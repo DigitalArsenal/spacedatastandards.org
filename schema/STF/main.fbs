@@ -1,7 +1,6 @@
-// Hash:
-// Version: 1.0.0
+// Hash: dbdb17407c2ee4d78f5e9ec77631c27813246acad984953f954fb35519a98780
+// Version: 1.0.1
 // -----------------------------------END_HEADER
-
 /// Access type for data listings
 enum accessType : byte {
   /// One-time purchase

@@ -3,37 +3,42 @@ import flatbuffers
 
 enum RecordType:
     RecordType_NONE = 0
-    RecordType_ATM = 1
-    RecordType_BOV = 2
-    RecordType_CAT = 3
-    RecordType_CDM = 4
-    RecordType_CRM = 5
-    RecordType_CSM = 6
-    RecordType_CTR = 7
-    RecordType_EME = 8
-    RecordType_EOO = 9
-    RecordType_EOP = 10
-    RecordType_EPM = 11
-    RecordType_HYP = 12
-    RecordType_IDM = 13
-    RecordType_LCC = 14
-    RecordType_LDM = 15
-    RecordType_MET = 16
-    RecordType_MPE = 17
-    RecordType_OCM = 18
-    RecordType_OEM = 19
-    RecordType_OMM = 20
-    RecordType_OSM = 21
-    RecordType_PLD = 22
-    RecordType_PNM = 23
-    RecordType_PRG = 24
-    RecordType_RFM = 25
-    RecordType_ROC = 26
-    RecordType_SCM = 27
-    RecordType_SIT = 28
-    RecordType_TDM = 29
-    RecordType_TIM = 30
-    RecordType_VCM = 31
+    RecordType_ACL = 1
+    RecordType_ATM = 2
+    RecordType_BOV = 3
+    RecordType_CAT = 4
+    RecordType_CDM = 5
+    RecordType_CRM = 6
+    RecordType_CSM = 7
+    RecordType_CTR = 8
+    RecordType_EME = 9
+    RecordType_EOO = 10
+    RecordType_EOP = 11
+    RecordType_EPM = 12
+    RecordType_HYP = 13
+    RecordType_IDM = 14
+    RecordType_LCC = 15
+    RecordType_LDM = 16
+    RecordType_MET = 17
+    RecordType_MPE = 18
+    RecordType_OCM = 19
+    RecordType_OEM = 20
+    RecordType_OMM = 21
+    RecordType_OSM = 22
+    RecordType_PLD = 23
+    RecordType_PNM = 24
+    RecordType_PRG = 25
+    RecordType_PUR = 26
+    RecordType_REV = 27
+    RecordType_RFM = 28
+    RecordType_ROC = 29
+    RecordType_SCM = 30
+    RecordType_SIT = 31
+    RecordType_STF = 32
+    RecordType_TDM = 33
+    RecordType_TIM = 34
+    RecordType_VCM = 35
+    RecordType_XTC = 36
 
 class Record
 
@@ -42,6 +47,8 @@ class REC
 class Record : flatbuffers.handle
     def value_type() -> RecordType:
         return RecordType(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    def value_as_ACL():
+        return ACL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ATM():
         return ATM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_BOV():
@@ -90,6 +97,10 @@ class Record : flatbuffers.handle
         return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PRG():
         return PRG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PUR():
+        return PUR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_REV():
+        return REV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_RFM():
         return RFM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ROC():
@@ -98,12 +109,16 @@ class Record : flatbuffers.handle
         return SCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SIT():
         return SIT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_STF():
+        return STF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TDM():
         return TDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TIM():
         return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_VCM():
         return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_XTC():
+        return XTC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def standard() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
 

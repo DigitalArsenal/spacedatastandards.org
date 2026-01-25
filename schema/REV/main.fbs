@@ -1,7 +1,6 @@
-// Hash:
-// Version: 1.0.0
+// Hash: 79e94008a46b17a5a2f19dd31f1771a174241599de23b755ce473d17166ea635
+// Version: 1.0.1
 // -----------------------------------END_HEADER
-
 /// Review - User review of a storefront listing
 table REV {
   /// Unique identifier for this review

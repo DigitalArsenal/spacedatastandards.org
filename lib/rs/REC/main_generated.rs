@@ -34,6 +34,11 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -43,11 +48,12 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 31;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 36;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 32] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 37] = [
   RecordType::NONE,
+  RecordType::ACL,
   RecordType::ATM,
   RecordType::BOV,
   RecordType::CAT,
@@ -72,13 +78,17 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 32] = [
   RecordType::PLD,
   RecordType::PNM,
   RecordType::PRG,
+  RecordType::PUR,
+  RecordType::REV,
   RecordType::RFM,
   RecordType::ROC,
   RecordType::SCM,
   RecordType::SIT,
+  RecordType::STF,
   RecordType::TDM,
   RecordType::TIM,
   RecordType::VCM,
+  RecordType::XTC,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -87,42 +97,48 @@ pub struct RecordType(pub u8);
 #[allow(non_upper_case_globals)]
 impl RecordType {
   pub const NONE: Self = Self(0);
-  pub const ATM: Self = Self(1);
-  pub const BOV: Self = Self(2);
-  pub const CAT: Self = Self(3);
-  pub const CDM: Self = Self(4);
-  pub const CRM: Self = Self(5);
-  pub const CSM: Self = Self(6);
-  pub const CTR: Self = Self(7);
-  pub const EME: Self = Self(8);
-  pub const EOO: Self = Self(9);
-  pub const EOP: Self = Self(10);
-  pub const EPM: Self = Self(11);
-  pub const HYP: Self = Self(12);
-  pub const IDM: Self = Self(13);
-  pub const LCC: Self = Self(14);
-  pub const LDM: Self = Self(15);
-  pub const MET: Self = Self(16);
-  pub const MPE: Self = Self(17);
-  pub const OCM: Self = Self(18);
-  pub const OEM: Self = Self(19);
-  pub const OMM: Self = Self(20);
-  pub const OSM: Self = Self(21);
-  pub const PLD: Self = Self(22);
-  pub const PNM: Self = Self(23);
-  pub const PRG: Self = Self(24);
-  pub const RFM: Self = Self(25);
-  pub const ROC: Self = Self(26);
-  pub const SCM: Self = Self(27);
-  pub const SIT: Self = Self(28);
-  pub const TDM: Self = Self(29);
-  pub const TIM: Self = Self(30);
-  pub const VCM: Self = Self(31);
+  pub const ACL: Self = Self(1);
+  pub const ATM: Self = Self(2);
+  pub const BOV: Self = Self(3);
+  pub const CAT: Self = Self(4);
+  pub const CDM: Self = Self(5);
+  pub const CRM: Self = Self(6);
+  pub const CSM: Self = Self(7);
+  pub const CTR: Self = Self(8);
+  pub const EME: Self = Self(9);
+  pub const EOO: Self = Self(10);
+  pub const EOP: Self = Self(11);
+  pub const EPM: Self = Self(12);
+  pub const HYP: Self = Self(13);
+  pub const IDM: Self = Self(14);
+  pub const LCC: Self = Self(15);
+  pub const LDM: Self = Self(16);
+  pub const MET: Self = Self(17);
+  pub const MPE: Self = Self(18);
+  pub const OCM: Self = Self(19);
+  pub const OEM: Self = Self(20);
+  pub const OMM: Self = Self(21);
+  pub const OSM: Self = Self(22);
+  pub const PLD: Self = Self(23);
+  pub const PNM: Self = Self(24);
+  pub const PRG: Self = Self(25);
+  pub const PUR: Self = Self(26);
+  pub const REV: Self = Self(27);
+  pub const RFM: Self = Self(28);
+  pub const ROC: Self = Self(29);
+  pub const SCM: Self = Self(30);
+  pub const SIT: Self = Self(31);
+  pub const STF: Self = Self(32);
+  pub const TDM: Self = Self(33);
+  pub const TIM: Self = Self(34);
+  pub const VCM: Self = Self(35);
+  pub const XTC: Self = Self(36);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 31;
+  pub const ENUM_MAX: u8 = 36;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
+    Self::ACL,
     Self::ATM,
     Self::BOV,
     Self::CAT,
@@ -147,18 +163,23 @@ impl RecordType {
     Self::PLD,
     Self::PNM,
     Self::PRG,
+    Self::PUR,
+    Self::REV,
     Self::RFM,
     Self::ROC,
     Self::SCM,
     Self::SIT,
+    Self::STF,
     Self::TDM,
     Self::TIM,
     Self::VCM,
+    Self::XTC,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
       Self::NONE => Some("NONE"),
+      Self::ACL => Some("ACL"),
       Self::ATM => Some("ATM"),
       Self::BOV => Some("BOV"),
       Self::CAT => Some("CAT"),
@@ -183,13 +204,17 @@ impl RecordType {
       Self::PLD => Some("PLD"),
       Self::PNM => Some("PNM"),
       Self::PRG => Some("PRG"),
+      Self::PUR => Some("PUR"),
+      Self::REV => Some("REV"),
       Self::RFM => Some("RFM"),
       Self::ROC => Some("ROC"),
       Self::SCM => Some("SCM"),
       Self::SIT => Some("SIT"),
+      Self::STF => Some("STF"),
       Self::TDM => Some("TDM"),
       Self::TIM => Some("TIM"),
       Self::VCM => Some("VCM"),
+      Self::XTC => Some("XTC"),
       _ => None,
     }
   }
@@ -252,6 +277,7 @@ pub struct RecordTypeUnionTableOffset {}
 #[derive(Debug, Clone, PartialEq)]
 pub enum RecordTypeT {
   NONE,
+  ACL(Box<ACLT>),
   ATM(Box<ATMT>),
   BOV(Box<BOVT>),
   CAT(Box<CATT>),
@@ -276,13 +302,17 @@ pub enum RecordTypeT {
   PLD(Box<PLDT>),
   PNM(Box<PNMT>),
   PRG(Box<PRGT>),
+  PUR(Box<PURT>),
+  REV(Box<REVT>),
   RFM(Box<RFMT>),
   ROC(Box<ROCT>),
   SCM(Box<SCMT>),
   SIT(Box<SITT>),
+  STF(Box<STFT>),
   TDM(Box<TDMT>),
   TIM(Box<TIMT>),
   VCM(Box<VCMT>),
+  XTC(Box<XTCT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -293,6 +323,7 @@ impl RecordTypeT {
   pub fn record_type_type(&self) -> RecordType {
     match self {
       Self::NONE => RecordType::NONE,
+      Self::ACL(_) => RecordType::ACL,
       Self::ATM(_) => RecordType::ATM,
       Self::BOV(_) => RecordType::BOV,
       Self::CAT(_) => RecordType::CAT,
@@ -317,18 +348,23 @@ impl RecordTypeT {
       Self::PLD(_) => RecordType::PLD,
       Self::PNM(_) => RecordType::PNM,
       Self::PRG(_) => RecordType::PRG,
+      Self::PUR(_) => RecordType::PUR,
+      Self::REV(_) => RecordType::REV,
       Self::RFM(_) => RecordType::RFM,
       Self::ROC(_) => RecordType::ROC,
       Self::SCM(_) => RecordType::SCM,
       Self::SIT(_) => RecordType::SIT,
+      Self::STF(_) => RecordType::STF,
       Self::TDM(_) => RecordType::TDM,
       Self::TIM(_) => RecordType::TIM,
       Self::VCM(_) => RecordType::VCM,
+      Self::XTC(_) => RecordType::XTC,
     }
   }
   pub fn pack<'b, A: flatbuffers::Allocator + 'b>(&self, fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>) -> Option<flatbuffers::WIPOffset<flatbuffers::UnionWIPOffset>> {
     match self {
       Self::NONE => None,
+      Self::ACL(v) => Some(v.pack(fbb).as_union_value()),
       Self::ATM(v) => Some(v.pack(fbb).as_union_value()),
       Self::BOV(v) => Some(v.pack(fbb).as_union_value()),
       Self::CAT(v) => Some(v.pack(fbb).as_union_value()),
@@ -353,14 +389,39 @@ impl RecordTypeT {
       Self::PLD(v) => Some(v.pack(fbb).as_union_value()),
       Self::PNM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRG(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PUR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::REV(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFM(v) => Some(v.pack(fbb).as_union_value()),
       Self::ROC(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCM(v) => Some(v.pack(fbb).as_union_value()),
       Self::SIT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::STF(v) => Some(v.pack(fbb).as_union_value()),
       Self::TDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::TIM(v) => Some(v.pack(fbb).as_union_value()),
       Self::VCM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::XTC(v) => Some(v.pack(fbb).as_union_value()),
     }
+  }
+  /// If the union variant matches, return the owned ACLT, setting the union to NONE.
+  pub fn take_ACL(&mut self) -> Option<Box<ACLT>> {
+    if let Self::ACL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ACL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ACLT.
+  pub fn as_ACL(&self) -> Option<&ACLT> {
+    if let Self::ACL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ACLT.
+  pub fn as_ACL_mut(&mut self) -> Option<&mut ACLT> {
+    if let Self::ACL(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned ATMT, setting the union to NONE.
   pub fn take_ATM(&mut self) -> Option<Box<ATMT>> {
@@ -866,6 +927,48 @@ impl RecordTypeT {
   pub fn as_PRG_mut(&mut self) -> Option<&mut PRGT> {
     if let Self::PRG(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned PURT, setting the union to NONE.
+  pub fn take_PUR(&mut self) -> Option<Box<PURT>> {
+    if let Self::PUR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::PUR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PURT.
+  pub fn as_PUR(&self) -> Option<&PURT> {
+    if let Self::PUR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PURT.
+  pub fn as_PUR_mut(&mut self) -> Option<&mut PURT> {
+    if let Self::PUR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned REVT, setting the union to NONE.
+  pub fn take_REV(&mut self) -> Option<Box<REVT>> {
+    if let Self::REV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::REV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the REVT.
+  pub fn as_REV(&self) -> Option<&REVT> {
+    if let Self::REV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the REVT.
+  pub fn as_REV_mut(&mut self) -> Option<&mut REVT> {
+    if let Self::REV(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned RFMT, setting the union to NONE.
   pub fn take_RFM(&mut self) -> Option<Box<RFMT>> {
     if let Self::RFM(_) = self {
@@ -950,6 +1053,27 @@ impl RecordTypeT {
   pub fn as_SIT_mut(&mut self) -> Option<&mut SITT> {
     if let Self::SIT(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned STFT, setting the union to NONE.
+  pub fn take_STF(&mut self) -> Option<Box<STFT>> {
+    if let Self::STF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::STF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the STFT.
+  pub fn as_STF(&self) -> Option<&STFT> {
+    if let Self::STF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the STFT.
+  pub fn as_STF_mut(&mut self) -> Option<&mut STFT> {
+    if let Self::STF(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned TDMT, setting the union to NONE.
   pub fn take_TDM(&mut self) -> Option<Box<TDMT>> {
     if let Self::TDM(_) = self {
@@ -1013,6 +1137,27 @@ impl RecordTypeT {
   pub fn as_VCM_mut(&mut self) -> Option<&mut VCMT> {
     if let Self::VCM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned XTCT, setting the union to NONE.
+  pub fn take_XTC(&mut self) -> Option<Box<XTCT>> {
+    if let Self::XTC(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::XTC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the XTCT.
+  pub fn as_XTC(&self) -> Option<&XTCT> {
+    if let Self::XTC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the XTCT.
+  pub fn as_XTC_mut(&mut self) -> Option<&mut XTCT> {
+    if let Self::XTC(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -1053,6 +1198,11 @@ impl<'a> Record<'a> {
   pub fn unpack(&self) -> RecordT {
     let value = match self.value_type() {
       RecordType::NONE => RecordTypeT::NONE,
+      RecordType::ACL => RecordTypeT::ACL(Box::new(
+        self.value_as_ACL()
+            .expect("Invalid union table, expected `RecordType::ACL`.")
+            .unpack()
+      )),
       RecordType::ATM => RecordTypeT::ATM(Box::new(
         self.value_as_ATM()
             .expect("Invalid union table, expected `RecordType::ATM`.")
@@ -1173,6 +1323,16 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::PRG`.")
             .unpack()
       )),
+      RecordType::PUR => RecordTypeT::PUR(Box::new(
+        self.value_as_PUR()
+            .expect("Invalid union table, expected `RecordType::PUR`.")
+            .unpack()
+      )),
+      RecordType::REV => RecordTypeT::REV(Box::new(
+        self.value_as_REV()
+            .expect("Invalid union table, expected `RecordType::REV`.")
+            .unpack()
+      )),
       RecordType::RFM => RecordTypeT::RFM(Box::new(
         self.value_as_RFM()
             .expect("Invalid union table, expected `RecordType::RFM`.")
@@ -1193,6 +1353,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::SIT`.")
             .unpack()
       )),
+      RecordType::STF => RecordTypeT::STF(Box::new(
+        self.value_as_STF()
+            .expect("Invalid union table, expected `RecordType::STF`.")
+            .unpack()
+      )),
       RecordType::TDM => RecordTypeT::TDM(Box::new(
         self.value_as_TDM()
             .expect("Invalid union table, expected `RecordType::TDM`.")
@@ -1206,6 +1371,11 @@ impl<'a> Record<'a> {
       RecordType::VCM => RecordTypeT::VCM(Box::new(
         self.value_as_VCM()
             .expect("Invalid union table, expected `RecordType::VCM`.")
+            .unpack()
+      )),
+      RecordType::XTC => RecordTypeT::XTC(Box::new(
+        self.value_as_XTC()
+            .expect("Invalid union table, expected `RecordType::XTC`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -1240,6 +1410,21 @@ impl<'a> Record<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(Record::VT_STANDARD, None)}
   }
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ACL(&self) -> Option<ACL<'a>> {
+    if self.value_type() == RecordType::ACL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ACL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
   #[inline]
   #[allow(non_snake_case)]
   pub fn value_as_ATM(&self) -> Option<ATM<'a>> {
@@ -1602,6 +1787,36 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_PUR(&self) -> Option<PUR<'a>> {
+    if self.value_type() == RecordType::PUR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PUR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_REV(&self) -> Option<REV<'a>> {
+    if self.value_type() == RecordType::REV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { REV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_RFM(&self) -> Option<RFM<'a>> {
     if self.value_type() == RecordType::RFM {
       self.value().map(|t| {
@@ -1662,6 +1877,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_STF(&self) -> Option<STF<'a>> {
+    if self.value_type() == RecordType::STF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { STF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_TDM(&self) -> Option<TDM<'a>> {
     if self.value_type() == RecordType::TDM {
       self.value().map(|t| {
@@ -1705,6 +1935,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_XTC(&self) -> Option<XTC<'a>> {
+    if self.value_type() == RecordType::XTC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { XTC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl flatbuffers::Verifiable for Record<'_> {
@@ -1716,6 +1961,7 @@ impl flatbuffers::Verifiable for Record<'_> {
     v.visit_table(pos)?
      .visit_union::<RecordType, _>("value_type", Self::VT_VALUE_TYPE, "value", Self::VT_VALUE, false, |key, v, pos| {
         match key {
+          RecordType::ACL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACL>>("RecordType::ACL", pos),
           RecordType::ATM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ATM>>("RecordType::ATM", pos),
           RecordType::BOV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BOV>>("RecordType::BOV", pos),
           RecordType::CAT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CAT>>("RecordType::CAT", pos),
@@ -1740,13 +1986,17 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::PLD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLD>>("RecordType::PLD", pos),
           RecordType::PNM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PNM>>("RecordType::PNM", pos),
           RecordType::PRG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PRG>>("RecordType::PRG", pos),
+          RecordType::PUR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PUR>>("RecordType::PUR", pos),
+          RecordType::REV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<REV>>("RecordType::REV", pos),
           RecordType::RFM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RFM>>("RecordType::RFM", pos),
           RecordType::ROC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ROC>>("RecordType::ROC", pos),
           RecordType::SCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SCM>>("RecordType::SCM", pos),
           RecordType::SIT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SIT>>("RecordType::SIT", pos),
+          RecordType::STF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<STF>>("RecordType::STF", pos),
           RecordType::TDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TDM>>("RecordType::TDM", pos),
           RecordType::TIM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TIM>>("RecordType::TIM", pos),
           RecordType::VCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<VCM>>("RecordType::VCM", pos),
+          RecordType::XTC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<XTC>>("RecordType::XTC", pos),
           _ => Ok(()),
         }
      })?
@@ -1808,6 +2058,13 @@ impl core::fmt::Debug for Record<'_> {
     let mut ds = f.debug_struct("Record");
       ds.field("value_type", &self.value_type());
       match self.value_type() {
+        RecordType::ACL => {
+          if let Some(x) = self.value_as_ACL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::ATM => {
           if let Some(x) = self.value_as_ATM() {
             ds.field("value", &x)
@@ -1976,6 +2233,20 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::PUR => {
+          if let Some(x) = self.value_as_PUR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::REV => {
+          if let Some(x) = self.value_as_REV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::RFM => {
           if let Some(x) = self.value_as_RFM() {
             ds.field("value", &x)
@@ -2004,6 +2275,13 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::STF => {
+          if let Some(x) = self.value_as_STF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::TDM => {
           if let Some(x) = self.value_as_TDM() {
             ds.field("value", &x)
@@ -2020,6 +2298,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::VCM => {
           if let Some(x) = self.value_as_VCM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::XTC => {
+          if let Some(x) = self.value_as_XTC() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

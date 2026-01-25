@@ -1,7 +1,6 @@
-// Hash: 1350c8d84324b1aa53e2b036817ffaa683041877e4e9376163ed08f85eed9a0e
-// Version: 1.0.0
+// Hash: e9f9bfd715094dbf0c2264551aa218ac0ac5e520a3ce25f451f0958deb154a33
+// Version: 1.0.3
 // -----------------------------------END_HEADER
-
 // XTCE - XML Telemetry and Command Exchange
 //
 // This schema implements the CCSDS XTCE 1.2 standard (CCSDS 660.1-G-2) for
@@ -1290,7 +1289,7 @@ table ServiceSet {
 // ============================================================================
 
 /// Document header information
-table Header {
+table XTCHeader {
   /// Version of this XTCE document
   VERSION:string;
   /// Date of document creation (ISO 8601)
@@ -1363,7 +1362,7 @@ table XTC {
   /// Operational status
   OPERATIONAL_STATUS:string;
   /// Document header
-  HEADER:Header;
+  HEADER:XTCHeader;
   /// Telemetry metadata
   TELEMETRY_META_DATA:TelemetryMetaData;
   /// Command metadata

@@ -2,6 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+import { ACL, ACLT } from './ACL.js';
 import { ATM, ATMT } from './ATM.js';
 import { BOV, BOVT } from './BOV.js';
 import { CAT, CATT } from './CAT.js';
@@ -26,56 +27,66 @@ import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PNM, PNMT } from './PNM.js';
 import { PRG, PRGT } from './PRG.js';
+import { PUR, PURT } from './PUR.js';
+import { REV, REVT } from './REV.js';
 import { RFM, RFMT } from './RFM.js';
 import { ROC, ROCT } from './ROC.js';
 import { SCM, SCMT } from './SCM.js';
 import { SIT, SITT } from './SIT.js';
+import { STF, STFT } from './STF.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
 import { VCM, VCMT } from './VCM.js';
+import { XTC, XTCT } from './XTC.js';
 
 
 export enum RecordType {
   NONE = 0,
-  ATM = 1,
-  BOV = 2,
-  CAT = 3,
-  CDM = 4,
-  CRM = 5,
-  CSM = 6,
-  CTR = 7,
-  EME = 8,
-  EOO = 9,
-  EOP = 10,
-  EPM = 11,
-  HYP = 12,
-  IDM = 13,
-  LCC = 14,
-  LDM = 15,
-  MET = 16,
-  MPE = 17,
-  OCM = 18,
-  OEM = 19,
-  OMM = 20,
-  OSM = 21,
-  PLD = 22,
-  PNM = 23,
-  PRG = 24,
-  RFM = 25,
-  ROC = 26,
-  SCM = 27,
-  SIT = 28,
-  TDM = 29,
-  TIM = 30,
-  VCM = 31
+  ACL = 1,
+  ATM = 2,
+  BOV = 3,
+  CAT = 4,
+  CDM = 5,
+  CRM = 6,
+  CSM = 7,
+  CTR = 8,
+  EME = 9,
+  EOO = 10,
+  EOP = 11,
+  EPM = 12,
+  HYP = 13,
+  IDM = 14,
+  LCC = 15,
+  LDM = 16,
+  MET = 17,
+  MPE = 18,
+  OCM = 19,
+  OEM = 20,
+  OMM = 21,
+  OSM = 22,
+  PLD = 23,
+  PNM = 24,
+  PRG = 25,
+  PUR = 26,
+  REV = 27,
+  RFM = 28,
+  ROC = 29,
+  SCM = 30,
+  SIT = 31,
+  STF = 32,
+  TDM = 33,
+  TIM = 34,
+  VCM = 35,
+  XTC = 36
 }
 
 export function unionToRecordType(
   type: RecordType,
-  accessor: (obj:ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM) => ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null
-): ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null {
+  accessor: (obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null
+): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
+    case 'ACL': return accessor(new ACL())! as ACL;
     case 'ATM': return accessor(new ATM())! as ATM;
     case 'BOV': return accessor(new BOV())! as BOV;
     case 'CAT': return accessor(new CAT())! as CAT;
@@ -100,24 +111,29 @@ export function unionToRecordType(
     case 'PLD': return accessor(new PLD())! as PLD;
     case 'PNM': return accessor(new PNM())! as PNM;
     case 'PRG': return accessor(new PRG())! as PRG;
+    case 'PUR': return accessor(new PUR())! as PUR;
+    case 'REV': return accessor(new REV())! as REV;
     case 'RFM': return accessor(new RFM())! as RFM;
     case 'ROC': return accessor(new ROC())! as ROC;
     case 'SCM': return accessor(new SCM())! as SCM;
     case 'SIT': return accessor(new SIT())! as SIT;
+    case 'STF': return accessor(new STF())! as STF;
     case 'TDM': return accessor(new TDM())! as TDM;
     case 'TIM': return accessor(new TIM())! as TIM;
     case 'VCM': return accessor(new VCM())! as VCM;
+    case 'XTC': return accessor(new XTC())! as XTC;
     default: return null;
   }
 }
 
 export function unionListToRecordType(
   type: RecordType, 
-  accessor: (index: number, obj:ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM) => ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null, 
+  accessor: (index: number, obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null, 
   index: number
-): ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|RFM|ROC|SCM|SIT|TDM|TIM|VCM|null {
+): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
+    case 'ACL': return accessor(index, new ACL())! as ACL;
     case 'ATM': return accessor(index, new ATM())! as ATM;
     case 'BOV': return accessor(index, new BOV())! as BOV;
     case 'CAT': return accessor(index, new CAT())! as CAT;
@@ -142,13 +158,17 @@ export function unionListToRecordType(
     case 'PLD': return accessor(index, new PLD())! as PLD;
     case 'PNM': return accessor(index, new PNM())! as PNM;
     case 'PRG': return accessor(index, new PRG())! as PRG;
+    case 'PUR': return accessor(index, new PUR())! as PUR;
+    case 'REV': return accessor(index, new REV())! as REV;
     case 'RFM': return accessor(index, new RFM())! as RFM;
     case 'ROC': return accessor(index, new ROC())! as ROC;
     case 'SCM': return accessor(index, new SCM())! as SCM;
     case 'SIT': return accessor(index, new SIT())! as SIT;
+    case 'STF': return accessor(index, new STF())! as STF;
     case 'TDM': return accessor(index, new TDM())! as TDM;
     case 'TIM': return accessor(index, new TIM())! as TIM;
     case 'VCM': return accessor(index, new VCM())! as VCM;
+    case 'XTC': return accessor(index, new XTC())! as XTC;
     default: return null;
   }
 }

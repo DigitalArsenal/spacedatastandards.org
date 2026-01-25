@@ -18,6 +18,7 @@ public struct Record : IFlatbufferObject
 
   public RecordType ValueType { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
   public TTable? Value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
+  public ACL ValueAsACL() { return Value<ACL>().Value; }
   public ATM ValueAsATM() { return Value<ATM>().Value; }
   public BOV ValueAsBOV() { return Value<BOV>().Value; }
   public CAT ValueAsCAT() { return Value<CAT>().Value; }
@@ -42,13 +43,17 @@ public struct Record : IFlatbufferObject
   public PLD ValueAsPLD() { return Value<PLD>().Value; }
   public PNM ValueAsPNM() { return Value<PNM>().Value; }
   public PRG ValueAsPRG() { return Value<PRG>().Value; }
+  public PUR ValueAsPUR() { return Value<PUR>().Value; }
+  public REV ValueAsREV() { return Value<REV>().Value; }
   public RFM ValueAsRFM() { return Value<RFM>().Value; }
   public ROC ValueAsROC() { return Value<ROC>().Value; }
   public SCM ValueAsSCM() { return Value<SCM>().Value; }
   public SIT ValueAsSIT() { return Value<SIT>().Value; }
+  public STF ValueAsSTF() { return Value<STF>().Value; }
   public TDM ValueAsTDM() { return Value<TDM>().Value; }
   public TIM ValueAsTIM() { return Value<TIM>().Value; }
   public VCM ValueAsVCM() { return Value<VCM>().Value; }
+  public XTC ValueAsXTC() { return Value<XTC>().Value; }
   public string Standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetStandardBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -86,6 +91,9 @@ public struct Record : IFlatbufferObject
     _o.Value.Type = this.ValueType;
     switch (this.ValueType) {
       default: break;
+      case RecordType.ACL:
+        _o.Value.Value = this.Value<ACL>().HasValue ? this.Value<ACL>().Value.UnPack() : null;
+        break;
       case RecordType.ATM:
         _o.Value.Value = this.Value<ATM>().HasValue ? this.Value<ATM>().Value.UnPack() : null;
         break;
@@ -158,6 +166,12 @@ public struct Record : IFlatbufferObject
       case RecordType.PRG:
         _o.Value.Value = this.Value<PRG>().HasValue ? this.Value<PRG>().Value.UnPack() : null;
         break;
+      case RecordType.PUR:
+        _o.Value.Value = this.Value<PUR>().HasValue ? this.Value<PUR>().Value.UnPack() : null;
+        break;
+      case RecordType.REV:
+        _o.Value.Value = this.Value<REV>().HasValue ? this.Value<REV>().Value.UnPack() : null;
+        break;
       case RecordType.RFM:
         _o.Value.Value = this.Value<RFM>().HasValue ? this.Value<RFM>().Value.UnPack() : null;
         break;
@@ -170,6 +184,9 @@ public struct Record : IFlatbufferObject
       case RecordType.SIT:
         _o.Value.Value = this.Value<SIT>().HasValue ? this.Value<SIT>().Value.UnPack() : null;
         break;
+      case RecordType.STF:
+        _o.Value.Value = this.Value<STF>().HasValue ? this.Value<STF>().Value.UnPack() : null;
+        break;
       case RecordType.TDM:
         _o.Value.Value = this.Value<TDM>().HasValue ? this.Value<TDM>().Value.UnPack() : null;
         break;
@@ -178,6 +195,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.VCM:
         _o.Value.Value = this.Value<VCM>().HasValue ? this.Value<VCM>().Value.UnPack() : null;
+        break;
+      case RecordType.XTC:
+        _o.Value.Value = this.Value<XTC>().HasValue ? this.Value<XTC>().Value.UnPack() : null;
         break;
     }
     _o.Standard = this.Standard;

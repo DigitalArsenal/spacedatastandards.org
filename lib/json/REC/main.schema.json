@@ -1,6 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "accessType" : {
+      "type" : "string",
+      "enum": ["OneTime", "Subscription", "Streaming", "Query"]
+    },
+    "paymentMethod" : {
+      "type" : "string",
+      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"]
+    },
     "AtmosphericModelFamily" : {
       "type" : "string",
       "enum": ["CIRA_XX", "DTM_XX", "GITM", "GOST", "GRAM_XX", "HP", "JAC_HASDM", "JAC_GILL", "JB08", "JR71", "JXX", "MET_XX", "MSIS_86", "MSISE_90", "NRLMSIS00E", "TIECGM", "USSA_XX"]
@@ -157,9 +165,281 @@
       "type" : "string",
       "enum": ["NONE", "SEMI_ANALYTICAL", "VINTI", "SGP4", "COWELL", "RK4", "NYX", "GMAT", "SPICE", "SGP", "SDP4", "SGP8", "SDP8"]
     },
+    "ComparisonOperator" : {
+      "type" : "string",
+      "enum": ["EQ", "NE", "GT", "LT", "GE", "LE", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "NOT_STARTS_WITH", "NOT_ENDS_WITH", "NOT_CONTAINS"]
+    },
+    "DataSourceType" : {
+      "type" : "string",
+      "enum": ["TELEMETERED", "DERIVED", "CONSTANT", "LOCAL", "GROUND"]
+    },
+    "BooleanOperatorType" : {
+      "type" : "string",
+      "enum": ["AND", "OR", "XOR"]
+    },
+    "ReferenceLocationType" : {
+      "type" : "string",
+      "enum": ["CONTAINER_START", "CONTAINER_END", "PREVIOUS_ENTRY", "NEXT_ENTRY"]
+    },
+    "RateBasisType" : {
+      "type" : "string",
+      "enum": ["PER_SECOND", "PER_CONTAINER"]
+    },
+    "ByteOrderType" : {
+      "type" : "string",
+      "enum": ["BIG_ENDIAN", "LITTLE_ENDIAN"]
+    },
+    "IntegerEncodingType" : {
+      "type" : "string",
+      "enum": ["UNSIGNED", "TWOS_COMPLEMENT", "SIGN_MAGNITUDE", "ONES_COMPLEMENT", "BCD", "PACKED_BCD"]
+    },
+    "FloatEncodingType" : {
+      "type" : "string",
+      "enum": ["IEEE754_1985", "MILSTD_1750A", "DEC", "IBM", "TI"]
+    },
+    "StringEncodingType" : {
+      "type" : "string",
+      "enum": ["US_ASCII", "ISO_8859_1", "WINDOWS_1252", "UTF_8", "UTF_16", "UTF_16BE", "UTF_16LE"]
+    },
+    "StringSizeType" : {
+      "type" : "string",
+      "enum": ["FIXED", "LEADING_SIZE", "TERMINATION_CHAR"]
+    },
+    "AlarmSeverityType" : {
+      "type" : "string",
+      "enum": ["NORMAL", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE"]
+    },
+    "VerifierType" : {
+      "type" : "string",
+      "enum": ["START", "PROGRESS", "COMPLETE", "FAILED"]
+    },
+    "TimeWindowRefType" : {
+      "type" : "string",
+      "enum": ["COMMAND_RELEASE", "TIME_LAST_VERIFIER_PASSED"]
+    },
+    "EpochType" : {
+      "type" : "string",
+      "enum": ["TAI", "J2000", "UNIX", "GPS", "CUSTOM"]
+    },
+    "ErrorDetectionType" : {
+      "type" : "string",
+      "enum": ["NONE", "CRC", "CHECKSUM", "PARITY"]
+    },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PNM", "PRG", "RFM", "ROC", "SCM", "SIT", "TDM", "TIM", "VCM"]
+      "enum": ["NONE", "ACL", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PNM", "PRG", "PUR", "REV", "RFM", "ROC", "SCM", "SIT", "STF", "TDM", "TIM", "VCM", "XTC"]
+    },
+    "SpatialCoverage" : {
+      "type" : "object",
+      "description" : "Spatial coverage definition",
+      "properties" : {
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type of coverage: \"global\", \"region\", \"object_list\""
+              },
+        "REGIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Regions covered, e.g., [\"LEO\", \"GEO\", \"MEO\"]"
+              },
+        "OBJECT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Specific NORAD IDs or catalog numbers"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TemporalCoverage" : {
+      "type" : "object",
+      "description" : "Temporal coverage definition",
+      "properties" : {
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Start epoch in ISO 8601 format"
+              },
+        "END_EPOCH" : {
+                "type" : "string",
+                "description" : "End epoch in ISO 8601 format"
+              },
+        "UPDATE_FREQUENCY" : {
+                "type" : "string",
+                "description" : "Update frequency: \"realtime\", \"hourly\", \"daily\""
+              },
+        "HISTORICAL_DEPTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Days of historical data available"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DataCoverage" : {
+      "type" : "object",
+      "description" : "Data coverage combining spatial and temporal",
+      "properties" : {
+        "SPATIAL" : {
+                "$ref" : "#/definitions/SpatialCoverage",
+                "description" : "Spatial coverage definition"
+              },
+        "TEMPORAL" : {
+                "$ref" : "#/definitions/TemporalCoverage",
+                "description" : "Temporal coverage definition"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PricingTier" : {
+      "type" : "object",
+      "description" : "Pricing tier for a listing",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Tier name, e.g., \"Basic\", \"Pro\", \"Enterprise\""
+              },
+        "PRICE_AMOUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Price in smallest unit (cents, satoshis, etc.)"
+              },
+        "PRICE_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency code: \"USD\", \"ETH\", \"SOL\", \"SDN_CREDITS\""
+              },
+        "DURATION_DAYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Duration in days (0 = one-time purchase)"
+              },
+        "RATE_LIMIT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Rate limit in requests per hour"
+              },
+        "FEATURES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of features included in this tier"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "STF" : {
+      "type" : "object",
+      "description" : "Storefront Listing - Data marketplace listing",
+      "properties" : {
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the listing"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the data provider"
+              },
+        "PROVIDER_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of provider's EPM (Entity Profile Message)"
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Title of the data listing"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Detailed description of the data offering"
+              },
+        "DATA_TYPES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SDS data types offered, e.g., [\"OMM\", \"CDM\", \"TLE\"]"
+              },
+        "COVERAGE" : {
+                "$ref" : "#/definitions/DataCoverage",
+                "description" : "Coverage information (spatial and temporal)"
+              },
+        "SAMPLE_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of sample data"
+              },
+        "ACCESS_TYPE" : {
+                "$ref" : "#/definitions/accessType",
+                "description" : "Type of access offered"
+              },
+        "ENCRYPTION_REQUIRED" : {
+                "type" : "boolean",
+                "description" : "Whether encryption is required for data delivery"
+              },
+        "PRICING" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PricingTier"},
+                "description" : "Available pricing tiers"
+              },
+        "ACCEPTED_PAYMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/paymentMethod"},
+                "description" : "Payment methods accepted"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when listing was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when listing was last updated"
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "Whether the listing is currently active"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              }
+      },
+      "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
+      "additionalProperties" : false
+    },
+    "ACL" : {
+      "type" : "object",
+      "description" : "Access Control Grant - Permission to access purchased data",
+      "properties" : {
+        "GRANT_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this grant"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing this grant applies to"
+              },
+        "BUYER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the buyer/grantee"
+              },
+        "BUYER_ENCRYPTION_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's encryption public key for encrypted delivery"
+              },
+        "ACCESS_TYPE" : {
+                "$ref" : "#/definitions/accessType",
+                "description" : "Type of access granted"
+              },
+        "TIER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the pricing tier purchased"
+              },
+        "GRANTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access was granted"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access expires (0 = never expires)"
+              },
+        "PAYMENT_TX_HASH" : {
+                "type" : "string",
+                "description" : "Transaction hash or reference proving payment"
+              },
+        "PAYMENT_METHOD" : {
+                "$ref" : "#/definitions/paymentMethod",
+                "description" : "Payment method used"
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              }
+      },
+      "required" : ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
+      "additionalProperties" : false
     },
     "ATM" : {
       "type" : "object",
@@ -3892,6 +4172,110 @@
       },
       "additionalProperties" : false
     },
+    "PUR" : {
+      "type" : "object",
+      "description" : "Purchase Request - Request to purchase data from a storefront listing",
+      "properties" : {
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this purchase request"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing being purchased"
+              },
+        "TIER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the pricing tier selected"
+              },
+        "BUYER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the buyer"
+              },
+        "BUYER_ENCRYPTION_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's encryption public key for encrypted delivery"
+              },
+        "PAYMENT_METHOD" : {
+                "$ref" : "#/definitions/paymentMethod",
+                "description" : "Payment method used"
+              },
+        "PAYMENT_AMOUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Payment amount in smallest unit"
+              },
+        "PAYMENT_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency of payment"
+              },
+        "PAYMENT_TX_HASH" : {
+                "type" : "string",
+                "description" : "Transaction hash for cryptocurrency payments"
+              },
+        "PAYMENT_CHAIN" : {
+                "type" : "string",
+                "description" : "Blockchain network: \"ethereum\", \"solana\", \"bitcoin\""
+              },
+        "PAYMENT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Reference ID for credit/fiat payments"
+              },
+        "BUYER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from buyer"
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp of the request"
+              }
+      },
+      "required" : ["REQUEST_ID", "LISTING_ID", "TIER_NAME", "BUYER_PEER_ID"],
+      "additionalProperties" : false
+    },
+    "REV" : {
+      "type" : "object",
+      "description" : "Review - User review of a storefront listing",
+      "properties" : {
+        "REVIEW_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this review"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing being reviewed"
+              },
+        "REVIEWER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the reviewer"
+              },
+        "RATING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Rating from 1-5 stars"
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Review title"
+              },
+        "CONTENT" : {
+                "type" : "string",
+                "description" : "Review content/body"
+              },
+        "ACL_GRANT_ID" : {
+                "type" : "string",
+                "description" : "ACL grant ID proving purchase (proof of purchase)"
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp of the review"
+              },
+        "REVIEWER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from reviewer"
+              }
+      },
+      "required" : ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],
+      "additionalProperties" : false
+    },
     "SCHEMA_STANDARD" : {
       "type" : "object",
       "description" : "Schema Standard Definition",
@@ -4474,6 +4858,2104 @@
       },
       "additionalProperties" : false
     },
+    "IntegerDataEncoding" : {
+      "type" : "object",
+      "description" : "Integer data encoding specification",
+      "properties" : {
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of bits for this integer"
+              },
+        "BYTE_ORDER" : {
+                "$ref" : "#/definitions/ByteOrderType",
+                "description" : "Byte ordering"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/IntegerEncodingType",
+                "description" : "Integer encoding type"
+              },
+        "DEFAULT_CALIBRATOR" : {
+                "type" : "string",
+                "description" : "Default calibrator reference"
+              },
+        "CONTEXT_CALIBRATOR_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextCalibrator"},
+                "description" : "Context-dependent calibrators"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FloatDataEncoding" : {
+      "type" : "object",
+      "description" : "Float data encoding specification",
+      "properties" : {
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of bits (typically 32 or 64)"
+              },
+        "BYTE_ORDER" : {
+                "$ref" : "#/definitions/ByteOrderType",
+                "description" : "Byte ordering"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/FloatEncodingType",
+                "description" : "Float encoding format"
+              },
+        "DEFAULT_CALIBRATOR" : {
+                "type" : "string",
+                "description" : "Default calibrator reference"
+              },
+        "CONTEXT_CALIBRATOR_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextCalibrator"},
+                "description" : "Context-dependent calibrators"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StringDataEncoding" : {
+      "type" : "object",
+      "description" : "String data encoding specification",
+      "properties" : {
+        "ENCODING" : {
+                "$ref" : "#/definitions/StringEncodingType",
+                "description" : "Character encoding"
+              },
+        "SIZE_TYPE" : {
+                "$ref" : "#/definitions/StringSizeType",
+                "description" : "Size type specification"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Fixed size in bits (when SIZE_TYPE=FIXED)"
+              },
+        "TERMINATION_CHAR" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Termination character (when SIZE_TYPE=TERMINATION_CHAR)"
+              },
+        "MAX_SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum size in bits (for variable length)"
+              },
+        "LEADING_SIZE_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Leading size field bits (when SIZE_TYPE=LEADING_SIZE)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BinaryDataEncoding" : {
+      "type" : "object",
+      "description" : "Binary data encoding specification",
+      "properties" : {
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Fixed size in bits"
+              },
+        "MAX_SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum size in bits (for variable length)"
+              },
+        "LEADING_SIZE_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Leading size field bits (for variable length)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PolynomialCalibrator" : {
+      "type" : "object",
+      "description" : "Polynomial calibrator - converts raw to engineering using polynomial",
+      "properties" : {
+        "COEFFICIENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Polynomial terms (index is power, value is coefficient)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SplinePoint" : {
+      "type" : "object",
+      "description" : "Spline point for spline calibration",
+      "properties" : {
+        "RAW" : {
+                "type" : "number",
+                "description" : "Raw value"
+              },
+        "CALIBRATED" : {
+                "type" : "number",
+                "description" : "Calibrated/engineering value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SplineCalibrator" : {
+      "type" : "object",
+      "description" : "Spline calibrator - piecewise linear interpolation",
+      "properties" : {
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SplinePoint"},
+                "description" : "Spline points ordered by raw value"
+              },
+        "EXTRAPOLATE_LOW" : {
+                "type" : "boolean",
+                "description" : "Extrapolate below minimum point"
+              },
+        "EXTRAPOLATE_HIGH" : {
+                "type" : "boolean",
+                "description" : "Extrapolate above maximum point"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MathOperation" : {
+      "type" : "object",
+      "description" : "Mathematical operation for math operation calibrator",
+      "properties" : {
+        "RPN_EXPRESSION" : {
+                "type" : "string",
+                "description" : "Operation in Reverse Polish Notation (RPN)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContextCalibrator" : {
+      "type" : "object",
+      "description" : "Context-dependent calibrator selection",
+      "properties" : {
+        "MATCH_CRITERIA" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Match criteria for selecting this calibrator"
+              },
+        "POLYNOMIAL" : {
+                "$ref" : "#/definitions/PolynomialCalibrator",
+                "description" : "Polynomial calibrator (if used)"
+              },
+        "SPLINE" : {
+                "$ref" : "#/definitions/SplineCalibrator",
+                "description" : "Spline calibrator (if used)"
+              },
+        "MATH_OPERATION" : {
+                "$ref" : "#/definitions/MathOperation",
+                "description" : "Math operation calibrator (if used)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AlarmRange" : {
+      "type" : "object",
+      "description" : "Numeric alarm range",
+      "properties" : {
+        "MIN_INCLUSIVE" : {
+                "type" : "number",
+                "description" : "Minimum value (inclusive)"
+              },
+        "MAX_INCLUSIVE" : {
+                "type" : "number",
+                "description" : "Maximum value (inclusive)"
+              },
+        "MIN_EXCLUSIVE" : {
+                "type" : "number",
+                "description" : "Minimum value (exclusive)"
+              },
+        "MAX_EXCLUSIVE" : {
+                "type" : "number",
+                "description" : "Maximum value (exclusive)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StaticAlarmRanges" : {
+      "type" : "object",
+      "description" : "Static numeric alarm levels",
+      "properties" : {
+        "WATCH_RANGE" : {
+                "$ref" : "#/definitions/AlarmRange",
+                "description" : "Watch range"
+              },
+        "WARNING_RANGE" : {
+                "$ref" : "#/definitions/AlarmRange",
+                "description" : "Warning range"
+              },
+        "DISTRESS_RANGE" : {
+                "$ref" : "#/definitions/AlarmRange",
+                "description" : "Distress range"
+              },
+        "CRITICAL_RANGE" : {
+                "$ref" : "#/definitions/AlarmRange",
+                "description" : "Critical range"
+              },
+        "SEVERE_RANGE" : {
+                "$ref" : "#/definitions/AlarmRange",
+                "description" : "Severe range"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EnumerationAlarm" : {
+      "type" : "object",
+      "description" : "Enumerated alarm",
+      "properties" : {
+        "LABEL" : {
+                "type" : "string",
+                "description" : "Enumerated value label"
+              },
+        "ALARM_LEVEL" : {
+                "$ref" : "#/definitions/AlarmSeverityType",
+                "description" : "Alarm level for this value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DefaultAlarm" : {
+      "type" : "object",
+      "description" : "Default alarm definition",
+      "properties" : {
+        "MIN_VIOLATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Minimum violations before alarm triggers"
+              },
+        "STATIC_ALARM_RANGES" : {
+                "$ref" : "#/definitions/StaticAlarmRanges",
+                "description" : "Static numeric alarm ranges"
+              },
+        "ENUMERATION_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EnumerationAlarm"},
+                "description" : "Enumeration alarms for enumerated types"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContextAlarm" : {
+      "type" : "object",
+      "description" : "Context-dependent alarm",
+      "properties" : {
+        "MATCH_CRITERIA" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Match criteria for this alarm context"
+              },
+        "ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Alarm definition for this context"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ParameterComparison" : {
+      "type" : "object",
+      "description" : "Parameter comparison for match criteria",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference path"
+              },
+        "OPERATOR" : {
+                "$ref" : "#/definitions/ComparisonOperator",
+                "description" : "Comparison operator"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Value to compare against"
+              },
+        "USE_CALIBRATED_VALUE" : {
+                "type" : "boolean",
+                "description" : "Use calibrated value (true) or raw value (false)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BooleanExpression" : {
+      "type" : "object",
+      "description" : "Boolean expression combining comparisons",
+      "properties" : {
+        "OPERATOR" : {
+                "$ref" : "#/definitions/BooleanOperatorType",
+                "description" : "Boolean operator"
+              },
+        "CONDITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ParameterComparison"},
+                "description" : "Comparison conditions"
+              },
+        "EXPRESSIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BooleanExpression"},
+                "description" : "Nested expressions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MatchCriteria" : {
+      "type" : "object",
+      "description" : "Match criteria for conditional logic",
+      "properties" : {
+        "COMPARISON" : {
+                "$ref" : "#/definitions/ParameterComparison",
+                "description" : "Single comparison"
+              },
+        "COMPARISON_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ParameterComparison"},
+                "description" : "List of comparisons (implicit AND)"
+              },
+        "BOOLEAN_EXPRESSION" : {
+                "$ref" : "#/definitions/BooleanExpression",
+                "description" : "Boolean expression"
+              },
+        "CUSTOM_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Custom algorithm reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Unit" : {
+      "type" : "object",
+      "description" : "Unit specification",
+      "properties" : {
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Unit description (e.g., \"meters per second\")"
+              },
+        "SYMBOL" : {
+                "type" : "string",
+                "description" : "Unit symbol (e.g., \"m/s\")"
+              },
+        "POWER" : {
+                "type" : "number",
+                "description" : "Power/exponent for this unit"
+              },
+        "FACTOR" : {
+                "type" : "number",
+                "description" : "Factor multiplier"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EnumerationValue" : {
+      "type" : "object",
+      "description" : "Enumeration value mapping",
+      "properties" : {
+        "LABEL" : {
+                "type" : "string",
+                "description" : "Label/name for this value"
+              },
+        "VALUE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Numeric value"
+              },
+        "MAX_VALUE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Maximum value (for ranges)"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description of this enumeration value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IntegerParameterType" : {
+      "type" : "object",
+      "description" : "Integer parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "UNITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Unit"},
+                "description" : "Units"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              },
+        "VALID_MIN" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Minimum valid value"
+              },
+        "VALID_MAX" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Maximum valid value"
+              },
+        "SIGNED" : {
+                "type" : "boolean",
+                "description" : "Signed integer (true) or unsigned (false)"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size in bits"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FloatParameterType" : {
+      "type" : "object",
+      "description" : "Float parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "UNITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Unit"},
+                "description" : "Units"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/FloatDataEncoding",
+                "description" : "Data encoding"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              },
+        "VALID_MIN" : {
+                "type" : "number",
+                "description" : "Minimum valid value"
+              },
+        "VALID_MAX" : {
+                "type" : "number",
+                "description" : "Maximum valid value"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size in bits (32 or 64)"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "number",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StringParameterType" : {
+      "type" : "object",
+      "description" : "String parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/StringDataEncoding",
+                "description" : "Data encoding"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value"
+              },
+        "RESTRICTION_PATTERN" : {
+                "type" : "string",
+                "description" : "Restriction pattern (regex)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BooleanParameterType" : {
+      "type" : "object",
+      "description" : "Boolean parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding (typically IntegerDataEncoding with 1 bit)"
+              },
+        "ONE_STRING_VALUE" : {
+                "type" : "string",
+                "description" : "String representation of true value"
+              },
+        "ZERO_STRING_VALUE" : {
+                "type" : "string",
+                "description" : "String representation of false value"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "boolean",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EnumeratedParameterType" : {
+      "type" : "object",
+      "description" : "Enumerated parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              },
+        "ENUMERATION_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EnumerationValue"},
+                "description" : "Enumeration values list"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value label"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BinaryParameterType" : {
+      "type" : "object",
+      "description" : "Binary parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/BinaryDataEncoding",
+                "description" : "Data encoding"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value (hex string)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AbsoluteTimeParameterType" : {
+      "type" : "object",
+      "description" : "Absolute time parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "EPOCH" : {
+                "$ref" : "#/definitions/EpochType",
+                "description" : "Reference epoch"
+              },
+        "EPOCH_DATE" : {
+                "type" : "string",
+                "description" : "Custom epoch date (ISO 8601) when EPOCH=CUSTOM"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Time unit scale factor"
+              },
+        "OFFSET" : {
+                "type" : "number",
+                "description" : "Time unit offset"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RelativeTimeParameterType" : {
+      "type" : "object",
+      "description" : "Relative time parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "UNITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Unit"},
+                "description" : "Units"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "DEFAULT_ALARM" : {
+                "$ref" : "#/definitions/DefaultAlarm",
+                "description" : "Default alarm"
+              },
+        "CONTEXT_ALARMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContextAlarm"},
+                "description" : "Context alarms"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArrayDimension" : {
+      "type" : "object",
+      "description" : "Array dimension specification",
+      "properties" : {
+        "SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Fixed size of this dimension"
+              },
+        "SIZE_PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Dynamic size from parameter reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArrayParameterType" : {
+      "type" : "object",
+      "description" : "Array parameter type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "ARRAY_TYPE_REF" : {
+                "type" : "string",
+                "description" : "Reference to the array element type"
+              },
+        "DIMENSIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ArrayDimension"},
+                "description" : "Dimension list"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AggregateMember" : {
+      "type" : "object",
+      "description" : "Aggregate member definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Member name"
+              },
+        "TYPE_REF" : {
+                "type" : "string",
+                "description" : "Reference to parameter type"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AggregateParameterType" : {
+      "type" : "object",
+      "description" : "Aggregate parameter type (structure)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "MEMBERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AggregateMember"},
+                "description" : "Member list"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ParameterTypeSet" : {
+      "type" : "object",
+      "description" : "Collection of all parameter types",
+      "properties" : {
+        "INTEGER_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IntegerParameterType"},
+                "description" : "Integer parameter types"
+              },
+        "FLOAT_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FloatParameterType"},
+                "description" : "Float parameter types"
+              },
+        "STRING_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/StringParameterType"},
+                "description" : "String parameter types"
+              },
+        "BOOLEAN_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BooleanParameterType"},
+                "description" : "Boolean parameter types"
+              },
+        "ENUMERATED_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EnumeratedParameterType"},
+                "description" : "Enumerated parameter types"
+              },
+        "BINARY_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BinaryParameterType"},
+                "description" : "Binary parameter types"
+              },
+        "ABSOLUTE_TIME_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AbsoluteTimeParameterType"},
+                "description" : "Absolute time parameter types"
+              },
+        "RELATIVE_TIME_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RelativeTimeParameterType"},
+                "description" : "Relative time parameter types"
+              },
+        "ARRAY_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ArrayParameterType"},
+                "description" : "Array parameter types"
+              },
+        "AGGREGATE_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AggregateParameterType"},
+                "description" : "Aggregate parameter types"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ParameterProperties" : {
+      "type" : "object",
+      "description" : "Parameter properties",
+      "properties" : {
+        "DATA_SOURCE" : {
+                "$ref" : "#/definitions/DataSourceType",
+                "description" : "Data source type"
+              },
+        "READ_ONLY" : {
+                "type" : "boolean",
+                "description" : "Read-only parameter"
+              },
+        "SYSTEM_NAME" : {
+                "type" : "string",
+                "description" : "System/subsystem name"
+              },
+        "VALIDITY_CONDITION" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Validity condition"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Parameter" : {
+      "type" : "object",
+      "description" : "Parameter definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Parameter name"
+              },
+        "PARAMETER_TYPE_REF" : {
+                "type" : "string",
+                "description" : "Reference to parameter type"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "PROPERTIES" : {
+                "$ref" : "#/definitions/ParameterProperties",
+                "description" : "Parameter properties"
+              },
+        "PHYSICAL_ADDRESS" : {
+                "type" : "string",
+                "description" : "Physical address mapping"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ParameterSet" : {
+      "type" : "object",
+      "description" : "Collection of parameters",
+      "properties" : {
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Parameter"},
+                "description" : "Parameters"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LocationInContainer" : {
+      "type" : "object",
+      "description" : "Location specification within a container",
+      "properties" : {
+        "REFERENCE_LOCATION" : {
+                "$ref" : "#/definitions/ReferenceLocationType",
+                "description" : "Reference location type"
+              },
+        "OFFSET_IN_BITS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Offset in bits from reference location"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RepeatEntry" : {
+      "type" : "object",
+      "description" : "Repeat entry specification",
+      "properties" : {
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Fixed repeat count"
+              },
+        "COUNT_PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Dynamic count from parameter reference"
+              },
+        "OFFSET_IN_BITS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Offset in bits between repetitions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ParameterRefEntry" : {
+      "type" : "object",
+      "description" : "Parameter reference entry in container",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference path"
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/LocationInContainer",
+                "description" : "Location in container"
+              },
+        "REPEAT" : {
+                "$ref" : "#/definitions/RepeatEntry",
+                "description" : "Repeat specification"
+              },
+        "INCLUDE_CONDITION" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Include condition"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContainerRefEntry" : {
+      "type" : "object",
+      "description" : "Container reference entry (nested container)",
+      "properties" : {
+        "CONTAINER_REF" : {
+                "type" : "string",
+                "description" : "Container reference path"
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/LocationInContainer",
+                "description" : "Location in container"
+              },
+        "REPEAT" : {
+                "$ref" : "#/definitions/RepeatEntry",
+                "description" : "Repeat specification"
+              },
+        "INCLUDE_CONDITION" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Include condition"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FixedValueEntry" : {
+      "type" : "object",
+      "description" : "Fixed value entry (static padding/header)",
+      "properties" : {
+        "BINARY_VALUE" : {
+                "type" : "string",
+                "description" : "Binary value (hex string)"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size in bits"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name/description"
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/LocationInContainer",
+                "description" : "Location in container"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArrayParameterRefEntry" : {
+      "type" : "object",
+      "description" : "Array parameter reference entry",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference path"
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/LocationInContainer",
+                "description" : "Location in container"
+              },
+        "FIRST_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First index to include"
+              },
+        "LAST_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Last index to include"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContainerEntry" : {
+      "type" : "object",
+      "description" : "Container entry list item (union of entry types)",
+      "properties" : {
+        "PARAMETER_REF_ENTRY" : {
+                "$ref" : "#/definitions/ParameterRefEntry",
+                "description" : "Parameter reference entry"
+              },
+        "CONTAINER_REF_ENTRY" : {
+                "$ref" : "#/definitions/ContainerRefEntry",
+                "description" : "Container reference entry"
+              },
+        "FIXED_VALUE_ENTRY" : {
+                "$ref" : "#/definitions/FixedValueEntry",
+                "description" : "Fixed value entry"
+              },
+        "ARRAY_PARAMETER_REF_ENTRY" : {
+                "$ref" : "#/definitions/ArrayParameterRefEntry",
+                "description" : "Array parameter reference entry"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BaseContainer" : {
+      "type" : "object",
+      "description" : "Base container reference with restriction",
+      "properties" : {
+        "CONTAINER_REF" : {
+                "type" : "string",
+                "description" : "Container reference path"
+              },
+        "RESTRICTION_CRITERIA" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Restriction criteria"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RateInStream" : {
+      "type" : "object",
+      "description" : "Rate specification for container in stream",
+      "properties" : {
+        "STREAM_REF" : {
+                "type" : "string",
+                "description" : "Stream reference"
+              },
+        "RATE" : {
+                "type" : "number",
+                "description" : "Rate value"
+              },
+        "BASIS" : {
+                "$ref" : "#/definitions/RateBasisType",
+                "description" : "Rate basis"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContainerBinaryEncoding" : {
+      "type" : "object",
+      "description" : "Binary encoding specification for container",
+      "properties" : {
+        "ERROR_DETECTION" : {
+                "$ref" : "#/definitions/ErrorDetectionType",
+                "description" : "Error detection type"
+              },
+        "CRC_POLYNOMIAL" : {
+                "type" : "string",
+                "description" : "CRC polynomial (for CRC error detection)"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Size in bits"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SequenceContainer" : {
+      "type" : "object",
+      "description" : "Sequence container (packet definition)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Container name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "ABSTRACT" : {
+                "type" : "boolean",
+                "description" : "Abstract container (used as base only)"
+              },
+        "ENTRY_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ContainerEntry"},
+                "description" : "Container entry list"
+              },
+        "BASE_CONTAINER" : {
+                "$ref" : "#/definitions/BaseContainer",
+                "description" : "Base container (inheritance)"
+              },
+        "BINARY_ENCODING" : {
+                "$ref" : "#/definitions/ContainerBinaryEncoding",
+                "description" : "Binary encoding"
+              },
+        "RATE_IN_STREAM" : {
+                "$ref" : "#/definitions/RateInStream",
+                "description" : "Rate in stream"
+              },
+        "IDLE_PATTERN" : {
+                "type" : "string",
+                "description" : "Idle pattern (hex string for padding)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ContainerSet" : {
+      "type" : "object",
+      "description" : "Collection of sequence containers",
+      "properties" : {
+        "CONTAINERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SequenceContainer"},
+                "description" : "Sequence containers"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AlgorithmInput" : {
+      "type" : "object",
+      "description" : "Algorithm input binding",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference"
+              },
+        "INPUT_NAME" : {
+                "type" : "string",
+                "description" : "Input name in algorithm"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AlgorithmOutput" : {
+      "type" : "object",
+      "description" : "Algorithm output binding",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference"
+              },
+        "OUTPUT_NAME" : {
+                "type" : "string",
+                "description" : "Output name in algorithm"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AlgorithmTrigger" : {
+      "type" : "object",
+      "description" : "Trigger condition for algorithm execution",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Trigger on parameter update"
+              },
+        "CONTAINER_REF" : {
+                "type" : "string",
+                "description" : "Trigger on container reception"
+              },
+        "RATE" : {
+                "type" : "number",
+                "description" : "Trigger rate (per second)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomAlgorithm" : {
+      "type" : "object",
+      "description" : "Custom algorithm definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Algorithm name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "LANGUAGE" : {
+                "type" : "string",
+                "description" : "Programming language"
+              },
+        "ALGORITHM_TEXT" : {
+                "type" : "string",
+                "description" : "Algorithm text/code"
+              },
+        "EXTERNAL_ALGORITHM_REF" : {
+                "type" : "string",
+                "description" : "External algorithm reference"
+              },
+        "INPUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AlgorithmInput"},
+                "description" : "Input bindings"
+              },
+        "OUTPUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AlgorithmOutput"},
+                "description" : "Output bindings"
+              },
+        "TRIGGERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AlgorithmTrigger"},
+                "description" : "Trigger conditions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MathAlgorithm" : {
+      "type" : "object",
+      "description" : "Math algorithm (inline calculation)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Algorithm name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "MATH_OPERATION" : {
+                "type" : "string",
+                "description" : "Math operation in RPN"
+              },
+        "OUTPUT_PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Output parameter reference"
+              },
+        "TRIGGERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AlgorithmTrigger"},
+                "description" : "Trigger conditions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AlgorithmSet" : {
+      "type" : "object",
+      "description" : "Collection of algorithms",
+      "properties" : {
+        "CUSTOM_ALGORITHMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CustomAlgorithm"},
+                "description" : "Custom algorithms"
+              },
+        "MATH_ALGORITHMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MathAlgorithm"},
+                "description" : "Math algorithms"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IntegerArgumentType" : {
+      "type" : "object",
+      "description" : "Integer argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "UNITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Unit"},
+                "description" : "Units"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "VALID_MIN" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Minimum valid value"
+              },
+        "VALID_MAX" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Maximum valid value"
+              },
+        "SIGNED" : {
+                "type" : "boolean",
+                "description" : "Signed integer (true) or unsigned (false)"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size in bits"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FloatArgumentType" : {
+      "type" : "object",
+      "description" : "Float argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "UNITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Unit"},
+                "description" : "Units"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/FloatDataEncoding",
+                "description" : "Data encoding"
+              },
+        "VALID_MIN" : {
+                "type" : "number",
+                "description" : "Minimum valid value"
+              },
+        "VALID_MAX" : {
+                "type" : "number",
+                "description" : "Maximum valid value"
+              },
+        "SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size in bits"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "number",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StringArgumentType" : {
+      "type" : "object",
+      "description" : "String argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/StringDataEncoding",
+                "description" : "Data encoding"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value"
+              },
+        "RESTRICTION_PATTERN" : {
+                "type" : "string",
+                "description" : "Restriction pattern (regex)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BooleanArgumentType" : {
+      "type" : "object",
+      "description" : "Boolean argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "ONE_STRING_VALUE" : {
+                "type" : "string",
+                "description" : "String representation of true value"
+              },
+        "ZERO_STRING_VALUE" : {
+                "type" : "string",
+                "description" : "String representation of false value"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "boolean",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EnumeratedArgumentType" : {
+      "type" : "object",
+      "description" : "Enumerated argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/IntegerDataEncoding",
+                "description" : "Data encoding"
+              },
+        "ENUMERATION_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EnumerationValue"},
+                "description" : "Enumeration values list"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value label"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BinaryArgumentType" : {
+      "type" : "object",
+      "description" : "Binary argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "DATA_ENCODING" : {
+                "$ref" : "#/definitions/BinaryDataEncoding",
+                "description" : "Data encoding"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value (hex string)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AggregateArgumentType" : {
+      "type" : "object",
+      "description" : "Aggregate argument type",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Type name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "MEMBERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AggregateMember"},
+                "description" : "Member list"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArgumentTypeSet" : {
+      "type" : "object",
+      "description" : "Collection of argument types",
+      "properties" : {
+        "INTEGER_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IntegerArgumentType"},
+                "description" : "Integer argument types"
+              },
+        "FLOAT_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FloatArgumentType"},
+                "description" : "Float argument types"
+              },
+        "STRING_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/StringArgumentType"},
+                "description" : "String argument types"
+              },
+        "BOOLEAN_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BooleanArgumentType"},
+                "description" : "Boolean argument types"
+              },
+        "ENUMERATED_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EnumeratedArgumentType"},
+                "description" : "Enumerated argument types"
+              },
+        "BINARY_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/BinaryArgumentType"},
+                "description" : "Binary argument types"
+              },
+        "AGGREGATE_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AggregateArgumentType"},
+                "description" : "Aggregate argument types"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Argument" : {
+      "type" : "object",
+      "description" : "Command argument definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Argument name"
+              },
+        "ARGUMENT_TYPE_REF" : {
+                "type" : "string",
+                "description" : "Reference to argument type"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "INITIAL_VALUE" : {
+                "type" : "string",
+                "description" : "Initial/default value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArgumentRefEntry" : {
+      "type" : "object",
+      "description" : "Argument reference entry in command container",
+      "properties" : {
+        "ARGUMENT_REF" : {
+                "type" : "string",
+                "description" : "Argument reference"
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/LocationInContainer",
+                "description" : "Location in container"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CommandContainerEntry" : {
+      "type" : "object",
+      "description" : "Command container entry",
+      "properties" : {
+        "ARGUMENT_REF_ENTRY" : {
+                "$ref" : "#/definitions/ArgumentRefEntry",
+                "description" : "Argument reference entry"
+              },
+        "PARAMETER_REF_ENTRY" : {
+                "$ref" : "#/definitions/ParameterRefEntry",
+                "description" : "Parameter reference entry"
+              },
+        "FIXED_VALUE_ENTRY" : {
+                "$ref" : "#/definitions/FixedValueEntry",
+                "description" : "Fixed value entry"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CommandContainer" : {
+      "type" : "object",
+      "description" : "Command container definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Container name"
+              },
+        "ENTRY_LIST" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CommandContainerEntry"},
+                "description" : "Entry list"
+              },
+        "BASE_CONTAINER" : {
+                "$ref" : "#/definitions/BaseContainer",
+                "description" : "Base container reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CommandVerifier" : {
+      "type" : "object",
+      "description" : "Command verifier definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Verifier name"
+              },
+        "VERIFIER_TYPE" : {
+                "$ref" : "#/definitions/VerifierType",
+                "description" : "Verifier type"
+              },
+        "CONDITION" : {
+                "$ref" : "#/definitions/MatchCriteria",
+                "description" : "Verification condition"
+              },
+        "CONTAINER_REF" : {
+                "type" : "string",
+                "description" : "Container reference for verification"
+              },
+        "TIME_WINDOW_START" : {
+                "type" : "number",
+                "description" : "Time window start (seconds)"
+              },
+        "TIME_WINDOW_STOP" : {
+                "type" : "number",
+                "description" : "Time window stop (seconds)"
+              },
+        "TIME_WINDOW_REF" : {
+                "$ref" : "#/definitions/TimeWindowRefType",
+                "description" : "Time window reference type"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CommandSignificance" : {
+      "type" : "object",
+      "description" : "Significance of command execution",
+      "properties" : {
+        "CONSEQUENCE_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Consequence level (1=lowest, higher=more severe)"
+              },
+        "REASON_FOR_WARNING" : {
+                "type" : "string",
+                "description" : "Reason for significance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BaseMetaCommand" : {
+      "type" : "object",
+      "description" : "Base metacommand reference",
+      "properties" : {
+        "META_COMMAND_REF" : {
+                "type" : "string",
+                "description" : "MetaCommand reference"
+              },
+        "ARGUMENT_ASSIGNMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ArgumentAssignment"},
+                "description" : "Argument assignments for inherited arguments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ArgumentAssignment" : {
+      "type" : "object",
+      "description" : "Argument assignment (value binding)",
+      "properties" : {
+        "ARGUMENT_NAME" : {
+                "type" : "string",
+                "description" : "Argument name"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Assigned value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Interlock" : {
+      "type" : "object",
+      "description" : "Interlock constraint",
+      "properties" : {
+        "PARAMETER_REF" : {
+                "type" : "string",
+                "description" : "Parameter reference"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Required value"
+              },
+        "OPERATOR" : {
+                "$ref" : "#/definitions/ComparisonOperator",
+                "description" : "Operator for comparison"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MetaCommand" : {
+      "type" : "object",
+      "description" : "MetaCommand definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Command name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "ABSTRACT" : {
+                "type" : "boolean",
+                "description" : "Abstract command (base only)"
+              },
+        "ARGUMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Argument"},
+                "description" : "Argument list"
+              },
+        "COMMAND_CONTAINER" : {
+                "$ref" : "#/definitions/CommandContainer",
+                "description" : "Command container"
+              },
+        "BASE_META_COMMAND" : {
+                "$ref" : "#/definitions/BaseMetaCommand",
+                "description" : "Base metacommand (inheritance)"
+              },
+        "VERIFIERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CommandVerifier"},
+                "description" : "Command verifiers"
+              },
+        "SIGNIFICANCE" : {
+                "$ref" : "#/definitions/CommandSignificance",
+                "description" : "Command significance"
+              },
+        "INTERLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Interlock"},
+                "description" : "Interlock constraints"
+              },
+        "DEFAULT_SIGNIFICANCE" : {
+                "$ref" : "#/definitions/CommandSignificance",
+                "description" : "Default significance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MetaCommandSet" : {
+      "type" : "object",
+      "description" : "Collection of metacommands",
+      "properties" : {
+        "META_COMMANDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MetaCommand"},
+                "description" : "MetaCommands"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FixedFrameStream" : {
+      "type" : "object",
+      "description" : "Fixed frame stream",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stream name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "FRAME_SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Frame size in bits"
+              },
+        "SYNC_PATTERN" : {
+                "type" : "string",
+                "description" : "Sync pattern (hex string)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VariableFrameStream" : {
+      "type" : "object",
+      "description" : "Variable frame stream",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stream name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "MIN_FRAME_SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minimum frame size in bits"
+              },
+        "MAX_FRAME_SIZE_IN_BITS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum frame size in bits"
+              },
+        "SIZE_FIELD_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Size field location in bits"
+              },
+        "SIZE_FIELD_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Size field size in bits"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomStream" : {
+      "type" : "object",
+      "description" : "Custom stream",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stream name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "ALGORITHM_REF" : {
+                "type" : "string",
+                "description" : "Algorithm reference for parsing"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StreamSet" : {
+      "type" : "object",
+      "description" : "Collection of streams",
+      "properties" : {
+        "FIXED_FRAME_STREAMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FixedFrameStream"},
+                "description" : "Fixed frame streams"
+              },
+        "VARIABLE_FRAME_STREAMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/VariableFrameStream"},
+                "description" : "Variable frame streams"
+              },
+        "CUSTOM_STREAMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CustomStream"},
+                "description" : "Custom streams"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Service" : {
+      "type" : "object",
+      "description" : "Service definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Service name"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "CONTAINER_REFS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Container references provided by this service"
+              },
+        "COMMAND_REFS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Command references accepted by this service"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ServiceSet" : {
+      "type" : "object",
+      "description" : "Collection of services",
+      "properties" : {
+        "SERVICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Service"},
+                "description" : "Services"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "XTCHeader" : {
+      "type" : "object",
+      "description" : "Document header information",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Version of this XTCE document"
+              },
+        "DATE" : {
+                "type" : "string",
+                "description" : "Date of document creation (ISO 8601)"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "Classification level"
+              },
+        "VALIDATION_STATUS" : {
+                "type" : "string",
+                "description" : "Validation status"
+              },
+        "AUTHOR" : {
+                "type" : "string",
+                "description" : "Author information"
+              },
+        "NOTES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Notes/comments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TelemetryMetaData" : {
+      "type" : "object",
+      "description" : "Telemetry metadata collection",
+      "properties" : {
+        "PARAMETER_TYPE_SET" : {
+                "$ref" : "#/definitions/ParameterTypeSet",
+                "description" : "Parameter type definitions"
+              },
+        "PARAMETER_SET" : {
+                "$ref" : "#/definitions/ParameterSet",
+                "description" : "Parameter definitions"
+              },
+        "CONTAINER_SET" : {
+                "$ref" : "#/definitions/ContainerSet",
+                "description" : "Container definitions"
+              },
+        "ALGORITHM_SET" : {
+                "$ref" : "#/definitions/AlgorithmSet",
+                "description" : "Algorithm definitions"
+              },
+        "STREAM_SET" : {
+                "$ref" : "#/definitions/StreamSet",
+                "description" : "Stream definitions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CommandMetaData" : {
+      "type" : "object",
+      "description" : "Command metadata collection",
+      "properties" : {
+        "ARGUMENT_TYPE_SET" : {
+                "$ref" : "#/definitions/ArgumentTypeSet",
+                "description" : "Argument type definitions"
+              },
+        "PARAMETER_TYPE_SET" : {
+                "$ref" : "#/definitions/ParameterTypeSet",
+                "description" : "Parameter types used by commands"
+              },
+        "PARAMETER_SET" : {
+                "$ref" : "#/definitions/ParameterSet",
+                "description" : "Parameters used by commands"
+              },
+        "META_COMMAND_SET" : {
+                "$ref" : "#/definitions/MetaCommandSet",
+                "description" : "MetaCommand definitions"
+              },
+        "COMMAND_CONTAINER_SET" : {
+                "$ref" : "#/definitions/ContainerSet",
+                "description" : "Command container set"
+              },
+        "ALGORITHM_SET" : {
+                "$ref" : "#/definitions/AlgorithmSet",
+                "description" : "Algorithm definitions"
+              },
+        "STREAM_SET" : {
+                "$ref" : "#/definitions/StreamSet",
+                "description" : "Stream definitions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "XTC" : {
+      "type" : "object",
+      "description" : "SpaceSystem - Root element for XTCE document\nA SpaceSystem defines the telemetry and command configuration for a space\nvehicle or subsystem. SpaceSystems can be nested hierarchically to represent\nthe structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of this space system"
+              },
+        "SHORT_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Short description"
+              },
+        "LONG_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Long description"
+              },
+        "OPERATIONAL_STATUS" : {
+                "type" : "string",
+                "description" : "Operational status"
+              },
+        "HEADER" : {
+                "$ref" : "#/definitions/XTCHeader",
+                "description" : "Document header"
+              },
+        "TELEMETRY_META_DATA" : {
+                "$ref" : "#/definitions/TelemetryMetaData",
+                "description" : "Telemetry metadata"
+              },
+        "COMMAND_META_DATA" : {
+                "$ref" : "#/definitions/CommandMetaData",
+                "description" : "Command metadata"
+              },
+        "SERVICE_SET" : {
+                "$ref" : "#/definitions/ServiceSet",
+                "description" : "Service definitions"
+              },
+        "CHILD_SYSTEMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/XTC"},
+                "description" : "Child space systems (hierarchical structure)"
+              }
+      },
+      "additionalProperties" : false
+    },
     "Record" : {
       "type" : "object",
       "properties" : {
@@ -4481,7 +6963,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" }]
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/XTC" }]
               },
         "standard" : {
                 "type" : "string"

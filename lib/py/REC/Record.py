@@ -82,6 +82,7 @@ def RecordEnd(builder):
 def End(builder):
     return RecordEnd(builder)
 
+import ACL
 import ATM
 import BOV
 import CAT
@@ -106,14 +107,18 @@ import OSM
 import PLD
 import PNM
 import PRG
+import PUR
+import REV
 import RFM
 import ROC
 import RecordType
 import SCM
 import SIT
+import STF
 import TDM
 import TIM
 import VCM
+import XTC
 try:
     from typing import Union
 except:
@@ -124,7 +129,7 @@ class RecordT(object):
     # RecordT
     def __init__(self):
         self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, ATM.ATMT, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, TDM.TDMT, TIM.TIMT, VCM.VCMT]
+        self.value = None  # type: Union[None, ACL.ACLT, ATM.ATMT, BOV.BOVT, CAT.CATT, CDM.CDMT, CRM.CRMT, CSM.CSMT, CTR.CTRT, EME.EMET, EOO.EOOT, EOP.EOPT, EPM.EPMT, HYP.HYPT, IDM.IDMT, LCC.LCCT, LDM.LDMT, MET.METT, MPE.MPET, OCM.OCMT, OEM.OEMT, OMM.OMMT, OSM.OSMT, PLD.PLDT, PNM.PNMT, PRG.PRGT, PUR.PURT, REV.REVT, RFM.RFMT, ROC.ROCT, SCM.SCMT, SIT.SITT, STF.STFT, TDM.TDMT, TIM.TIMT, VCM.VCMT, XTC.XTCT]
         self.standard = None  # type: str
 
     @classmethod

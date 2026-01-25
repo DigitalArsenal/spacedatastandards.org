@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ACL, ACLT } from './ACL.js';
 import { ATM, ATMT } from './ATM.js';
 import { BOV, BOVT } from './BOV.js';
 import { CAT, CATT } from './CAT.js';
@@ -28,14 +29,18 @@ import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PNM, PNMT } from './PNM.js';
 import { PRG, PRGT } from './PRG.js';
+import { PUR, PURT } from './PUR.js';
+import { REV, REVT } from './REV.js';
 import { RFM, RFMT } from './RFM.js';
 import { ROC, ROCT } from './ROC.js';
 import { RecordType, unionToRecordType, unionListToRecordType } from './RecordType.js';
 import { SCM, SCMT } from './SCM.js';
 import { SIT, SITT } from './SIT.js';
+import { STF, STFT } from './STF.js';
 import { TDM, TDMT } from './TDM.js';
 import { TIM, TIMT } from './TIM.js';
 import { VCM, VCMT } from './VCM.js';
+import { XTC, XTCT } from './XTC.js';
 
 
 export class Record implements flatbuffers.IUnpackableObject<RecordT> {
@@ -129,7 +134,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: ATMT|BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|RFMT|ROCT|SCMT|SITT|TDMT|TIMT|VCMT|null = null,
+  public value: ACLT|ATMT|BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PNMT|PRGT|PURT|REVT|RFMT|ROCT|SCMT|SITT|STFT|TDMT|TIMT|VCMT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

@@ -5,37 +5,42 @@
 public enum RecordType : byte
 {
   NONE = 0,
-  ATM = 1,
-  BOV = 2,
-  CAT = 3,
-  CDM = 4,
-  CRM = 5,
-  CSM = 6,
-  CTR = 7,
-  EME = 8,
-  EOO = 9,
-  EOP = 10,
-  EPM = 11,
-  HYP = 12,
-  IDM = 13,
-  LCC = 14,
-  LDM = 15,
-  MET = 16,
-  MPE = 17,
-  OCM = 18,
-  OEM = 19,
-  OMM = 20,
-  OSM = 21,
-  PLD = 22,
-  PNM = 23,
-  PRG = 24,
-  RFM = 25,
-  ROC = 26,
-  SCM = 27,
-  SIT = 28,
-  TDM = 29,
-  TIM = 30,
-  VCM = 31,
+  ACL = 1,
+  ATM = 2,
+  BOV = 3,
+  CAT = 4,
+  CDM = 5,
+  CRM = 6,
+  CSM = 7,
+  CTR = 8,
+  EME = 9,
+  EOO = 10,
+  EOP = 11,
+  EPM = 12,
+  HYP = 13,
+  IDM = 14,
+  LCC = 15,
+  LDM = 16,
+  MET = 17,
+  MPE = 18,
+  OCM = 19,
+  OEM = 20,
+  OMM = 21,
+  OSM = 22,
+  PLD = 23,
+  PNM = 24,
+  PRG = 25,
+  PUR = 26,
+  REV = 27,
+  RFM = 28,
+  ROC = 29,
+  SCM = 30,
+  SIT = 31,
+  STF = 32,
+  TDM = 33,
+  TIM = 34,
+  VCM = 35,
+  XTC = 36,
 };
 
 public class RecordTypeUnion {
@@ -48,6 +53,8 @@ public class RecordTypeUnion {
   }
 
   public T As<T>() where T : class { return this.Value as T; }
+  public ACLT AsACL() { return this.As<ACLT>(); }
+  public static RecordTypeUnion FromACL(ACLT _acl) { return new RecordTypeUnion{ Type = RecordType.ACL, Value = _acl }; }
   public ATMT AsATM() { return this.As<ATMT>(); }
   public static RecordTypeUnion FromATM(ATMT _atm) { return new RecordTypeUnion{ Type = RecordType.ATM, Value = _atm }; }
   public BOVT AsBOV() { return this.As<BOVT>(); }
@@ -96,6 +103,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPNM(PNMT _pnm) { return new RecordTypeUnion{ Type = RecordType.PNM, Value = _pnm }; }
   public PRGT AsPRG() { return this.As<PRGT>(); }
   public static RecordTypeUnion FromPRG(PRGT _prg) { return new RecordTypeUnion{ Type = RecordType.PRG, Value = _prg }; }
+  public PURT AsPUR() { return this.As<PURT>(); }
+  public static RecordTypeUnion FromPUR(PURT _pur) { return new RecordTypeUnion{ Type = RecordType.PUR, Value = _pur }; }
+  public REVT AsREV() { return this.As<REVT>(); }
+  public static RecordTypeUnion FromREV(REVT _rev) { return new RecordTypeUnion{ Type = RecordType.REV, Value = _rev }; }
   public RFMT AsRFM() { return this.As<RFMT>(); }
   public static RecordTypeUnion FromRFM(RFMT _rfm) { return new RecordTypeUnion{ Type = RecordType.RFM, Value = _rfm }; }
   public ROCT AsROC() { return this.As<ROCT>(); }
@@ -104,16 +115,21 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSCM(SCMT _scm) { return new RecordTypeUnion{ Type = RecordType.SCM, Value = _scm }; }
   public SITT AsSIT() { return this.As<SITT>(); }
   public static RecordTypeUnion FromSIT(SITT _sit) { return new RecordTypeUnion{ Type = RecordType.SIT, Value = _sit }; }
+  public STFT AsSTF() { return this.As<STFT>(); }
+  public static RecordTypeUnion FromSTF(STFT _stf) { return new RecordTypeUnion{ Type = RecordType.STF, Value = _stf }; }
   public TDMT AsTDM() { return this.As<TDMT>(); }
   public static RecordTypeUnion FromTDM(TDMT _tdm) { return new RecordTypeUnion{ Type = RecordType.TDM, Value = _tdm }; }
   public TIMT AsTIM() { return this.As<TIMT>(); }
   public static RecordTypeUnion FromTIM(TIMT _tim) { return new RecordTypeUnion{ Type = RecordType.TIM, Value = _tim }; }
   public VCMT AsVCM() { return this.As<VCMT>(); }
   public static RecordTypeUnion FromVCM(VCMT _vcm) { return new RecordTypeUnion{ Type = RecordType.VCM, Value = _vcm }; }
+  public XTCT AsXTC() { return this.As<XTCT>(); }
+  public static RecordTypeUnion FromXTC(XTCT _xtc) { return new RecordTypeUnion{ Type = RecordType.XTC, Value = _xtc }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
       default: return 0;
+      case RecordType.ACL: return ACL.Pack(builder, _o.AsACL()).Value;
       case RecordType.ATM: return ATM.Pack(builder, _o.AsATM()).Value;
       case RecordType.BOV: return BOV.Pack(builder, _o.AsBOV()).Value;
       case RecordType.CAT: return CAT.Pack(builder, _o.AsCAT()).Value;
@@ -138,13 +154,17 @@ public class RecordTypeUnion {
       case RecordType.PLD: return PLD.Pack(builder, _o.AsPLD()).Value;
       case RecordType.PNM: return PNM.Pack(builder, _o.AsPNM()).Value;
       case RecordType.PRG: return PRG.Pack(builder, _o.AsPRG()).Value;
+      case RecordType.PUR: return PUR.Pack(builder, _o.AsPUR()).Value;
+      case RecordType.REV: return REV.Pack(builder, _o.AsREV()).Value;
       case RecordType.RFM: return RFM.Pack(builder, _o.AsRFM()).Value;
       case RecordType.ROC: return ROC.Pack(builder, _o.AsROC()).Value;
       case RecordType.SCM: return SCM.Pack(builder, _o.AsSCM()).Value;
       case RecordType.SIT: return SIT.Pack(builder, _o.AsSIT()).Value;
+      case RecordType.STF: return STF.Pack(builder, _o.AsSTF()).Value;
       case RecordType.TDM: return TDM.Pack(builder, _o.AsTDM()).Value;
       case RecordType.TIM: return TIM.Pack(builder, _o.AsTIM()).Value;
       case RecordType.VCM: return VCM.Pack(builder, _o.AsVCM()).Value;
+      case RecordType.XTC: return XTC.Pack(builder, _o.AsXTC()).Value;
     }
   }
 }
@@ -158,6 +178,9 @@ static public class RecordTypeVerify
     bool result = true;
     switch((RecordType)typeId)
     {
+      case RecordType.ACL:
+        result = ACLVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.ATM:
         result = ATMVerify.Verify(verifier, tablePos);
         break;
@@ -230,6 +253,12 @@ static public class RecordTypeVerify
       case RecordType.PRG:
         result = PRGVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.PUR:
+        result = PURVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.REV:
+        result = REVVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.RFM:
         result = RFMVerify.Verify(verifier, tablePos);
         break;
@@ -242,6 +271,9 @@ static public class RecordTypeVerify
       case RecordType.SIT:
         result = SITVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.STF:
+        result = STFVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.TDM:
         result = TDMVerify.Verify(verifier, tablePos);
         break;
@@ -250,6 +282,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.VCM:
         result = VCMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.XTC:
+        result = XTCVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

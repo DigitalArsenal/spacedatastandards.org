@@ -1,0 +1,34 @@
+/**
+ * String encoding character sets
+ */
+export declare enum StringEncodingType {
+    /**
+     * US-ASCII (7-bit)
+     */
+    US_ASCII = 0,
+    /**
+     * ISO 8859-1 Latin-1
+     */
+    ISO_8859_1 = 1,
+    /**
+     * Windows-1252
+     */
+    WINDOWS_1252 = 2,
+    /**
+     * UTF-8
+     */
+    UTF_8 = 3,
+    /**
+     * UTF-16
+     */
+    UTF_16 = 4,
+    /**
+     * UTF-16 Big Endian
+     */
+    UTF_16BE = 5,
+    /**
+     * UTF-16 Little Endian
+     */
+    UTF_16LE = 6
+}
+//# sourceMappingURL=StringEncodingType.d.ts.map

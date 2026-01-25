@@ -44,6 +44,11 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -53,44 +58,50 @@ struct RECBuilder;
 
 enum RecordType : uint8_t {
   RecordType_NONE = 0,
-  RecordType_ATM = 1,
-  RecordType_BOV = 2,
-  RecordType_CAT = 3,
-  RecordType_CDM = 4,
-  RecordType_CRM = 5,
-  RecordType_CSM = 6,
-  RecordType_CTR = 7,
-  RecordType_EME = 8,
-  RecordType_EOO = 9,
-  RecordType_EOP = 10,
-  RecordType_EPM = 11,
-  RecordType_HYP = 12,
-  RecordType_IDM = 13,
-  RecordType_LCC = 14,
-  RecordType_LDM = 15,
-  RecordType_MET = 16,
-  RecordType_MPE = 17,
-  RecordType_OCM = 18,
-  RecordType_OEM = 19,
-  RecordType_OMM = 20,
-  RecordType_OSM = 21,
-  RecordType_PLD = 22,
-  RecordType_PNM = 23,
-  RecordType_PRG = 24,
-  RecordType_RFM = 25,
-  RecordType_ROC = 26,
-  RecordType_SCM = 27,
-  RecordType_SIT = 28,
-  RecordType_TDM = 29,
-  RecordType_TIM = 30,
-  RecordType_VCM = 31,
+  RecordType_ACL = 1,
+  RecordType_ATM = 2,
+  RecordType_BOV = 3,
+  RecordType_CAT = 4,
+  RecordType_CDM = 5,
+  RecordType_CRM = 6,
+  RecordType_CSM = 7,
+  RecordType_CTR = 8,
+  RecordType_EME = 9,
+  RecordType_EOO = 10,
+  RecordType_EOP = 11,
+  RecordType_EPM = 12,
+  RecordType_HYP = 13,
+  RecordType_IDM = 14,
+  RecordType_LCC = 15,
+  RecordType_LDM = 16,
+  RecordType_MET = 17,
+  RecordType_MPE = 18,
+  RecordType_OCM = 19,
+  RecordType_OEM = 20,
+  RecordType_OMM = 21,
+  RecordType_OSM = 22,
+  RecordType_PLD = 23,
+  RecordType_PNM = 24,
+  RecordType_PRG = 25,
+  RecordType_PUR = 26,
+  RecordType_REV = 27,
+  RecordType_RFM = 28,
+  RecordType_ROC = 29,
+  RecordType_SCM = 30,
+  RecordType_SIT = 31,
+  RecordType_STF = 32,
+  RecordType_TDM = 33,
+  RecordType_TIM = 34,
+  RecordType_VCM = 35,
+  RecordType_XTC = 36,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_VCM
+  RecordType_MAX = RecordType_XTC
 };
 
-inline const RecordType (&EnumValuesRecordType())[32] {
+inline const RecordType (&EnumValuesRecordType())[37] {
   static const RecordType values[] = {
     RecordType_NONE,
+    RecordType_ACL,
     RecordType_ATM,
     RecordType_BOV,
     RecordType_CAT,
@@ -115,20 +126,25 @@ inline const RecordType (&EnumValuesRecordType())[32] {
     RecordType_PLD,
     RecordType_PNM,
     RecordType_PRG,
+    RecordType_PUR,
+    RecordType_REV,
     RecordType_RFM,
     RecordType_ROC,
     RecordType_SCM,
     RecordType_SIT,
+    RecordType_STF,
     RecordType_TDM,
     RecordType_TIM,
-    RecordType_VCM
+    RecordType_VCM,
+    RecordType_XTC
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[33] = {
+  static const char * const names[38] = {
     "NONE",
+    "ACL",
     "ATM",
     "BOV",
     "CAT",
@@ -153,26 +169,34 @@ inline const char * const *EnumNamesRecordType() {
     "PLD",
     "PNM",
     "PRG",
+    "PUR",
+    "REV",
     "RFM",
     "ROC",
     "SCM",
     "SIT",
+    "STF",
     "TDM",
     "TIM",
     "VCM",
+    "XTC",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_VCM)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_XTC)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
 
 template<typename T> struct RecordTypeTraits {
   static const RecordType enum_value = RecordType_NONE;
+};
+
+template<> struct RecordTypeTraits<ACL> {
+  static const RecordType enum_value = RecordType_ACL;
 };
 
 template<> struct RecordTypeTraits<ATM> {
@@ -271,6 +295,14 @@ template<> struct RecordTypeTraits<PRG> {
   static const RecordType enum_value = RecordType_PRG;
 };
 
+template<> struct RecordTypeTraits<PUR> {
+  static const RecordType enum_value = RecordType_PUR;
+};
+
+template<> struct RecordTypeTraits<REV> {
+  static const RecordType enum_value = RecordType_REV;
+};
+
 template<> struct RecordTypeTraits<RFM> {
   static const RecordType enum_value = RecordType_RFM;
 };
@@ -287,6 +319,10 @@ template<> struct RecordTypeTraits<SIT> {
   static const RecordType enum_value = RecordType_SIT;
 };
 
+template<> struct RecordTypeTraits<STF> {
+  static const RecordType enum_value = RecordType_STF;
+};
+
 template<> struct RecordTypeTraits<TDM> {
   static const RecordType enum_value = RecordType_TDM;
 };
@@ -297,6 +333,10 @@ template<> struct RecordTypeTraits<TIM> {
 
 template<> struct RecordTypeTraits<VCM> {
   static const RecordType enum_value = RecordType_VCM;
+};
+
+template<> struct RecordTypeTraits<XTC> {
+  static const RecordType enum_value = RecordType_XTC;
 };
 
 bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj, RecordType type);
@@ -316,6 +356,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const void *>(VT_VALUE);
   }
   template<typename T> const T *value_as() const;
+  const ACL *value_as_ACL() const {
+    return value_type() == RecordType_ACL ? static_cast<const ACL *>(value()) : nullptr;
+  }
   const ATM *value_as_ATM() const {
     return value_type() == RecordType_ATM ? static_cast<const ATM *>(value()) : nullptr;
   }
@@ -388,6 +431,12 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PRG *value_as_PRG() const {
     return value_type() == RecordType_PRG ? static_cast<const PRG *>(value()) : nullptr;
   }
+  const PUR *value_as_PUR() const {
+    return value_type() == RecordType_PUR ? static_cast<const PUR *>(value()) : nullptr;
+  }
+  const REV *value_as_REV() const {
+    return value_type() == RecordType_REV ? static_cast<const REV *>(value()) : nullptr;
+  }
   const RFM *value_as_RFM() const {
     return value_type() == RecordType_RFM ? static_cast<const RFM *>(value()) : nullptr;
   }
@@ -400,6 +449,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const SIT *value_as_SIT() const {
     return value_type() == RecordType_SIT ? static_cast<const SIT *>(value()) : nullptr;
   }
+  const STF *value_as_STF() const {
+    return value_type() == RecordType_STF ? static_cast<const STF *>(value()) : nullptr;
+  }
   const TDM *value_as_TDM() const {
     return value_type() == RecordType_TDM ? static_cast<const TDM *>(value()) : nullptr;
   }
@@ -408,6 +460,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const VCM *value_as_VCM() const {
     return value_type() == RecordType_VCM ? static_cast<const VCM *>(value()) : nullptr;
+  }
+  const XTC *value_as_XTC() const {
+    return value_type() == RecordType_XTC ? static_cast<const XTC *>(value()) : nullptr;
   }
   const ::flatbuffers::String *standard() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
@@ -422,6 +477,10 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.EndTable();
   }
 };
+
+template<> inline const ACL *Record::value_as<ACL>() const {
+  return value_as_ACL();
+}
 
 template<> inline const ATM *Record::value_as<ATM>() const {
   return value_as_ATM();
@@ -519,6 +578,14 @@ template<> inline const PRG *Record::value_as<PRG>() const {
   return value_as_PRG();
 }
 
+template<> inline const PUR *Record::value_as<PUR>() const {
+  return value_as_PUR();
+}
+
+template<> inline const REV *Record::value_as<REV>() const {
+  return value_as_REV();
+}
+
 template<> inline const RFM *Record::value_as<RFM>() const {
   return value_as_RFM();
 }
@@ -535,6 +602,10 @@ template<> inline const SIT *Record::value_as<SIT>() const {
   return value_as_SIT();
 }
 
+template<> inline const STF *Record::value_as<STF>() const {
+  return value_as_STF();
+}
+
 template<> inline const TDM *Record::value_as<TDM>() const {
   return value_as_TDM();
 }
@@ -545,6 +616,10 @@ template<> inline const TIM *Record::value_as<TIM>() const {
 
 template<> inline const VCM *Record::value_as<VCM>() const {
   return value_as_VCM();
+}
+
+template<> inline const XTC *Record::value_as<XTC>() const {
+  return value_as_XTC();
 }
 
 struct RecordBuilder {
@@ -668,6 +743,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     case RecordType_NONE: {
       return true;
     }
+    case RecordType_ACL: {
+      auto ptr = reinterpret_cast<const ACL *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_ATM: {
       auto ptr = reinterpret_cast<const ATM *>(obj);
       return verifier.VerifyTable(ptr);
@@ -764,6 +843,14 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
       auto ptr = reinterpret_cast<const PRG *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_PUR: {
+      auto ptr = reinterpret_cast<const PUR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_REV: {
+      auto ptr = reinterpret_cast<const REV *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_RFM: {
       auto ptr = reinterpret_cast<const RFM *>(obj);
       return verifier.VerifyTable(ptr);
@@ -780,6 +867,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
       auto ptr = reinterpret_cast<const SIT *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_STF: {
+      auto ptr = reinterpret_cast<const STF *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_TDM: {
       auto ptr = reinterpret_cast<const TDM *>(obj);
       return verifier.VerifyTable(ptr);
@@ -790,6 +881,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     }
     case RecordType_VCM: {
       auto ptr = reinterpret_cast<const VCM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_XTC: {
+      auto ptr = reinterpret_cast<const XTC *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

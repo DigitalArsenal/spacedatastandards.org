@@ -4,42 +4,50 @@
 
 class RecordType(object):
     NONE = 0
-    ATM = 1
-    BOV = 2
-    CAT = 3
-    CDM = 4
-    CRM = 5
-    CSM = 6
-    CTR = 7
-    EME = 8
-    EOO = 9
-    EOP = 10
-    EPM = 11
-    HYP = 12
-    IDM = 13
-    LCC = 14
-    LDM = 15
-    MET = 16
-    MPE = 17
-    OCM = 18
-    OEM = 19
-    OMM = 20
-    OSM = 21
-    PLD = 22
-    PNM = 23
-    PRG = 24
-    RFM = 25
-    ROC = 26
-    SCM = 27
-    SIT = 28
-    TDM = 29
-    TIM = 30
-    VCM = 31
+    ACL = 1
+    ATM = 2
+    BOV = 3
+    CAT = 4
+    CDM = 5
+    CRM = 6
+    CSM = 7
+    CTR = 8
+    EME = 9
+    EOO = 10
+    EOP = 11
+    EPM = 12
+    HYP = 13
+    IDM = 14
+    LCC = 15
+    LDM = 16
+    MET = 17
+    MPE = 18
+    OCM = 19
+    OEM = 20
+    OMM = 21
+    OSM = 22
+    PLD = 23
+    PNM = 24
+    PRG = 25
+    PUR = 26
+    REV = 27
+    RFM = 28
+    ROC = 29
+    SCM = 30
+    SIT = 31
+    STF = 32
+    TDM = 33
+    TIM = 34
+    VCM = 35
+    XTC = 36
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
     if not isinstance(table, Table):
         return None
+    if unionType == RecordType.ACL:
+        import ACL
+        return ACL.ACLT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.ATM:
         import ATM
         return ATM.ATMT.InitFromBuf(table.Bytes, table.Pos)
@@ -112,6 +120,12 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PRG:
         import PRG
         return PRG.PRGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PUR:
+        import PUR
+        return PUR.PURT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.REV:
+        import REV
+        return REV.REVT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.RFM:
         import RFM
         return RFM.RFMT.InitFromBuf(table.Bytes, table.Pos)
@@ -124,6 +138,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SIT:
         import SIT
         return SIT.SITT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.STF:
+        import STF
+        return STF.STFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TDM:
         import TDM
         return TDM.TDMT.InitFromBuf(table.Bytes, table.Pos)
@@ -133,4 +150,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.VCM:
         import VCM
         return VCM.VCMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.XTC:
+        import XTC
+        return XTC.XTCT.InitFromBuf(table.Bytes, table.Pos)
     return None

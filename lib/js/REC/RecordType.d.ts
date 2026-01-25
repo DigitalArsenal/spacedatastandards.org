@@ -1,3 +1,4 @@
+import { ACL } from './ACL.js';
 import { ATM } from './ATM.js';
 import { BOV } from './BOV.js';
 import { CAT } from './CAT.js';
@@ -22,47 +23,56 @@ import { OSM } from './OSM.js';
 import { PLD } from './PLD.js';
 import { PNM } from './PNM.js';
 import { PRG } from './PRG.js';
+import { PUR } from './PUR.js';
+import { REV } from './REV.js';
 import { RFM } from './RFM.js';
 import { ROC } from './ROC.js';
 import { SCM } from './SCM.js';
 import { SIT } from './SIT.js';
+import { STF } from './STF.js';
 import { TDM } from './TDM.js';
 import { TIM } from './TIM.js';
 import { VCM } from './VCM.js';
+import { XTC } from './XTC.js';
 export declare enum RecordType {
     NONE = 0,
-    ATM = 1,
-    BOV = 2,
-    CAT = 3,
-    CDM = 4,
-    CRM = 5,
-    CSM = 6,
-    CTR = 7,
-    EME = 8,
-    EOO = 9,
-    EOP = 10,
-    EPM = 11,
-    HYP = 12,
-    IDM = 13,
-    LCC = 14,
-    LDM = 15,
-    MET = 16,
-    MPE = 17,
-    OCM = 18,
-    OEM = 19,
-    OMM = 20,
-    OSM = 21,
-    PLD = 22,
-    PNM = 23,
-    PRG = 24,
-    RFM = 25,
-    ROC = 26,
-    SCM = 27,
-    SIT = 28,
-    TDM = 29,
-    TIM = 30,
-    VCM = 31
+    ACL = 1,
+    ATM = 2,
+    BOV = 3,
+    CAT = 4,
+    CDM = 5,
+    CRM = 6,
+    CSM = 7,
+    CTR = 8,
+    EME = 9,
+    EOO = 10,
+    EOP = 11,
+    EPM = 12,
+    HYP = 13,
+    IDM = 14,
+    LCC = 15,
+    LDM = 16,
+    MET = 17,
+    MPE = 18,
+    OCM = 19,
+    OEM = 20,
+    OMM = 21,
+    OSM = 22,
+    PLD = 23,
+    PNM = 24,
+    PRG = 25,
+    PUR = 26,
+    REV = 27,
+    RFM = 28,
+    ROC = 29,
+    SCM = 30,
+    SIT = 31,
+    STF = 32,
+    TDM = 33,
+    TIM = 34,
+    VCM = 35,
+    XTC = 36
 }
-export declare function unionToRecordType(type: RecordType, accessor: (obj: ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM) => ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM | null): ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM | null;
-export declare function unionListToRecordType(type: RecordType, accessor: (index: number, obj: ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM) => ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM | null, index: number): ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | RFM | ROC | SCM | SIT | TDM | TIM | VCM | null;
+export declare function unionToRecordType(type: RecordType, accessor: (obj: ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC) => ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC | null): ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC | null;
+export declare function unionListToRecordType(type: RecordType, accessor: (index: number, obj: ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC) => ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC | null, index: number): ACL | ATM | BOV | CAT | CDM | CRM | CSM | CTR | EME | EOO | EOP | EPM | HYP | IDM | LCC | LDM | MET | MPE | OCM | OEM | OMM | OSM | PLD | PNM | PRG | PUR | REV | RFM | ROC | SCM | SIT | STF | TDM | TIM | VCM | XTC | null;
 //# sourceMappingURL=RecordType.d.ts.map

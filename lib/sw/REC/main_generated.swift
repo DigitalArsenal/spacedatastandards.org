@@ -14,39 +14,44 @@ public enum RecordType: UInt8, UnionEnum {
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case none_ = 0
-  case atm = 1
-  case bov = 2
-  case cat = 3
-  case cdm = 4
-  case crm = 5
-  case csm = 6
-  case ctr = 7
-  case eme = 8
-  case eoo = 9
-  case eop = 10
-  case epm = 11
-  case hyp = 12
-  case idm = 13
-  case lcc = 14
-  case ldm = 15
-  case met = 16
-  case mpe = 17
-  case ocm = 18
-  case oem = 19
-  case omm = 20
-  case osm = 21
-  case pld = 22
-  case pnm = 23
-  case prg = 24
-  case rfm = 25
-  case roc = 26
-  case scm = 27
-  case sit = 28
-  case tdm = 29
-  case tim = 30
-  case vcm = 31
+  case acl = 1
+  case atm = 2
+  case bov = 3
+  case cat = 4
+  case cdm = 5
+  case crm = 6
+  case csm = 7
+  case ctr = 8
+  case eme = 9
+  case eoo = 10
+  case eop = 11
+  case epm = 12
+  case hyp = 13
+  case idm = 14
+  case lcc = 15
+  case ldm = 16
+  case met = 17
+  case mpe = 18
+  case ocm = 19
+  case oem = 20
+  case omm = 21
+  case osm = 22
+  case pld = 23
+  case pnm = 24
+  case prg = 25
+  case pur = 26
+  case rev = 27
+  case rfm = 28
+  case roc = 29
+  case scm = 30
+  case sit = 31
+  case stf = 32
+  case tdm = 33
+  case tim = 34
+  case vcm = 35
+  case xtc = 36
 
-  public static var max: RecordType { return .vcm }
+  public static var max: RecordType { return .xtc }
   public static var min: RecordType { return .none_ }
 }
 
@@ -98,6 +103,8 @@ public struct Record: FlatBufferObject, Verifiable {
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none
+      case .acl:
+        try ForwardOffset<ACL>.verify(&verifier, at: pos, of: ACL.self)
       case .atm:
         try ForwardOffset<ATM>.verify(&verifier, at: pos, of: ATM.self)
       case .bov:
@@ -146,6 +153,10 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<PNM>.verify(&verifier, at: pos, of: PNM.self)
       case .prg:
         try ForwardOffset<PRG>.verify(&verifier, at: pos, of: PRG.self)
+      case .pur:
+        try ForwardOffset<PUR>.verify(&verifier, at: pos, of: PUR.self)
+      case .rev:
+        try ForwardOffset<REV>.verify(&verifier, at: pos, of: REV.self)
       case .rfm:
         try ForwardOffset<RFM>.verify(&verifier, at: pos, of: RFM.self)
       case .roc:
@@ -154,12 +165,16 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
       case .sit:
         try ForwardOffset<SIT>.verify(&verifier, at: pos, of: SIT.self)
+      case .stf:
+        try ForwardOffset<STF>.verify(&verifier, at: pos, of: STF.self)
       case .tdm:
         try ForwardOffset<TDM>.verify(&verifier, at: pos, of: TDM.self)
       case .tim:
         try ForwardOffset<TIM>.verify(&verifier, at: pos, of: TIM.self)
       case .vcm:
         try ForwardOffset<VCM>.verify(&verifier, at: pos, of: VCM.self)
+      case .xtc:
+        try ForwardOffset<XTC>.verify(&verifier, at: pos, of: XTC.self)
       }
     })
     try _v.visit(field: VTOFFSET.standard.p, fieldName: "standard", required: false, type: ForwardOffset<String>.self)

@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { ACLT } from './ACL.js';
 import { ATMT } from './ATM.js';
 import { BOVT } from './BOV.js';
 import { CATT } from './CAT.js';
@@ -23,14 +24,18 @@ import { OSMT } from './OSM.js';
 import { PLDT } from './PLD.js';
 import { PNMT } from './PNM.js';
 import { PRGT } from './PRG.js';
+import { PURT } from './PUR.js';
+import { REVT } from './REV.js';
 import { RFMT } from './RFM.js';
 import { ROCT } from './ROC.js';
 import { RecordType } from './RecordType.js';
 import { SCMT } from './SCM.js';
 import { SITT } from './SIT.js';
+import { STFT } from './STF.js';
 import { TDMT } from './TDM.js';
 import { TIMT } from './TIM.js';
 import { VCMT } from './VCM.js';
+import { XTCT } from './XTC.js';
 export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -52,9 +57,9 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
     valueType: RecordType;
-    value: ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null;
+    value: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null;
     standard: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | RFMT | ROCT | SCMT | SITT | TDMT | TIMT | VCMT | null, standard?: string | Uint8Array | null);
+    constructor(valueType?: RecordType, value?: ACLT | ATMT | BOVT | CATT | CDMT | CRMT | CSMT | CTRT | EMET | EOOT | EOPT | EPMT | HYPT | IDMT | LCCT | LDMT | METT | MPET | OCMT | OEMT | OMMT | OSMT | PLDT | PNMT | PRGT | PURT | REVT | RFMT | ROCT | SCMT | SITT | STFT | TDMT | TIMT | VCMT | XTCT | null, standard?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

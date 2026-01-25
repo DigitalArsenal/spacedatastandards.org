@@ -1,92 +1,226 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "accessType": {
-      "type": "string",
-      "enum": ["OneTime", "Subscription", "Streaming", "Query"],
-      "description": "Access type for data listings"
+    "accessType" : {
+      "type" : "string",
+      "enum": ["OneTime", "Subscription", "Streaming", "Query"]
     },
-    "paymentMethod": {
-      "type": "string",
-      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"],
-      "description": "Payment method accepted"
+    "paymentMethod" : {
+      "type" : "string",
+      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"]
     },
-    "ACL": {
-      "type": "object",
-      "description": "Access Control Grant - Permission to access purchased data",
-      "required": ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
-      "properties": {
-        "GRANT_ID": {
-          "type": "string",
-          "description": "Unique identifier for this grant",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-field-id": 0
-        },
-        "LISTING_ID": {
-          "type": "string",
-          "description": "ID of the listing this grant applies to",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-field-id": 1
-        },
-        "BUYER_PEER_ID": {
-          "type": "string",
-          "description": "Peer ID of the buyer/grantee",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-field-id": 2
-        },
-        "BUYER_ENCRYPTION_PUBKEY": {
-          "type": "array",
-          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
-          "description": "Buyer's encryption public key for encrypted delivery",
-          "x-flatbuffer-type": "[ubyte]",
-          "x-flatbuffer-field-id": 3
-        },
-        "ACCESS_TYPE": {
-          "$ref": "#/definitions/accessType",
-          "description": "Type of access granted",
-          "x-flatbuffer-field-id": 4
-        },
-        "TIER_NAME": {
-          "type": "string",
-          "description": "Name of the pricing tier purchased",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-field-id": 5
-        },
-        "GRANTED_AT": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Unix timestamp when access was granted",
-          "x-flatbuffer-type": "uint64",
-          "x-flatbuffer-field-id": 6
-        },
-        "EXPIRES_AT": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Unix timestamp when access expires (0 = never expires)",
-          "x-flatbuffer-type": "uint64",
-          "x-flatbuffer-field-id": 7
-        },
-        "PAYMENT_TX_HASH": {
-          "type": "string",
-          "description": "Transaction hash or reference proving payment",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-field-id": 8
-        },
-        "PAYMENT_METHOD": {
-          "$ref": "#/definitions/paymentMethod",
-          "description": "Payment method used",
-          "x-flatbuffer-field-id": 9
-        },
-        "PROVIDER_SIGNATURE": {
-          "type": "array",
-          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
-          "description": "Ed25519 signature from provider",
-          "x-flatbuffer-type": "[ubyte]",
-          "x-flatbuffer-field-id": 10
-        }
+    "SpatialCoverage" : {
+      "type" : "object",
+      "description" : "Spatial coverage definition",
+      "properties" : {
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type of coverage: \"global\", \"region\", \"object_list\""
+              },
+        "REGIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Regions covered, e.g., [\"LEO\", \"GEO\", \"MEO\"]"
+              },
+        "OBJECT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Specific NORAD IDs or catalog numbers"
+              }
       },
-      "additionalProperties": false
+      "additionalProperties" : false
+    },
+    "TemporalCoverage" : {
+      "type" : "object",
+      "description" : "Temporal coverage definition",
+      "properties" : {
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Start epoch in ISO 8601 format"
+              },
+        "END_EPOCH" : {
+                "type" : "string",
+                "description" : "End epoch in ISO 8601 format"
+              },
+        "UPDATE_FREQUENCY" : {
+                "type" : "string",
+                "description" : "Update frequency: \"realtime\", \"hourly\", \"daily\""
+              },
+        "HISTORICAL_DEPTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Days of historical data available"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DataCoverage" : {
+      "type" : "object",
+      "description" : "Data coverage combining spatial and temporal",
+      "properties" : {
+        "SPATIAL" : {
+                "$ref" : "#/definitions/SpatialCoverage",
+                "description" : "Spatial coverage definition"
+              },
+        "TEMPORAL" : {
+                "$ref" : "#/definitions/TemporalCoverage",
+                "description" : "Temporal coverage definition"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PricingTier" : {
+      "type" : "object",
+      "description" : "Pricing tier for a listing",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Tier name, e.g., \"Basic\", \"Pro\", \"Enterprise\""
+              },
+        "PRICE_AMOUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Price in smallest unit (cents, satoshis, etc.)"
+              },
+        "PRICE_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency code: \"USD\", \"ETH\", \"SOL\", \"SDN_CREDITS\""
+              },
+        "DURATION_DAYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Duration in days (0 = one-time purchase)"
+              },
+        "RATE_LIMIT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Rate limit in requests per hour"
+              },
+        "FEATURES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of features included in this tier"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "STF" : {
+      "type" : "object",
+      "description" : "Storefront Listing - Data marketplace listing",
+      "properties" : {
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the listing"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the data provider"
+              },
+        "PROVIDER_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of provider's EPM (Entity Profile Message)"
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Title of the data listing"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Detailed description of the data offering"
+              },
+        "DATA_TYPES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SDS data types offered, e.g., [\"OMM\", \"CDM\", \"TLE\"]"
+              },
+        "COVERAGE" : {
+                "$ref" : "#/definitions/DataCoverage",
+                "description" : "Coverage information (spatial and temporal)"
+              },
+        "SAMPLE_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of sample data"
+              },
+        "ACCESS_TYPE" : {
+                "$ref" : "#/definitions/accessType",
+                "description" : "Type of access offered"
+              },
+        "ENCRYPTION_REQUIRED" : {
+                "type" : "boolean",
+                "description" : "Whether encryption is required for data delivery"
+              },
+        "PRICING" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PricingTier"},
+                "description" : "Available pricing tiers"
+              },
+        "ACCEPTED_PAYMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/paymentMethod"},
+                "description" : "Payment methods accepted"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when listing was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when listing was last updated"
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "Whether the listing is currently active"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              }
+      },
+      "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
+      "additionalProperties" : false
+    },
+    "ACL" : {
+      "type" : "object",
+      "description" : "Access Control Grant - Permission to access purchased data",
+      "properties" : {
+        "GRANT_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this grant"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing this grant applies to"
+              },
+        "BUYER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the buyer/grantee"
+              },
+        "BUYER_ENCRYPTION_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's encryption public key for encrypted delivery"
+              },
+        "ACCESS_TYPE" : {
+                "$ref" : "#/definitions/accessType",
+                "description" : "Type of access granted"
+              },
+        "TIER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the pricing tier purchased"
+              },
+        "GRANTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access was granted"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access expires (0 = never expires)"
+              },
+        "PAYMENT_TX_HASH" : {
+                "type" : "string",
+                "description" : "Transaction hash or reference proving payment"
+              },
+        "PAYMENT_METHOD" : {
+                "$ref" : "#/definitions/paymentMethod",
+                "description" : "Payment method used"
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              }
+      },
+      "required" : ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
+      "additionalProperties" : false
     }
   },
-  "$ref": "#/definitions/ACL"
+  "$ref" : "#/definitions/ACL"
 }
