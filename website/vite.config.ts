@@ -33,11 +33,18 @@ export default defineConfig(({ mode }) => {
     build: {
       emptyOutDir: false,
       rollupOptions: {
+        external: ['cesium'],
         output: {
           inlineDynamicImports: true,
           dir: '../',
+          globals: {
+            cesium: 'Cesium'
+          }
         }
       }
+    },
+    optimizeDeps: {
+      exclude: ['cesium']
     }
   };
 });

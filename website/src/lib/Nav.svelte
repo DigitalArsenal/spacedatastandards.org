@@ -39,6 +39,7 @@
       <a href="/" use:link class:active={isActive("/", $currentPath)} on:click={closeMobileMenu}>Home</a>
       <a href="/schemas" use:link class:active={isActive("/schemas", $currentPath)} on:click={closeMobileMenu}>Schemas</a>
       <a href="/docs" use:link class:active={isActive("/docs", $currentPath)} on:click={closeMobileMenu}>Docs</a>
+      <a href="/playground" use:link class:active={isActive("/playground", $currentPath)} on:click={closeMobileMenu}>Playground</a>
       <a href="/download" use:link class:active={isActive("/download", $currentPath)} on:click={closeMobileMenu}>Download</a>
     </div>
 
@@ -71,6 +72,7 @@
   <a href="/" use:link on:click={closeMobileMenu}>Home</a>
   <a href="/schemas" use:link on:click={closeMobileMenu}>Schemas</a>
   <a href="/docs" use:link on:click={closeMobileMenu}>Docs</a>
+  <a href="/playground" use:link on:click={closeMobileMenu}>Playground</a>
   <a href="/download" use:link on:click={closeMobileMenu}>Download</a>
   <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank" on:click={closeMobileMenu}>GitHub</a>
 </div>
