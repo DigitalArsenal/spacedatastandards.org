@@ -67,85 +67,106 @@
     { name: "OEM (XML)", desc: "Orbit Ephemeris Message", replacement: "OEM" }
   ];
 
-  // Animated starfield background
-  function initStarfield() {
+  // Technical grid background with floating data
+  function initTechBackground() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const stars: { x: number; y: number; z: number; size: number; color: string }[] = [];
-    const numStars = 400;
-    const colors = ['#ffffff', '#b8c6ff', '#ffd6a5', '#a5d6ff'];
+    const gridSize = 60;
+    const dataStrings: { x: number; y: number; text: string; opacity: number; speed: number }[] = [];
 
-    // Initialize stars
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * canvas.width - canvas.width / 2,
-        y: Math.random() * canvas.height - canvas.height / 2,
-        z: Math.random() * 1000,
-        size: Math.random() * 2 + 0.5,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
+    // Sample hex/binary data strings
+    const dataFragments = [
+      'OMM', 'CDM', 'EPM', 'TDM', 'OEM', 'XTC', 'CAT', 'STF',
+      '0x7F', '0xA3', '0x1B', '0xE4', '0x9C', '0x2D', '0x5F', '0x8B',
+      '1101', '0110', '1010', '0011', '1111', '0001', '1000', '0100',
+      'FBS', 'SDS', 'P2P', 'DHT', 'CID', 'API', 'SDK', 'IDL'
+    ];
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      initDataStrings();
     }
 
-    function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    function initDataStrings() {
+      dataStrings.length = 0;
+      const count = Math.floor((canvas.width * canvas.height) / 40000);
+      for (let i = 0; i < count; i++) {
+        dataStrings.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          text: dataFragments[Math.floor(Math.random() * dataFragments.length)],
+          opacity: Math.random() * 0.15 + 0.03,
+          speed: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+
+    function draw() {
+      // Clear with dark background
+      ctx.fillStyle = '#030308';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      // Draw subtle grid
+      ctx.strokeStyle = 'rgba(102, 126, 234, 0.03)';
+      ctx.lineWidth = 1;
 
-      stars.forEach(star => {
-        star.z -= 0.5;
-        if (star.z <= 0) {
-          star.z = 1000;
-          star.x = Math.random() * canvas.width - centerX;
-          star.y = Math.random() * canvas.height - centerY;
-        }
+      // Vertical lines
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
 
-        const k = 128 / star.z;
-        const px = star.x * k + centerX;
-        const py = star.y * k + centerY;
-        const size = star.size * (1 - star.z / 1000) * 2;
-        const opacity = 1 - star.z / 1000;
+      // Horizontal lines
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
 
-        if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+      // Draw grid intersection dots
+      ctx.fillStyle = 'rgba(102, 126, 234, 0.08)';
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        for (let y = 0; y < canvas.height; y += gridSize) {
           ctx.beginPath();
-          ctx.arc(px, py, size, 0, Math.PI * 2);
-          ctx.fillStyle = star.color.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('#', 'rgba(');
-
-          // Convert hex to rgba
-          const hex = star.color;
-          const r = parseInt(hex.slice(1, 3), 16);
-          const g = parseInt(hex.slice(3, 5), 16);
-          const b = parseInt(hex.slice(5, 7), 16);
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
           ctx.fill();
+        }
+      }
+
+      // Draw floating data strings
+      ctx.font = '10px "JetBrains Mono", monospace';
+      dataStrings.forEach(data => {
+        ctx.fillStyle = `rgba(102, 126, 234, ${data.opacity})`;
+        ctx.fillText(data.text, data.x, data.y);
+
+        // Slowly drift upward
+        data.y -= data.speed;
+        if (data.y < -20) {
+          data.y = canvas.height + 20;
+          data.x = Math.random() * canvas.width;
+          data.text = dataFragments[Math.floor(Math.random() * dataFragments.length)];
         }
       });
 
-      // Add nebula glow
-      const gradient = ctx.createRadialGradient(
-        centerX, centerY * 0.7, 0,
-        centerX, centerY * 0.7, canvas.width * 0.6
-      );
-      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.03)');
-      gradient.addColorStop(0.5, 'rgba(118, 75, 162, 0.02)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      // Subtle gradient overlay at top
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
+      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.02)');
+      gradient.addColorStop(1, 'transparent');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
 
-      animationFrame = requestAnimationFrame(animate);
+      animationFrame = requestAnimationFrame(draw);
     }
 
     window.addEventListener('resize', resize);
     resize();
-    animate();
+    draw();
 
     return () => {
       window.removeEventListener('resize', resize);
@@ -155,7 +176,7 @@
 
   onMount(() => {
     schemaCount = 40; // Updated schema count
-    const cleanup = initStarfield();
+    const cleanup = initTechBackground();
     return cleanup;
   });
 </script>
@@ -537,7 +558,7 @@ console.log(messages[0].OBJECT_NAME); // "STARLINK-1234"`}</code></pre>
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 100%);
+    background: #030308;
   }
 
   .hero {
