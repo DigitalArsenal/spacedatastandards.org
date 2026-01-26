@@ -8,6 +8,7 @@
   import Docs from "./lib/Docs.svelte";
   import Download from "./lib/Download.svelte";
   import Playground from "./lib/Playground.svelte";
+  import CodePlayground from "./lib/CodePlayground.svelte";
   import Nav from "./lib/Nav.svelte";
   import Footer from "./lib/Footer.svelte";
 
@@ -19,6 +20,7 @@
     "/docs/*": Docs,
     "/download": Download,
     "/playground": Playground,
+    "/code": CodePlayground,
   };
 
   const currentPath = derived(location, ($location) => {

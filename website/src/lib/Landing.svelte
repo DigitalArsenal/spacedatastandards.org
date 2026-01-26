@@ -5,6 +5,7 @@
   let schemaCount = 0;
   let canvas: HTMLCanvasElement;
   let animationFrame: number;
+  let selectedLang = 'typescript';
 
   // Schema categories with descriptions
   const categories = [
@@ -67,6 +68,367 @@
     { name: "OEM (XML)", desc: "Orbit Ephemeris Message", replacement: "OEM" }
   ];
 
+  const quickStartExamples: Record<string, { install: string; code: string }> = {
+    typescript: {
+      install: 'npm install spacedatastandards.org',
+      code: `import { OMM, OMMT } from 'spacedatastandards.org/lib/js/OMM/main.js';
+import * as flatbuffers from 'flatbuffers';
+
+// Create a FlatBuffer builder
+const builder = new flatbuffers.Builder(1024);
+
+// Create string offsets first
+const objectName = builder.createString("STARLINK-1234");
+const objectId = builder.createString("2024-001A");
+const epoch = builder.createString("2024-06-22T16:56:20.014080");
+
+// Build the OMM message
+OMM.startOMM(builder);
+OMM.addOBJECT_NAME(builder, objectName);
+OMM.addOBJECT_ID(builder, objectId);
+OMM.addEPOCH(builder, epoch);
+OMM.addMEAN_MOTION(builder, 15.09);
+OMM.addECCENTRICITY(builder, 0.0001);
+OMM.addINCLINATION(builder, 53.0);
+const omm = OMM.endOMM(builder);
+
+builder.finish(omm);
+const buffer = builder.asUint8Array();
+
+// Read back (zero-copy!)
+const buf = new flatbuffers.ByteBuffer(buffer);
+const msg = OMM.getRootAsOMM(buf);
+console.log(msg.OBJECT_NAME()); // "STARLINK-1234"`
+    },
+    javascript: {
+      install: 'npm install spacedatastandards.org',
+      code: `import { OMM } from 'spacedatastandards.org/lib/js/OMM/main.js';
+import * as flatbuffers from 'flatbuffers';
+
+// Create a FlatBuffer builder
+const builder = new flatbuffers.Builder(1024);
+
+// Create string offsets
+const objectName = builder.createString("STARLINK-1234");
+const objectId = builder.createString("2024-001A");
+const epoch = builder.createString("2024-06-22T16:56:20.014080");
+
+// Build the OMM
+OMM.startOMM(builder);
+OMM.addOBJECT_NAME(builder, objectName);
+OMM.addOBJECT_ID(builder, objectId);
+OMM.addEPOCH(builder, epoch);
+OMM.addMEAN_MOTION(builder, 15.09);
+OMM.addECCENTRICITY(builder, 0.0001);
+OMM.addINCLINATION(builder, 53.0);
+const omm = OMM.endOMM(builder);
+
+builder.finish(omm);
+const buffer = builder.asUint8Array();
+
+// Read back (zero-copy!)
+const buf = new flatbuffers.ByteBuffer(buffer);
+const msg = OMM.getRootAsOMM(buf);
+console.log(msg.OBJECT_NAME()); // "STARLINK-1234"`
+    },
+    python: {
+      install: 'pip install flatbuffers',
+      code: `import flatbuffers
+from OMM import OMM
+
+# Create a FlatBuffer builder
+builder = flatbuffers.Builder(1024)
+
+# Create strings first
+object_name = builder.CreateString("STARLINK-1234")
+object_id = builder.CreateString("2024-001A")
+epoch = builder.CreateString("2024-06-22T16:56:20.014080")
+
+# Build the OMM message
+OMM.Start(builder)
+OMM.AddOBJECT_NAME(builder, object_name)
+OMM.AddOBJECT_ID(builder, object_id)
+OMM.AddEPOCH(builder, epoch)
+OMM.AddMEAN_MOTION(builder, 15.09)
+OMM.AddECCENTRICITY(builder, 0.0001)
+OMM.AddINCLINATION(builder, 53.0)
+omm = OMM.End(builder)
+
+builder.Finish(omm)
+buf = builder.Output()
+
+# Read back (zero-copy!)
+omm = OMM.OMM.GetRootAs(bytes(buf), 0)
+print(omm.OBJECT_NAME().decode())  # "STARLINK-1234"`
+    },
+    go: {
+      install: 'go get github.com/google/flatbuffers/go',
+      code: `package main
+
+import (
+    flatbuffers "github.com/google/flatbuffers/go"
+    "spacedatastandards/OMM"
+)
+
+func main() {
+    builder := flatbuffers.NewBuilder(1024)
+
+    // Create strings first
+    objectName := builder.CreateString("STARLINK-1234")
+    objectId := builder.CreateString("2024-001A")
+    epoch := builder.CreateString("2024-06-22T16:56:20.014080")
+
+    // Build the OMM message
+    OMM.OMMStart(builder)
+    OMM.OMMAddOBJECT_NAME(builder, objectName)
+    OMM.OMMAddOBJECT_ID(builder, objectId)
+    OMM.OMMAddEPOCH(builder, epoch)
+    OMM.OMMAddMEAN_MOTION(builder, 15.09)
+    OMM.OMMAddECCENTRICITY(builder, 0.0001)
+    OMM.OMMAddINCLINATION(builder, 53.0)
+    omm := OMM.OMMEnd(builder)
+
+    builder.Finish(omm)
+    buf := builder.FinishedBytes()
+
+    // Read back (zero-copy!)
+    msg := OMM.GetRootAsOMM(buf, 0)
+    fmt.Println(string(msg.OBJECT_NAME())) // "STARLINK-1234"
+}`
+    },
+    rust: {
+      install: 'cargo add flatbuffers',
+      code: `use flatbuffers::FlatBufferBuilder;
+
+mod omm_generated;
+use omm_generated::omm::{OMM, OMMArgs, root_as_omm};
+
+fn main() {
+    let mut builder = FlatBufferBuilder::new();
+
+    // Create strings first
+    let object_name = builder.create_string("STARLINK-1234");
+    let object_id = builder.create_string("2024-001A");
+    let epoch = builder.create_string("2024-06-22T16:56:20.014080");
+
+    // Build the OMM message
+    let omm = OMM::create(&mut builder, &OMMArgs {
+        OBJECT_NAME: Some(object_name),
+        OBJECT_ID: Some(object_id),
+        EPOCH: Some(epoch),
+        MEAN_MOTION: 15.09,
+        ECCENTRICITY: 0.0001,
+        INCLINATION: 53.0,
+        ..Default::default()
+    });
+
+    builder.finish(omm, None);
+    let buf = builder.finished_data();
+
+    // Read back (zero-copy!)
+    let msg = root_as_omm(buf).unwrap();
+    println!("{}", msg.OBJECT_NAME().unwrap()); // "STARLINK-1234"
+}`
+    },
+    cpp: {
+      install: '# Include flatbuffers headers',
+      code: `#include "flatbuffers/flatbuffers.h"
+#include "OMM_generated.h"
+
+int main() {
+    flatbuffers::FlatBufferBuilder builder(1024);
+
+    // Create strings first
+    auto object_name = builder.CreateString("STARLINK-1234");
+    auto object_id = builder.CreateString("2024-001A");
+    auto epoch = builder.CreateString("2024-06-22T16:56:20.014080");
+
+    // Build the OMM message
+    auto omm = CreateOMM(builder,
+        object_name,
+        object_id,
+        epoch,
+        15.09,   // MEAN_MOTION
+        0.0001,  // ECCENTRICITY
+        53.0     // INCLINATION
+    );
+
+    builder.Finish(omm);
+    uint8_t* buf = builder.GetBufferPointer();
+
+    // Read back (zero-copy!)
+    auto msg = GetOMM(buf);
+    std::cout << msg->OBJECT_NAME()->str(); // "STARLINK-1234"
+}`
+    },
+    csharp: {
+      install: 'dotnet add package FlatBuffers',
+      code: `using FlatBuffers;
+using SpaceDataStandards;
+
+var builder = new FlatBufferBuilder(1024);
+
+// Create strings first
+var objectName = builder.CreateString("STARLINK-1234");
+var objectId = builder.CreateString("2024-001A");
+var epoch = builder.CreateString("2024-06-22T16:56:20.014080");
+
+// Build the OMM message
+OMM.StartOMM(builder);
+OMM.AddOBJECT_NAME(builder, objectName);
+OMM.AddOBJECT_ID(builder, objectId);
+OMM.AddEPOCH(builder, epoch);
+OMM.AddMEAN_MOTION(builder, 15.09);
+OMM.AddECCENTRICITY(builder, 0.0001);
+OMM.AddINCLINATION(builder, 53.0);
+var omm = OMM.EndOMM(builder);
+
+builder.Finish(omm.Value);
+var buf = builder.SizedByteArray();
+
+// Read back (zero-copy!)
+var msg = OMM.GetRootAsOMM(new ByteBuffer(buf));
+Console.WriteLine(msg.OBJECT_NAME); // "STARLINK-1234"`
+    },
+    java: {
+      install: 'implementation "com.google.flatbuffers:flatbuffers-java:24.3.25"',
+      code: `import com.google.flatbuffers.FlatBufferBuilder;
+import spacedatastandards.OMM;
+
+public class Example {
+    public static void main(String[] args) {
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+
+        // Create strings first
+        int objectName = builder.createString("STARLINK-1234");
+        int objectId = builder.createString("2024-001A");
+        int epoch = builder.createString("2024-06-22T16:56:20.014080");
+
+        // Build the OMM message
+        OMM.startOMM(builder);
+        OMM.addOBJECT_NAME(builder, objectName);
+        OMM.addOBJECT_ID(builder, objectId);
+        OMM.addEPOCH(builder, epoch);
+        OMM.addMEAN_MOTION(builder, 15.09);
+        OMM.addECCENTRICITY(builder, 0.0001);
+        OMM.addINCLINATION(builder, 53.0);
+        int omm = OMM.endOMM(builder);
+
+        builder.finish(omm);
+        byte[] buf = builder.sizedByteArray();
+
+        // Read back (zero-copy!)
+        OMM msg = OMM.getRootAsOMM(ByteBuffer.wrap(buf));
+        System.out.println(msg.OBJECT_NAME()); // "STARLINK-1234"
+    }
+}`
+    },
+    swift: {
+      install: '.package(url: "https://github.com/nicklockwood/FlatBuffers.git", from: "2.0.0")',
+      code: `import FlatBuffers
+
+var builder = FlatBufferBuilder(initialSize: 1024)
+
+// Create strings first
+let objectName = builder.create(string: "STARLINK-1234")
+let objectId = builder.create(string: "2024-001A")
+let epoch = builder.create(string: "2024-06-22T16:56:20.014080")
+
+// Build the OMM message
+let omm = OMM.createOMM(
+    &builder,
+    OBJECT_NAMEOffset: objectName,
+    OBJECT_IDOffset: objectId,
+    EPOCHOffset: epoch,
+    MEAN_MOTION: 15.09,
+    ECCENTRICITY: 0.0001,
+    INCLINATION: 53.0
+)
+
+builder.finish(offset: omm)
+let buf = builder.sizedByteArray
+
+// Read back (zero-copy!)
+let msg = OMM.getRootAsOMM(bb: ByteBuffer(bytes: buf))
+print(msg.OBJECT_NAME!) // "STARLINK-1234"`
+    },
+    php: {
+      install: 'composer require google/flatbuffers',
+      code: `<?php
+use Google\\FlatBuffers\\FlatbufferBuilder;
+use SpaceDataStandards\\OMM;
+
+$builder = new FlatbufferBuilder(1024);
+
+// Create strings first
+$objectName = $builder->createString("STARLINK-1234");
+$objectId = $builder->createString("2024-001A");
+$epoch = $builder->createString("2024-06-22T16:56:20.014080");
+
+// Build the OMM message
+OMM::startOMM($builder);
+OMM::addOBJECT_NAME($builder, $objectName);
+OMM::addOBJECT_ID($builder, $objectId);
+OMM::addEPOCH($builder, $epoch);
+OMM::addMEAN_MOTION($builder, 15.09);
+OMM::addECCENTRICITY($builder, 0.0001);
+OMM::addINCLINATION($builder, 53.0);
+$omm = OMM::endOMM($builder);
+
+$builder->finish($omm);
+$buf = $builder->sizedByteArray();
+
+// Read back (zero-copy!)
+$msg = OMM::getRootAsOMM(new ByteBuffer($buf));
+echo $msg->getOBJECT_NAME(); // "STARLINK-1234"`
+    },
+    dart: {
+      install: 'dart pub add flat_buffers',
+      code: `import 'package:flat_buffers/flat_buffers.dart';
+import 'omm_generated.dart';
+
+void main() {
+  final builder = Builder(initialSize: 1024);
+
+  // Create strings first
+  final objectName = builder.writeString("STARLINK-1234");
+  final objectId = builder.writeString("2024-001A");
+  final epoch = builder.writeString("2024-06-22T16:56:20.014080");
+
+  // Build the OMM message
+  final omm = OMMBuilder(builder)
+    ..addOBJECT_NAMEOffset(objectName)
+    ..addOBJECT_IDOffset(objectId)
+    ..addEPOCHOffset(epoch)
+    ..addMEAN_MOTION(15.09)
+    ..addECCENTRICITY(0.0001)
+    ..addINCLINATION(53.0);
+
+  final offset = omm.finish();
+  builder.finish(offset);
+  final buf = builder.buffer;
+
+  // Read back (zero-copy!)
+  final msg = OMM(buf);
+  print(msg.OBJECT_NAME); // "STARLINK-1234"
+}`
+    }
+  };
+
+  const languages = [
+    { id: 'typescript', name: 'TypeScript' },
+    { id: 'javascript', name: 'JavaScript' },
+    { id: 'python', name: 'Python' },
+    { id: 'go', name: 'Go' },
+    { id: 'rust', name: 'Rust' },
+    { id: 'cpp', name: 'C++' },
+    { id: 'csharp', name: 'C#' },
+    { id: 'java', name: 'Java' },
+    { id: 'swift', name: 'Swift' },
+    { id: 'php', name: 'PHP' },
+    { id: 'dart', name: 'Dart' }
+  ];
+
   // Technical grid background with floating data
   function initTechBackground() {
     if (!canvas) return;
@@ -98,7 +460,7 @@
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           text: dataFragments[Math.floor(Math.random() * dataFragments.length)],
-          opacity: Math.random() * 0.15 + 0.03,
+          opacity: Math.random() * 0.2 + 0.08,
           speed: Math.random() * 0.3 + 0.1
         });
       }
@@ -110,7 +472,7 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw subtle grid
-      ctx.strokeStyle = 'rgba(102, 126, 234, 0.03)';
+      ctx.strokeStyle = 'rgba(102, 126, 234, 0.08)';
       ctx.lineWidth = 1;
 
       // Vertical lines
@@ -130,7 +492,7 @@
       }
 
       // Draw grid intersection dots
-      ctx.fillStyle = 'rgba(102, 126, 234, 0.08)';
+      ctx.fillStyle = 'rgba(102, 126, 234, 0.15)';
       for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
           ctx.beginPath();
@@ -156,7 +518,7 @@
 
       // Subtle gradient overlay at top
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
-      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.02)');
+      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.05)');
       gradient.addColorStop(1, 'transparent');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
