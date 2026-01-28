@@ -24,6 +24,8 @@ const (
 	pluginTypeComms      pluginType = 6
 	/// Physics simulation
 	pluginTypePhysics    pluginType = 7
+	/// GLSL shader plugins for custom visualization
+	pluginTypeShader     pluginType = 8
 )
 
 var EnumNamespluginType = map[pluginType]string{
@@ -35,6 +37,7 @@ var EnumNamespluginType = map[pluginType]string{
 	pluginTypeEW:         "EW",
 	pluginTypeComms:      "Comms",
 	pluginTypePhysics:    "Physics",
+	pluginTypeShader:     "Shader",
 }
 
 var EnumValuespluginType = map[string]pluginType{
@@ -46,6 +49,7 @@ var EnumValuespluginType = map[string]pluginType{
 	"EW":         pluginTypeEW,
 	"Comms":      pluginTypeComms,
 	"Physics":    pluginTypePhysics,
+	"Shader":     pluginTypeShader,
 }
 
 func (v pluginType) String() string {

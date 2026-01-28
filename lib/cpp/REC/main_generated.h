@@ -50,6 +50,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -83,24 +84,25 @@ enum RecordType : uint8_t {
   RecordType_OSM = 22,
   RecordType_PLD = 23,
   RecordType_PLG = 24,
-  RecordType_PNM = 25,
-  RecordType_PRG = 26,
-  RecordType_PUR = 27,
-  RecordType_REV = 28,
-  RecordType_RFM = 29,
-  RecordType_ROC = 30,
-  RecordType_SCM = 31,
-  RecordType_SIT = 32,
-  RecordType_STF = 33,
-  RecordType_TDM = 34,
-  RecordType_TIM = 35,
-  RecordType_VCM = 36,
-  RecordType_XTC = 37,
+  RecordType_PLK = 25,
+  RecordType_PNM = 26,
+  RecordType_PRG = 27,
+  RecordType_PUR = 28,
+  RecordType_REV = 29,
+  RecordType_RFM = 30,
+  RecordType_ROC = 31,
+  RecordType_SCM = 32,
+  RecordType_SIT = 33,
+  RecordType_STF = 34,
+  RecordType_TDM = 35,
+  RecordType_TIM = 36,
+  RecordType_VCM = 37,
+  RecordType_XTC = 38,
   RecordType_MIN = RecordType_NONE,
   RecordType_MAX = RecordType_XTC
 };
 
-inline const RecordType (&EnumValuesRecordType())[38] {
+inline const RecordType (&EnumValuesRecordType())[39] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -127,6 +129,7 @@ inline const RecordType (&EnumValuesRecordType())[38] {
     RecordType_OSM,
     RecordType_PLD,
     RecordType_PLG,
+    RecordType_PLK,
     RecordType_PNM,
     RecordType_PRG,
     RecordType_PUR,
@@ -145,7 +148,7 @@ inline const RecordType (&EnumValuesRecordType())[38] {
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[39] = {
+  static const char * const names[40] = {
     "NONE",
     "ACL",
     "ATM",
@@ -171,6 +174,7 @@ inline const char * const *EnumNamesRecordType() {
     "OSM",
     "PLD",
     "PLG",
+    "PLK",
     "PNM",
     "PRG",
     "PUR",
@@ -293,6 +297,10 @@ template<> struct RecordTypeTraits<PLD> {
 
 template<> struct RecordTypeTraits<PLG> {
   static const RecordType enum_value = RecordType_PLG;
+};
+
+template<> struct RecordTypeTraits<PLK> {
+  static const RecordType enum_value = RecordType_PLK;
 };
 
 template<> struct RecordTypeTraits<PNM> {
@@ -435,6 +443,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const PLG *value_as_PLG() const {
     return value_type() == RecordType_PLG ? static_cast<const PLG *>(value()) : nullptr;
+  }
+  const PLK *value_as_PLK() const {
+    return value_type() == RecordType_PLK ? static_cast<const PLK *>(value()) : nullptr;
   }
   const PNM *value_as_PNM() const {
     return value_type() == RecordType_PNM ? static_cast<const PNM *>(value()) : nullptr;
@@ -583,6 +594,10 @@ template<> inline const PLD *Record::value_as<PLD>() const {
 
 template<> inline const PLG *Record::value_as<PLG>() const {
   return value_as_PLG();
+}
+
+template<> inline const PLK *Record::value_as<PLK>() const {
+  return value_as_PLK();
 }
 
 template<> inline const PNM *Record::value_as<PNM>() const {
@@ -852,6 +867,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     }
     case RecordType_PLG: {
       auto ptr = reinterpret_cast<const PLG *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PLK: {
+      auto ptr = reinterpret_cast<const PLK *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_PNM: {

@@ -33,6 +33,10 @@ export declare enum pluginType {
     /**
      * Physics simulation
      */
-    Physics = 7
+    Physics = 7,
+    /**
+     * GLSL shader plugins for custom visualization
+     */
+    Shader = 8
 }
 //# sourceMappingURL=pluginType.d.ts.map

@@ -25,8 +25,10 @@ public enum pluginType: Int8, Enum, Verifiable {
   case comms = 6
   ///  Physics simulation
   case physics = 7
+  ///  GLSL shader plugins for custom visualization
+  case shader = 8
 
-  public static var max: pluginType { return .physics }
+  public static var max: pluginType { return .shader }
   public static var min: pluginType { return .sensor }
 }
 

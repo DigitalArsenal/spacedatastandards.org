@@ -20,6 +20,8 @@ class pluginType
     const Comms = 6;
     /// Physics simulation
     const Physics = 7;
+    /// GLSL shader plugins for custom visualization
+    const Shader = 8;
 
     private static $names = array(
         pluginType::Sensor=>"Sensor",
@@ -30,6 +32,7 @@ class pluginType
         pluginType::EW=>"EW",
         pluginType::Comms=>"Comms",
         pluginType::Physics=>"Physics",
+        pluginType::Shader=>"Shader",
     );
 
     public static function Name($e)

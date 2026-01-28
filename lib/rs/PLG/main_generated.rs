@@ -12,10 +12,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PLUGIN_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PLUGIN_TYPE: i8 = 7;
+pub const ENUM_MAX_PLUGIN_TYPE: i8 = 8;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PLUGIN_TYPE: [pluginType; 8] = [
+pub const ENUM_VALUES_PLUGIN_TYPE: [pluginType; 9] = [
   pluginType::Sensor,
   pluginType::Propagator,
   pluginType::Renderer,
@@ -24,6 +24,7 @@ pub const ENUM_VALUES_PLUGIN_TYPE: [pluginType; 8] = [
   pluginType::EW,
   pluginType::Comms,
   pluginType::Physics,
+  pluginType::Shader,
 ];
 
 /// Plugin type category
@@ -48,9 +49,11 @@ impl pluginType {
   pub const Comms: Self = Self(6);
   /// Physics simulation
   pub const Physics: Self = Self(7);
+  /// GLSL shader plugins for custom visualization
+  pub const Shader: Self = Self(8);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_MAX: i8 = 8;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Sensor,
     Self::Propagator,
@@ -60,6 +63,7 @@ impl pluginType {
     Self::EW,
     Self::Comms,
     Self::Physics,
+    Self::Shader,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -72,6 +76,7 @@ impl pluginType {
       Self::EW => Some("EW"),
       Self::Comms => Some("Comms"),
       Self::Physics => Some("Physics"),
+      Self::Shader => Some("Shader"),
       _ => None,
     }
   }

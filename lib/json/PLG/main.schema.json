@@ -3,7 +3,7 @@
   "definitions": {
     "pluginType" : {
       "type" : "string",
-      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics"]
+      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader"]
     },
     "PluginCapability" : {
       "type" : "object",

@@ -44,5 +44,10 @@ export enum pluginType {
   /**
    * Physics simulation
    */
-  Physics = 7
+  Physics = 7,
+
+  /**
+   * GLSL shader plugins for custom visualization
+   */
+  Shader = 8
 }

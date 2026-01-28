@@ -43,11 +43,13 @@ enum pluginType : int8_t {
   pluginType_Comms = 6,
   /// Physics simulation
   pluginType_Physics = 7,
+  /// GLSL shader plugins for custom visualization
+  pluginType_Shader = 8,
   pluginType_MIN = pluginType_Sensor,
-  pluginType_MAX = pluginType_Physics
+  pluginType_MAX = pluginType_Shader
 };
 
-inline const pluginType (&EnumValuespluginType())[8] {
+inline const pluginType (&EnumValuespluginType())[9] {
   static const pluginType values[] = {
     pluginType_Sensor,
     pluginType_Propagator,
@@ -56,13 +58,14 @@ inline const pluginType (&EnumValuespluginType())[8] {
     pluginType_DataSource,
     pluginType_EW,
     pluginType_Comms,
-    pluginType_Physics
+    pluginType_Physics,
+    pluginType_Shader
   };
   return values;
 }
 
 inline const char * const *EnumNamespluginType() {
-  static const char * const names[9] = {
+  static const char * const names[10] = {
     "Sensor",
     "Propagator",
     "Renderer",
@@ -71,13 +74,14 @@ inline const char * const *EnumNamespluginType() {
     "EW",
     "Comms",
     "Physics",
+    "Shader",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepluginType(pluginType e) {
-  if (::flatbuffers::IsOutRange(e, pluginType_Sensor, pluginType_Physics)) return "";
+  if (::flatbuffers::IsOutRange(e, pluginType_Sensor, pluginType_Shader)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespluginType()[index];
 }

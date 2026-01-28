@@ -26,6 +26,7 @@ import { OMM, OMMT } from './OMM.js';
 import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PLG, PLGT } from './PLG.js';
+import { PLK, PLKT } from './PLK.js';
 import { PNM, PNMT } from './PNM.js';
 import { PRG, PRGT } from './PRG.js';
 import { PUR, PURT } from './PUR.js';
@@ -67,25 +68,26 @@ export enum RecordType {
   OSM = 22,
   PLD = 23,
   PLG = 24,
-  PNM = 25,
-  PRG = 26,
-  PUR = 27,
-  REV = 28,
-  RFM = 29,
-  ROC = 30,
-  SCM = 31,
-  SIT = 32,
-  STF = 33,
-  TDM = 34,
-  TIM = 35,
-  VCM = 36,
-  XTC = 37
+  PLK = 25,
+  PNM = 26,
+  PRG = 27,
+  PUR = 28,
+  REV = 29,
+  RFM = 30,
+  ROC = 31,
+  SCM = 32,
+  SIT = 33,
+  STF = 34,
+  TDM = 35,
+  TIM = 36,
+  VCM = 37,
+  XTC = 38
 }
 
 export function unionToRecordType(
   type: RecordType,
-  accessor: (obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null
-): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
+  accessor: (obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null
+): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'ACL': return accessor(new ACL())! as ACL;
@@ -112,6 +114,7 @@ export function unionToRecordType(
     case 'OSM': return accessor(new OSM())! as OSM;
     case 'PLD': return accessor(new PLD())! as PLD;
     case 'PLG': return accessor(new PLG())! as PLG;
+    case 'PLK': return accessor(new PLK())! as PLK;
     case 'PNM': return accessor(new PNM())! as PNM;
     case 'PRG': return accessor(new PRG())! as PRG;
     case 'PUR': return accessor(new PUR())! as PUR;
@@ -131,9 +134,9 @@ export function unionToRecordType(
 
 export function unionListToRecordType(
   type: RecordType, 
-  accessor: (index: number, obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null, 
+  accessor: (index: number, obj:ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC) => ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null, 
   index: number
-): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
+): ACL|ATM|BOV|CAT|CDM|CRM|CSM|CTR|EME|EOO|EOP|EPM|HYP|IDM|LCC|LDM|MET|MPE|OCM|OEM|OMM|OSM|PLD|PLG|PLK|PNM|PRG|PUR|REV|RFM|ROC|SCM|SIT|STF|TDM|TIM|VCM|XTC|null {
   switch(RecordType[type]) {
     case 'NONE': return null; 
     case 'ACL': return accessor(index, new ACL())! as ACL;
@@ -160,6 +163,7 @@ export function unionListToRecordType(
     case 'OSM': return accessor(index, new OSM())! as OSM;
     case 'PLD': return accessor(index, new PLD())! as PLD;
     case 'PLG': return accessor(index, new PLG())! as PLG;
+    case 'PLK': return accessor(index, new PLK())! as PLK;
     case 'PNM': return accessor(index, new PNM())! as PNM;
     case 'PRG': return accessor(index, new PRG())! as PRG;
     case 'PUR': return accessor(index, new PUR())! as PUR;

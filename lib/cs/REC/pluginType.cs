@@ -21,5 +21,7 @@ public enum pluginType : sbyte
   Comms = 6,
   /// Physics simulation
   Physics = 7,
+  /// GLSL shader plugins for custom visualization
+  Shader = 8,
 };
 

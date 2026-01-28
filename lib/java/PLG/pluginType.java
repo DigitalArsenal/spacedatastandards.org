@@ -38,8 +38,12 @@ public final class pluginType {
    * Physics simulation
    */
   public static final byte Physics = 7;
+  /**
+   * GLSL shader plugins for custom visualization
+   */
+  public static final byte Shader = 8;
 
-  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", };
+  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", };
 
   public static String name(int e) { return names[e]; }
 }

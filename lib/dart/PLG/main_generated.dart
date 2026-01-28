@@ -22,7 +22,7 @@ class PluginType {
       value == null ? null : PluginType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 8;
   static bool containsValue(int value) => values.containsKey(value);
 
   ///  Sensor simulation and analysis
@@ -48,6 +48,9 @@ class PluginType {
 
   ///  Physics simulation
   static const PluginType Physics = PluginType._(7);
+
+  ///  GLSL shader plugins for custom visualization
+  static const PluginType Shader = PluginType._(8);
   static const Map<int, PluginType> values = {
     0: Sensor,
     1: Propagator,
@@ -56,7 +59,8 @@ class PluginType {
     4: DataSource,
     5: EW,
     6: Comms,
-    7: Physics};
+    7: Physics,
+    8: Shader};
 
   static const fb.Reader<PluginType> reader = _PluginTypeReader();
 

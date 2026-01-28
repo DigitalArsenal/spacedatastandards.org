@@ -27,19 +27,20 @@ enum RecordType:
     RecordType_OSM = 22
     RecordType_PLD = 23
     RecordType_PLG = 24
-    RecordType_PNM = 25
-    RecordType_PRG = 26
-    RecordType_PUR = 27
-    RecordType_REV = 28
-    RecordType_RFM = 29
-    RecordType_ROC = 30
-    RecordType_SCM = 31
-    RecordType_SIT = 32
-    RecordType_STF = 33
-    RecordType_TDM = 34
-    RecordType_TIM = 35
-    RecordType_VCM = 36
-    RecordType_XTC = 37
+    RecordType_PLK = 25
+    RecordType_PNM = 26
+    RecordType_PRG = 27
+    RecordType_PUR = 28
+    RecordType_REV = 29
+    RecordType_RFM = 30
+    RecordType_ROC = 31
+    RecordType_SCM = 32
+    RecordType_SIT = 33
+    RecordType_STF = 34
+    RecordType_TDM = 35
+    RecordType_TIM = 36
+    RecordType_VCM = 37
+    RecordType_XTC = 38
 
 class Record
 
@@ -96,6 +97,8 @@ class Record : flatbuffers.handle
         return PLD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PLG():
         return PLG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PLK():
+        return PLK { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PNM():
         return PNM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PRG():

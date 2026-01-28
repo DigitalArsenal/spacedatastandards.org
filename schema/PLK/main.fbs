@@ -1,0 +1,68 @@
+// Hash: 09b2abd0fe15ebad8ddf22d64adce877547ccd6f96466a4a3fbb7b33f6a37bc5
+// Version: 1.1.1
+// -----------------------------------END_HEADER
+/// License type for plugin access
+enum licenseType : byte {
+  /// Evaluation/trial license
+  Trial,
+  /// Standard commercial license
+  Commercial,
+  /// Enterprise site license
+  Enterprise,
+  /// Educational/academic license
+  Educational,
+  /// Open source project license
+  OpenSource,
+  /// Internal OrbPro default plugins
+  Internal
+}
+
+/// Plugin License Key - Issued license for plugin access
+/// Uses ECIES: both parties derive symmetric key via X25519 ECDH
+/// Key derivation: X25519(private, peer_public) → HKDF-SHA256 → AES-256-GCM
+table PLK {
+  /// Unique license key identifier
+  LICENSE_ID: string (required);
+  /// Plugin ID this license is for
+  PLUGIN_ID: string (required);
+  /// Plugin version or version range (semver)
+  PLUGIN_VERSION: string;
+
+  /// Licensee organization name
+  LICENSEE_ORG: string (required);
+  /// Licensee contact email
+  LICENSEE_EMAIL: string;
+  /// Licensee's SDN Peer ID
+  LICENSEE_PEER_ID: string;
+
+  /// Licensee's X25519 public key (32 bytes)
+  LICENSEE_PUBKEY: [ubyte];
+  /// Issuer's X25519 public key (32 bytes)
+  /// Used with licensee's private key to derive shared secret via ECDH
+  ISSUER_PUBKEY: [ubyte];
+
+  /// Domain restrictions (empty = any domain allowed)
+  ALLOWED_DOMAINS: [string];
+  /// TLD restrictions (e.g., ".gov", ".mil", ".edu")
+  ALLOWED_TLDS: [string];
+
+  /// Type of license
+  LICENSE_TYPE: licenseType;
+  /// Maximum concurrent activations (0 = unlimited)
+  MAX_ACTIVATIONS: uint32;
+
+  /// Unix timestamp when license was issued
+  ISSUED_AT: uint64;
+  /// Unix timestamp when license becomes valid
+  VALID_FROM: uint64;
+  /// Unix timestamp when license expires (0 = never expires)
+  EXPIRES_AT: uint64;
+
+  /// Peer ID of the license issuer (OrbPro)
+  ISSUER_PEER_ID: string;
+  /// Ed25519 signature from issuer over all fields (except SIGNATURE)
+  SIGNATURE: [ubyte];
+}
+
+root_type PLK;
+file_identifier "$PLK";

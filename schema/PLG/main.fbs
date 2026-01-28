@@ -1,5 +1,5 @@
-// Hash: fd563a2cd85ca17a38336fbd8ac00e6505d0235b1c94b3f61f333390b7209ba9
-// Version: 1.0.1
+// Hash: 10e390c7bdca60a3d55945e36dbfcd25f241a2710fd2a10095aaf67f0ed54364
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 /// Plugin type category
 enum pluginType : byte {
@@ -18,7 +18,9 @@ enum pluginType : byte {
   /// Communications modeling
   Comms,
   /// Physics simulation
-  Physics
+  Physics,
+  /// GLSL shader plugins for custom visualization
+  Shader
 }
 
 /// Plugin capability declaration

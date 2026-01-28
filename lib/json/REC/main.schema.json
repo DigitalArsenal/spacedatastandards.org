@@ -123,7 +123,11 @@
     },
     "pluginType" : {
       "type" : "string",
-      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics"]
+      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader"]
+    },
+    "licenseType" : {
+      "type" : "string",
+      "enum": ["Trial", "Commercial", "Enterprise", "Educational", "OpenSource", "Internal"]
     },
     "elementType" : {
       "type" : "string",
@@ -231,7 +235,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PLG", "PNM", "PRG", "PUR", "REV", "RFM", "ROC", "SCM", "SIT", "STF", "TDM", "TIM", "VCM", "XTC"]
+      "enum": ["NONE", "ACL", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "REV", "RFM", "ROC", "SCM", "SIT", "STF", "TDM", "TIM", "VCM", "XTC"]
     },
     "SpatialCoverage" : {
       "type" : "object",
@@ -4303,6 +4307,82 @@
       "required" : ["PLUGIN_ID", "NAME", "VERSION"],
       "additionalProperties" : false
     },
+    "PLK" : {
+      "type" : "object",
+      "description" : "Plugin License Key - Issued license for plugin access\nUses ECIES: both parties derive symmetric key via X25519 ECDH\nKey derivation: X25519(private, peer_public) → HKDF-SHA256 → AES-256-GCM",
+      "properties" : {
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Unique license key identifier"
+              },
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Plugin ID this license is for"
+              },
+        "PLUGIN_VERSION" : {
+                "type" : "string",
+                "description" : "Plugin version or version range (semver)"
+              },
+        "LICENSEE_ORG" : {
+                "type" : "string",
+                "description" : "Licensee organization name"
+              },
+        "LICENSEE_EMAIL" : {
+                "type" : "string",
+                "description" : "Licensee contact email"
+              },
+        "LICENSEE_PEER_ID" : {
+                "type" : "string",
+                "description" : "Licensee's SDN Peer ID"
+              },
+        "LICENSEE_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Licensee's X25519 public key (32 bytes)"
+              },
+        "ISSUER_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Issuer's X25519 public key (32 bytes)\nUsed with licensee's private key to derive shared secret via ECDH"
+              },
+        "ALLOWED_DOMAINS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Domain restrictions (empty = any domain allowed)"
+              },
+        "ALLOWED_TLDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "TLD restrictions (e.g., \".gov\", \".mil\", \".edu\")"
+              },
+        "LICENSE_TYPE" : {
+                "$ref" : "#/definitions/licenseType",
+                "description" : "Type of license"
+              },
+        "MAX_ACTIVATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum concurrent activations (0 = unlimited)"
+              },
+        "ISSUED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when license was issued"
+              },
+        "VALID_FROM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when license becomes valid"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when license expires (0 = never expires)"
+              },
+        "ISSUER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the license issuer (OrbPro)"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from issuer over all fields (except SIGNATURE)"
+              }
+      },
+      "required" : ["LICENSE_ID", "PLUGIN_ID", "LICENSEE_ORG"],
+      "additionalProperties" : false
+    },
     "PRG" : {
       "type" : "object",
       "description" : "Program Description Message",
@@ -7129,7 +7209,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/XTC" }]
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/XTC" }]
               },
         "standard" : {
                 "type" : "string"

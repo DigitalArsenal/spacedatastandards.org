@@ -28,19 +28,20 @@ class RecordType(object):
     OSM = 22
     PLD = 23
     PLG = 24
-    PNM = 25
-    PRG = 26
-    PUR = 27
-    REV = 28
-    RFM = 29
-    ROC = 30
-    SCM = 31
-    SIT = 32
-    STF = 33
-    TDM = 34
-    TIM = 35
-    VCM = 36
-    XTC = 37
+    PLK = 25
+    PNM = 26
+    PRG = 27
+    PUR = 28
+    REV = 29
+    RFM = 30
+    ROC = 31
+    SCM = 32
+    SIT = 33
+    STF = 34
+    TDM = 35
+    TIM = 36
+    VCM = 37
+    XTC = 38
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -118,6 +119,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PLG:
         import PLG
         return PLG.PLGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PLK:
+        import PLK
+        return PLK.PLKT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PNM:
         import PNM
         return PNM.PNMT.InitFromBuf(table.Bytes, table.Pos)

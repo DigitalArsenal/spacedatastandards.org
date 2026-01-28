@@ -28,6 +28,7 @@ import { OMM, OMMT } from './OMM.js';
 import { OSM, OSMT } from './OSM.js';
 import { PLD, PLDT } from './PLD.js';
 import { PLG, PLGT } from './PLG.js';
+import { PLK, PLKT } from './PLK.js';
 import { PNM, PNMT } from './PNM.js';
 import { PRG, PRGT } from './PRG.js';
 import { PUR, PURT } from './PUR.js';
@@ -135,7 +136,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: ACLT|ATMT|BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PLGT|PNMT|PRGT|PURT|REVT|RFMT|ROCT|SCMT|SITT|STFT|TDMT|TIMT|VCMT|XTCT|null = null,
+  public value: ACLT|ATMT|BOVT|CATT|CDMT|CRMT|CSMT|CTRT|EMET|EOOT|EOPT|EPMT|HYPT|IDMT|LCCT|LDMT|METT|MPET|OCMT|OEMT|OMMT|OSMT|PLDT|PLGT|PLKT|PNMT|PRGT|PURT|REVT|RFMT|ROCT|SCMT|SITT|STFT|TDMT|TIMT|VCMT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

@@ -38,5 +38,9 @@ class pluginType private constructor() {
          * Physics simulation
          */
         const val Physics: Byte = 7
+        /**
+         * GLSL shader plugins for custom visualization
+         */
+        const val Shader: Byte = 8
     }
 }

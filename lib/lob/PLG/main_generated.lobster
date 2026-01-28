@@ -19,6 +19,8 @@ enum pluginType:
     pluginType_Comms = 6
     /// Physics simulation
     pluginType_Physics = 7
+    /// GLSL shader plugins for custom visualization
+    pluginType_Shader = 8
 
 class PluginCapability
 

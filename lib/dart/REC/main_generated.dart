@@ -23,7 +23,7 @@ class RecordTypeTypeId {
       value == null ? null : RecordTypeTypeId.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 37;
+  static const int maxValue = 38;
   static bool containsValue(int value) => values.containsKey(value);
 
   static const RecordTypeTypeId NONE = RecordTypeTypeId._(0);
@@ -51,19 +51,20 @@ class RecordTypeTypeId {
   static const RecordTypeTypeId OSM = RecordTypeTypeId._(22);
   static const RecordTypeTypeId PLD = RecordTypeTypeId._(23);
   static const RecordTypeTypeId PLG = RecordTypeTypeId._(24);
-  static const RecordTypeTypeId PNM = RecordTypeTypeId._(25);
-  static const RecordTypeTypeId PRG = RecordTypeTypeId._(26);
-  static const RecordTypeTypeId PUR = RecordTypeTypeId._(27);
-  static const RecordTypeTypeId REV = RecordTypeTypeId._(28);
-  static const RecordTypeTypeId RFM = RecordTypeTypeId._(29);
-  static const RecordTypeTypeId ROC = RecordTypeTypeId._(30);
-  static const RecordTypeTypeId SCM = RecordTypeTypeId._(31);
-  static const RecordTypeTypeId SIT = RecordTypeTypeId._(32);
-  static const RecordTypeTypeId STF = RecordTypeTypeId._(33);
-  static const RecordTypeTypeId TDM = RecordTypeTypeId._(34);
-  static const RecordTypeTypeId TIM = RecordTypeTypeId._(35);
-  static const RecordTypeTypeId VCM = RecordTypeTypeId._(36);
-  static const RecordTypeTypeId XTC = RecordTypeTypeId._(37);
+  static const RecordTypeTypeId PLK = RecordTypeTypeId._(25);
+  static const RecordTypeTypeId PNM = RecordTypeTypeId._(26);
+  static const RecordTypeTypeId PRG = RecordTypeTypeId._(27);
+  static const RecordTypeTypeId PUR = RecordTypeTypeId._(28);
+  static const RecordTypeTypeId REV = RecordTypeTypeId._(29);
+  static const RecordTypeTypeId RFM = RecordTypeTypeId._(30);
+  static const RecordTypeTypeId ROC = RecordTypeTypeId._(31);
+  static const RecordTypeTypeId SCM = RecordTypeTypeId._(32);
+  static const RecordTypeTypeId SIT = RecordTypeTypeId._(33);
+  static const RecordTypeTypeId STF = RecordTypeTypeId._(34);
+  static const RecordTypeTypeId TDM = RecordTypeTypeId._(35);
+  static const RecordTypeTypeId TIM = RecordTypeTypeId._(36);
+  static const RecordTypeTypeId VCM = RecordTypeTypeId._(37);
+  static const RecordTypeTypeId XTC = RecordTypeTypeId._(38);
   static const Map<int, RecordTypeTypeId> values = {
     0: NONE,
     1: ACL,
@@ -90,19 +91,20 @@ class RecordTypeTypeId {
     22: OSM,
     23: PLD,
     24: PLG,
-    25: PNM,
-    26: PRG,
-    27: PUR,
-    28: REV,
-    29: RFM,
-    30: ROC,
-    31: SCM,
-    32: SIT,
-    33: STF,
-    34: TDM,
-    35: TIM,
-    36: VCM,
-    37: XTC};
+    25: PLK,
+    26: PNM,
+    27: PRG,
+    28: PUR,
+    29: REV,
+    30: RFM,
+    31: ROC,
+    32: SCM,
+    33: SIT,
+    34: STF,
+    35: TDM,
+    36: TIM,
+    37: VCM,
+    38: XTC};
 
   static const fb.Reader<RecordTypeTypeId> reader = _RecordTypeTypeIdReader();
 
@@ -162,19 +164,20 @@ class Record {
       case 22: return OSM.reader.vTableGetNullable(_bc, _bcOffset, 6);
       case 23: return PLD.reader.vTableGetNullable(_bc, _bcOffset, 6);
       case 24: return PLG.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 25: return PNM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 26: return PRG.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 27: return PUR.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 28: return REV.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 29: return RFM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 30: return ROC.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 31: return SCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 32: return SIT.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 33: return STF.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 34: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 35: return TIM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 36: return VCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
-      case 37: return XTC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 25: return PLK.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 26: return PNM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 27: return PRG.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 28: return PUR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 29: return REV.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 30: return RFM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 31: return ROC.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 32: return SCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 33: return SIT.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 34: return STF.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 35: return TDM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 36: return TIM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 37: return VCM.reader.vTableGetNullable(_bc, _bcOffset, 6);
+      case 38: return XTC.reader.vTableGetNullable(_bc, _bcOffset, 6);
       default: return null;
     }
   }
