@@ -95,14 +95,13 @@
     "scripts": {
         "test": "mocha",
         "test:watch": "nodemon --exec 'npm test' --watch .",
-        "deploy": "npm run build && npm run build:website && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
+        "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
         "publish:js": "npm publish",
         "start": "node index.js",
         "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
-        "build:website": "cd website && npm run build",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
-        "dev": "npm run build && cd website && npm run dev"
+        "dev": "npx serve ."
     },
     "funding": {
         "type": "corporate",
@@ -120,17 +119,13 @@
         "buffer": "^6.0.3",
         "esbuild": "^0.20.2",
         "flatbuffers": "23.3.3",
-        "flatc-wasm": "^26.1.17",
-        "svelte-awesome": "^3.3.1",
-        "svelte-spa-router": "^4.0.0"
+        "flatc-wasm": "^26.1.17"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",
         "chai": "^5.1.1",
         "mocha": "^10.4.0",
         "pure-ipfs-only-hash": "^4.0.2",
-        "sass": "^1.69.5",
-        "smui-theme": "^7.0.0-beta.15",
         "typescript": "^5.2.2"
     }
 }
