@@ -75,6 +75,10 @@ For the generated Flatbuffer IDL source code files, please refer to the `dist/` 
 
 [Access the Generated Source Code Files](./dist/)
 
+## Deployment
+
+Space Data Standards supports 13 programming languages, each with its own package manager. For detailed instructions on publishing packages to npm, PyPI, crates.io, Maven Central, NuGet, pub.dev, and more, see the [Deployment Guide](./DEPLOY.md).
+
 ## Contributing
 
 Contributions to this repository are welcome. To propose changes or improvements to the existing Flatbuffer IDLs, please submit a pull request or open an issue for discussion.
