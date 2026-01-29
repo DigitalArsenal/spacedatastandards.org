@@ -1,0 +1,783 @@
+name: Publish Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.65.0)'
+        required: true
+        type: string
+      packages:
+        description: 'Packages to publish (comma-separated: npm,pypi,cargo,nuget,dart,maven,go)'
+        required: false
+        default: 'all'
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+  DOTNET_VERSION: '8.0.x'
+  GO_VERSION: '1.21'
+  JAVA_VERSION: '17'
+
+jobs:
+  # ============================================
+  # Build job - creates all artifacts
+  # ============================================
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all artifacts
+        run: npm run build
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            VERSION=$(node -p "require('./package.json').version.split('+')[0]")
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload lib artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+          retention-days: 1
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
+          retention-days: 1
+
+  # ============================================
+  # npm (JavaScript/TypeScript) - npmjs.org
+  # ============================================
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'npm') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ============================================
+  # GitHub Packages (npm)
+  # ============================================
+  publish-github-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'npm') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@digitalarsenal'
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure package for GitHub Packages
+        run: |
+          # Update package.json for GitHub Packages (scoped package)
+          node -e "
+            const pkg = require('./package.json');
+            pkg.name = '@digitalarsenal/spacedatastandards';
+            pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
+            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+          "
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # PyPI (Python)
+  # ============================================
+  publish-pypi:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'pypi') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Install build tools
+        run: pip install build twine
+
+      - name: Create pyproject.toml
+        run: |
+          cat > lib/py/pyproject.toml << 'EOF'
+          [build-system]
+          requires = ["setuptools>=61.0", "wheel"]
+          build-backend = "setuptools.build_meta"
+
+          [project]
+          name = "spacedatastandards"
+          version = "${{ needs.build.outputs.version }}"
+          description = "Space data standards framework based on CCSDS standards and Google FlatBuffers"
+          readme = "README.md"
+          license = {text = "Apache-2.0"}
+          authors = [
+              {name = "Digital Arsenal", email = "sds@digitalarsenal.io"}
+          ]
+          keywords = ["space", "flatbuffers", "ccsds", "satellite", "orbital-mechanics", "ssa"]
+          classifiers = [
+              "Development Status :: 4 - Beta",
+              "Intended Audience :: Science/Research",
+              "License :: OSI Approved :: Apache Software License",
+              "Programming Language :: Python :: 3",
+              "Programming Language :: Python :: 3.8",
+              "Programming Language :: Python :: 3.9",
+              "Programming Language :: Python :: 3.10",
+              "Programming Language :: Python :: 3.11",
+              "Programming Language :: Python :: 3.12",
+              "Topic :: Scientific/Engineering :: Astronomy",
+          ]
+          requires-python = ">=3.8"
+          dependencies = [
+              "flatbuffers>=23.3.3",
+          ]
+
+          [project.urls]
+          Homepage = "https://spacedatastandards.org"
+          Repository = "https://github.com/DigitalArsenal/spacedatastandards.org"
+          Documentation = "https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/"
+
+          [tool.setuptools.packages.find]
+          where = ["."]
+          EOF
+
+      - name: Create README for PyPI
+        run: |
+          cat > lib/py/README.md << 'EOF'
+          # Space Data Standards (Python)
+
+          High-performance FlatBuffers schemas for space data exchange.
+
+          ## Installation
+
+          ```bash
+          pip install spacedatastandards
+          ```
+
+          ## Usage
+
+          ```python
+          import flatbuffers
+          from spacedatastandards.OMM import OMM
+
+          # Create a builder
+          builder = flatbuffers.Builder(1024)
+
+          # Build your message...
+          ```
+
+          ## Documentation
+
+          - [Website](https://spacedatastandards.org)
+          - [GitBook](https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/)
+          - [GitHub](https://github.com/DigitalArsenal/spacedatastandards.org)
+          EOF
+
+      - name: Build Python package
+        run: |
+          cd lib/py
+          python -m build
+
+      - name: Publish to PyPI
+        run: |
+          cd lib/py
+          twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+
+  # ============================================
+  # crates.io (Rust)
+  # ============================================
+  publish-cargo:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'cargo') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js (for Cargo.toml generation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Generate Cargo package structure
+        run: node scripts/generateCargoPackage.js
+
+      - name: Update Cargo.toml version
+        run: |
+          cd lib/rs
+          sed -i 's/version = "0.1.0"/version = "${{ needs.build.outputs.version }}"/' Cargo.toml
+
+      - name: Publish to crates.io
+        run: |
+          cd lib/rs
+          cargo publish --token ${{ secrets.CARGO_TOKEN }}
+
+  # ============================================
+  # NuGet (C#/.NET)
+  # ============================================
+  publish-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'nuget') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Create .csproj file
+        run: |
+          cat > lib/cs/SpaceDataStandards.csproj << 'EOF'
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <TargetFramework>netstandard2.0</TargetFramework>
+              <PackageId>SpaceDataStandards</PackageId>
+              <Version>${{ needs.build.outputs.version }}</Version>
+              <Authors>Digital Arsenal</Authors>
+              <Company>Digital Arsenal</Company>
+              <Description>Space data standards framework based on CCSDS and FlatBuffers</Description>
+              <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+              <PackageProjectUrl>https://spacedatastandards.org</PackageProjectUrl>
+              <RepositoryUrl>https://github.com/DigitalArsenal/spacedatastandards.org</RepositoryUrl>
+              <PackageTags>space;flatbuffers;ccsds;satellite;orbit;ssa</PackageTags>
+              <PackageReadmeFile>README.md</PackageReadmeFile>
+            </PropertyGroup>
+            <ItemGroup>
+              <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
+            </ItemGroup>
+            <ItemGroup>
+              <None Include="README.md" Pack="true" PackagePath="\" />
+            </ItemGroup>
+          </Project>
+          EOF
+
+      - name: Create README for NuGet
+        run: |
+          cat > lib/cs/README.md << 'EOF'
+          # Space Data Standards (.NET)
+
+          High-performance FlatBuffers schemas for space data exchange.
+
+          ## Installation
+
+          ```bash
+          dotnet add package SpaceDataStandards
+          ```
+
+          ## Documentation
+
+          - [Website](https://spacedatastandards.org)
+          - [GitHub](https://github.com/DigitalArsenal/spacedatastandards.org)
+          EOF
+
+      - name: Build NuGet package
+        run: |
+          cd lib/cs
+          dotnet pack -c Release
+
+      - name: Publish to NuGet
+        run: |
+          cd lib/cs
+          dotnet nuget push bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
+
+  # ============================================
+  # pub.dev (Dart)
+  # ============================================
+  publish-dart:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'dart') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Create pubspec.yaml
+        run: |
+          cat > lib/dart/pubspec.yaml << 'EOF'
+          name: spacedatastandards
+          version: ${{ needs.build.outputs.version }}
+          description: Space data standards framework based on CCSDS and FlatBuffers
+          repository: https://github.com/DigitalArsenal/spacedatastandards.org
+          homepage: https://spacedatastandards.org
+
+          environment:
+            sdk: '>=3.0.0 <4.0.0'
+
+          dependencies:
+            flat_buffers: ^23.5.26
+          EOF
+
+      - name: Create LICENSE
+        run: cp LICENSE lib/dart/LICENSE
+
+      - name: Create README for pub.dev
+        run: |
+          cat > lib/dart/README.md << 'EOF'
+          # Space Data Standards (Dart)
+
+          High-performance FlatBuffers schemas for space data exchange.
+
+          ## Installation
+
+          ```yaml
+          dependencies:
+            spacedatastandards: ^${{ needs.build.outputs.version }}
+          ```
+
+          ## Documentation
+
+          - [Website](https://spacedatastandards.org)
+          - [GitHub](https://github.com/DigitalArsenal/spacedatastandards.org)
+          EOF
+
+      - name: Create CHANGELOG
+        run: |
+          cat > lib/dart/CHANGELOG.md << 'EOF'
+          ## ${{ needs.build.outputs.version }}
+
+          - Updated schemas to version ${{ needs.build.outputs.version }}
+          EOF
+
+      - name: Setup pub credentials
+        run: |
+          mkdir -p ~/.config/dart
+          echo '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
+
+      - name: Publish to pub.dev
+        run: |
+          cd lib/dart
+          dart pub publish --force
+
+  # ============================================
+  # Maven Central (Java)
+  # ============================================
+  publish-maven-java:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'maven') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Create pom.xml
+        run: |
+          cat > lib/java/pom.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+
+              <groupId>io.spacedatastandards</groupId>
+              <artifactId>spacedatastandards</artifactId>
+              <version>${{ needs.build.outputs.version }}</version>
+              <packaging>jar</packaging>
+
+              <name>Space Data Standards</name>
+              <description>Space data standards framework based on CCSDS and FlatBuffers</description>
+              <url>https://spacedatastandards.org</url>
+
+              <licenses>
+                  <license>
+                      <name>Apache License, Version 2.0</name>
+                      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                  </license>
+              </licenses>
+
+              <developers>
+                  <developer>
+                      <name>Digital Arsenal</name>
+                      <email>sds@digitalarsenal.io</email>
+                      <organization>Digital Arsenal</organization>
+                      <organizationUrl>https://digitalarsenal.io</organizationUrl>
+                  </developer>
+              </developers>
+
+              <scm>
+                  <connection>scm:git:git://github.com/DigitalArsenal/spacedatastandards.org.git</connection>
+                  <developerConnection>scm:git:ssh://github.com:DigitalArsenal/spacedatastandards.org.git</developerConnection>
+                  <url>https://github.com/DigitalArsenal/spacedatastandards.org</url>
+              </scm>
+
+              <distributionManagement>
+                  <snapshotRepository>
+                      <id>ossrh</id>
+                      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                  </snapshotRepository>
+                  <repository>
+                      <id>ossrh</id>
+                      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                  </repository>
+              </distributionManagement>
+
+              <dependencies>
+                  <dependency>
+                      <groupId>com.google.flatbuffers</groupId>
+                      <artifactId>flatbuffers-java</artifactId>
+                      <version>24.3.25</version>
+                  </dependency>
+              </dependencies>
+
+              <build>
+                  <sourceDirectory>.</sourceDirectory>
+                  <plugins>
+                      <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-compiler-plugin</artifactId>
+                          <version>3.11.0</version>
+                          <configuration>
+                              <source>11</source>
+                              <target>11</target>
+                          </configuration>
+                      </plugin>
+                      <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-source-plugin</artifactId>
+                          <version>3.3.0</version>
+                          <executions>
+                              <execution>
+                                  <id>attach-sources</id>
+                                  <goals>
+                                      <goal>jar-no-fork</goal>
+                                  </goals>
+                              </execution>
+                          </executions>
+                      </plugin>
+                      <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-javadoc-plugin</artifactId>
+                          <version>3.6.0</version>
+                          <executions>
+                              <execution>
+                                  <id>attach-javadocs</id>
+                                  <goals>
+                                      <goal>jar</goal>
+                                  </goals>
+                              </execution>
+                          </executions>
+                      </plugin>
+                      <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-gpg-plugin</artifactId>
+                          <version>3.1.0</version>
+                          <executions>
+                              <execution>
+                                  <id>sign-artifacts</id>
+                                  <phase>verify</phase>
+                                  <goals>
+                                      <goal>sign</goal>
+                                  </goals>
+                              </execution>
+                          </executions>
+                      </plugin>
+                      <plugin>
+                          <groupId>org.sonatype.plugins</groupId>
+                          <artifactId>nexus-staging-maven-plugin</artifactId>
+                          <version>1.6.13</version>
+                          <extensions>true</extensions>
+                          <configuration>
+                              <serverId>ossrh</serverId>
+                              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                          </configuration>
+                      </plugin>
+                  </plugins>
+              </build>
+          </project>
+          EOF
+
+      - name: Publish to Maven Central
+        run: |
+          cd lib/java
+          mvn clean deploy -P release
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+  # ============================================
+  # Go Modules (tag-based)
+  # ============================================
+  publish-go:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'go') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update go.mod version
+        run: |
+          cd lib/go
+          cat > go.mod << EOF
+          module github.com/DigitalArsenal/spacedatastandards.org/lib/go
+
+          go 1.21
+
+          require github.com/google/flatbuffers/go v23.3.3+incompatible
+          EOF
+
+      - name: Create and push Go module tag
+        run: |
+          VERSION="v${{ needs.build.outputs.version }}"
+          git add lib/go/
+          git commit -m "chore: Update Go module to ${VERSION}" || true
+          git tag "lib/go/${VERSION}"
+          git push origin "lib/go/${VERSION}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # PHP (Packagist - auto-updates from tags)
+  # ============================================
+  publish-php:
+    needs: build
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'release' ||
+      contains(inputs.packages, 'php') ||
+      inputs.packages == 'all'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Create composer.json
+        run: |
+          cat > lib/php/composer.json << 'EOF'
+          {
+              "name": "digitalarsenal/spacedatastandards",
+              "description": "Space data standards framework based on CCSDS and FlatBuffers",
+              "type": "library",
+              "license": "Apache-2.0",
+              "homepage": "https://spacedatastandards.org",
+              "authors": [
+                  {
+                      "name": "Digital Arsenal",
+                      "email": "sds@digitalarsenal.io"
+                  }
+              ],
+              "require": {
+                  "php": ">=8.0",
+                  "google/flatbuffers": "^24.3"
+              },
+              "autoload": {
+                  "psr-4": {
+                      "SpaceDataStandards\\": ""
+                  }
+              }
+          }
+          EOF
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and tag for Packagist
+        run: |
+          VERSION="v${{ needs.build.outputs.version }}"
+          git add lib/php/
+          git commit -m "chore: Update PHP package to ${VERSION}" || true
+          # Packagist reads from main repo tags
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Summary job
+  # ============================================
+  publish-summary:
+    needs:
+      - build
+      - publish-npm
+      - publish-github-npm
+      - publish-pypi
+      - publish-cargo
+      - publish-nuget
+      - publish-dart
+      - publish-maven-java
+      - publish-go
+      - publish-php
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "## Publish Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Package | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| npm (npmjs.org) | ${{ needs.publish-npm.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| npm (GitHub Packages) | ${{ needs.publish-github-npm.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PyPI | ${{ needs.publish-pypi.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| crates.io | ${{ needs.publish-cargo.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| NuGet | ${{ needs.publish-nuget.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| pub.dev | ${{ needs.publish-dart.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Maven Central | ${{ needs.publish-maven-java.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Go Modules | ${{ needs.publish-go.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP/Packagist | ${{ needs.publish-php.result }} |" >> $GITHUB_STEP_SUMMARY
