@@ -641,80 +641,36 @@ Lobster is a niche language without a central package registry. Distribute via:
 
 ## CI/CD Automation
 
-For automated multi-platform publishing, create `.github/workflows/publish.yml`:
+The repository includes a comprehensive GitHub Actions workflow at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) that handles automated publishing to all package managers.
 
-```yaml
-name: Publish Packages
+### Workflow Triggers
 
-on:
-  release:
-    types: [published]
+The workflow runs on:
+- **Release published**: Automatically publishes when you create a GitHub Release
+- **Manual dispatch**: Run manually with custom version and package selection
 
-jobs:
-  publish-npm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+### Manual Trigger
 
-  publish-pypi:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          cd lib/py
-          pip install build twine
-          python -m build
-          twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+You can trigger publishing manually from the Actions tab:
 
-  publish-crates:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - run: |
-          node scripts/generateCargoPackage.js
-          cd lib/rs
-          cargo publish --token ${{ secrets.CARGO_TOKEN }}
+1. Go to **Actions** → **Publish Packages**
+2. Click **Run workflow**
+3. Enter the version number
+4. Optionally specify which packages to publish (comma-separated: `npm,pypi,cargo,nuget,dart,maven,go,php`) or leave as `all`
 
-  publish-nuget:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - run: |
-          cd lib/cs
-          dotnet pack -c Release
-          dotnet nuget push bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
+### Published Packages
 
-  publish-dart:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-      - run: |
-          cd lib/dart
-          dart pub publish --force
-        env:
-          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
-```
+| Registry | Package Name | Install Command |
+|----------|--------------|-----------------|
+| npmjs.org | `spacedatastandards.org` | `npm install spacedatastandards.org` |
+| GitHub Packages | `@digitalarsenal/spacedatastandards` | `npm install @digitalarsenal/spacedatastandards` |
+| PyPI | `spacedatastandards` | `pip install spacedatastandards` |
+| crates.io | `digitalarsenal-standards` | `cargo add digitalarsenal-standards` |
+| NuGet | `SpaceDataStandards` | `dotnet add package SpaceDataStandards` |
+| pub.dev | `spacedatastandards` | `dart pub add spacedatastandards` |
+| Maven Central | `io.spacedatastandards:spacedatastandards` | See Maven/Gradle docs |
+| Go Modules | `github.com/.../lib/go` | `go get github.com/DigitalArsenal/spacedatastandards.org/lib/go` |
+| Packagist | `digitalarsenal/spacedatastandards` | `composer require digitalarsenal/spacedatastandards` |
 
 ### Required Secrets
 
