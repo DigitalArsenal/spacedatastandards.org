@@ -32,7 +32,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "spacedatastandards.org": "^1.65.0",
-    "flatc-wasm": "^26.1.15"
+    "flatc-wasm": "^25.12.19-wasm.5"
   },
   "devDependencies": {
     "esbuild": "^0.20.2"
