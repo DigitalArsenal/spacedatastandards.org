@@ -1,0 +1,2601 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CelestialFrame": {
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+        },
+        "ICRF": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+        },
+        "J2000": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+        },
+        "J2000A": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+        },
+        "EME2000": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+        },
+        "TEMEOFDATE": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+        },
+        "GTOD": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+        },
+        "CIRS": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+        },
+        "MOD_EARTH": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+        },
+        "MOD_CB": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+        },
+        "MOD_MOON": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+        },
+        "TOD_EARTH": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+        },
+        "TOD_CB": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+        },
+        "TOD_MOON": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+        },
+        "TOE_EARTH": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+        },
+        "TOE_CB": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+        },
+        "TOE_MOON": {
+          "value": 16,
+          "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+        },
+        "ITRF2000": {
+          "value": 17,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+        },
+        "ITRF93": {
+          "value": 18,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+        },
+        "ITRF97": {
+          "value": 19,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+        },
+        "EFG": {
+          "value": 20,
+          "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+        },
+        "FIXED_CB": {
+          "value": 21,
+          "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+        },
+        "FIXED_EARTH": {
+          "value": 22,
+          "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+        },
+        "WGS84": {
+          "value": 23,
+          "description": "WGS84 Earth-fixed terrestrial system."
+        },
+        "DTRFYYYY": {
+          "value": 24,
+          "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+        },
+        "ALIGN_EARTH": {
+          "value": 25,
+          "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+        },
+        "ALIGN_CB": {
+          "value": 26,
+          "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+        },
+        "B1950": {
+          "value": 27,
+          "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+        }
+      }
+    },
+    "SpacecraftFrame": {
+      "type": "string",
+      "enum": [
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACC_i": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+        },
+        "ACTUATOR_i": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+        },
+        "AST_i": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+        },
+        "CSS_i": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+        },
+        "DSS_i": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+        },
+        "ESA_i": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+        },
+        "GYRO_FRAME_i": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+        },
+        "IMU_FRAME_i": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+        },
+        "INSTRUMENT_i": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+        },
+        "MTA_i": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+        },
+        "RW_i": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+        },
+        "SA_i": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+        },
+        "SC_BODY_i": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+        },
+        "SENSOR_i": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+        },
+        "STARTRACKER_i": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+        },
+        "TAM_i": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+        }
+      }
+    },
+    "OrbitFrame": {
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EQW_INERTIAL": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+        },
+        "LVLH_INERTIAL": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+        },
+        "LVLH_ROTATING": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+        },
+        "NSW_INERTIAL": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+        },
+        "NSW_ROTATING": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+        },
+        "NTW_INERTIAL": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+        },
+        "NTW_ROTATING": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+        },
+        "PQW_INERTIAL": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+        },
+        "RSW_INERTIAL": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+        },
+        "RSW_ROTATING": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+        },
+        "SEZ_INERTIAL": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+        },
+        "SEZ_ROTATING": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+        },
+        "TNW_INERTIAL": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+        },
+        "TNW_ROTATING": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+        },
+        "VNC_INERTIAL": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+        },
+        "VNC_ROTATING": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+        }
+      }
+    },
+    "CustomFrame": {
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECEF": {
+          "value": 0,
+          "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+        },
+        "TEME": {
+          "value": 1,
+          "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+        },
+        "TEMEOFEPOCH": {
+          "value": 2,
+          "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+        },
+        "ENU": {
+          "value": 3,
+          "description": "East-North-Up: Local tangent plane for surface points."
+        },
+        "NED": {
+          "value": 4,
+          "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+        },
+        "NEU": {
+          "value": 5,
+          "description": "North-East-Up: Local tangent plane variant with Up positive."
+        },
+        "RIC": {
+          "value": 6,
+          "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+        },
+        "RTN": {
+          "value": 7,
+          "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+        },
+        "TVN": {
+          "value": 8,
+          "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+        },
+        "VVLH": {
+          "value": 9,
+          "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+        },
+        "QSW": {
+          "value": 10,
+          "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+        },
+        "LTP": {
+          "value": 11,
+          "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+        },
+        "LVLH": {
+          "value": 12,
+          "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+        },
+        "PNE": {
+          "value": 13,
+          "description": "Polar-North-East: Surface coordinate frame."
+        },
+        "BRF": {
+          "value": 14,
+          "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+        },
+        "RSW": {
+          "value": 15,
+          "description": "Radial-Along-track-Cross-track: Same as RSW."
+        },
+        "TNW": {
+          "value": 16,
+          "description": "Tangential-Normal-Cross-track: Same as TNW."
+        },
+        "UVW": {
+          "value": 17,
+          "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+        }
+      }
+    },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper"
+      ]
+    },
+    "PolarizationType": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "circular",
+        "elliptical",
+        "unpolarized"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "linear": {
+          "value": 0
+        },
+        "circular": {
+          "value": 1
+        },
+        "elliptical": {
+          "value": 2
+        },
+        "unpolarized": {
+          "value": 3
+        }
+      }
+    },
+    "SimplePolarization": {
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal",
+        "leftHandCircular",
+        "rightHandCircular"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "vertical": {
+          "value": 0
+        },
+        "horizontal": {
+          "value": 1
+        },
+        "leftHandCircular": {
+          "value": 2
+        },
+        "rightHandCircular": {
+          "value": 3
+        }
+      }
+    },
+    "DataMode": {
+      "type": "string",
+      "enum": [
+        "EXERCISE",
+        "REAL",
+        "SIMULATED",
+        "TEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EXERCISE": {
+          "value": 0,
+          "description": "Data collected during an exercise scenario."
+        },
+        "REAL": {
+          "value": 1,
+          "description": "Data collected from real-world observations."
+        },
+        "SIMULATED": {
+          "value": 2,
+          "description": "Data generated through simulation."
+        },
+        "TEST": {
+          "value": 3,
+          "description": "Data collected for testing purposes."
+        }
+      }
+    },
+    "DeviceType": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPTICAL",
+        "INFRARED_SENSOR",
+        "ULTRAVIOLET_SENSOR",
+        "X_RAY_SENSOR",
+        "GAMMA_RAY_SENSOR",
+        "RADAR",
+        "PHASED_ARRAY_RADAR",
+        "SYNTHETIC_APERTURE_RADAR",
+        "BISTATIC_RADIO_TELESCOPE",
+        "RADIO_TELESCOPE",
+        "ATMOSPHERIC_SENSOR",
+        "SPACE_WEATHER_SENSOR",
+        "ENVIRONMENTAL_SENSOR",
+        "SEISMIC_SENSOR",
+        "GRAVIMETRIC_SENSOR",
+        "MAGNETIC_SENSOR",
+        "ELECTROMAGNETIC_SENSOR",
+        "THERMAL_SENSOR",
+        "CHEMICAL_SENSOR",
+        "BIOLOGICAL_SENSOR",
+        "RADIATION_SENSOR",
+        "PARTICLE_DETECTOR",
+        "LIDAR",
+        "SONAR",
+        "TELESCOPE",
+        "SPECTROSCOPIC_SENSOR",
+        "PHOTOMETRIC_SENSOR",
+        "POLARIMETRIC_SENSOR",
+        "INTERFEROMETRIC_SENSOR",
+        "MULTISPECTRAL_SENSOR",
+        "HYPERSPECTRAL_SENSOR",
+        "GPS_RECEIVER",
+        "RADIO_COMMUNICATIONS",
+        "LASER_COMMUNICATIONS",
+        "SATELLITE_COMMUNICATIONS",
+        "LASER_INSTRUMENT",
+        "RF_ANALYZER",
+        "IONOSPHERIC_SENSOR",
+        "LASER_IMAGING",
+        "OPTICAL_TELESCOPE",
+        "HIGH_RESOLUTION_OPTICAL",
+        "RADIO",
+        "MICROWAVE_TRANSMITTER",
+        "RF_MONITOR",
+        "HF_RADIO_COMMUNICATIONS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0,
+          "description": "Basic and General Sensors Basic or undefined sensor type"
+        },
+        "OPTICAL": {
+          "value": 1,
+          "description": "General optical sensors"
+        },
+        "INFRARED_SENSOR": {
+          "value": 2,
+          "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+        },
+        "ULTRAVIOLET_SENSOR": {
+          "value": 3,
+          "description": "Sensitive to ultraviolet light"
+        },
+        "X_RAY_SENSOR": {
+          "value": 4,
+          "description": "For X-ray detection"
+        },
+        "GAMMA_RAY_SENSOR": {
+          "value": 5,
+          "description": "For gamma-ray detection"
+        },
+        "RADAR": {
+          "value": 6,
+          "description": "Radar and Radio Telescopes Basic radar systems"
+        },
+        "PHASED_ARRAY_RADAR": {
+          "value": 7,
+          "description": "Advanced radar with phased array technology"
+        },
+        "SYNTHETIC_APERTURE_RADAR": {
+          "value": 8,
+          "description": "For high-resolution imaging"
+        },
+        "BISTATIC_RADIO_TELESCOPE": {
+          "value": 9,
+          "description": "For astronomical observations using bistatic setup"
+        },
+        "RADIO_TELESCOPE": {
+          "value": 10,
+          "description": "For radio astronomy"
+        },
+        "ATMOSPHERIC_SENSOR": {
+          "value": 11,
+          "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+        },
+        "SPACE_WEATHER_SENSOR": {
+          "value": 12,
+          "description": "For observing space weather phenomena"
+        },
+        "ENVIRONMENTAL_SENSOR": {
+          "value": 13,
+          "description": "General environmental monitoring"
+        },
+        "SEISMIC_SENSOR": {
+          "value": 14,
+          "description": "Specialized Scientific Sensors For measuring seismic activities"
+        },
+        "GRAVIMETRIC_SENSOR": {
+          "value": 15,
+          "description": "For gravity measurements"
+        },
+        "MAGNETIC_SENSOR": {
+          "value": 16,
+          "description": "For magnetic field detection"
+        },
+        "ELECTROMAGNETIC_SENSOR": {
+          "value": 17,
+          "description": "For electromagnetic field analysis"
+        },
+        "THERMAL_SENSOR": {
+          "value": 18,
+          "description": "For temperature and heat detection"
+        },
+        "CHEMICAL_SENSOR": {
+          "value": 19,
+          "description": "For detecting chemicals and substances"
+        },
+        "BIOLOGICAL_SENSOR": {
+          "value": 20,
+          "description": "For biological research and detection"
+        },
+        "RADIATION_SENSOR": {
+          "value": 21,
+          "description": "For detecting ionizing radiation"
+        },
+        "PARTICLE_DETECTOR": {
+          "value": 22,
+          "description": "For detecting subatomic particles"
+        },
+        "LIDAR": {
+          "value": 23,
+          "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+        },
+        "SONAR": {
+          "value": 24,
+          "description": "Sound Navigation and Ranging"
+        },
+        "TELESCOPE": {
+          "value": 25,
+          "description": "General telescopes for astronomical observations"
+        },
+        "SPECTROSCOPIC_SENSOR": {
+          "value": 26,
+          "description": "For spectral analysis"
+        },
+        "PHOTOMETRIC_SENSOR": {
+          "value": 27,
+          "description": "For measuring light intensity"
+        },
+        "POLARIMETRIC_SENSOR": {
+          "value": 28,
+          "description": "For analyzing polarization of light"
+        },
+        "INTERFEROMETRIC_SENSOR": {
+          "value": 29,
+          "description": "For detailed imaging using interference"
+        },
+        "MULTISPECTRAL_SENSOR": {
+          "value": 30,
+          "description": "Capturing image data at multiple wavelengths"
+        },
+        "HYPERSPECTRAL_SENSOR": {
+          "value": 31,
+          "description": "Advanced imaging across many spectral bands"
+        },
+        "GPS_RECEIVER": {
+          "value": 32,
+          "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+        },
+        "RADIO_COMMUNICATIONS": {
+          "value": 33,
+          "description": "Communication Devices Standard radio communication device"
+        },
+        "LASER_COMMUNICATIONS": {
+          "value": 34,
+          "description": "Advanced laser communication system"
+        },
+        "SATELLITE_COMMUNICATIONS": {
+          "value": 35,
+          "description": "Satellite communication system"
+        },
+        "LASER_INSTRUMENT": {
+          "value": 36,
+          "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+        },
+        "RF_ANALYZER": {
+          "value": 37,
+          "description": "Radio frequency analysis and measurement device"
+        },
+        "IONOSPHERIC_SENSOR": {
+          "value": 38,
+          "description": "Device for ionospheric research"
+        },
+        "LASER_IMAGING": {
+          "value": 39,
+          "description": "Optical Devices Device for laser-based imaging"
+        },
+        "OPTICAL_TELESCOPE": {
+          "value": 40,
+          "description": "Advanced optical telescope"
+        },
+        "HIGH_RESOLUTION_OPTICAL": {
+          "value": 41,
+          "description": "Device for high-resolution optical observations"
+        },
+        "RADIO": {
+          "value": 42,
+          "description": "Radio and Microwave Devices"
+        },
+        "MICROWAVE_TRANSMITTER": {
+          "value": 43,
+          "description": "Microwave communication device"
+        },
+        "RF_MONITOR": {
+          "value": 44,
+          "description": "Device for radio frequency monitoring"
+        },
+        "HF_RADIO_COMMUNICATIONS": {
+          "value": 45,
+          "description": "High-frequency radio communication device"
+        }
+      }
+    },
+    "CollectMethod": {
+      "type": "string",
+      "enum": [
+        "SIDEREAL",
+        "RATE_TRACK",
+        "FIXED_STARE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SIDEREAL": {
+          "value": 0
+        },
+        "RATE_TRACK": {
+          "value": 1
+        },
+        "FIXED_STARE": {
+          "value": 2
+        },
+        "OTHER": {
+          "value": 3
+        }
+      }
+    },
+    "ObservationPosition": {
+      "type": "string",
+      "enum": [
+        "FENCE",
+        "FIRST",
+        "IN",
+        "LAST",
+        "SINGLE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FENCE": {
+          "value": 0
+        },
+        "FIRST": {
+          "value": 1
+        },
+        "IN": {
+          "value": 2
+        },
+        "LAST": {
+          "value": 3
+        },
+        "SINGLE": {
+          "value": 4
+        }
+      }
+    },
+    "CelestialFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CelestialFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GCRF": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            "ICRF": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            "J2000": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            "J2000A": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            "EME2000": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            "TEMEOFDATE": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            "GTOD": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            "CIRS": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            "MOD_EARTH": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            "MOD_CB": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            "MOD_MOON": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            "TOD_EARTH": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            "TOD_CB": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            "TOD_MOON": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            "TOE_EARTH": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            "TOE_CB": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            "TOE_MOON": {
+              "value": 16,
+              "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            "ITRF2000": {
+              "value": 17,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            "ITRF93": {
+              "value": 18,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            "ITRF97": {
+              "value": 19,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            "EFG": {
+              "value": 20,
+              "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            "FIXED_CB": {
+              "value": 21,
+              "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            "FIXED_EARTH": {
+              "value": 22,
+              "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            "WGS84": {
+              "value": 23,
+              "description": "WGS84 Earth-fixed terrestrial system."
+            },
+            "DTRFYYYY": {
+              "value": 24,
+              "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            "ALIGN_EARTH": {
+              "value": 25,
+              "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            "ALIGN_CB": {
+              "value": 26,
+              "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            "B1950": {
+              "value": 27,
+              "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SpacecraftFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/SpacecraftFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACC_i": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            "ACTUATOR_i": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            "AST_i": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            "CSS_i": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            "DSS_i": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            "ESA_i": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            "GYRO_FRAME_i": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            "IMU_FRAME_i": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            "INSTRUMENT_i": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            "MTA_i": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            "RW_i": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            "SA_i": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            "SC_BODY_i": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            "SENSOR_i": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            "STARTRACKER_i": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            "TAM_i": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OrbitFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/OrbitFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQW_INERTIAL": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            "LVLH_INERTIAL": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            "LVLH_ROTATING": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            "NSW_INERTIAL": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            "NSW_ROTATING": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            "NTW_INERTIAL": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            "NTW_ROTATING": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            "PQW_INERTIAL": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            "RSW_INERTIAL": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            "RSW_ROTATING": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            "SEZ_INERTIAL": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            "SEZ_ROTATING": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            "TNW_INERTIAL": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            "TNW_ROTATING": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            "VNC_INERTIAL": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            "VNC_ROTATING": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CustomFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ECEF": {
+              "value": 0,
+              "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            "TEME": {
+              "value": 1,
+              "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            "TEMEOFEPOCH": {
+              "value": 2,
+              "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            "ENU": {
+              "value": 3,
+              "description": "East-North-Up: Local tangent plane for surface points."
+            },
+            "NED": {
+              "value": 4,
+              "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            "NEU": {
+              "value": 5,
+              "description": "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            "RIC": {
+              "value": 6,
+              "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            "RTN": {
+              "value": 7,
+              "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            "TVN": {
+              "value": 8,
+              "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            "VVLH": {
+              "value": 9,
+              "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            "QSW": {
+              "value": 10,
+              "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            "LTP": {
+              "value": 11,
+              "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            "LVLH": {
+              "value": 12,
+              "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            "PNE": {
+              "value": 13,
+              "description": "Polar-North-East: Surface coordinate frame."
+            },
+            "BRF": {
+              "value": 14,
+              "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            "RSW": {
+              "value": 15,
+              "description": "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            "TNW": {
+              "value": 16,
+              "description": "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            "UVW": {
+              "value": 17,
+              "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFM": {
+      "type": "object",
+      "description": "Reference Frame Message",
+      "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
+        "REFERENCE_FRAME": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            }
+          ],
+          "x-flatbuffer-type": "RFMUnion"
+        },
+        "INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FrequencyRange": {
+      "type": "object",
+      "description": "Frequency range with lower and upper limits",
+      "properties": {
+        "LOWER": {
+          "type": "number",
+          "description": "Lower frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER": {
+          "type": "number",
+          "description": "Upper frequency in MHz",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StokesParameters": {
+      "type": "object",
+      "description": "Stokes parameters, representing different aspects of polarization",
+      "properties": {
+        "I": {
+          "type": "number",
+          "description": "Intensity",
+          "x-flatbuffer-type": "double"
+        },
+        "Q": {
+          "type": "number",
+          "description": "Linear polarization",
+          "x-flatbuffer-type": "double"
+        },
+        "U": {
+          "type": "number",
+          "description": "Another linear polarization, orthogonal to Q",
+          "x-flatbuffer-type": "double"
+        },
+        "V": {
+          "type": "number",
+          "description": "Circular polarization",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Band": {
+      "type": "object",
+      "description": "Table representing a frequency band with a name and frequency range",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the band",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_RANGE": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Frequency range of the band",
+          "x-flatbuffer-type": "FrequencyRange"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IDM": {
+      "type": "object",
+      "description": "Integrated Device Message",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_MODE": {
+          "$ref": "#/definitions/DataMode",
+          "description": "Mode of the data (real, simulated, synthetic)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EXERCISE": {
+              "value": 0,
+              "description": "Data collected during an exercise scenario."
+            },
+            "REAL": {
+              "value": 1,
+              "description": "Data collected from real-world observations."
+            },
+            "SIMULATED": {
+              "value": 2,
+              "description": "Data generated through simulation."
+            },
+            "TEST": {
+              "value": 3,
+              "description": "Data collected for testing purposes."
+            }
+          }
+        },
+        "UPLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Uplink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "DOWNLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Downlink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BEACON": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Beacon frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BAND": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Band"
+          },
+          "description": "Bands associated with the EMT",
+          "x-flatbuffer-type": "[Band]"
+        },
+        "POLARIZATION_TYPE": {
+          "$ref": "#/definitions/PolarizationType",
+          "description": "Type of polarization used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "linear": {
+              "value": 0
+            },
+            "circular": {
+              "value": 1
+            },
+            "elliptical": {
+              "value": 2
+            },
+            "unpolarized": {
+              "value": 3
+            }
+          }
+        },
+        "SIMPLE_POLARIZATION": {
+          "$ref": "#/definitions/SimplePolarization",
+          "description": "Simple polarization configuration",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "vertical": {
+              "value": 0
+            },
+            "horizontal": {
+              "value": 1
+            },
+            "leftHandCircular": {
+              "value": 2
+            },
+            "rightHandCircular": {
+              "value": 3
+            }
+          }
+        },
+        "STOKES_PARAMETERS": {
+          "$ref": "#/definitions/StokesParameters",
+          "description": "Stokes parameters for polarization characterization",
+          "x-flatbuffer-type": "StokesParameters"
+        },
+        "POWER_REQUIRED": {
+          "type": "number",
+          "description": "Power required in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_TYPE": {
+          "type": "string",
+          "description": "Type of power (eg. AC or DC)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can transmit",
+          "x-flatbuffer-type": "bool"
+        },
+        "RECEIVE": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can receive",
+          "x-flatbuffer-type": "bool"
+        },
+        "SENSOR_TYPE": {
+          "$ref": "#/definitions/DeviceType",
+          "description": "Type of the sensor",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0,
+              "description": "Basic and General Sensors Basic or undefined sensor type"
+            },
+            "OPTICAL": {
+              "value": 1,
+              "description": "General optical sensors"
+            },
+            "INFRARED_SENSOR": {
+              "value": 2,
+              "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+            },
+            "ULTRAVIOLET_SENSOR": {
+              "value": 3,
+              "description": "Sensitive to ultraviolet light"
+            },
+            "X_RAY_SENSOR": {
+              "value": 4,
+              "description": "For X-ray detection"
+            },
+            "GAMMA_RAY_SENSOR": {
+              "value": 5,
+              "description": "For gamma-ray detection"
+            },
+            "RADAR": {
+              "value": 6,
+              "description": "Radar and Radio Telescopes Basic radar systems"
+            },
+            "PHASED_ARRAY_RADAR": {
+              "value": 7,
+              "description": "Advanced radar with phased array technology"
+            },
+            "SYNTHETIC_APERTURE_RADAR": {
+              "value": 8,
+              "description": "For high-resolution imaging"
+            },
+            "BISTATIC_RADIO_TELESCOPE": {
+              "value": 9,
+              "description": "For astronomical observations using bistatic setup"
+            },
+            "RADIO_TELESCOPE": {
+              "value": 10,
+              "description": "For radio astronomy"
+            },
+            "ATMOSPHERIC_SENSOR": {
+              "value": 11,
+              "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+            },
+            "SPACE_WEATHER_SENSOR": {
+              "value": 12,
+              "description": "For observing space weather phenomena"
+            },
+            "ENVIRONMENTAL_SENSOR": {
+              "value": 13,
+              "description": "General environmental monitoring"
+            },
+            "SEISMIC_SENSOR": {
+              "value": 14,
+              "description": "Specialized Scientific Sensors For measuring seismic activities"
+            },
+            "GRAVIMETRIC_SENSOR": {
+              "value": 15,
+              "description": "For gravity measurements"
+            },
+            "MAGNETIC_SENSOR": {
+              "value": 16,
+              "description": "For magnetic field detection"
+            },
+            "ELECTROMAGNETIC_SENSOR": {
+              "value": 17,
+              "description": "For electromagnetic field analysis"
+            },
+            "THERMAL_SENSOR": {
+              "value": 18,
+              "description": "For temperature and heat detection"
+            },
+            "CHEMICAL_SENSOR": {
+              "value": 19,
+              "description": "For detecting chemicals and substances"
+            },
+            "BIOLOGICAL_SENSOR": {
+              "value": 20,
+              "description": "For biological research and detection"
+            },
+            "RADIATION_SENSOR": {
+              "value": 21,
+              "description": "For detecting ionizing radiation"
+            },
+            "PARTICLE_DETECTOR": {
+              "value": 22,
+              "description": "For detecting subatomic particles"
+            },
+            "LIDAR": {
+              "value": 23,
+              "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+            },
+            "SONAR": {
+              "value": 24,
+              "description": "Sound Navigation and Ranging"
+            },
+            "TELESCOPE": {
+              "value": 25,
+              "description": "General telescopes for astronomical observations"
+            },
+            "SPECTROSCOPIC_SENSOR": {
+              "value": 26,
+              "description": "For spectral analysis"
+            },
+            "PHOTOMETRIC_SENSOR": {
+              "value": 27,
+              "description": "For measuring light intensity"
+            },
+            "POLARIMETRIC_SENSOR": {
+              "value": 28,
+              "description": "For analyzing polarization of light"
+            },
+            "INTERFEROMETRIC_SENSOR": {
+              "value": 29,
+              "description": "For detailed imaging using interference"
+            },
+            "MULTISPECTRAL_SENSOR": {
+              "value": 30,
+              "description": "Capturing image data at multiple wavelengths"
+            },
+            "HYPERSPECTRAL_SENSOR": {
+              "value": 31,
+              "description": "Advanced imaging across many spectral bands"
+            },
+            "GPS_RECEIVER": {
+              "value": 32,
+              "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+            },
+            "RADIO_COMMUNICATIONS": {
+              "value": 33,
+              "description": "Communication Devices Standard radio communication device"
+            },
+            "LASER_COMMUNICATIONS": {
+              "value": 34,
+              "description": "Advanced laser communication system"
+            },
+            "SATELLITE_COMMUNICATIONS": {
+              "value": 35,
+              "description": "Satellite communication system"
+            },
+            "LASER_INSTRUMENT": {
+              "value": 36,
+              "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+            },
+            "RF_ANALYZER": {
+              "value": 37,
+              "description": "Radio frequency analysis and measurement device"
+            },
+            "IONOSPHERIC_SENSOR": {
+              "value": 38,
+              "description": "Device for ionospheric research"
+            },
+            "LASER_IMAGING": {
+              "value": 39,
+              "description": "Optical Devices Device for laser-based imaging"
+            },
+            "OPTICAL_TELESCOPE": {
+              "value": 40,
+              "description": "Advanced optical telescope"
+            },
+            "HIGH_RESOLUTION_OPTICAL": {
+              "value": 41,
+              "description": "Device for high-resolution optical observations"
+            },
+            "RADIO": {
+              "value": 42,
+              "description": "Radio and Microwave Devices"
+            },
+            "MICROWAVE_TRANSMITTER": {
+              "value": 43,
+              "description": "Microwave communication device"
+            },
+            "RF_MONITOR": {
+              "value": 44,
+              "description": "Device for radio frequency monitoring"
+            },
+            "HF_RADIO_COMMUNICATIONS": {
+              "value": 45,
+              "description": "High-frequency radio communication device"
+            }
+          }
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the data",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_TIME": {
+          "type": "string",
+          "description": "Timestamp of the last observation",
+          "x-flatbuffer-type": "string"
+        },
+        "LOWER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "RIGHT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Right geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LEFT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Left geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "MAGNITUDE_LIMIT": {
+          "type": "number",
+          "description": "Magnitude limit of the sensor",
+          "x-flatbuffer-type": "double"
+        },
+        "TASKABLE": {
+          "type": "boolean",
+          "description": "Indicates if the site is taskable",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EOO": {
+      "type": "object",
+      "description": "Electro-Optical Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier of the record.",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification marking of the data in IC/CAPCO Portion-marked format.",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_TIME": {
+          "type": "string",
+          "description": "Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.",
+          "x-flatbuffer-type": "string"
+        },
+        "CORR_QUALITY": {
+          "type": "number",
+          "description": "Correlation score of the observation when compared to a known orbit state.",
+          "x-flatbuffer-type": "float"
+        },
+        "ID_ON_ORBIT": {
+          "type": "string",
+          "description": "Server will auto-populate with SAT_NO if available.",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Unique ID of the sensor. Must have a corresponding sensor record on the server.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECT_METHOD": {
+          "$ref": "#/definitions/CollectMethod",
+          "description": "Accepted Collection Method",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SIDEREAL": {
+              "value": 0
+            },
+            "RATE_TRACK": {
+              "value": 1
+            },
+            "FIXED_STARE": {
+              "value": 2
+            },
+            "OTHER": {
+              "value": 3
+            }
+          }
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "18SDS satellite number. Only list if correlated against the 18SDS catalog.",
+          "x-flatbuffer-type": "int"
+        },
+        "TASK_ID": {
+          "type": "string",
+          "description": "Identifier for the collectRequest message if the collection was in response to tasking.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "description": "Optional identifier to track a transaction.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_SET_ID": {
+          "type": "string",
+          "description": "The user-defined set ID of a sequence of images.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_SET_LENGTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "The number of images in an image set.",
+          "x-flatbuffer-type": "int"
+        },
+        "SEQUENCE_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "The sequence ID of an image within an image set.",
+          "x-flatbuffer-type": "int"
+        },
+        "OB_POSITION": {
+          "$ref": "#/definitions/ObservationPosition",
+          "description": "The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FENCE": {
+              "value": 0
+            },
+            "FIRST": {
+              "value": 1
+            },
+            "IN": {
+              "value": 2
+            },
+            "LAST": {
+              "value": 3
+            },
+            "SINGLE": {
+              "value": 4
+            }
+          }
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "Provider maintained ID. May not be consistent with 18SDS SAT_NO.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "description": "Sensor ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "description": "Required if correlation is attempted. Indicates whether correlation succeeded.",
+          "x-flatbuffer-type": "bool"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "description": "Line of sight azimuth angle in degrees and topocentric frame.",
+          "x-flatbuffer-type": "float"
+        },
+        "AZIMUTH_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight azimuth angle, in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "AZIMUTH_BIAS": {
+          "type": "number",
+          "description": "Sensor line of sight azimuth angle bias in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "AZIMUTH_RATE": {
+          "type": "number",
+          "description": "Rate of change of the line of sight azimuth in degrees per second.",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Line of sight elevation in degrees and topocentric frame.",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight elevation angle, in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_BIAS": {
+          "type": "number",
+          "description": "Sensor line of sight elevation bias in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_RATE": {
+          "type": "number",
+          "description": "Rate of change of the line of sight elevation in degrees per second.",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE": {
+          "type": "number",
+          "description": "Line of sight range in km. Reported value should include all applicable corrections.",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight range, in km.",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE_BIAS": {
+          "type": "number",
+          "description": "Sensor line of sight range bias in km.",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE_RATE": {
+          "type": "number",
+          "description": "Range rate in km/s. Reported value should include all applicable corrections.",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE_RATE_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight range rate, in km/sec.",
+          "x-flatbuffer-type": "float"
+        },
+        "RA": {
+          "type": "number",
+          "description": "Right ascension in degrees. Required metric reporting field for EO observations.",
+          "x-flatbuffer-type": "float"
+        },
+        "RA_RATE": {
+          "type": "number",
+          "description": "Line of sight right ascension rate of change, in degrees/sec.",
+          "x-flatbuffer-type": "float"
+        },
+        "RA_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight right ascension angle, in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "RA_BIAS": {
+          "type": "number",
+          "description": "Sensor line of sight right ascension bias in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "DECLINATION": {
+          "type": "number",
+          "description": "Declination in degrees. Required metric reporting field for EO observations.",
+          "x-flatbuffer-type": "float"
+        },
+        "DECLINATION_RATE": {
+          "type": "number",
+          "description": "Line of sight declination rate of change, in degrees/sec.",
+          "x-flatbuffer-type": "float"
+        },
+        "DECLINATION_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line of sight declination angle, in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "DECLINATION_BIAS": {
+          "type": "number",
+          "description": "Sensor line of sight declination angle bias in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSX": {
+          "type": "number",
+          "description": "X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSY": {
+          "type": "number",
+          "description": "Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSZ": {
+          "type": "number",
+          "description": "Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOS_UNC": {
+          "type": "number",
+          "description": "One sigma uncertainty in the line-of-sight direction vector components.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSXVEL": {
+          "type": "number",
+          "description": "X-component of the velocity vector along the line of sight, in km/s.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSYVEL": {
+          "type": "number",
+          "description": "Y-component of the velocity vector along the line of sight, in km/s.",
+          "x-flatbuffer-type": "float"
+        },
+        "LOSZVEL": {
+          "type": "number",
+          "description": "Z-component of the velocity vector along the line of sight, in km/s.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENLAT": {
+          "type": "number",
+          "description": "WGS-84 latitude in decimal degrees at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENLON": {
+          "type": "number",
+          "description": "WGS-84 longitude in decimal degrees at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENALT": {
+          "type": "number",
+          "description": "Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENX": {
+          "type": "number",
+          "description": "Cartesian X position in km at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENY": {
+          "type": "number",
+          "description": "Cartesian Y position in km at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "SENZ": {
+          "type": "number",
+          "description": "Cartesian Z position in km at the time of the observation.",
+          "x-flatbuffer-type": "float"
+        },
+        "FOV_COUNT": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Total number of satellites in the field of view.",
+          "x-flatbuffer-type": "int"
+        },
+        "FOV_COUNT_UCTS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Number of uncorrelated satellites in the field of view (JCO).",
+          "x-flatbuffer-type": "int"
+        },
+        "EXP_DURATION": {
+          "type": "number",
+          "description": "Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods,\nthe exposure duration should be the total integration time. This field is highly recommended / required if the\nobservations are going to be used for photometric processing.",
+          "x-flatbuffer-type": "float"
+        },
+        "ZEROPTD": {
+          "type": "number",
+          "description": "Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).",
+          "x-flatbuffer-type": "float"
+        },
+        "NET_OBJ_SIG": {
+          "type": "number",
+          "description": "Net object signature = counts / EXP_DURATION.",
+          "x-flatbuffer-type": "float"
+        },
+        "NET_OBJ_SIG_UNC": {
+          "type": "number",
+          "description": "Net object signature uncertainty = counts uncertainty / EXP_DURATION.",
+          "x-flatbuffer-type": "float"
+        },
+        "MAG": {
+          "type": "number",
+          "description": "Measure of observed brightness calibrated against the Gaia G-band.",
+          "x-flatbuffer-type": "float"
+        },
+        "MAG_UNC": {
+          "type": "number",
+          "description": "Uncertainty of the observed brightness.",
+          "x-flatbuffer-type": "float"
+        },
+        "MAG_NORM_RANGE": {
+          "type": "number",
+          "description": "[Definition needed].",
+          "x-flatbuffer-type": "float"
+        },
+        "GEOLAT": {
+          "type": "number",
+          "description": "Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range\nand corresponding viewing geometry. It must NOT be computed from the orbit state.",
+          "x-flatbuffer-type": "float"
+        },
+        "GEOLON": {
+          "type": "number",
+          "description": "Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range\nand viewing geometry. It must NOT be computed from the orbit state.",
+          "x-flatbuffer-type": "float"
+        },
+        "GEOALT": {
+          "type": "number",
+          "description": "Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.",
+          "x-flatbuffer-type": "float"
+        },
+        "GEORANGE": {
+          "type": "number",
+          "description": "Computed estimate of the slant range in km. It must NOT be computed from the orbit state.",
+          "x-flatbuffer-type": "float"
+        },
+        "SKY_BKGRND": {
+          "type": "number",
+          "description": "Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently\nempty part of the night sky.",
+          "x-flatbuffer-type": "float"
+        },
+        "PRIMARY_EXTINCTION": {
+          "type": "number",
+          "description": "Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass\nto determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general,\ndescribes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical\nobject and the observer.",
+          "x-flatbuffer-type": "float"
+        },
+        "PRIMARY_EXTINCTION_UNC": {
+          "type": "number",
+          "description": "Primary Extinction Coefficient Uncertainty, in Magnitudes.",
+          "x-flatbuffer-type": "float"
+        },
+        "SOLAR_PHASE_ANGLE": {
+          "type": "number",
+          "description": "The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the\ncalculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.",
+          "x-flatbuffer-type": "float"
+        },
+        "SOLAR_EQ_PHASE_ANGLE": {
+          "type": "number",
+          "description": "The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector\nonto the equatorial plane. The convention used is negative when closing (i.e., before the opposition)\nand positive when opening (after the opposition).",
+          "x-flatbuffer-type": "float"
+        },
+        "SOLAR_DEC_ANGLE": {
+          "type": "number",
+          "description": "Angle from the sun to the equatorial plane.",
+          "x-flatbuffer-type": "float"
+        },
+        "SHUTTER_DELAY": {
+          "type": "number",
+          "description": "Shutter delay in seconds.",
+          "x-flatbuffer-type": "float"
+        },
+        "TIMING_BIAS": {
+          "type": "number",
+          "description": "Sensor timing bias in seconds.",
+          "x-flatbuffer-type": "float"
+        },
+        "RAW_FILE_URI": {
+          "type": "string",
+          "description": "Optional URI location in the document repository of the raw file parsed by the system to produce this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "INTENSITY": {
+          "type": "number",
+          "description": "Intensity of the target for IR observations, in kw/sr/em.",
+          "x-flatbuffer-type": "float"
+        },
+        "BG_INTENSITY": {
+          "type": "number",
+          "description": "Background intensity for IR observations, in kw/sr/um.",
+          "x-flatbuffer-type": "float"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Optional source-provided and searchable metadata or descriptor of the data.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the data.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN": {
+          "type": "string",
+          "description": "Originating system or organization which produced the data, if different from the source.\nThe origin may be different than the source if the source was a mediating system which forwarded\nthe data on behalf of the origin system. If null, the source may be assumed to be the origin.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_MODE": {
+          "$ref": "#/definitions/DataMode",
+          "description": "Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EXERCISE": {
+              "value": 0,
+              "description": "Data collected during an exercise scenario."
+            },
+            "REAL": {
+              "value": 1,
+              "description": "Data collected from real-world observations."
+            },
+            "SIMULATED": {
+              "value": 2,
+              "description": "Data generated through simulation."
+            },
+            "TEST": {
+              "value": 3,
+              "description": "Data collected for testing purposes."
+            }
+          }
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "Time the row was created in the database, auto-populated by the system.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_BY": {
+          "type": "string",
+          "description": "Application user who created the row in the database, auto-populated by the system.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.",
+          "x-flatbuffer-type": "RFM"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF),\nunless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose).\nLat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.",
+          "x-flatbuffer-type": "RFM"
+        },
+        "UMBRA": {
+          "type": "boolean",
+          "description": "Boolean indicating that the target object was in umbral eclipse at the time of this observation.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PENUMBRA": {
+          "type": "boolean",
+          "description": "Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.\nThis field is highly recommended if the observations will be used for photometric processing.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ORIG_NETWORK": {
+          "type": "string",
+          "description": "The originating source network on which this record was created, auto-populated by the system.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DL": {
+          "type": "string",
+          "description": "The source from which this record was received.",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/DeviceType",
+          "description": "Device Type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0,
+              "description": "Basic and General Sensors Basic or undefined sensor type"
+            },
+            "OPTICAL": {
+              "value": 1,
+              "description": "General optical sensors"
+            },
+            "INFRARED_SENSOR": {
+              "value": 2,
+              "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+            },
+            "ULTRAVIOLET_SENSOR": {
+              "value": 3,
+              "description": "Sensitive to ultraviolet light"
+            },
+            "X_RAY_SENSOR": {
+              "value": 4,
+              "description": "For X-ray detection"
+            },
+            "GAMMA_RAY_SENSOR": {
+              "value": 5,
+              "description": "For gamma-ray detection"
+            },
+            "RADAR": {
+              "value": 6,
+              "description": "Radar and Radio Telescopes Basic radar systems"
+            },
+            "PHASED_ARRAY_RADAR": {
+              "value": 7,
+              "description": "Advanced radar with phased array technology"
+            },
+            "SYNTHETIC_APERTURE_RADAR": {
+              "value": 8,
+              "description": "For high-resolution imaging"
+            },
+            "BISTATIC_RADIO_TELESCOPE": {
+              "value": 9,
+              "description": "For astronomical observations using bistatic setup"
+            },
+            "RADIO_TELESCOPE": {
+              "value": 10,
+              "description": "For radio astronomy"
+            },
+            "ATMOSPHERIC_SENSOR": {
+              "value": 11,
+              "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+            },
+            "SPACE_WEATHER_SENSOR": {
+              "value": 12,
+              "description": "For observing space weather phenomena"
+            },
+            "ENVIRONMENTAL_SENSOR": {
+              "value": 13,
+              "description": "General environmental monitoring"
+            },
+            "SEISMIC_SENSOR": {
+              "value": 14,
+              "description": "Specialized Scientific Sensors For measuring seismic activities"
+            },
+            "GRAVIMETRIC_SENSOR": {
+              "value": 15,
+              "description": "For gravity measurements"
+            },
+            "MAGNETIC_SENSOR": {
+              "value": 16,
+              "description": "For magnetic field detection"
+            },
+            "ELECTROMAGNETIC_SENSOR": {
+              "value": 17,
+              "description": "For electromagnetic field analysis"
+            },
+            "THERMAL_SENSOR": {
+              "value": 18,
+              "description": "For temperature and heat detection"
+            },
+            "CHEMICAL_SENSOR": {
+              "value": 19,
+              "description": "For detecting chemicals and substances"
+            },
+            "BIOLOGICAL_SENSOR": {
+              "value": 20,
+              "description": "For biological research and detection"
+            },
+            "RADIATION_SENSOR": {
+              "value": 21,
+              "description": "For detecting ionizing radiation"
+            },
+            "PARTICLE_DETECTOR": {
+              "value": 22,
+              "description": "For detecting subatomic particles"
+            },
+            "LIDAR": {
+              "value": 23,
+              "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+            },
+            "SONAR": {
+              "value": 24,
+              "description": "Sound Navigation and Ranging"
+            },
+            "TELESCOPE": {
+              "value": 25,
+              "description": "General telescopes for astronomical observations"
+            },
+            "SPECTROSCOPIC_SENSOR": {
+              "value": 26,
+              "description": "For spectral analysis"
+            },
+            "PHOTOMETRIC_SENSOR": {
+              "value": 27,
+              "description": "For measuring light intensity"
+            },
+            "POLARIMETRIC_SENSOR": {
+              "value": 28,
+              "description": "For analyzing polarization of light"
+            },
+            "INTERFEROMETRIC_SENSOR": {
+              "value": 29,
+              "description": "For detailed imaging using interference"
+            },
+            "MULTISPECTRAL_SENSOR": {
+              "value": 30,
+              "description": "Capturing image data at multiple wavelengths"
+            },
+            "HYPERSPECTRAL_SENSOR": {
+              "value": 31,
+              "description": "Advanced imaging across many spectral bands"
+            },
+            "GPS_RECEIVER": {
+              "value": 32,
+              "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+            },
+            "RADIO_COMMUNICATIONS": {
+              "value": 33,
+              "description": "Communication Devices Standard radio communication device"
+            },
+            "LASER_COMMUNICATIONS": {
+              "value": 34,
+              "description": "Advanced laser communication system"
+            },
+            "SATELLITE_COMMUNICATIONS": {
+              "value": 35,
+              "description": "Satellite communication system"
+            },
+            "LASER_INSTRUMENT": {
+              "value": 36,
+              "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+            },
+            "RF_ANALYZER": {
+              "value": 37,
+              "description": "Radio frequency analysis and measurement device"
+            },
+            "IONOSPHERIC_SENSOR": {
+              "value": 38,
+              "description": "Device for ionospheric research"
+            },
+            "LASER_IMAGING": {
+              "value": 39,
+              "description": "Optical Devices Device for laser-based imaging"
+            },
+            "OPTICAL_TELESCOPE": {
+              "value": 40,
+              "description": "Advanced optical telescope"
+            },
+            "HIGH_RESOLUTION_OPTICAL": {
+              "value": 41,
+              "description": "Device for high-resolution optical observations"
+            },
+            "RADIO": {
+              "value": 42,
+              "description": "Radio and Microwave Devices"
+            },
+            "MICROWAVE_TRANSMITTER": {
+              "value": 43,
+              "description": "Microwave communication device"
+            },
+            "RF_MONITOR": {
+              "value": 44,
+              "description": "Device for radio frequency monitoring"
+            },
+            "HF_RADIO_COMMUNICATIONS": {
+              "value": 45,
+              "description": "High-frequency radio communication device"
+            }
+          }
+        },
+        "AZIMUTH_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if azimuth is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ELEVATION_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if elevation is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RANGE_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if range is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RANGERATE_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if range-rate is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RA_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if right ascension is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DECLINATION_MEASURED": {
+          "type": "boolean",
+          "description": "True if measured, false if computed. Required if declination is reported.",
+          "x-flatbuffer-type": "bool"
+        },
+        "NIIRS": {
+          "type": "number",
+          "description": "National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).",
+          "x-flatbuffer-type": "float"
+        },
+        "METERS_PER_PIXEL": {
+          "type": "number",
+          "description": "Ground sample distance in meters per pixel.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_SNR": {
+          "type": "number",
+          "description": "Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_BIT_DEPTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Bit depth of the image (e.g., 8, 12, 16).",
+          "x-flatbuffer-type": "int"
+        },
+        "IMAGE_WIDTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Width of the image in pixels.",
+          "x-flatbuffer-type": "int"
+        },
+        "IMAGE_HEIGHT": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Height of the image in pixels.",
+          "x-flatbuffer-type": "int"
+        },
+        "IMAGE_COMPRESSION": {
+          "type": "string",
+          "description": "Compression type used for the image, e.g., \"JPEG\", \"PNG\", \"RAW\", etc.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_COMPRESSION_RATIO": {
+          "type": "number",
+          "description": "Compression ratio used (original size / compressed size), if applicable.",
+          "x-flatbuffer-type": "float"
+        },
+        "PROCESSED_IMAGE_URI": {
+          "type": "string",
+          "description": "URI to the processed image used for this observation.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_AUTO_ENHANCED": {
+          "type": "boolean",
+          "description": "Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).",
+          "x-flatbuffer-type": "bool"
+        },
+        "MULTI_FRAME_STACKED": {
+          "type": "boolean",
+          "description": "True if the observation was taken with multiple frames stacked into one image.",
+          "x-flatbuffer-type": "bool"
+        },
+        "SYNTHETIC_TRACKING_USED": {
+          "type": "boolean",
+          "description": "True if synthetic tracking was used to create the image.",
+          "x-flatbuffer-type": "bool"
+        },
+        "IMAGE_SHARPNESS": {
+          "type": "number",
+          "description": "Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_NOISE_STDDEV": {
+          "type": "number",
+          "description": "Noise level of the image, estimated via pixel intensity variance in background regions.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_CONTRAST": {
+          "type": "number",
+          "description": "Contrast metric of the image, such as Michelson contrast or RMS contrast.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_DYNAMIC_RANGE": {
+          "type": "number",
+          "description": "Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.",
+          "x-flatbuffer-type": "float"
+        },
+        "IMAGE_ENTROPY": {
+          "type": "number",
+          "description": "Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.",
+          "x-flatbuffer-type": "float"
+        },
+        "BACKGROUND_UNIFORMITY": {
+          "type": "number",
+          "description": "Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.",
+          "x-flatbuffer-type": "float"
+        },
+        "BACKGROUND_MEAN_LEVEL": {
+          "type": "number",
+          "description": "Mean background level, computed from non-object regions in pixel units.",
+          "x-flatbuffer-type": "float"
+        },
+        "SATURATED_PIXEL_PERCENT": {
+          "type": "number",
+          "description": "Percentage of saturated pixels in the image. Indicates overexposure when high.",
+          "x-flatbuffer-type": "float"
+        },
+        "DEAD_PIXEL_PERCENT": {
+          "type": "number",
+          "description": "Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.",
+          "x-flatbuffer-type": "float"
+        },
+        "PSF_FWHM": {
+          "type": "number",
+          "description": "Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.",
+          "x-flatbuffer-type": "float"
+        },
+        "CLOUD_COVER_PERCENT": {
+          "type": "number",
+          "description": "Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.",
+          "x-flatbuffer-type": "float"
+        },
+        "CLOUD_DETECTION_CONFIDENCE": {
+          "type": "number",
+          "description": "Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).",
+          "x-flatbuffer-type": "float"
+        },
+        "HAZE_PERCENT": {
+          "type": "number",
+          "description": "Estimated percentage of the image obscured by haze or atmospheric scattering effects.",
+          "x-flatbuffer-type": "float"
+        },
+        "AEROSOL_OPTICAL_THICKNESS": {
+          "type": "number",
+          "description": "Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.",
+          "x-flatbuffer-type": "float"
+        },
+        "WATER_VAPOR_CONTENT": {
+          "type": "number",
+          "description": "Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.",
+          "x-flatbuffer-type": "float"
+        },
+        "SUN_ELEVATION": {
+          "type": "number",
+          "description": "Sun elevation angle at the time of image capture, in degrees above the horizon.",
+          "x-flatbuffer-type": "float"
+        },
+        "SUN_AZIMUTH": {
+          "type": "number",
+          "description": "Sun azimuth angle at the time of image capture, in degrees from true north.",
+          "x-flatbuffer-type": "float"
+        },
+        "VIEW_ZENITH_ANGLE": {
+          "type": "number",
+          "description": "View zenith angle (sensor line-of-sight angle from nadir), in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "VIEW_AZIMUTH_ANGLE": {
+          "type": "number",
+          "description": "View azimuth angle (direction of sensor relative to north), in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "OFF_NADIR_ANGLE": {
+          "type": "number",
+          "description": "Off-nadir angle of the sensor at the time of image capture, in degrees.",
+          "x-flatbuffer-type": "float"
+        },
+        "SWATH_WIDTH_KM": {
+          "type": "number",
+          "description": "Ground coverage width of the image swath in kilometers.",
+          "x-flatbuffer-type": "float"
+        },
+        "MEAN_TERRAIN_ELEVATION": {
+          "type": "number",
+          "description": "Mean terrain elevation in the image footprint, in meters above sea level.",
+          "x-flatbuffer-type": "float"
+        },
+        "TERRAIN_ELEVATION_STDDEV": {
+          "type": "number",
+          "description": "Standard deviation of terrain elevation in the image footprint, in meters.",
+          "x-flatbuffer-type": "float"
+        },
+        "SHADOW_COVER_PERCENT": {
+          "type": "number",
+          "description": "Percentage of the image affected by shadows, derived via topographic or object shadow detection.",
+          "x-flatbuffer-type": "float"
+        },
+        "SUNGLINT_PRESENT": {
+          "type": "boolean",
+          "description": "Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).",
+          "x-flatbuffer-type": "bool"
+        },
+        "SUNGLINT_PERCENT": {
+          "type": "number",
+          "description": "Percentage of image affected by sunglint.",
+          "x-flatbuffer-type": "float"
+        },
+        "SNOW_ICE_COVER_PERCENT": {
+          "type": "number",
+          "description": "Estimated percentage of snow or ice coverage in the image footprint.",
+          "x-flatbuffer-type": "float"
+        },
+        "VALID_DATA_AREA_KM2": {
+          "type": "number",
+          "description": "Total area covered by valid data (non-masked, usable imagery) in square kilometers.",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/EOO",
+  "x-flatbuffer-root-type": "EOO",
+  "x-flatbuffer-file-identifier": "$EOO"
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "BOV": {
+      "type": "object",
+      "description": "Burn Out Vector Message",
+      "properties": {
+        "E_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "F_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "G_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "E_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "F_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "G_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_FROM_LAUNCH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/BOV",
+  "x-flatbuffer-root-type": "BOV",
+  "x-flatbuffer-file-identifier": "$BOV"
+}

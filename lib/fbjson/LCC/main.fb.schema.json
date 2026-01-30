@@ -1,0 +1,1165 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "legacyCountryCode": {
+      "type": "string",
+      "enum": [
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AB": {
+          "value": 0,
+          "description": "Arab Satellite Communications Organization"
+        },
+        "ABS": {
+          "value": 1,
+          "description": "Asia Broadcast Satellite"
+        },
+        "AC": {
+          "value": 2,
+          "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+        },
+        "ALG": {
+          "value": 3,
+          "description": "Algeria"
+        },
+        "ANG": {
+          "value": 4,
+          "description": "Angola"
+        },
+        "ARGN": {
+          "value": 5,
+          "description": "Argentina"
+        },
+        "ARM": {
+          "value": 6,
+          "description": "Republic of Armenia"
+        },
+        "ASRA": {
+          "value": 7,
+          "description": "Austria"
+        },
+        "AUS": {
+          "value": 8,
+          "description": "Australia"
+        },
+        "AZER": {
+          "value": 9,
+          "description": "Azerbaijan"
+        },
+        "BEL": {
+          "value": 10,
+          "description": "Belgium"
+        },
+        "BELA": {
+          "value": 11,
+          "description": "Belarus"
+        },
+        "BERM": {
+          "value": 12,
+          "description": "Bermuda"
+        },
+        "BGD": {
+          "value": 13,
+          "description": "People's Republic of Bangladesh"
+        },
+        "BHUT": {
+          "value": 14,
+          "description": "Kingdom of Bhutan"
+        },
+        "BOL": {
+          "value": 15,
+          "description": "Bolivia"
+        },
+        "BRAZ": {
+          "value": 16,
+          "description": "Brazil"
+        },
+        "BUL": {
+          "value": 17,
+          "description": "Bulgaria"
+        },
+        "CA": {
+          "value": 18,
+          "description": "Canada"
+        },
+        "CHBZ": {
+          "value": 19,
+          "description": "China/Brazil"
+        },
+        "CHTU": {
+          "value": 20,
+          "description": "China/Turkey"
+        },
+        "CHLE": {
+          "value": 21,
+          "description": "Chile"
+        },
+        "CIS": {
+          "value": 22,
+          "description": "Commonwealth of Independent States (former USSR)"
+        },
+        "COL": {
+          "value": 23,
+          "description": "Colombia"
+        },
+        "CRI": {
+          "value": 24,
+          "description": "Republic of Costa Rica"
+        },
+        "CZCH": {
+          "value": 25,
+          "description": "Czech Republic (former Czechoslovakia)"
+        },
+        "DEN": {
+          "value": 26,
+          "description": "Denmark"
+        },
+        "DJI": {
+          "value": 27,
+          "description": "Republic of Djibouti"
+        },
+        "ECU": {
+          "value": 28,
+          "description": "Ecuador"
+        },
+        "EGYP": {
+          "value": 29,
+          "description": "Egypt"
+        },
+        "ESA": {
+          "value": 30,
+          "description": "European Space Agency"
+        },
+        "ESRO": {
+          "value": 31,
+          "description": "European Space Research Organization"
+        },
+        "EST": {
+          "value": 32,
+          "description": "Estonia"
+        },
+        "ETH": {
+          "value": 33,
+          "description": "Ethiopia"
+        },
+        "EUME": {
+          "value": 34,
+          "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+        },
+        "EUTE": {
+          "value": 35,
+          "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+        },
+        "FGER": {
+          "value": 36,
+          "description": "France/Germany"
+        },
+        "FIN": {
+          "value": 37,
+          "description": "Finland"
+        },
+        "FR": {
+          "value": 38,
+          "description": "France"
+        },
+        "FRIT": {
+          "value": 39,
+          "description": "France/Italy"
+        },
+        "GER": {
+          "value": 40,
+          "description": "Germany"
+        },
+        "GHA": {
+          "value": 41,
+          "description": "Republic of Ghana"
+        },
+        "GLOB": {
+          "value": 42,
+          "description": "Globalstar"
+        },
+        "GREC": {
+          "value": 43,
+          "description": "Greece"
+        },
+        "GRSA": {
+          "value": 44,
+          "description": "Greece/Saudi Arabia"
+        },
+        "GUAT": {
+          "value": 45,
+          "description": "Guatemala"
+        },
+        "HUN": {
+          "value": 46,
+          "description": "Hungary"
+        },
+        "IM": {
+          "value": 47,
+          "description": "International Mobile Satellite Organization (INMARSAT)"
+        },
+        "IND": {
+          "value": 48,
+          "description": "India"
+        },
+        "INDO": {
+          "value": 49,
+          "description": "Indonesia"
+        },
+        "IRAN": {
+          "value": 50,
+          "description": "Iran"
+        },
+        "IRAQ": {
+          "value": 51,
+          "description": "Iraq"
+        },
+        "IRID": {
+          "value": 52,
+          "description": "Iridium"
+        },
+        "IRL": {
+          "value": 53,
+          "description": "Ireland"
+        },
+        "ISRA": {
+          "value": 54,
+          "description": "Israel"
+        },
+        "ISRO": {
+          "value": 55,
+          "description": "Indian Space Research Organisation"
+        },
+        "ISS": {
+          "value": 56,
+          "description": "International Space Station"
+        },
+        "IT": {
+          "value": 57,
+          "description": "Italy"
+        },
+        "ITSO": {
+          "value": 58,
+          "description": "International Telecommunications Satellite Organization (INTELSAT)"
+        },
+        "JPN": {
+          "value": 59,
+          "description": "Japan"
+        },
+        "KAZ": {
+          "value": 60,
+          "description": "Kazakhstan"
+        },
+        "KEN": {
+          "value": 61,
+          "description": "Republic of Kenya"
+        },
+        "LAOS": {
+          "value": 62,
+          "description": "Laos"
+        },
+        "LKA": {
+          "value": 63,
+          "description": "Democratic Socialist Republic of Sri Lanka"
+        },
+        "LTU": {
+          "value": 64,
+          "description": "Lithuania"
+        },
+        "LUXE": {
+          "value": 65,
+          "description": "Luxembourg"
+        },
+        "MA": {
+          "value": 66,
+          "description": "Morocco"
+        },
+        "MALA": {
+          "value": 67,
+          "description": "Malaysia"
+        },
+        "MCO": {
+          "value": 68,
+          "description": "Principality of Monaco"
+        },
+        "MDA": {
+          "value": 69,
+          "description": "Republic of Moldova"
+        },
+        "MEX": {
+          "value": 70,
+          "description": "Mexico"
+        },
+        "MMR": {
+          "value": 71,
+          "description": "Republic of the Union of Myanmar"
+        },
+        "MNG": {
+          "value": 72,
+          "description": "Mongolia"
+        },
+        "MUS": {
+          "value": 73,
+          "description": "Mauritius"
+        },
+        "NATO": {
+          "value": 74,
+          "description": "North Atlantic Treaty Organization"
+        },
+        "NETH": {
+          "value": 75,
+          "description": "Netherlands"
+        },
+        "NICO": {
+          "value": 76,
+          "description": "New ICO"
+        },
+        "NIG": {
+          "value": 77,
+          "description": "Nigeria"
+        },
+        "NKOR": {
+          "value": 78,
+          "description": "Democratic People's Republic of Korea"
+        },
+        "NOR": {
+          "value": 79,
+          "description": "Norway"
+        },
+        "NPL": {
+          "value": 80,
+          "description": "Federal Democratic Republic of Nepal"
+        },
+        "NZ": {
+          "value": 81,
+          "description": "New Zealand"
+        },
+        "O3B": {
+          "value": 82,
+          "description": "O3b Networks"
+        },
+        "ORB": {
+          "value": 83,
+          "description": "ORBCOMM"
+        },
+        "PAKI": {
+          "value": 84,
+          "description": "Pakistan"
+        },
+        "PERU": {
+          "value": 85,
+          "description": "Peru"
+        },
+        "POL": {
+          "value": 86,
+          "description": "Poland"
+        },
+        "POR": {
+          "value": 87,
+          "description": "Portugal"
+        },
+        "PRC": {
+          "value": 88,
+          "description": "People's Republic of China"
+        },
+        "PRY": {
+          "value": 89,
+          "description": "Republic of Paraguay"
+        },
+        "PRES": {
+          "value": 90,
+          "description": "People's Republic of China/European Space Agency"
+        },
+        "QAT": {
+          "value": 91,
+          "description": "State of Qatar"
+        },
+        "RASC": {
+          "value": 92,
+          "description": "RascomStar-QAF"
+        },
+        "ROC": {
+          "value": 93,
+          "description": "Taiwan (Republic of China)"
+        },
+        "ROM": {
+          "value": 94,
+          "description": "Romania"
+        },
+        "RP": {
+          "value": 95,
+          "description": "Philippines (Republic of the Philippines)"
+        },
+        "RWA": {
+          "value": 96,
+          "description": "Republic of Rwanda"
+        },
+        "SAFR": {
+          "value": 97,
+          "description": "South Africa"
+        },
+        "SAUD": {
+          "value": 98,
+          "description": "Saudi Arabia"
+        },
+        "SDN": {
+          "value": 99,
+          "description": "Republic of Sudan"
+        },
+        "SEAL": {
+          "value": 100,
+          "description": "Sea Launch"
+        },
+        "SES": {
+          "value": 101,
+          "description": "SES"
+        },
+        "SGJP": {
+          "value": 102,
+          "description": "Singapore/Japan"
+        },
+        "SING": {
+          "value": 103,
+          "description": "Singapore"
+        },
+        "SKOR": {
+          "value": 104,
+          "description": "Republic of Korea"
+        },
+        "SPN": {
+          "value": 105,
+          "description": "Spain"
+        },
+        "STCT": {
+          "value": 106,
+          "description": "Singapore/Taiwan"
+        },
+        "SVN": {
+          "value": 107,
+          "description": "Slovenia"
+        },
+        "SWED": {
+          "value": 108,
+          "description": "Sweden"
+        },
+        "SWTZ": {
+          "value": 109,
+          "description": "Switzerland"
+        },
+        "TBD": {
+          "value": 110,
+          "description": "To Be Determined"
+        },
+        "THAI": {
+          "value": 111,
+          "description": "Thailand"
+        },
+        "TMMC": {
+          "value": 112,
+          "description": "Turkmenistan/Monaco"
+        },
+        "TUN": {
+          "value": 113,
+          "description": "Republic of Tunisia"
+        },
+        "TURK": {
+          "value": 114,
+          "description": "Turkey"
+        },
+        "UAE": {
+          "value": 115,
+          "description": "United Arab Emirates"
+        },
+        "UK": {
+          "value": 116,
+          "description": "United Kingdom"
+        },
+        "UKR": {
+          "value": 117,
+          "description": "Ukraine"
+        },
+        "UNK": {
+          "value": 118,
+          "description": "Unknown"
+        },
+        "URY": {
+          "value": 119,
+          "description": "Uruguay"
+        },
+        "US": {
+          "value": 120,
+          "description": "United States"
+        },
+        "USBZ": {
+          "value": 121,
+          "description": "United States/Brazil"
+        },
+        "VAT": {
+          "value": 122,
+          "description": "Vatican City State"
+        },
+        "VENZ": {
+          "value": 123,
+          "description": "Venezuela"
+        },
+        "VTNM": {
+          "value": 124,
+          "description": "Vietnam"
+        },
+        "ZWE": {
+          "value": 125,
+          "description": "Republic of Zimbabwe"
+        }
+      }
+    },
+    "LCC": {
+      "type": "object",
+      "description": "Legacy Country Code",
+      "properties": {
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AB": {
+              "value": 0,
+              "description": "Arab Satellite Communications Organization"
+            },
+            "ABS": {
+              "value": 1,
+              "description": "Asia Broadcast Satellite"
+            },
+            "AC": {
+              "value": 2,
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+            },
+            "ALG": {
+              "value": 3,
+              "description": "Algeria"
+            },
+            "ANG": {
+              "value": 4,
+              "description": "Angola"
+            },
+            "ARGN": {
+              "value": 5,
+              "description": "Argentina"
+            },
+            "ARM": {
+              "value": 6,
+              "description": "Republic of Armenia"
+            },
+            "ASRA": {
+              "value": 7,
+              "description": "Austria"
+            },
+            "AUS": {
+              "value": 8,
+              "description": "Australia"
+            },
+            "AZER": {
+              "value": 9,
+              "description": "Azerbaijan"
+            },
+            "BEL": {
+              "value": 10,
+              "description": "Belgium"
+            },
+            "BELA": {
+              "value": 11,
+              "description": "Belarus"
+            },
+            "BERM": {
+              "value": 12,
+              "description": "Bermuda"
+            },
+            "BGD": {
+              "value": 13,
+              "description": "People's Republic of Bangladesh"
+            },
+            "BHUT": {
+              "value": 14,
+              "description": "Kingdom of Bhutan"
+            },
+            "BOL": {
+              "value": 15,
+              "description": "Bolivia"
+            },
+            "BRAZ": {
+              "value": 16,
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LCC",
+  "x-flatbuffer-root-type": "LCC",
+  "x-flatbuffer-file-identifier": "$LCC"
+}

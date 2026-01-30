@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "timeSystem": {
+      "type": "string",
+      "enum": [
+        "GMST",
+        "GPS",
+        "MET",
+        "MRT",
+        "SCLK",
+        "TAI",
+        "TCB",
+        "TDB",
+        "TCG",
+        "TT",
+        "UT1",
+        "UTC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GMST": {
+          "value": 0,
+          "description": "Greenwich Mean Sidereal Time"
+        },
+        "GPS": {
+          "value": 1,
+          "description": "Global Positioning System"
+        },
+        "MET": {
+          "value": 2,
+          "description": "Mission Elapsed Time"
+        },
+        "MRT": {
+          "value": 3,
+          "description": "Mission Relative Time"
+        },
+        "SCLK": {
+          "value": 4,
+          "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+        },
+        "TAI": {
+          "value": 5,
+          "description": "International Atomic Time"
+        },
+        "TCB": {
+          "value": 6,
+          "description": "Barycentric Coordinate Time"
+        },
+        "TDB": {
+          "value": 7,
+          "description": "Barycentric Dynamical Time"
+        },
+        "TCG": {
+          "value": 8,
+          "description": "Geocentric Coordinate Time"
+        },
+        "TT": {
+          "value": 9,
+          "description": "Terrestrial Time"
+        },
+        "UT1": {
+          "value": 10,
+          "description": "Universal Time"
+        },
+        "UTC": {
+          "value": 11,
+          "description": "Coordinated Universal Time"
+        }
+      }
+    },
+    "TIM": {
+      "type": "object",
+      "description": "Time System",
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timeSystem",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TIM",
+  "x-flatbuffer-root-type": "TIM",
+  "x-flatbuffer-file-identifier": "$TIM"
+}

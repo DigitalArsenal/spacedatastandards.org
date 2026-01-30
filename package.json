@@ -9,6 +9,7 @@
         "lib/js/",
         "lib/ts/",
         "lib/json/",
+        "lib/fbjson/",
         "src/js",
         "dist/",
         "README"
@@ -98,8 +99,8 @@
         "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
         "publish:js": "npm publish",
         "start": "node index.js",
-        "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateGoModule.py",
-        "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateGoModule.py",
+        "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py",
+        "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "dev": "npx serve ."
     },

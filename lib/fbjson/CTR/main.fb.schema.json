@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CTR": {
+      "type": "object",
+      "description": "Country Identity Message",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "ISO 3166 Numeric code",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Country name",
+          "x-flatbuffer-type": "string"
+        },
+        "GENC_CODE": {
+          "type": "string",
+          "description": "GENC code",
+          "x-flatbuffer-type": "string"
+        },
+        "ALPHA_2_CODE": {
+          "type": "string",
+          "description": "ISO 3166 Alpha-2 code",
+          "x-flatbuffer-type": "string"
+        },
+        "ALPHA_3_CODE": {
+          "type": "string",
+          "description": "ISO 3166 Alpha-3 code",
+          "x-flatbuffer-type": "string"
+        },
+        "STANAG_CODE": {
+          "type": "string",
+          "description": "Stanag code",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERNET_CCTLD": {
+          "type": "string",
+          "description": "Internet country code top-level domain (ccTLD)",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Additional comments",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CTR",
+  "x-flatbuffer-root-type": "CTR",
+  "x-flatbuffer-file-identifier": "$CTR"
+}

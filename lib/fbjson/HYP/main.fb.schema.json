@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ScoreType": {
+      "type": "string",
+      "enum": [
+        "OUTLIER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OUTLIER": {
+          "value": 0
+        }
+      }
+    },
+    "Score": {
+      "type": "object",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/ScoreType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OUTLIER": {
+              "value": 0
+            }
+          }
+        },
+        "TAG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCORE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    },
+    "HYP": {
+      "type": "object",
+      "description": "Hypothesis Message",
+      "properties": {
+        "CAT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Space Objects Involved",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SIT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Space Objects Involved",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the hypothesis",
+          "x-flatbuffer-type": "string"
+        },
+        "CATEGORY": {
+          "type": "string",
+          "description": "Category of the hypothesis",
+          "x-flatbuffer-type": "string"
+        },
+        "ROW_INDICATORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Row indicators for the hypothesis matrix",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COL_INDICATORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Column indicators for the hypothesis matrix",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MATRIX": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "description": "Matrix data as a boolean array in row major format; if overflow, adds additional rows",
+          "x-flatbuffer-type": "[bool]"
+        },
+        "SCORE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Score"
+          },
+          "description": "Scores for objects",
+          "x-flatbuffer-type": "[Score]"
+        },
+        "ANALYSIS_METHOD": {
+          "type": "string",
+          "description": "Analysis methodology used to form the hypothesis",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/HYP",
+  "x-flatbuffer-root-type": "HYP",
+  "x-flatbuffer-file-identifier": "$HYP"
+}

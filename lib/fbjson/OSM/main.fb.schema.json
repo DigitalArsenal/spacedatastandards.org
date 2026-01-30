@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OSM": {
+      "type": "object",
+      "description": "Observation Stability Message",
+      "properties": {
+        "IS_STABLE": {
+          "type": "boolean",
+          "description": "Indicates whether the observation is stable or not",
+          "x-flatbuffer-type": "bool"
+        },
+        "NUM_OBS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "The number of observations",
+          "x-flatbuffer-type": "int"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "Unique identifier for the object being observed",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "description": "Identifier of the sensor",
+          "x-flatbuffer-type": "string"
+        },
+        "PASS_START": {
+          "type": "string",
+          "description": "Timestamp of data creation",
+          "x-flatbuffer-type": "string"
+        },
+        "PASS_DURATION": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Duration of the observation pass in seconds",
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OSM",
+  "x-flatbuffer-root-type": "OSM",
+  "x-flatbuffer-file-identifier": "$OSM"
+}

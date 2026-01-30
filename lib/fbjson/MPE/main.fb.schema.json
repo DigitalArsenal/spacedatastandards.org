@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "meanElementTheory": {
+      "type": "string",
+      "enum": [
+        "SGP4",
+        "SGP4XP",
+        "DSST",
+        "USM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SGP4": {
+          "value": 0,
+          "description": "Simplified General Perturbation Model 4"
+        },
+        "SGP4XP": {
+          "value": 1,
+          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+        },
+        "DSST": {
+          "value": 2,
+          "description": "Draper Semi-analytical Satellite Theory"
+        },
+        "USM": {
+          "value": 3,
+          "description": "Universal Semianalytical Method"
+        }
+      }
+    },
+    "MET": {
+      "type": "object",
+      "description": "Mean Element Theory",
+      "properties": {
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementTheory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "MPE": {
+      "type": "object",
+      "description": "Minimum Propagatable Element Set",
+      "properties": {
+        "ENTITY_ID": {
+          "type": "string",
+          "description": "Unique ID as a String [no units]",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION": {
+          "type": "number",
+          "description": "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity (unitless)",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE": {
+          "type": "number",
+          "description": "Right ascension of ascending node in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "description": "Argument of pericenter in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "description": "Mean anomaly in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "BSTAR": {
+          "type": "number",
+          "description": "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementTheory",
+          "description": "Description of the Mean Element Theory (SGP4, DSST, USM)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MPE",
+  "x-flatbuffer-root-type": "MPE",
+  "x-flatbuffer-file-identifier": "$MPE"
+}

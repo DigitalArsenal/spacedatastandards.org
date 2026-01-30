@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "meanElementTheory": {
+      "type": "string",
+      "enum": [
+        "SGP4",
+        "SGP4XP",
+        "DSST",
+        "USM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SGP4": {
+          "value": 0,
+          "description": "Simplified General Perturbation Model 4"
+        },
+        "SGP4XP": {
+          "value": 1,
+          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+        },
+        "DSST": {
+          "value": 2,
+          "description": "Draper Semi-analytical Satellite Theory"
+        },
+        "USM": {
+          "value": 3,
+          "description": "Universal Semianalytical Method"
+        }
+      }
+    },
+    "MET": {
+      "type": "object",
+      "description": "Mean Element Theory",
+      "properties": {
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementTheory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MET",
+  "x-flatbuffer-root-type": "MET",
+  "x-flatbuffer-file-identifier": "$MET"
+}

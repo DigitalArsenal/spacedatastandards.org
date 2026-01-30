@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "accessType": {
+      "type": "string",
+      "enum": [
+        "OneTime",
+        "Subscription",
+        "Streaming",
+        "Query"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OneTime": {
+          "value": 0,
+          "description": "One-time purchase"
+        },
+        "Subscription": {
+          "value": 1,
+          "description": "Recurring subscription"
+        },
+        "Streaming": {
+          "value": 2,
+          "description": "Real-time streaming access"
+        },
+        "Query": {
+          "value": 3,
+          "description": "Query-based access"
+        }
+      }
+    },
+    "paymentMethod": {
+      "type": "string",
+      "enum": [
+        "Crypto_ETH",
+        "Crypto_SOL",
+        "Crypto_BTC",
+        "SDN_Credits",
+        "Fiat_Stripe",
+        "Free"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Crypto_ETH": {
+          "value": 0,
+          "description": "Ethereum cryptocurrency"
+        },
+        "Crypto_SOL": {
+          "value": 1,
+          "description": "Solana cryptocurrency"
+        },
+        "Crypto_BTC": {
+          "value": 2,
+          "description": "Bitcoin cryptocurrency"
+        },
+        "SDN_Credits": {
+          "value": 3,
+          "description": "Internal SDN credits system"
+        },
+        "Fiat_Stripe": {
+          "value": 4,
+          "description": "Fiat payment via Stripe"
+        },
+        "Free": {
+          "value": 5,
+          "description": "Free/open data"
+        }
+      }
+    },
+    "SpatialCoverage": {
+      "type": "object",
+      "description": "Spatial coverage definition",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "description": "Type of coverage: \"global\", \"region\", \"object_list\"",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Regions covered, e.g., [\"LEO\", \"GEO\", \"MEO\"]",
+          "x-flatbuffer-type": "[string]"
+        },
+        "OBJECT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific NORAD IDs or catalog numbers",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TemporalCoverage": {
+      "type": "object",
+      "description": "Temporal coverage definition",
+      "properties": {
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Start epoch in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "END_EPOCH": {
+          "type": "string",
+          "description": "End epoch in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATE_FREQUENCY": {
+          "type": "string",
+          "description": "Update frequency: \"realtime\", \"hourly\", \"daily\"",
+          "x-flatbuffer-type": "string"
+        },
+        "HISTORICAL_DEPTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Days of historical data available",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DataCoverage": {
+      "type": "object",
+      "description": "Data coverage combining spatial and temporal",
+      "properties": {
+        "SPATIAL": {
+          "$ref": "#/definitions/SpatialCoverage",
+          "description": "Spatial coverage definition",
+          "x-flatbuffer-type": "SpatialCoverage"
+        },
+        "TEMPORAL": {
+          "$ref": "#/definitions/TemporalCoverage",
+          "description": "Temporal coverage definition",
+          "x-flatbuffer-type": "TemporalCoverage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PricingTier": {
+      "type": "object",
+      "description": "Pricing tier for a listing",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Tier name, e.g., \"Basic\", \"Pro\", \"Enterprise\"",
+          "x-flatbuffer-type": "string"
+        },
+        "PRICE_AMOUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Price in smallest unit (cents, satoshis, etc.)",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRICE_CURRENCY": {
+          "type": "string",
+          "description": "Currency code: \"USD\", \"ETH\", \"SOL\", \"SDN_CREDITS\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DURATION_DAYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Duration in days (0 = one-time purchase)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RATE_LIMIT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Rate limit in requests per hour",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of features included in this tier",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "STF": {
+      "type": "object",
+      "description": "Storefront Listing - Data marketplace listing",
+      "properties": {
+        "LISTING_ID": {
+          "type": "string",
+          "description": "Unique identifier for the listing",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the data provider",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of provider's EPM (Entity Profile Message)",
+          "x-flatbuffer-type": "string"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Title of the data listing",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Detailed description of the data offering",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_TYPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SDS data types offered, e.g., [\"OMM\", \"CDM\", \"TLE\"]",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/DataCoverage",
+          "description": "Coverage information (spatial and temporal)",
+          "x-flatbuffer-type": "DataCoverage"
+        },
+        "SAMPLE_CID": {
+          "type": "string",
+          "description": "IPFS CID of sample data",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESS_TYPE": {
+          "$ref": "#/definitions/accessType",
+          "description": "Type of access offered",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OneTime": {
+              "value": 0,
+              "description": "One-time purchase"
+            },
+            "Subscription": {
+              "value": 1,
+              "description": "Recurring subscription"
+            },
+            "Streaming": {
+              "value": 2,
+              "description": "Real-time streaming access"
+            },
+            "Query": {
+              "value": 3,
+              "description": "Query-based access"
+            }
+          }
+        },
+        "ENCRYPTION_REQUIRED": {
+          "type": "boolean",
+          "description": "Whether encryption is required for data delivery",
+          "x-flatbuffer-type": "bool"
+        },
+        "PRICING": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingTier"
+          },
+          "description": "Available pricing tiers",
+          "x-flatbuffer-type": "[PricingTier]"
+        },
+        "ACCEPTED_PAYMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/paymentMethod"
+          },
+          "description": "Payment methods accepted",
+          "x-flatbuffer-type": "[paymentMethod]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when listing was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when listing was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "Whether the listing is currently active",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature from provider",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "LISTING_ID",
+        "PROVIDER_PEER_ID",
+        "TITLE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/STF",
+  "x-flatbuffer-root-type": "STF",
+  "x-flatbuffer-file-identifier": "$STF"
+}

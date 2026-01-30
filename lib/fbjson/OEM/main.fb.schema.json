@@ -1,0 +1,4193 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CelestialFrame": {
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+        },
+        "ICRF": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+        },
+        "J2000": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+        },
+        "J2000A": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+        },
+        "EME2000": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+        },
+        "TEMEOFDATE": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+        },
+        "GTOD": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+        },
+        "CIRS": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+        },
+        "MOD_EARTH": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+        },
+        "MOD_CB": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+        },
+        "MOD_MOON": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+        },
+        "TOD_EARTH": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+        },
+        "TOD_CB": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+        },
+        "TOD_MOON": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+        },
+        "TOE_EARTH": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+        },
+        "TOE_CB": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+        },
+        "TOE_MOON": {
+          "value": 16,
+          "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+        },
+        "ITRF2000": {
+          "value": 17,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+        },
+        "ITRF93": {
+          "value": 18,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+        },
+        "ITRF97": {
+          "value": 19,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+        },
+        "EFG": {
+          "value": 20,
+          "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+        },
+        "FIXED_CB": {
+          "value": 21,
+          "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+        },
+        "FIXED_EARTH": {
+          "value": 22,
+          "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+        },
+        "WGS84": {
+          "value": 23,
+          "description": "WGS84 Earth-fixed terrestrial system."
+        },
+        "DTRFYYYY": {
+          "value": 24,
+          "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+        },
+        "ALIGN_EARTH": {
+          "value": 25,
+          "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+        },
+        "ALIGN_CB": {
+          "value": 26,
+          "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+        },
+        "B1950": {
+          "value": 27,
+          "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+        }
+      }
+    },
+    "SpacecraftFrame": {
+      "type": "string",
+      "enum": [
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACC_i": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+        },
+        "ACTUATOR_i": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+        },
+        "AST_i": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+        },
+        "CSS_i": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+        },
+        "DSS_i": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+        },
+        "ESA_i": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+        },
+        "GYRO_FRAME_i": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+        },
+        "IMU_FRAME_i": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+        },
+        "INSTRUMENT_i": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+        },
+        "MTA_i": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+        },
+        "RW_i": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+        },
+        "SA_i": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+        },
+        "SC_BODY_i": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+        },
+        "SENSOR_i": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+        },
+        "STARTRACKER_i": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+        },
+        "TAM_i": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+        }
+      }
+    },
+    "OrbitFrame": {
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EQW_INERTIAL": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+        },
+        "LVLH_INERTIAL": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+        },
+        "LVLH_ROTATING": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+        },
+        "NSW_INERTIAL": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+        },
+        "NSW_ROTATING": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+        },
+        "NTW_INERTIAL": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+        },
+        "NTW_ROTATING": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+        },
+        "PQW_INERTIAL": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+        },
+        "RSW_INERTIAL": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+        },
+        "RSW_ROTATING": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+        },
+        "SEZ_INERTIAL": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+        },
+        "SEZ_ROTATING": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+        },
+        "TNW_INERTIAL": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+        },
+        "TNW_ROTATING": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+        },
+        "VNC_INERTIAL": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+        },
+        "VNC_ROTATING": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+        }
+      }
+    },
+    "CustomFrame": {
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECEF": {
+          "value": 0,
+          "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+        },
+        "TEME": {
+          "value": 1,
+          "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+        },
+        "TEMEOFEPOCH": {
+          "value": 2,
+          "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+        },
+        "ENU": {
+          "value": 3,
+          "description": "East-North-Up: Local tangent plane for surface points."
+        },
+        "NED": {
+          "value": 4,
+          "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+        },
+        "NEU": {
+          "value": 5,
+          "description": "North-East-Up: Local tangent plane variant with Up positive."
+        },
+        "RIC": {
+          "value": 6,
+          "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+        },
+        "RTN": {
+          "value": 7,
+          "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+        },
+        "TVN": {
+          "value": 8,
+          "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+        },
+        "VVLH": {
+          "value": 9,
+          "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+        },
+        "QSW": {
+          "value": 10,
+          "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+        },
+        "LTP": {
+          "value": 11,
+          "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+        },
+        "LVLH": {
+          "value": 12,
+          "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+        },
+        "PNE": {
+          "value": 13,
+          "description": "Polar-North-East: Surface coordinate frame."
+        },
+        "BRF": {
+          "value": 14,
+          "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+        },
+        "RSW": {
+          "value": 15,
+          "description": "Radial-Along-track-Cross-track: Same as RSW."
+        },
+        "TNW": {
+          "value": 16,
+          "description": "Tangential-Normal-Cross-track: Same as TNW."
+        },
+        "UVW": {
+          "value": 17,
+          "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+        }
+      }
+    },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper"
+      ]
+    },
+    "timeSystem": {
+      "type": "string",
+      "enum": [
+        "GMST",
+        "GPS",
+        "MET",
+        "MRT",
+        "SCLK",
+        "TAI",
+        "TCB",
+        "TDB",
+        "TCG",
+        "TT",
+        "UT1",
+        "UTC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GMST": {
+          "value": 0,
+          "description": "Greenwich Mean Sidereal Time"
+        },
+        "GPS": {
+          "value": 1,
+          "description": "Global Positioning System"
+        },
+        "MET": {
+          "value": 2,
+          "description": "Mission Elapsed Time"
+        },
+        "MRT": {
+          "value": 3,
+          "description": "Mission Relative Time"
+        },
+        "SCLK": {
+          "value": 4,
+          "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+        },
+        "TAI": {
+          "value": 5,
+          "description": "International Atomic Time"
+        },
+        "TCB": {
+          "value": 6,
+          "description": "Barycentric Coordinate Time"
+        },
+        "TDB": {
+          "value": 7,
+          "description": "Barycentric Dynamical Time"
+        },
+        "TCG": {
+          "value": 8,
+          "description": "Geocentric Coordinate Time"
+        },
+        "TT": {
+          "value": 9,
+          "description": "Terrestrial Time"
+        },
+        "UT1": {
+          "value": 10,
+          "description": "Universal Time"
+        },
+        "UTC": {
+          "value": 11,
+          "description": "Coordinated Universal Time"
+        }
+      }
+    },
+    "PolarizationType": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "circular",
+        "elliptical",
+        "unpolarized"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "linear": {
+          "value": 0
+        },
+        "circular": {
+          "value": 1
+        },
+        "elliptical": {
+          "value": 2
+        },
+        "unpolarized": {
+          "value": 3
+        }
+      }
+    },
+    "SimplePolarization": {
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal",
+        "leftHandCircular",
+        "rightHandCircular"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "vertical": {
+          "value": 0
+        },
+        "horizontal": {
+          "value": 1
+        },
+        "leftHandCircular": {
+          "value": 2
+        },
+        "rightHandCircular": {
+          "value": 3
+        }
+      }
+    },
+    "DataMode": {
+      "type": "string",
+      "enum": [
+        "EXERCISE",
+        "REAL",
+        "SIMULATED",
+        "TEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EXERCISE": {
+          "value": 0,
+          "description": "Data collected during an exercise scenario."
+        },
+        "REAL": {
+          "value": 1,
+          "description": "Data collected from real-world observations."
+        },
+        "SIMULATED": {
+          "value": 2,
+          "description": "Data generated through simulation."
+        },
+        "TEST": {
+          "value": 3,
+          "description": "Data collected for testing purposes."
+        }
+      }
+    },
+    "DeviceType": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPTICAL",
+        "INFRARED_SENSOR",
+        "ULTRAVIOLET_SENSOR",
+        "X_RAY_SENSOR",
+        "GAMMA_RAY_SENSOR",
+        "RADAR",
+        "PHASED_ARRAY_RADAR",
+        "SYNTHETIC_APERTURE_RADAR",
+        "BISTATIC_RADIO_TELESCOPE",
+        "RADIO_TELESCOPE",
+        "ATMOSPHERIC_SENSOR",
+        "SPACE_WEATHER_SENSOR",
+        "ENVIRONMENTAL_SENSOR",
+        "SEISMIC_SENSOR",
+        "GRAVIMETRIC_SENSOR",
+        "MAGNETIC_SENSOR",
+        "ELECTROMAGNETIC_SENSOR",
+        "THERMAL_SENSOR",
+        "CHEMICAL_SENSOR",
+        "BIOLOGICAL_SENSOR",
+        "RADIATION_SENSOR",
+        "PARTICLE_DETECTOR",
+        "LIDAR",
+        "SONAR",
+        "TELESCOPE",
+        "SPECTROSCOPIC_SENSOR",
+        "PHOTOMETRIC_SENSOR",
+        "POLARIMETRIC_SENSOR",
+        "INTERFEROMETRIC_SENSOR",
+        "MULTISPECTRAL_SENSOR",
+        "HYPERSPECTRAL_SENSOR",
+        "GPS_RECEIVER",
+        "RADIO_COMMUNICATIONS",
+        "LASER_COMMUNICATIONS",
+        "SATELLITE_COMMUNICATIONS",
+        "LASER_INSTRUMENT",
+        "RF_ANALYZER",
+        "IONOSPHERIC_SENSOR",
+        "LASER_IMAGING",
+        "OPTICAL_TELESCOPE",
+        "HIGH_RESOLUTION_OPTICAL",
+        "RADIO",
+        "MICROWAVE_TRANSMITTER",
+        "RF_MONITOR",
+        "HF_RADIO_COMMUNICATIONS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0,
+          "description": "Basic and General Sensors Basic or undefined sensor type"
+        },
+        "OPTICAL": {
+          "value": 1,
+          "description": "General optical sensors"
+        },
+        "INFRARED_SENSOR": {
+          "value": 2,
+          "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+        },
+        "ULTRAVIOLET_SENSOR": {
+          "value": 3,
+          "description": "Sensitive to ultraviolet light"
+        },
+        "X_RAY_SENSOR": {
+          "value": 4,
+          "description": "For X-ray detection"
+        },
+        "GAMMA_RAY_SENSOR": {
+          "value": 5,
+          "description": "For gamma-ray detection"
+        },
+        "RADAR": {
+          "value": 6,
+          "description": "Radar and Radio Telescopes Basic radar systems"
+        },
+        "PHASED_ARRAY_RADAR": {
+          "value": 7,
+          "description": "Advanced radar with phased array technology"
+        },
+        "SYNTHETIC_APERTURE_RADAR": {
+          "value": 8,
+          "description": "For high-resolution imaging"
+        },
+        "BISTATIC_RADIO_TELESCOPE": {
+          "value": 9,
+          "description": "For astronomical observations using bistatic setup"
+        },
+        "RADIO_TELESCOPE": {
+          "value": 10,
+          "description": "For radio astronomy"
+        },
+        "ATMOSPHERIC_SENSOR": {
+          "value": 11,
+          "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+        },
+        "SPACE_WEATHER_SENSOR": {
+          "value": 12,
+          "description": "For observing space weather phenomena"
+        },
+        "ENVIRONMENTAL_SENSOR": {
+          "value": 13,
+          "description": "General environmental monitoring"
+        },
+        "SEISMIC_SENSOR": {
+          "value": 14,
+          "description": "Specialized Scientific Sensors For measuring seismic activities"
+        },
+        "GRAVIMETRIC_SENSOR": {
+          "value": 15,
+          "description": "For gravity measurements"
+        },
+        "MAGNETIC_SENSOR": {
+          "value": 16,
+          "description": "For magnetic field detection"
+        },
+        "ELECTROMAGNETIC_SENSOR": {
+          "value": 17,
+          "description": "For electromagnetic field analysis"
+        },
+        "THERMAL_SENSOR": {
+          "value": 18,
+          "description": "For temperature and heat detection"
+        },
+        "CHEMICAL_SENSOR": {
+          "value": 19,
+          "description": "For detecting chemicals and substances"
+        },
+        "BIOLOGICAL_SENSOR": {
+          "value": 20,
+          "description": "For biological research and detection"
+        },
+        "RADIATION_SENSOR": {
+          "value": 21,
+          "description": "For detecting ionizing radiation"
+        },
+        "PARTICLE_DETECTOR": {
+          "value": 22,
+          "description": "For detecting subatomic particles"
+        },
+        "LIDAR": {
+          "value": 23,
+          "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+        },
+        "SONAR": {
+          "value": 24,
+          "description": "Sound Navigation and Ranging"
+        },
+        "TELESCOPE": {
+          "value": 25,
+          "description": "General telescopes for astronomical observations"
+        },
+        "SPECTROSCOPIC_SENSOR": {
+          "value": 26,
+          "description": "For spectral analysis"
+        },
+        "PHOTOMETRIC_SENSOR": {
+          "value": 27,
+          "description": "For measuring light intensity"
+        },
+        "POLARIMETRIC_SENSOR": {
+          "value": 28,
+          "description": "For analyzing polarization of light"
+        },
+        "INTERFEROMETRIC_SENSOR": {
+          "value": 29,
+          "description": "For detailed imaging using interference"
+        },
+        "MULTISPECTRAL_SENSOR": {
+          "value": 30,
+          "description": "Capturing image data at multiple wavelengths"
+        },
+        "HYPERSPECTRAL_SENSOR": {
+          "value": 31,
+          "description": "Advanced imaging across many spectral bands"
+        },
+        "GPS_RECEIVER": {
+          "value": 32,
+          "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+        },
+        "RADIO_COMMUNICATIONS": {
+          "value": 33,
+          "description": "Communication Devices Standard radio communication device"
+        },
+        "LASER_COMMUNICATIONS": {
+          "value": 34,
+          "description": "Advanced laser communication system"
+        },
+        "SATELLITE_COMMUNICATIONS": {
+          "value": 35,
+          "description": "Satellite communication system"
+        },
+        "LASER_INSTRUMENT": {
+          "value": 36,
+          "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+        },
+        "RF_ANALYZER": {
+          "value": 37,
+          "description": "Radio frequency analysis and measurement device"
+        },
+        "IONOSPHERIC_SENSOR": {
+          "value": 38,
+          "description": "Device for ionospheric research"
+        },
+        "LASER_IMAGING": {
+          "value": 39,
+          "description": "Optical Devices Device for laser-based imaging"
+        },
+        "OPTICAL_TELESCOPE": {
+          "value": 40,
+          "description": "Advanced optical telescope"
+        },
+        "HIGH_RESOLUTION_OPTICAL": {
+          "value": 41,
+          "description": "Device for high-resolution optical observations"
+        },
+        "RADIO": {
+          "value": 42,
+          "description": "Radio and Microwave Devices"
+        },
+        "MICROWAVE_TRANSMITTER": {
+          "value": 43,
+          "description": "Microwave communication device"
+        },
+        "RF_MONITOR": {
+          "value": 44,
+          "description": "Device for radio frequency monitoring"
+        },
+        "HF_RADIO_COMMUNICATIONS": {
+          "value": 45,
+          "description": "High-frequency radio communication device"
+        }
+      }
+    },
+    "legacyCountryCode": {
+      "type": "string",
+      "enum": [
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AB": {
+          "value": 0,
+          "description": "Arab Satellite Communications Organization"
+        },
+        "ABS": {
+          "value": 1,
+          "description": "Asia Broadcast Satellite"
+        },
+        "AC": {
+          "value": 2,
+          "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+        },
+        "ALG": {
+          "value": 3,
+          "description": "Algeria"
+        },
+        "ANG": {
+          "value": 4,
+          "description": "Angola"
+        },
+        "ARGN": {
+          "value": 5,
+          "description": "Argentina"
+        },
+        "ARM": {
+          "value": 6,
+          "description": "Republic of Armenia"
+        },
+        "ASRA": {
+          "value": 7,
+          "description": "Austria"
+        },
+        "AUS": {
+          "value": 8,
+          "description": "Australia"
+        },
+        "AZER": {
+          "value": 9,
+          "description": "Azerbaijan"
+        },
+        "BEL": {
+          "value": 10,
+          "description": "Belgium"
+        },
+        "BELA": {
+          "value": 11,
+          "description": "Belarus"
+        },
+        "BERM": {
+          "value": 12,
+          "description": "Bermuda"
+        },
+        "BGD": {
+          "value": 13,
+          "description": "People's Republic of Bangladesh"
+        },
+        "BHUT": {
+          "value": 14,
+          "description": "Kingdom of Bhutan"
+        },
+        "BOL": {
+          "value": 15,
+          "description": "Bolivia"
+        },
+        "BRAZ": {
+          "value": 16,
+          "description": "Brazil"
+        },
+        "BUL": {
+          "value": 17,
+          "description": "Bulgaria"
+        },
+        "CA": {
+          "value": 18,
+          "description": "Canada"
+        },
+        "CHBZ": {
+          "value": 19,
+          "description": "China/Brazil"
+        },
+        "CHTU": {
+          "value": 20,
+          "description": "China/Turkey"
+        },
+        "CHLE": {
+          "value": 21,
+          "description": "Chile"
+        },
+        "CIS": {
+          "value": 22,
+          "description": "Commonwealth of Independent States (former USSR)"
+        },
+        "COL": {
+          "value": 23,
+          "description": "Colombia"
+        },
+        "CRI": {
+          "value": 24,
+          "description": "Republic of Costa Rica"
+        },
+        "CZCH": {
+          "value": 25,
+          "description": "Czech Republic (former Czechoslovakia)"
+        },
+        "DEN": {
+          "value": 26,
+          "description": "Denmark"
+        },
+        "DJI": {
+          "value": 27,
+          "description": "Republic of Djibouti"
+        },
+        "ECU": {
+          "value": 28,
+          "description": "Ecuador"
+        },
+        "EGYP": {
+          "value": 29,
+          "description": "Egypt"
+        },
+        "ESA": {
+          "value": 30,
+          "description": "European Space Agency"
+        },
+        "ESRO": {
+          "value": 31,
+          "description": "European Space Research Organization"
+        },
+        "EST": {
+          "value": 32,
+          "description": "Estonia"
+        },
+        "ETH": {
+          "value": 33,
+          "description": "Ethiopia"
+        },
+        "EUME": {
+          "value": 34,
+          "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+        },
+        "EUTE": {
+          "value": 35,
+          "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+        },
+        "FGER": {
+          "value": 36,
+          "description": "France/Germany"
+        },
+        "FIN": {
+          "value": 37,
+          "description": "Finland"
+        },
+        "FR": {
+          "value": 38,
+          "description": "France"
+        },
+        "FRIT": {
+          "value": 39,
+          "description": "France/Italy"
+        },
+        "GER": {
+          "value": 40,
+          "description": "Germany"
+        },
+        "GHA": {
+          "value": 41,
+          "description": "Republic of Ghana"
+        },
+        "GLOB": {
+          "value": 42,
+          "description": "Globalstar"
+        },
+        "GREC": {
+          "value": 43,
+          "description": "Greece"
+        },
+        "GRSA": {
+          "value": 44,
+          "description": "Greece/Saudi Arabia"
+        },
+        "GUAT": {
+          "value": 45,
+          "description": "Guatemala"
+        },
+        "HUN": {
+          "value": 46,
+          "description": "Hungary"
+        },
+        "IM": {
+          "value": 47,
+          "description": "International Mobile Satellite Organization (INMARSAT)"
+        },
+        "IND": {
+          "value": 48,
+          "description": "India"
+        },
+        "INDO": {
+          "value": 49,
+          "description": "Indonesia"
+        },
+        "IRAN": {
+          "value": 50,
+          "description": "Iran"
+        },
+        "IRAQ": {
+          "value": 51,
+          "description": "Iraq"
+        },
+        "IRID": {
+          "value": 52,
+          "description": "Iridium"
+        },
+        "IRL": {
+          "value": 53,
+          "description": "Ireland"
+        },
+        "ISRA": {
+          "value": 54,
+          "description": "Israel"
+        },
+        "ISRO": {
+          "value": 55,
+          "description": "Indian Space Research Organisation"
+        },
+        "ISS": {
+          "value": 56,
+          "description": "International Space Station"
+        },
+        "IT": {
+          "value": 57,
+          "description": "Italy"
+        },
+        "ITSO": {
+          "value": 58,
+          "description": "International Telecommunications Satellite Organization (INTELSAT)"
+        },
+        "JPN": {
+          "value": 59,
+          "description": "Japan"
+        },
+        "KAZ": {
+          "value": 60,
+          "description": "Kazakhstan"
+        },
+        "KEN": {
+          "value": 61,
+          "description": "Republic of Kenya"
+        },
+        "LAOS": {
+          "value": 62,
+          "description": "Laos"
+        },
+        "LKA": {
+          "value": 63,
+          "description": "Democratic Socialist Republic of Sri Lanka"
+        },
+        "LTU": {
+          "value": 64,
+          "description": "Lithuania"
+        },
+        "LUXE": {
+          "value": 65,
+          "description": "Luxembourg"
+        },
+        "MA": {
+          "value": 66,
+          "description": "Morocco"
+        },
+        "MALA": {
+          "value": 67,
+          "description": "Malaysia"
+        },
+        "MCO": {
+          "value": 68,
+          "description": "Principality of Monaco"
+        },
+        "MDA": {
+          "value": 69,
+          "description": "Republic of Moldova"
+        },
+        "MEX": {
+          "value": 70,
+          "description": "Mexico"
+        },
+        "MMR": {
+          "value": 71,
+          "description": "Republic of the Union of Myanmar"
+        },
+        "MNG": {
+          "value": 72,
+          "description": "Mongolia"
+        },
+        "MUS": {
+          "value": 73,
+          "description": "Mauritius"
+        },
+        "NATO": {
+          "value": 74,
+          "description": "North Atlantic Treaty Organization"
+        },
+        "NETH": {
+          "value": 75,
+          "description": "Netherlands"
+        },
+        "NICO": {
+          "value": 76,
+          "description": "New ICO"
+        },
+        "NIG": {
+          "value": 77,
+          "description": "Nigeria"
+        },
+        "NKOR": {
+          "value": 78,
+          "description": "Democratic People's Republic of Korea"
+        },
+        "NOR": {
+          "value": 79,
+          "description": "Norway"
+        },
+        "NPL": {
+          "value": 80,
+          "description": "Federal Democratic Republic of Nepal"
+        },
+        "NZ": {
+          "value": 81,
+          "description": "New Zealand"
+        },
+        "O3B": {
+          "value": 82,
+          "description": "O3b Networks"
+        },
+        "ORB": {
+          "value": 83,
+          "description": "ORBCOMM"
+        },
+        "PAKI": {
+          "value": 84,
+          "description": "Pakistan"
+        },
+        "PERU": {
+          "value": 85,
+          "description": "Peru"
+        },
+        "POL": {
+          "value": 86,
+          "description": "Poland"
+        },
+        "POR": {
+          "value": 87,
+          "description": "Portugal"
+        },
+        "PRC": {
+          "value": 88,
+          "description": "People's Republic of China"
+        },
+        "PRY": {
+          "value": 89,
+          "description": "Republic of Paraguay"
+        },
+        "PRES": {
+          "value": 90,
+          "description": "People's Republic of China/European Space Agency"
+        },
+        "QAT": {
+          "value": 91,
+          "description": "State of Qatar"
+        },
+        "RASC": {
+          "value": 92,
+          "description": "RascomStar-QAF"
+        },
+        "ROC": {
+          "value": 93,
+          "description": "Taiwan (Republic of China)"
+        },
+        "ROM": {
+          "value": 94,
+          "description": "Romania"
+        },
+        "RP": {
+          "value": 95,
+          "description": "Philippines (Republic of the Philippines)"
+        },
+        "RWA": {
+          "value": 96,
+          "description": "Republic of Rwanda"
+        },
+        "SAFR": {
+          "value": 97,
+          "description": "South Africa"
+        },
+        "SAUD": {
+          "value": 98,
+          "description": "Saudi Arabia"
+        },
+        "SDN": {
+          "value": 99,
+          "description": "Republic of Sudan"
+        },
+        "SEAL": {
+          "value": 100,
+          "description": "Sea Launch"
+        },
+        "SES": {
+          "value": 101,
+          "description": "SES"
+        },
+        "SGJP": {
+          "value": 102,
+          "description": "Singapore/Japan"
+        },
+        "SING": {
+          "value": 103,
+          "description": "Singapore"
+        },
+        "SKOR": {
+          "value": 104,
+          "description": "Republic of Korea"
+        },
+        "SPN": {
+          "value": 105,
+          "description": "Spain"
+        },
+        "STCT": {
+          "value": 106,
+          "description": "Singapore/Taiwan"
+        },
+        "SVN": {
+          "value": 107,
+          "description": "Slovenia"
+        },
+        "SWED": {
+          "value": 108,
+          "description": "Sweden"
+        },
+        "SWTZ": {
+          "value": 109,
+          "description": "Switzerland"
+        },
+        "TBD": {
+          "value": 110,
+          "description": "To Be Determined"
+        },
+        "THAI": {
+          "value": 111,
+          "description": "Thailand"
+        },
+        "TMMC": {
+          "value": 112,
+          "description": "Turkmenistan/Monaco"
+        },
+        "TUN": {
+          "value": 113,
+          "description": "Republic of Tunisia"
+        },
+        "TURK": {
+          "value": 114,
+          "description": "Turkey"
+        },
+        "UAE": {
+          "value": 115,
+          "description": "United Arab Emirates"
+        },
+        "UK": {
+          "value": 116,
+          "description": "United Kingdom"
+        },
+        "UKR": {
+          "value": 117,
+          "description": "Ukraine"
+        },
+        "UNK": {
+          "value": 118,
+          "description": "Unknown"
+        },
+        "URY": {
+          "value": 119,
+          "description": "Uruguay"
+        },
+        "US": {
+          "value": 120,
+          "description": "United States"
+        },
+        "USBZ": {
+          "value": 121,
+          "description": "United States/Brazil"
+        },
+        "VAT": {
+          "value": 122,
+          "description": "Vatican City State"
+        },
+        "VENZ": {
+          "value": 123,
+          "description": "Venezuela"
+        },
+        "VTNM": {
+          "value": 124,
+          "description": "Vietnam"
+        },
+        "ZWE": {
+          "value": 125,
+          "description": "Republic of Zimbabwe"
+        }
+      }
+    },
+    "objectType": {
+      "type": "string",
+      "enum": [
+        "PAYLOAD",
+        "ROCKET_BODY",
+        "DEBRIS",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PAYLOAD": {
+          "value": 0,
+          "description": "0"
+        },
+        "ROCKET_BODY": {
+          "value": 1,
+          "description": "1"
+        },
+        "DEBRIS": {
+          "value": 2,
+          "description": "2"
+        },
+        "UNKNOWN": {
+          "value": 3,
+          "description": "3"
+        }
+      }
+    },
+    "opsStatusCode": {
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "NONOPERATIONAL",
+        "PARTIALLY_OPERATIONAL",
+        "BACKUP_STANDBY",
+        "SPARE",
+        "EXTENDED_MISSION",
+        "DECAYED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPERATIONAL": {
+          "value": 0,
+          "description": "+"
+        },
+        "NONOPERATIONAL": {
+          "value": 1,
+          "description": "-"
+        },
+        "PARTIALLY_OPERATIONAL": {
+          "value": 2,
+          "description": "P"
+        },
+        "BACKUP_STANDBY": {
+          "value": 3,
+          "description": "B"
+        },
+        "SPARE": {
+          "value": 4,
+          "description": "S"
+        },
+        "EXTENDED_MISSION": {
+          "value": 5,
+          "description": "X"
+        },
+        "DECAYED": {
+          "value": 6,
+          "description": "D"
+        },
+        "UNKNOWN": {
+          "value": 7,
+          "description": "?"
+        }
+      }
+    },
+    "dataStatusCode": {
+      "type": "string",
+      "enum": [
+        "NO_CURRENT_ELEMENTS",
+        "NO_INITIAL_ELEMENTS",
+        "NO_ELEMENTS_AVAILABLE",
+        "OK"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NO_CURRENT_ELEMENTS": {
+          "value": 0,
+          "description": "NCE"
+        },
+        "NO_INITIAL_ELEMENTS": {
+          "value": 1,
+          "description": "NIE"
+        },
+        "NO_ELEMENTS_AVAILABLE": {
+          "value": 2,
+          "description": "NEA"
+        },
+        "OK": {
+          "value": 3,
+          "description": "OK"
+        }
+      }
+    },
+    "orbitType": {
+      "type": "string",
+      "enum": [
+        "ORBIT",
+        "LANDING",
+        "IMPACT",
+        "DOCKED",
+        "ROUNDTRIP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ORBIT": {
+          "value": 0,
+          "description": "0"
+        },
+        "LANDING": {
+          "value": 1,
+          "description": "1"
+        },
+        "IMPACT": {
+          "value": 2,
+          "description": "2"
+        },
+        "DOCKED": {
+          "value": 3,
+          "description": "3"
+        },
+        "ROUNDTRIP": {
+          "value": 4,
+          "description": "4"
+        }
+      }
+    },
+    "massType": {
+      "type": "string",
+      "enum": [
+        "DRY",
+        "WET"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DRY": {
+          "value": 0
+        },
+        "WET": {
+          "value": 1
+        }
+      }
+    },
+    "CelestialFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CelestialFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GCRF": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            "ICRF": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            "J2000": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            "J2000A": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            "EME2000": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            "TEMEOFDATE": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            "GTOD": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            "CIRS": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            "MOD_EARTH": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            "MOD_CB": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            "MOD_MOON": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            "TOD_EARTH": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            "TOD_CB": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            "TOD_MOON": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            "TOE_EARTH": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            "TOE_CB": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            "TOE_MOON": {
+              "value": 16,
+              "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            "ITRF2000": {
+              "value": 17,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            "ITRF93": {
+              "value": 18,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            "ITRF97": {
+              "value": 19,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            "EFG": {
+              "value": 20,
+              "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            "FIXED_CB": {
+              "value": 21,
+              "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            "FIXED_EARTH": {
+              "value": 22,
+              "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            "WGS84": {
+              "value": 23,
+              "description": "WGS84 Earth-fixed terrestrial system."
+            },
+            "DTRFYYYY": {
+              "value": 24,
+              "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            "ALIGN_EARTH": {
+              "value": 25,
+              "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            "ALIGN_CB": {
+              "value": 26,
+              "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            "B1950": {
+              "value": 27,
+              "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SpacecraftFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/SpacecraftFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACC_i": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            "ACTUATOR_i": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            "AST_i": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            "CSS_i": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            "DSS_i": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            "ESA_i": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            "GYRO_FRAME_i": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            "IMU_FRAME_i": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            "INSTRUMENT_i": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            "MTA_i": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            "RW_i": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            "SA_i": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            "SC_BODY_i": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            "SENSOR_i": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            "STARTRACKER_i": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            "TAM_i": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OrbitFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/OrbitFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQW_INERTIAL": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            "LVLH_INERTIAL": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            "LVLH_ROTATING": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            "NSW_INERTIAL": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            "NSW_ROTATING": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            "NTW_INERTIAL": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            "NTW_ROTATING": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            "PQW_INERTIAL": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            "RSW_INERTIAL": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            "RSW_ROTATING": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            "SEZ_INERTIAL": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            "SEZ_ROTATING": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            "TNW_INERTIAL": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            "TNW_ROTATING": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            "VNC_INERTIAL": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            "VNC_ROTATING": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CustomFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ECEF": {
+              "value": 0,
+              "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            "TEME": {
+              "value": 1,
+              "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            "TEMEOFEPOCH": {
+              "value": 2,
+              "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            "ENU": {
+              "value": 3,
+              "description": "East-North-Up: Local tangent plane for surface points."
+            },
+            "NED": {
+              "value": 4,
+              "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            "NEU": {
+              "value": 5,
+              "description": "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            "RIC": {
+              "value": 6,
+              "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            "RTN": {
+              "value": 7,
+              "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            "TVN": {
+              "value": 8,
+              "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            "VVLH": {
+              "value": 9,
+              "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            "QSW": {
+              "value": 10,
+              "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            "LTP": {
+              "value": 11,
+              "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            "LVLH": {
+              "value": 12,
+              "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            "PNE": {
+              "value": 13,
+              "description": "Polar-North-East: Surface coordinate frame."
+            },
+            "BRF": {
+              "value": 14,
+              "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            "RSW": {
+              "value": 15,
+              "description": "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            "TNW": {
+              "value": 16,
+              "description": "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            "UVW": {
+              "value": 17,
+              "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFM": {
+      "type": "object",
+      "description": "Reference Frame Message",
+      "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
+        "REFERENCE_FRAME": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            }
+          ],
+          "x-flatbuffer-type": "RFMUnion"
+        },
+        "INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIM": {
+      "type": "object",
+      "description": "Time System",
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timeSystem",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FrequencyRange": {
+      "type": "object",
+      "description": "Frequency range with lower and upper limits",
+      "properties": {
+        "LOWER": {
+          "type": "number",
+          "description": "Lower frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER": {
+          "type": "number",
+          "description": "Upper frequency in MHz",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StokesParameters": {
+      "type": "object",
+      "description": "Stokes parameters, representing different aspects of polarization",
+      "properties": {
+        "I": {
+          "type": "number",
+          "description": "Intensity",
+          "x-flatbuffer-type": "double"
+        },
+        "Q": {
+          "type": "number",
+          "description": "Linear polarization",
+          "x-flatbuffer-type": "double"
+        },
+        "U": {
+          "type": "number",
+          "description": "Another linear polarization, orthogonal to Q",
+          "x-flatbuffer-type": "double"
+        },
+        "V": {
+          "type": "number",
+          "description": "Circular polarization",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Band": {
+      "type": "object",
+      "description": "Table representing a frequency band with a name and frequency range",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the band",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_RANGE": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Frequency range of the band",
+          "x-flatbuffer-type": "FrequencyRange"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IDM": {
+      "type": "object",
+      "description": "Integrated Device Message",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_MODE": {
+          "$ref": "#/definitions/DataMode",
+          "description": "Mode of the data (real, simulated, synthetic)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EXERCISE": {
+              "value": 0,
+              "description": "Data collected during an exercise scenario."
+            },
+            "REAL": {
+              "value": 1,
+              "description": "Data collected from real-world observations."
+            },
+            "SIMULATED": {
+              "value": 2,
+              "description": "Data generated through simulation."
+            },
+            "TEST": {
+              "value": 3,
+              "description": "Data collected for testing purposes."
+            }
+          }
+        },
+        "UPLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Uplink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "DOWNLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Downlink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BEACON": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Beacon frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BAND": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Band"
+          },
+          "description": "Bands associated with the EMT",
+          "x-flatbuffer-type": "[Band]"
+        },
+        "POLARIZATION_TYPE": {
+          "$ref": "#/definitions/PolarizationType",
+          "description": "Type of polarization used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "linear": {
+              "value": 0
+            },
+            "circular": {
+              "value": 1
+            },
+            "elliptical": {
+              "value": 2
+            },
+            "unpolarized": {
+              "value": 3
+            }
+          }
+        },
+        "SIMPLE_POLARIZATION": {
+          "$ref": "#/definitions/SimplePolarization",
+          "description": "Simple polarization configuration",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "vertical": {
+              "value": 0
+            },
+            "horizontal": {
+              "value": 1
+            },
+            "leftHandCircular": {
+              "value": 2
+            },
+            "rightHandCircular": {
+              "value": 3
+            }
+          }
+        },
+        "STOKES_PARAMETERS": {
+          "$ref": "#/definitions/StokesParameters",
+          "description": "Stokes parameters for polarization characterization",
+          "x-flatbuffer-type": "StokesParameters"
+        },
+        "POWER_REQUIRED": {
+          "type": "number",
+          "description": "Power required in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_TYPE": {
+          "type": "string",
+          "description": "Type of power (eg. AC or DC)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can transmit",
+          "x-flatbuffer-type": "bool"
+        },
+        "RECEIVE": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can receive",
+          "x-flatbuffer-type": "bool"
+        },
+        "SENSOR_TYPE": {
+          "$ref": "#/definitions/DeviceType",
+          "description": "Type of the sensor",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0,
+              "description": "Basic and General Sensors Basic or undefined sensor type"
+            },
+            "OPTICAL": {
+              "value": 1,
+              "description": "General optical sensors"
+            },
+            "INFRARED_SENSOR": {
+              "value": 2,
+              "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+            },
+            "ULTRAVIOLET_SENSOR": {
+              "value": 3,
+              "description": "Sensitive to ultraviolet light"
+            },
+            "X_RAY_SENSOR": {
+              "value": 4,
+              "description": "For X-ray detection"
+            },
+            "GAMMA_RAY_SENSOR": {
+              "value": 5,
+              "description": "For gamma-ray detection"
+            },
+            "RADAR": {
+              "value": 6,
+              "description": "Radar and Radio Telescopes Basic radar systems"
+            },
+            "PHASED_ARRAY_RADAR": {
+              "value": 7,
+              "description": "Advanced radar with phased array technology"
+            },
+            "SYNTHETIC_APERTURE_RADAR": {
+              "value": 8,
+              "description": "For high-resolution imaging"
+            },
+            "BISTATIC_RADIO_TELESCOPE": {
+              "value": 9,
+              "description": "For astronomical observations using bistatic setup"
+            },
+            "RADIO_TELESCOPE": {
+              "value": 10,
+              "description": "For radio astronomy"
+            },
+            "ATMOSPHERIC_SENSOR": {
+              "value": 11,
+              "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+            },
+            "SPACE_WEATHER_SENSOR": {
+              "value": 12,
+              "description": "For observing space weather phenomena"
+            },
+            "ENVIRONMENTAL_SENSOR": {
+              "value": 13,
+              "description": "General environmental monitoring"
+            },
+            "SEISMIC_SENSOR": {
+              "value": 14,
+              "description": "Specialized Scientific Sensors For measuring seismic activities"
+            },
+            "GRAVIMETRIC_SENSOR": {
+              "value": 15,
+              "description": "For gravity measurements"
+            },
+            "MAGNETIC_SENSOR": {
+              "value": 16,
+              "description": "For magnetic field detection"
+            },
+            "ELECTROMAGNETIC_SENSOR": {
+              "value": 17,
+              "description": "For electromagnetic field analysis"
+            },
+            "THERMAL_SENSOR": {
+              "value": 18,
+              "description": "For temperature and heat detection"
+            },
+            "CHEMICAL_SENSOR": {
+              "value": 19,
+              "description": "For detecting chemicals and substances"
+            },
+            "BIOLOGICAL_SENSOR": {
+              "value": 20,
+              "description": "For biological research and detection"
+            },
+            "RADIATION_SENSOR": {
+              "value": 21,
+              "description": "For detecting ionizing radiation"
+            },
+            "PARTICLE_DETECTOR": {
+              "value": 22,
+              "description": "For detecting subatomic particles"
+            },
+            "LIDAR": {
+              "value": 23,
+              "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+            },
+            "SONAR": {
+              "value": 24,
+              "description": "Sound Navigation and Ranging"
+            },
+            "TELESCOPE": {
+              "value": 25,
+              "description": "General telescopes for astronomical observations"
+            },
+            "SPECTROSCOPIC_SENSOR": {
+              "value": 26,
+              "description": "For spectral analysis"
+            },
+            "PHOTOMETRIC_SENSOR": {
+              "value": 27,
+              "description": "For measuring light intensity"
+            },
+            "POLARIMETRIC_SENSOR": {
+              "value": 28,
+              "description": "For analyzing polarization of light"
+            },
+            "INTERFEROMETRIC_SENSOR": {
+              "value": 29,
+              "description": "For detailed imaging using interference"
+            },
+            "MULTISPECTRAL_SENSOR": {
+              "value": 30,
+              "description": "Capturing image data at multiple wavelengths"
+            },
+            "HYPERSPECTRAL_SENSOR": {
+              "value": 31,
+              "description": "Advanced imaging across many spectral bands"
+            },
+            "GPS_RECEIVER": {
+              "value": 32,
+              "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+            },
+            "RADIO_COMMUNICATIONS": {
+              "value": 33,
+              "description": "Communication Devices Standard radio communication device"
+            },
+            "LASER_COMMUNICATIONS": {
+              "value": 34,
+              "description": "Advanced laser communication system"
+            },
+            "SATELLITE_COMMUNICATIONS": {
+              "value": 35,
+              "description": "Satellite communication system"
+            },
+            "LASER_INSTRUMENT": {
+              "value": 36,
+              "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+            },
+            "RF_ANALYZER": {
+              "value": 37,
+              "description": "Radio frequency analysis and measurement device"
+            },
+            "IONOSPHERIC_SENSOR": {
+              "value": 38,
+              "description": "Device for ionospheric research"
+            },
+            "LASER_IMAGING": {
+              "value": 39,
+              "description": "Optical Devices Device for laser-based imaging"
+            },
+            "OPTICAL_TELESCOPE": {
+              "value": 40,
+              "description": "Advanced optical telescope"
+            },
+            "HIGH_RESOLUTION_OPTICAL": {
+              "value": 41,
+              "description": "Device for high-resolution optical observations"
+            },
+            "RADIO": {
+              "value": 42,
+              "description": "Radio and Microwave Devices"
+            },
+            "MICROWAVE_TRANSMITTER": {
+              "value": 43,
+              "description": "Microwave communication device"
+            },
+            "RF_MONITOR": {
+              "value": 44,
+              "description": "Device for radio frequency monitoring"
+            },
+            "HF_RADIO_COMMUNICATIONS": {
+              "value": 45,
+              "description": "High-frequency radio communication device"
+            }
+          }
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the data",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_TIME": {
+          "type": "string",
+          "description": "Timestamp of the last observation",
+          "x-flatbuffer-type": "string"
+        },
+        "LOWER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "RIGHT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Right geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LEFT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Left geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "MAGNITUDE_LIMIT": {
+          "type": "number",
+          "description": "Magnitude limit of the sensor",
+          "x-flatbuffer-type": "double"
+        },
+        "TASKABLE": {
+          "type": "boolean",
+          "description": "Indicates if the site is taskable",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PLD": {
+      "type": "object",
+      "description": "Payload Information",
+      "properties": {
+        "PAYLOAD_DURATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MASS_AT_LAUNCH": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "DIMENSIONS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLAR_ARRAY_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "SOLAR_ARRAY_DIMENSIONS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NOMINAL_OPERATIONAL_LIFETIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTRUMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IDM"
+          },
+          "x-flatbuffer-type": "[IDM]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LCC": {
+      "type": "object",
+      "description": "Legacy Country Code",
+      "properties": {
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AB": {
+              "value": 0,
+              "description": "Arab Satellite Communications Organization"
+            },
+            "ABS": {
+              "value": 1,
+              "description": "Asia Broadcast Satellite"
+            },
+            "AC": {
+              "value": 2,
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+            },
+            "ALG": {
+              "value": 3,
+              "description": "Algeria"
+            },
+            "ANG": {
+              "value": 4,
+              "description": "Angola"
+            },
+            "ARGN": {
+              "value": 5,
+              "description": "Argentina"
+            },
+            "ARM": {
+              "value": 6,
+              "description": "Republic of Armenia"
+            },
+            "ASRA": {
+              "value": 7,
+              "description": "Austria"
+            },
+            "AUS": {
+              "value": 8,
+              "description": "Australia"
+            },
+            "AZER": {
+              "value": 9,
+              "description": "Azerbaijan"
+            },
+            "BEL": {
+              "value": 10,
+              "description": "Belgium"
+            },
+            "BELA": {
+              "value": 11,
+              "description": "Belarus"
+            },
+            "BERM": {
+              "value": 12,
+              "description": "Bermuda"
+            },
+            "BGD": {
+              "value": 13,
+              "description": "People's Republic of Bangladesh"
+            },
+            "BHUT": {
+              "value": 14,
+              "description": "Kingdom of Bhutan"
+            },
+            "BOL": {
+              "value": 15,
+              "description": "Bolivia"
+            },
+            "BRAZ": {
+              "value": 16,
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CAT": {
+      "type": "object",
+      "description": "Catalog Entity Message",
+      "properties": {
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Satellite Name(s)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International Designator (YYYY-NNNAAA)",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD Catalog Number",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_TYPE": {
+          "$ref": "#/definitions/objectType",
+          "description": "Object type (Payload, Rocket body, Debris, Unknown)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PAYLOAD": {
+              "value": 0,
+              "description": "0"
+            },
+            "ROCKET_BODY": {
+              "value": 1,
+              "description": "1"
+            },
+            "DEBRIS": {
+              "value": 2,
+              "description": "2"
+            },
+            "UNKNOWN": {
+              "value": 3,
+              "description": "3"
+            }
+          }
+        },
+        "OPS_STATUS_CODE": {
+          "$ref": "#/definitions/opsStatusCode",
+          "description": "Operational Status Code",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPERATIONAL": {
+              "value": 0,
+              "description": "+"
+            },
+            "NONOPERATIONAL": {
+              "value": 1,
+              "description": "-"
+            },
+            "PARTIALLY_OPERATIONAL": {
+              "value": 2,
+              "description": "P"
+            },
+            "BACKUP_STANDBY": {
+              "value": 3,
+              "description": "B"
+            },
+            "SPARE": {
+              "value": 4,
+              "description": "S"
+            },
+            "EXTENDED_MISSION": {
+              "value": 5,
+              "description": "X"
+            },
+            "DECAYED": {
+              "value": 6,
+              "description": "D"
+            },
+            "UNKNOWN": {
+              "value": 7,
+              "description": "?"
+            }
+          }
+        },
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
+          "description": "Ownership, typically country or company",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AB": {
+              "value": 0,
+              "description": "Arab Satellite Communications Organization"
+            },
+            "ABS": {
+              "value": 1,
+              "description": "Asia Broadcast Satellite"
+            },
+            "AC": {
+              "value": 2,
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+            },
+            "ALG": {
+              "value": 3,
+              "description": "Algeria"
+            },
+            "ANG": {
+              "value": 4,
+              "description": "Angola"
+            },
+            "ARGN": {
+              "value": 5,
+              "description": "Argentina"
+            },
+            "ARM": {
+              "value": 6,
+              "description": "Republic of Armenia"
+            },
+            "ASRA": {
+              "value": 7,
+              "description": "Austria"
+            },
+            "AUS": {
+              "value": 8,
+              "description": "Australia"
+            },
+            "AZER": {
+              "value": 9,
+              "description": "Azerbaijan"
+            },
+            "BEL": {
+              "value": 10,
+              "description": "Belgium"
+            },
+            "BELA": {
+              "value": 11,
+              "description": "Belarus"
+            },
+            "BERM": {
+              "value": 12,
+              "description": "Bermuda"
+            },
+            "BGD": {
+              "value": 13,
+              "description": "People's Republic of Bangladesh"
+            },
+            "BHUT": {
+              "value": 14,
+              "description": "Kingdom of Bhutan"
+            },
+            "BOL": {
+              "value": 15,
+              "description": "Bolivia"
+            },
+            "BRAZ": {
+              "value": 16,
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
+            }
+          }
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "description": "Launch Date [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_SITE": {
+          "type": "string",
+          "description": "Launch Site",
+          "x-flatbuffer-type": "string"
+        },
+        "DECAY_DATE": {
+          "type": "string",
+          "description": "Decay Date, if applicable [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Orbital period [minutes]",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination [degrees]",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee Altitude [kilometers]",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee Altitude [kilometers]",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS": {
+          "type": "number",
+          "description": "Radar Cross Section [meters2]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_STATUS_CODE": {
+          "$ref": "#/definitions/dataStatusCode",
+          "description": "Data status code; blank otherwise",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NO_CURRENT_ELEMENTS": {
+              "value": 0,
+              "description": "NCE"
+            },
+            "NO_INITIAL_ELEMENTS": {
+              "value": 1,
+              "description": "NIE"
+            },
+            "NO_ELEMENTS_AVAILABLE": {
+              "value": 2,
+              "description": "NEA"
+            },
+            "OK": {
+              "value": 3,
+              "description": "OK"
+            }
+          }
+        },
+        "ORBIT_CENTER": {
+          "type": "string",
+          "description": "Orbit center",
+          "x-flatbuffer-type": "string"
+        },
+        "ORBIT_TYPE": {
+          "$ref": "#/definitions/orbitType",
+          "description": "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ORBIT": {
+              "value": 0,
+              "description": "0"
+            },
+            "LANDING": {
+              "value": 1,
+              "description": "1"
+            },
+            "IMPACT": {
+              "value": 2,
+              "description": "2"
+            },
+            "DOCKED": {
+              "value": 3,
+              "description": "3"
+            },
+            "ROUNDTRIP": {
+              "value": 4,
+              "description": "4"
+            }
+          }
+        },
+        "DEPLOYMENT_DATE": {
+          "type": "string",
+          "description": "Deployment Date [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MANEUVERABLE": {
+          "type": "boolean",
+          "description": "Indicates if the object is maneuverable",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIZE": {
+          "type": "number",
+          "description": "Size [meters]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Mass [kilograms]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS_TYPE": {
+          "$ref": "#/definitions/massType",
+          "description": "Mass type (Dry, Wet)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DRY": {
+              "value": 0
+            },
+            "WET": {
+              "value": 1
+            }
+          }
+        },
+        "PAYLOADS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLD"
+          },
+          "description": "Vector of PAYLOADS",
+          "x-flatbuffer-type": "[PLD]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ephemerisDataLine": {
+      "type": "object",
+      "description": "A single ephemeris data line",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch time, in ISO 8601 UTC format",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "description": "Position vector X-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Position vector Y-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Position vector Z-component km",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DOT": {
+          "type": "number",
+          "description": "Velocity vector X-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DOT": {
+          "type": "number",
+          "description": "Velocity vector Y-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DOT": {
+          "type": "number",
+          "description": "Velocity vector Z-component km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector X-component km/s/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector Y-component km/s/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DDOT": {
+          "type": "number",
+          "description": "Optional: Acceleration vector Z-component km/s/s",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "covarianceMatrixLine": {
+      "type": "object",
+      "description": "Position/Velocity Covariance Matrix Line",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch",
+          "x-flatbuffer-type": "string"
+        },
+        "CX_X": {
+          "type": "number",
+          "description": "Covariance matrix [1,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_X": {
+          "type": "number",
+          "description": "Covariance matrix [2,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_Y": {
+          "type": "number",
+          "description": "Covariance matrix [2,2] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_X": {
+          "type": "number",
+          "description": "Covariance matrix [3,1] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_Y": {
+          "type": "number",
+          "description": "Covariance matrix [3,2] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_Z": {
+          "type": "number",
+          "description": "Covariance matrix [3,3] km**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [4,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [4,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [4,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CX_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [4,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [5,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [5,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [5,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [5,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CY_DOT_Y_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [5,5] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_X": {
+          "type": "number",
+          "description": "Covariance matrix [6,1] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Y": {
+          "type": "number",
+          "description": "Covariance matrix [6,2] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Z": {
+          "type": "number",
+          "description": "Covariance matrix [6,3] km**2/s",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_X_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,4] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Y_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,5] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "CZ_DOT_Z_DOT": {
+          "type": "number",
+          "description": "Covariance matrix [6,6] km**2/s**2",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ephemerisDataBlock": {
+      "type": "object",
+      "description": "OEM Ephemeris Data Block",
+      "properties": {
+        "COMMENT": {
+          "type": "string",
+          "description": "Plain-Text Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT": {
+          "$ref": "#/definitions/CAT",
+          "description": "Satellite name for the first object",
+          "x-flatbuffer-type": "CAT"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "Origin of reference frame (EARTH, MARS, MOON, etc.)",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Name of the reference frame (TEME, EME2000, etc.)",
+          "x-flatbuffer-type": "RFM"
+        },
+        "REFERENCE_FRAME_EPOCH": {
+          "type": "string",
+          "description": "Epoch of reference frame, if not intrinsic to the definition of the reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "COV_REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Reference frame for the covariance matrix",
+          "x-flatbuffer-type": "RFM"
+        },
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timeSystem",
+          "description": "Time system used for the orbit state and covariance matrix. (UTC)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            }
+          }
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_START_TIME": {
+          "type": "string",
+          "description": "Optional start USEABLE time span covered by ephemeris data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "USEABLE_STOP_TIME": {
+          "type": "string",
+          "description": "Optional end of USEABLE time span covered by ephemeris data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "description": "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STEP_SIZE": {
+          "type": "number",
+          "description": "Step size in seconds separating the epochs of each ephemeris data row",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERPOLATION": {
+          "type": "string",
+          "description": "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Recommended interpolation degree for ephemeris data",
+          "x-flatbuffer-type": "uint"
+        },
+        "EPHEMERIS_DATA_LINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ephemerisDataLine"
+          },
+          "description": "Array of ephemeris data lines",
+          "x-flatbuffer-type": "[ephemerisDataLine]"
+        },
+        "COVARIANCE_MATRIX_LINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/covarianceMatrixLine"
+          },
+          "description": "Array of covariance matrix lines",
+          "x-flatbuffer-type": "[covarianceMatrixLine]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OEM": {
+      "type": "object",
+      "description": "Orbit Ephemeris Message",
+      "properties": {
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_OEM_VERS": {
+          "type": "number",
+          "description": "OEM Version",
+          "x-flatbuffer-type": "double"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Creation Date",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Originator",
+          "x-flatbuffer-type": "string"
+        },
+        "EPHEMERIS_DATA_BLOCK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ephemerisDataBlock"
+          },
+          "description": "Array of ephemeris data blocks",
+          "x-flatbuffer-type": "[ephemerisDataBlock]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OEM",
+  "x-flatbuffer-root-type": "OEM",
+  "x-flatbuffer-file-identifier": "$OEM"
+}

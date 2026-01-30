@@ -1,0 +1,40 @@
+{
+  "name": "@spacedatastandards/standards-explorer",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Interactive standards explorer - browse, inspect, and generate code from Space Data Standards schemas. Available as a JavaScript library and Web Component.",
+  "main": "dist/standards-explorer.js",
+  "module": "dist/standards-explorer.js",
+  "exports": {
+    ".": {
+      "import": "./dist/standards-explorer.js",
+      "default": "./dist/standards-explorer.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "dev": "npx serve examples"
+  },
+  "keywords": [
+    "space-data-standards",
+    "flatbuffers",
+    "json-schema",
+    "web-component",
+    "code-generator",
+    "ccsds"
+  ],
+  "author": "sds@digitalarsenal.io",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "spacedatastandards.org": "^1.65.0",
+    "flatc-wasm": "^26.1.15"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ENGINE_TYPE": {
+      "type": "string",
+      "enum": [
+        "LIQUID",
+        "SOLID",
+        "HYBRID",
+        "ION",
+        "NUCLEAR_THERMAL",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LIQUID": {
+          "value": 0
+        },
+        "SOLID": {
+          "value": 1
+        },
+        "HYBRID": {
+          "value": 2
+        },
+        "ION": {
+          "value": 3
+        },
+        "NUCLEAR_THERMAL": {
+          "value": 4
+        },
+        "OTHER": {
+          "value": 5
+        }
+      }
+    },
+    "ROC": {
+      "type": "object",
+      "description": "Rocket Configuration",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Rocket Name",
+          "x-flatbuffer-type": "string"
+        },
+        "FAMILY": {
+          "type": "string",
+          "description": "Rocket Family",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIANT": {
+          "type": "string",
+          "description": "Rocket Variant",
+          "x-flatbuffer-type": "string"
+        },
+        "STAGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/STAGE"
+          },
+          "description": "Stages in the Rocket",
+          "x-flatbuffer-type": "[STAGE]"
+        },
+        "SUSTAINERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SUSTAINER"
+          },
+          "description": "Sustainers in the Rocket",
+          "x-flatbuffer-type": "[SUSTAINER]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "STAGE": {
+      "type": "object",
+      "description": "Stage Details",
+      "properties": {
+        "STAGE_NUMBER": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Stage Number",
+          "x-flatbuffer-type": "int"
+        },
+        "ENGINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ENGINE"
+          },
+          "description": "Engines Used in This Stage",
+          "x-flatbuffer-type": "[ENGINE]"
+        },
+        "FUEL_TYPE": {
+          "type": "string",
+          "description": "Fuel Type Used in This Stage",
+          "x-flatbuffer-type": "string"
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by This Stage (in Newtons)",
+          "x-flatbuffer-type": "double"
+        },
+        "BURN_DURATION": {
+          "type": "number",
+          "description": "Duration of the Burn (in Seconds)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SUSTAINER": {
+      "type": "object",
+      "description": "Sustainer Details",
+      "properties": {
+        "SUSTAINER_NAME": {
+          "type": "string",
+          "description": "Name of the Sustainer",
+          "x-flatbuffer-type": "string"
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by the Sustainer (in Newtons)",
+          "x-flatbuffer-type": "double"
+        },
+        "BURN_DURATION": {
+          "type": "number",
+          "description": "Duration of the Burn (in Seconds)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ENGINE": {
+      "type": "object",
+      "description": "Engine Details",
+      "properties": {
+        "ENGINE_NAME": {
+          "type": "string",
+          "description": "Engine Name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/ENGINE_TYPE",
+          "description": "Type of Engine",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LIQUID": {
+              "value": 0
+            },
+            "SOLID": {
+              "value": 1
+            },
+            "HYBRID": {
+              "value": 2
+            },
+            "ION": {
+              "value": 3
+            },
+            "NUCLEAR_THERMAL": {
+              "value": 4
+            },
+            "OTHER": {
+              "value": 5
+            }
+          }
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by the Engine (in Newtons)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ROC",
+  "x-flatbuffer-root-type": "ROC",
+  "x-flatbuffer-file-identifier": "$ROC"
+}

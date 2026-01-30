@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pluginType": {
+      "type": "string",
+      "enum": [
+        "Sensor",
+        "Propagator",
+        "Renderer",
+        "Analysis",
+        "DataSource",
+        "EW",
+        "Comms",
+        "Physics",
+        "Shader"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Sensor": {
+          "value": 0,
+          "description": "Sensor simulation and analysis"
+        },
+        "Propagator": {
+          "value": 1,
+          "description": "Orbital propagation algorithms"
+        },
+        "Renderer": {
+          "value": 2,
+          "description": "Custom rendering/visualization"
+        },
+        "Analysis": {
+          "value": 3,
+          "description": "Data analysis and processing"
+        },
+        "DataSource": {
+          "value": 4,
+          "description": "External data source integration"
+        },
+        "EW": {
+          "value": 5,
+          "description": "Electronic warfare simulation"
+        },
+        "Comms": {
+          "value": 6,
+          "description": "Communications modeling"
+        },
+        "Physics": {
+          "value": 7,
+          "description": "Physics simulation"
+        },
+        "Shader": {
+          "value": 8,
+          "description": "GLSL shader plugins for custom visualization"
+        }
+      }
+    },
+    "PluginCapability": {
+      "type": "object",
+      "description": "Plugin capability declaration",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Capability name, e.g., \"gpu_compute\", \"wasm_simd\"",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Capability version",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUIRED": {
+          "type": "boolean",
+          "description": "Whether this capability is required",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PluginDependency": {
+      "type": "object",
+      "description": "Plugin dependency on another plugin",
+      "properties": {
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Plugin ID of the dependency",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_VERSION": {
+          "type": "string",
+          "description": "Minimum version required (semver)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAX_VERSION": {
+          "type": "string",
+          "description": "Maximum version allowed (optional)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EntryFunction": {
+      "type": "object",
+      "description": "Plugin entry point function definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Function name as exported from WASM",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable description",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Input parameter types (FlatBuffer schema names)",
+          "x-flatbuffer-type": "[string]"
+        },
+        "OUTPUT_SCHEMA": {
+          "type": "string",
+          "description": "Output type (FlatBuffer schema name)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "PLG": {
+      "type": "object",
+      "description": "Plugin Manifest - WASM plugin distribution",
+      "properties": {
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Unique identifier for the plugin",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable plugin name",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Plugin version (semver format)",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Detailed description of plugin functionality",
+          "x-flatbuffer-type": "string"
+        },
+        "PLUGIN_TYPE": {
+          "$ref": "#/definitions/pluginType",
+          "description": "Type/category of the plugin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Sensor": {
+              "value": 0,
+              "description": "Sensor simulation and analysis"
+            },
+            "Propagator": {
+              "value": 1,
+              "description": "Orbital propagation algorithms"
+            },
+            "Renderer": {
+              "value": 2,
+              "description": "Custom rendering/visualization"
+            },
+            "Analysis": {
+              "value": 3,
+              "description": "Data analysis and processing"
+            },
+            "DataSource": {
+              "value": 4,
+              "description": "External data source integration"
+            },
+            "EW": {
+              "value": 5,
+              "description": "Electronic warfare simulation"
+            },
+            "Comms": {
+              "value": 6,
+              "description": "Communications modeling"
+            },
+            "Physics": {
+              "value": 7,
+              "description": "Physics simulation"
+            },
+            "Shader": {
+              "value": 8,
+              "description": "GLSL shader plugins for custom visualization"
+            }
+          }
+        },
+        "ABI_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "ABI version for compatibility checking",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WASM_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA256 hash of the decrypted WASM binary",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "WASM_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of WASM binary in bytes",
+          "x-flatbuffer-type": "uint64"
+        },
+        "WASM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the encrypted WASM binary",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTRY_FUNCTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntryFunction"
+          },
+          "description": "Entry point functions exported by the plugin",
+          "x-flatbuffer-type": "[EntryFunction]"
+        },
+        "REQUIRED_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "FlatBuffer schemas required by this plugin",
+          "x-flatbuffer-type": "[string]"
+        },
+        "DEPENDENCIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PluginDependency"
+          },
+          "description": "Other plugins this depends on",
+          "x-flatbuffer-type": "[PluginDependency]"
+        },
+        "CAPABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PluginCapability"
+          },
+          "description": "Capabilities provided by this plugin",
+          "x-flatbuffer-type": "[PluginCapability]"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the plugin provider",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of provider's EPM (Entity Profile Message)",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTED": {
+          "type": "boolean",
+          "description": "Whether the WASM binary is encrypted",
+          "x-flatbuffer-type": "bool"
+        },
+        "MIN_PERMISSIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Minimum permissions required to run",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when plugin was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when plugin was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DOCUMENTATION_URL": {
+          "type": "string",
+          "description": "URL to plugin documentation",
+          "x-flatbuffer-type": "string"
+        },
+        "ICON_URL": {
+          "type": "string",
+          "description": "URL to plugin icon/logo",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "License identifier (SPDX format)",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature from provider over manifest",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "PLUGIN_ID",
+        "NAME",
+        "VERSION"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PLG",
+  "x-flatbuffer-root-type": "PLG",
+  "x-flatbuffer-file-identifier": "$PLG"
+}

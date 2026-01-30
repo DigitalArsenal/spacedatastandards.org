@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SCHEMA_STANDARD": {
+      "type": "object",
+      "description": "Schema Standard Definition",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Unique identifier for the standard",
+          "x-flatbuffer-type": "string"
+        },
+        "idl": {
+          "type": "string",
+          "description": "IDL",
+          "x-flatbuffer-type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List Of File Paths",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCM": {
+      "type": "object",
+      "description": "Schema Manifest",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version of Space Data Standards",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCHEMA_STANDARD"
+          },
+          "description": "Standards Dictionary",
+          "x-flatbuffer-type": "[SCHEMA_STANDARD]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SCM",
+  "x-flatbuffer-root-type": "SCM",
+  "x-flatbuffer-file-identifier": "$SCM"
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "EME": {
+      "type": "object",
+      "description": "Encrypted Message Envelope",
+      "properties": {
+        "ENCRYPTED_BLOB": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Encrypted data blob, containing the ciphertext of the original plaintext message.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "EPHEMERAL_PUBLIC_KEY": {
+          "type": "string",
+          "description": "Temporary public key used for the encryption session, contributing to the derivation of the shared secret.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAC": {
+          "type": "string",
+          "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message.",
+          "x-flatbuffer-type": "string"
+        },
+        "NONCE": {
+          "type": "string",
+          "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.",
+          "x-flatbuffer-type": "string"
+        },
+        "TAG": {
+          "type": "string",
+          "description": "Additional authentication tag used in some encryption schemes for integrity and authenticity verification.",
+          "x-flatbuffer-type": "string"
+        },
+        "IV": {
+          "type": "string",
+          "description": "Initialization vector used to introduce randomness in the encryption process, enhancing security.",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLIC_KEY_IDENTIFIER": {
+          "type": "string",
+          "description": "Identifier for the public key used, aiding in recipient key management and message decryption.",
+          "x-flatbuffer-type": "string"
+        },
+        "CIPHER_SUITE": {
+          "type": "string",
+          "description": "Specifies the set of cryptographic algorithms used in the encryption process.",
+          "x-flatbuffer-type": "string"
+        },
+        "KDF_PARAMETERS": {
+          "type": "string",
+          "description": "Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTION_ALGORITHM_PARAMETERS": {
+          "type": "string",
+          "description": "Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/EME",
+  "x-flatbuffer-root-type": "EME",
+  "x-flatbuffer-file-identifier": "$EME"
+}

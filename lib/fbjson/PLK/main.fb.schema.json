@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "licenseType": {
+      "type": "string",
+      "enum": [
+        "Trial",
+        "Commercial",
+        "Enterprise",
+        "Educational",
+        "OpenSource",
+        "Internal"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Trial": {
+          "value": 0,
+          "description": "Evaluation/trial license"
+        },
+        "Commercial": {
+          "value": 1,
+          "description": "Standard commercial license"
+        },
+        "Enterprise": {
+          "value": 2,
+          "description": "Enterprise site license"
+        },
+        "Educational": {
+          "value": 3,
+          "description": "Educational/academic license"
+        },
+        "OpenSource": {
+          "value": 4,
+          "description": "Open source project license"
+        },
+        "Internal": {
+          "value": 5,
+          "description": "Internal OrbPro default plugins"
+        }
+      }
+    },
+    "PLK": {
+      "type": "object",
+      "description": "Plugin License Key - Issued license for plugin access\nUses ECIES: both parties derive symmetric key via X25519 ECDH\nKey derivation: X25519(private, peer_public) \u2192 HKDF-SHA256 \u2192 AES-256-GCM",
+      "properties": {
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Unique license key identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Plugin ID this license is for",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLUGIN_VERSION": {
+          "type": "string",
+          "description": "Plugin version or version range (semver)",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSEE_ORG": {
+          "type": "string",
+          "description": "Licensee organization name",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSEE_EMAIL": {
+          "type": "string",
+          "description": "Licensee contact email",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSEE_PEER_ID": {
+          "type": "string",
+          "description": "Licensee's SDN Peer ID",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSEE_PUBKEY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Licensee's X25519 public key (32 bytes)",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ISSUER_PUBKEY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Issuer's X25519 public key (32 bytes)\nUsed with licensee's private key to derive shared secret via ECDH",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ALLOWED_DOMAINS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Domain restrictions (empty = any domain allowed)",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ALLOWED_TLDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "TLD restrictions (e.g., \".gov\", \".mil\", \".edu\")",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LICENSE_TYPE": {
+          "$ref": "#/definitions/licenseType",
+          "description": "Type of license",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Trial": {
+              "value": 0,
+              "description": "Evaluation/trial license"
+            },
+            "Commercial": {
+              "value": 1,
+              "description": "Standard commercial license"
+            },
+            "Enterprise": {
+              "value": 2,
+              "description": "Enterprise site license"
+            },
+            "Educational": {
+              "value": 3,
+              "description": "Educational/academic license"
+            },
+            "OpenSource": {
+              "value": 4,
+              "description": "Open source project license"
+            },
+            "Internal": {
+              "value": 5,
+              "description": "Internal OrbPro default plugins"
+            }
+          }
+        },
+        "MAX_ACTIVATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Maximum concurrent activations (0 = unlimited)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ISSUED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when license was issued",
+          "x-flatbuffer-type": "uint64"
+        },
+        "VALID_FROM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when license becomes valid",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when license expires (0 = never expires)",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ISSUER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the license issuer (OrbPro)",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature from issuer over all fields (except SIGNATURE)",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "LICENSE_ID",
+        "PLUGIN_ID",
+        "LICENSEE_ORG"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PLK",
+  "x-flatbuffer-root-type": "PLK",
+  "x-flatbuffer-file-identifier": "$PLK"
+}

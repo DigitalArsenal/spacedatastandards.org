@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AtmosphericModelFamily": {
+      "type": "string",
+      "enum": [
+        "CIRA_XX",
+        "DTM_XX",
+        "GITM",
+        "GOST",
+        "GRAM_XX",
+        "HP",
+        "JAC_HASDM",
+        "JAC_GILL",
+        "JB08",
+        "JR71",
+        "JXX",
+        "MET_XX",
+        "MSIS_86",
+        "MSISE_90",
+        "NRLMSIS00E",
+        "TIECGM",
+        "USSA_XX"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CIRA_XX": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.9.1 COSPAR International Reference Atmosphere Known years: 1965, 1972, 1986, 1990"
+        },
+        "DTM_XX": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.9.2 Drag Temperature Model Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020"
+        },
+        "GITM": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.9.3 Global Ionosphere-Thermosphere Model GITM has no specific year versions defined"
+        },
+        "GOST": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.9.4 GOST atmospheric density model Known version: 2004 (GOST R 25645.166-2004)"
+        },
+        "GRAM_XX": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.9.5 Global Reference Atmospheric Model Known version: 2016"
+        },
+        "HP": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.9.6 Harris-Priester empirical model Known version: 1962"
+        },
+        "JAC_HASDM": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.9.7 Jacchia atmosphere model with HASDM correction overlay Based on Jacchia 1970 with HASDM (DCA) overlay"
+        },
+        "JAC_GILL": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.9.8 Jacchia-Gill bi-polynomial interpolation Interpolates Jacchia 1971"
+        },
+        "JB08": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.9.9 Jacchia-Bowman empirical model Known versions: 2006 (JB2006), 2008 (JB2008)"
+        },
+        "JR71": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.9.10 Jacchia-Roberts analytic model Known version: 1971"
+        },
+        "JXX": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.9.11 Jacchia static diffusion models Known years: 1970, 1971, 1977"
+        },
+        "MET_XX": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.9.12 Marshall Engineering Thermosphere Known version: 2007"
+        },
+        "MSIS_86": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.9.13 MSIS empirical model Known version: 1986"
+        },
+        "MSISE_90": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.9.14 MSISE empirical model with exosphere extension Known version: 1990"
+        },
+        "NRLMSIS00E": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.9.15 NRLMSISE empirical model Known version: 2000 (NRLMSISE-00E)"
+        },
+        "TIECGM": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.9.16 Thermosphere-Ionosphere Electrodynamic General Circulation Model Based on TIME-GCM, no version specified"
+        },
+        "USSA_XX": {
+          "value": 16,
+          "description": "OID: 1.3.112.4.57.9.17 U.S. Standard Atmosphere Known versions: 1962, 1976"
+        }
+      }
+    },
+    "ATM": {
+      "type": "object",
+      "description": "Atmospheric Model Message",
+      "properties": {
+        "MODEL": {
+          "$ref": "#/definitions/AtmosphericModelFamily",
+          "description": "Canonical model family",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CIRA_XX": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.9.1 COSPAR International Reference Atmosphere Known years: 1965, 1972, 1986, 1990"
+            },
+            "DTM_XX": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.9.2 Drag Temperature Model Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020"
+            },
+            "GITM": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.9.3 Global Ionosphere-Thermosphere Model GITM has no specific year versions defined"
+            },
+            "GOST": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.9.4 GOST atmospheric density model Known version: 2004 (GOST R 25645.166-2004)"
+            },
+            "GRAM_XX": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.9.5 Global Reference Atmospheric Model Known version: 2016"
+            },
+            "HP": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.9.6 Harris-Priester empirical model Known version: 1962"
+            },
+            "JAC_HASDM": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.9.7 Jacchia atmosphere model with HASDM correction overlay Based on Jacchia 1970 with HASDM (DCA) overlay"
+            },
+            "JAC_GILL": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.9.8 Jacchia-Gill bi-polynomial interpolation Interpolates Jacchia 1971"
+            },
+            "JB08": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.9.9 Jacchia-Bowman empirical model Known versions: 2006 (JB2006), 2008 (JB2008)"
+            },
+            "JR71": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.9.10 Jacchia-Roberts analytic model Known version: 1971"
+            },
+            "JXX": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.9.11 Jacchia static diffusion models Known years: 1970, 1971, 1977"
+            },
+            "MET_XX": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.9.12 Marshall Engineering Thermosphere Known version: 2007"
+            },
+            "MSIS_86": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.9.13 MSIS empirical model Known version: 1986"
+            },
+            "MSISE_90": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.9.14 MSISE empirical model with exosphere extension Known version: 1990"
+            },
+            "NRLMSIS00E": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.9.15 NRLMSISE empirical model Known version: 2000 (NRLMSISE-00E)"
+            },
+            "TIECGM": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.9.16 Thermosphere-Ionosphere Electrodynamic General Circulation Model Based on TIME-GCM, no version specified"
+            },
+            "USSA_XX": {
+              "value": 16,
+              "description": "OID: 1.3.112.4.57.9.17 U.S. Standard Atmosphere Known versions: 1962, 1976"
+            }
+          }
+        },
+        "YEAR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)",
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ATM",
+  "x-flatbuffer-root-type": "ATM",
+  "x-flatbuffer-file-identifier": "$ATM"
+}

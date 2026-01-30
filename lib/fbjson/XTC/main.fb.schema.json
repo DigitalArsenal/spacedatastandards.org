@@ -1,0 +1,3623 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ComparisonOperator": {
+      "type": "string",
+      "enum": [
+        "EQ",
+        "NE",
+        "GT",
+        "LT",
+        "GE",
+        "LE",
+        "STARTS_WITH",
+        "ENDS_WITH",
+        "CONTAINS",
+        "NOT_STARTS_WITH",
+        "NOT_ENDS_WITH",
+        "NOT_CONTAINS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EQ": {
+          "value": 0,
+          "description": "Equal to"
+        },
+        "NE": {
+          "value": 1,
+          "description": "Not equal to"
+        },
+        "GT": {
+          "value": 2,
+          "description": "Greater than"
+        },
+        "LT": {
+          "value": 3,
+          "description": "Less than"
+        },
+        "GE": {
+          "value": 4,
+          "description": "Greater than or equal to"
+        },
+        "LE": {
+          "value": 5,
+          "description": "Less than or equal to"
+        },
+        "STARTS_WITH": {
+          "value": 6,
+          "description": "String starts with"
+        },
+        "ENDS_WITH": {
+          "value": 7,
+          "description": "String ends with"
+        },
+        "CONTAINS": {
+          "value": 8,
+          "description": "String contains"
+        },
+        "NOT_STARTS_WITH": {
+          "value": 9,
+          "description": "String does not start with"
+        },
+        "NOT_ENDS_WITH": {
+          "value": 10,
+          "description": "String does not end with"
+        },
+        "NOT_CONTAINS": {
+          "value": 11,
+          "description": "String does not contain"
+        }
+      }
+    },
+    "DataSourceType": {
+      "type": "string",
+      "enum": [
+        "TELEMETERED",
+        "DERIVED",
+        "CONSTANT",
+        "LOCAL",
+        "GROUND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TELEMETERED": {
+          "value": 0,
+          "description": "Data received from spacecraft telemetry"
+        },
+        "DERIVED": {
+          "value": 1,
+          "description": "Computed from other parameters"
+        },
+        "CONSTANT": {
+          "value": 2,
+          "description": "Fixed constant value"
+        },
+        "LOCAL": {
+          "value": 3,
+          "description": "Local ground system value"
+        },
+        "GROUND": {
+          "value": 4,
+          "description": "Ground-generated data"
+        }
+      }
+    },
+    "BooleanOperatorType": {
+      "type": "string",
+      "enum": [
+        "AND",
+        "OR",
+        "XOR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AND": {
+          "value": 0,
+          "description": "Logical AND"
+        },
+        "OR": {
+          "value": 1,
+          "description": "Logical OR"
+        },
+        "XOR": {
+          "value": 2,
+          "description": "Logical XOR"
+        }
+      }
+    },
+    "ReferenceLocationType": {
+      "type": "string",
+      "enum": [
+        "CONTAINER_START",
+        "CONTAINER_END",
+        "PREVIOUS_ENTRY",
+        "NEXT_ENTRY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CONTAINER_START": {
+          "value": 0,
+          "description": "Start of the container"
+        },
+        "CONTAINER_END": {
+          "value": 1,
+          "description": "End of the container"
+        },
+        "PREVIOUS_ENTRY": {
+          "value": 2,
+          "description": "End of previous entry"
+        },
+        "NEXT_ENTRY": {
+          "value": 3,
+          "description": "Start of next entry"
+        }
+      }
+    },
+    "RateBasisType": {
+      "type": "string",
+      "enum": [
+        "PER_SECOND",
+        "PER_CONTAINER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PER_SECOND": {
+          "value": 0,
+          "description": "Rate per second"
+        },
+        "PER_CONTAINER": {
+          "value": 1,
+          "description": "Rate per container occurrence"
+        }
+      }
+    },
+    "ByteOrderType": {
+      "type": "string",
+      "enum": [
+        "BIG_ENDIAN",
+        "LITTLE_ENDIAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BIG_ENDIAN": {
+          "value": 0,
+          "description": "Most significant byte first"
+        },
+        "LITTLE_ENDIAN": {
+          "value": 1,
+          "description": "Least significant byte first"
+        }
+      }
+    },
+    "IntegerEncodingType": {
+      "type": "string",
+      "enum": [
+        "UNSIGNED",
+        "TWOS_COMPLEMENT",
+        "SIGN_MAGNITUDE",
+        "ONES_COMPLEMENT",
+        "BCD",
+        "PACKED_BCD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSIGNED": {
+          "value": 0,
+          "description": "Unsigned binary"
+        },
+        "TWOS_COMPLEMENT": {
+          "value": 1,
+          "description": "Two's complement signed"
+        },
+        "SIGN_MAGNITUDE": {
+          "value": 2,
+          "description": "Sign-magnitude representation"
+        },
+        "ONES_COMPLEMENT": {
+          "value": 3,
+          "description": "Ones' complement signed"
+        },
+        "BCD": {
+          "value": 4,
+          "description": "Binary Coded Decimal"
+        },
+        "PACKED_BCD": {
+          "value": 5,
+          "description": "Packed BCD"
+        }
+      }
+    },
+    "FloatEncodingType": {
+      "type": "string",
+      "enum": [
+        "IEEE754_1985",
+        "MILSTD_1750A",
+        "DEC",
+        "IBM",
+        "TI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IEEE754_1985": {
+          "value": 0,
+          "description": "IEEE 754-1985 single precision (32-bit)"
+        },
+        "MILSTD_1750A": {
+          "value": 1,
+          "description": "MIL-STD-1750A format"
+        },
+        "DEC": {
+          "value": 2,
+          "description": "DEC PDP format"
+        },
+        "IBM": {
+          "value": 3,
+          "description": "IBM System/360 format"
+        },
+        "TI": {
+          "value": 4,
+          "description": "Texas Instruments TI format"
+        }
+      }
+    },
+    "StringEncodingType": {
+      "type": "string",
+      "enum": [
+        "US_ASCII",
+        "ISO_8859_1",
+        "WINDOWS_1252",
+        "UTF_8",
+        "UTF_16",
+        "UTF_16BE",
+        "UTF_16LE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "US_ASCII": {
+          "value": 0,
+          "description": "US-ASCII (7-bit)"
+        },
+        "ISO_8859_1": {
+          "value": 1,
+          "description": "ISO 8859-1 Latin-1"
+        },
+        "WINDOWS_1252": {
+          "value": 2,
+          "description": "Windows-1252"
+        },
+        "UTF_8": {
+          "value": 3,
+          "description": "UTF-8"
+        },
+        "UTF_16": {
+          "value": 4,
+          "description": "UTF-16"
+        },
+        "UTF_16BE": {
+          "value": 5,
+          "description": "UTF-16 Big Endian"
+        },
+        "UTF_16LE": {
+          "value": 6,
+          "description": "UTF-16 Little Endian"
+        }
+      }
+    },
+    "StringSizeType": {
+      "type": "string",
+      "enum": [
+        "FIXED",
+        "LEADING_SIZE",
+        "TERMINATION_CHAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FIXED": {
+          "value": 0,
+          "description": "Fixed length string"
+        },
+        "LEADING_SIZE": {
+          "value": 1,
+          "description": "Variable with leading count"
+        },
+        "TERMINATION_CHAR": {
+          "value": 2,
+          "description": "Variable with termination character"
+        }
+      }
+    },
+    "AlarmSeverityType": {
+      "type": "string",
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "WARNING",
+        "DISTRESS",
+        "CRITICAL",
+        "SEVERE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NORMAL": {
+          "value": 0,
+          "description": "Normal operation"
+        },
+        "WATCH": {
+          "value": 1,
+          "description": "Watch level - early warning"
+        },
+        "WARNING": {
+          "value": 2,
+          "description": "Warning level"
+        },
+        "DISTRESS": {
+          "value": 3,
+          "description": "Distress level - significant issue"
+        },
+        "CRITICAL": {
+          "value": 4,
+          "description": "Critical level - immediate action required"
+        },
+        "SEVERE": {
+          "value": 5,
+          "description": "Severe level - system failure"
+        }
+      }
+    },
+    "VerifierType": {
+      "type": "string",
+      "enum": [
+        "START",
+        "PROGRESS",
+        "COMPLETE",
+        "FAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "START": {
+          "value": 0,
+          "description": "Execution started"
+        },
+        "PROGRESS": {
+          "value": 1,
+          "description": "Progress update"
+        },
+        "COMPLETE": {
+          "value": 2,
+          "description": "Execution complete"
+        },
+        "FAILED": {
+          "value": 3,
+          "description": "Command failed"
+        }
+      }
+    },
+    "TimeWindowRefType": {
+      "type": "string",
+      "enum": [
+        "COMMAND_RELEASE",
+        "TIME_LAST_VERIFIER_PASSED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "COMMAND_RELEASE": {
+          "value": 0,
+          "description": "Relative to command release time"
+        },
+        "TIME_LAST_VERIFIER_PASSED": {
+          "value": 1,
+          "description": "Relative to last verifier passed"
+        }
+      }
+    },
+    "EpochType": {
+      "type": "string",
+      "enum": [
+        "TAI",
+        "J2000",
+        "UNIX",
+        "GPS",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TAI": {
+          "value": 0,
+          "description": "TAI epoch (1958-01-01)"
+        },
+        "J2000": {
+          "value": 1,
+          "description": "J2000 epoch (2000-01-01 12:00:00 TT)"
+        },
+        "UNIX": {
+          "value": 2,
+          "description": "Unix epoch (1970-01-01)"
+        },
+        "GPS": {
+          "value": 3,
+          "description": "GPS epoch (1980-01-06)"
+        },
+        "CUSTOM": {
+          "value": 4,
+          "description": "Custom epoch specified in offset"
+        }
+      }
+    },
+    "ErrorDetectionType": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CRC",
+        "CHECKSUM",
+        "PARITY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No error detection"
+        },
+        "CRC": {
+          "value": 1,
+          "description": "Cyclic redundancy check"
+        },
+        "CHECKSUM": {
+          "value": 2,
+          "description": "Checksum"
+        },
+        "PARITY": {
+          "value": 3,
+          "description": "Parity"
+        }
+      }
+    },
+    "IntegerDataEncoding": {
+      "type": "object",
+      "description": "Integer data encoding specification",
+      "properties": {
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of bits for this integer",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BYTE_ORDER": {
+          "$ref": "#/definitions/ByteOrderType",
+          "description": "Byte ordering",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BIG_ENDIAN": {
+              "value": 0,
+              "description": "Most significant byte first"
+            },
+            "LITTLE_ENDIAN": {
+              "value": 1,
+              "description": "Least significant byte first"
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/IntegerEncodingType",
+          "description": "Integer encoding type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSIGNED": {
+              "value": 0,
+              "description": "Unsigned binary"
+            },
+            "TWOS_COMPLEMENT": {
+              "value": 1,
+              "description": "Two's complement signed"
+            },
+            "SIGN_MAGNITUDE": {
+              "value": 2,
+              "description": "Sign-magnitude representation"
+            },
+            "ONES_COMPLEMENT": {
+              "value": 3,
+              "description": "Ones' complement signed"
+            },
+            "BCD": {
+              "value": 4,
+              "description": "Binary Coded Decimal"
+            },
+            "PACKED_BCD": {
+              "value": 5,
+              "description": "Packed BCD"
+            }
+          }
+        },
+        "DEFAULT_CALIBRATOR": {
+          "type": "string",
+          "description": "Default calibrator reference",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTEXT_CALIBRATOR_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextCalibrator"
+          },
+          "description": "Context-dependent calibrators",
+          "x-flatbuffer-type": "[ContextCalibrator]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FloatDataEncoding": {
+      "type": "object",
+      "description": "Float data encoding specification",
+      "properties": {
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of bits (typically 32 or 64)",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BYTE_ORDER": {
+          "$ref": "#/definitions/ByteOrderType",
+          "description": "Byte ordering",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BIG_ENDIAN": {
+              "value": 0,
+              "description": "Most significant byte first"
+            },
+            "LITTLE_ENDIAN": {
+              "value": 1,
+              "description": "Least significant byte first"
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/FloatEncodingType",
+          "description": "Float encoding format",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IEEE754_1985": {
+              "value": 0,
+              "description": "IEEE 754-1985 single precision (32-bit)"
+            },
+            "MILSTD_1750A": {
+              "value": 1,
+              "description": "MIL-STD-1750A format"
+            },
+            "DEC": {
+              "value": 2,
+              "description": "DEC PDP format"
+            },
+            "IBM": {
+              "value": 3,
+              "description": "IBM System/360 format"
+            },
+            "TI": {
+              "value": 4,
+              "description": "Texas Instruments TI format"
+            }
+          }
+        },
+        "DEFAULT_CALIBRATOR": {
+          "type": "string",
+          "description": "Default calibrator reference",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTEXT_CALIBRATOR_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextCalibrator"
+          },
+          "description": "Context-dependent calibrators",
+          "x-flatbuffer-type": "[ContextCalibrator]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StringDataEncoding": {
+      "type": "object",
+      "description": "String data encoding specification",
+      "properties": {
+        "ENCODING": {
+          "$ref": "#/definitions/StringEncodingType",
+          "description": "Character encoding",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "US_ASCII": {
+              "value": 0,
+              "description": "US-ASCII (7-bit)"
+            },
+            "ISO_8859_1": {
+              "value": 1,
+              "description": "ISO 8859-1 Latin-1"
+            },
+            "WINDOWS_1252": {
+              "value": 2,
+              "description": "Windows-1252"
+            },
+            "UTF_8": {
+              "value": 3,
+              "description": "UTF-8"
+            },
+            "UTF_16": {
+              "value": 4,
+              "description": "UTF-16"
+            },
+            "UTF_16BE": {
+              "value": 5,
+              "description": "UTF-16 Big Endian"
+            },
+            "UTF_16LE": {
+              "value": 6,
+              "description": "UTF-16 Little Endian"
+            }
+          }
+        },
+        "SIZE_TYPE": {
+          "$ref": "#/definitions/StringSizeType",
+          "description": "Size type specification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FIXED": {
+              "value": 0,
+              "description": "Fixed length string"
+            },
+            "LEADING_SIZE": {
+              "value": 1,
+              "description": "Variable with leading count"
+            },
+            "TERMINATION_CHAR": {
+              "value": 2,
+              "description": "Variable with termination character"
+            }
+          }
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Fixed size in bits (when SIZE_TYPE=FIXED)",
+          "x-flatbuffer-type": "uint16"
+        },
+        "TERMINATION_CHAR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Termination character (when SIZE_TYPE=TERMINATION_CHAR)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "MAX_SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximum size in bits (for variable length)",
+          "x-flatbuffer-type": "uint16"
+        },
+        "LEADING_SIZE_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Leading size field bits (when SIZE_TYPE=LEADING_SIZE)",
+          "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BinaryDataEncoding": {
+      "type": "object",
+      "description": "Binary data encoding specification",
+      "properties": {
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Fixed size in bits",
+          "x-flatbuffer-type": "uint16"
+        },
+        "MAX_SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximum size in bits (for variable length)",
+          "x-flatbuffer-type": "uint16"
+        },
+        "LEADING_SIZE_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Leading size field bits (for variable length)",
+          "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PolynomialCalibrator": {
+      "type": "object",
+      "description": "Polynomial calibrator - converts raw to engineering using polynomial",
+      "properties": {
+        "COEFFICIENTS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Polynomial terms (index is power, value is coefficient)",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SplinePoint": {
+      "type": "object",
+      "description": "Spline point for spline calibration",
+      "properties": {
+        "RAW": {
+          "type": "number",
+          "description": "Raw value",
+          "x-flatbuffer-type": "double"
+        },
+        "CALIBRATED": {
+          "type": "number",
+          "description": "Calibrated/engineering value",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SplineCalibrator": {
+      "type": "object",
+      "description": "Spline calibrator - piecewise linear interpolation",
+      "properties": {
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SplinePoint"
+          },
+          "description": "Spline points ordered by raw value",
+          "x-flatbuffer-type": "[SplinePoint]"
+        },
+        "EXTRAPOLATE_LOW": {
+          "type": "boolean",
+          "description": "Extrapolate below minimum point",
+          "x-flatbuffer-type": "bool"
+        },
+        "EXTRAPOLATE_HIGH": {
+          "type": "boolean",
+          "description": "Extrapolate above maximum point",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MathOperation": {
+      "type": "object",
+      "description": "Mathematical operation for math operation calibrator",
+      "properties": {
+        "RPN_EXPRESSION": {
+          "type": "string",
+          "description": "Operation in Reverse Polish Notation (RPN)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContextCalibrator": {
+      "type": "object",
+      "description": "Context-dependent calibrator selection",
+      "properties": {
+        "MATCH_CRITERIA": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Match criteria for selecting this calibrator",
+          "x-flatbuffer-type": "MatchCriteria"
+        },
+        "POLYNOMIAL": {
+          "$ref": "#/definitions/PolynomialCalibrator",
+          "description": "Polynomial calibrator (if used)",
+          "x-flatbuffer-type": "PolynomialCalibrator"
+        },
+        "SPLINE": {
+          "$ref": "#/definitions/SplineCalibrator",
+          "description": "Spline calibrator (if used)",
+          "x-flatbuffer-type": "SplineCalibrator"
+        },
+        "MATH_OPERATION": {
+          "$ref": "#/definitions/MathOperation",
+          "description": "Math operation calibrator (if used)",
+          "x-flatbuffer-type": "MathOperation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AlarmRange": {
+      "type": "object",
+      "description": "Numeric alarm range",
+      "properties": {
+        "MIN_INCLUSIVE": {
+          "type": "number",
+          "description": "Minimum value (inclusive)",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_INCLUSIVE": {
+          "type": "number",
+          "description": "Maximum value (inclusive)",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_EXCLUSIVE": {
+          "type": "number",
+          "description": "Minimum value (exclusive)",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_EXCLUSIVE": {
+          "type": "number",
+          "description": "Maximum value (exclusive)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StaticAlarmRanges": {
+      "type": "object",
+      "description": "Static numeric alarm levels",
+      "properties": {
+        "WATCH_RANGE": {
+          "$ref": "#/definitions/AlarmRange",
+          "description": "Watch range",
+          "x-flatbuffer-type": "AlarmRange"
+        },
+        "WARNING_RANGE": {
+          "$ref": "#/definitions/AlarmRange",
+          "description": "Warning range",
+          "x-flatbuffer-type": "AlarmRange"
+        },
+        "DISTRESS_RANGE": {
+          "$ref": "#/definitions/AlarmRange",
+          "description": "Distress range",
+          "x-flatbuffer-type": "AlarmRange"
+        },
+        "CRITICAL_RANGE": {
+          "$ref": "#/definitions/AlarmRange",
+          "description": "Critical range",
+          "x-flatbuffer-type": "AlarmRange"
+        },
+        "SEVERE_RANGE": {
+          "$ref": "#/definitions/AlarmRange",
+          "description": "Severe range",
+          "x-flatbuffer-type": "AlarmRange"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EnumerationAlarm": {
+      "type": "object",
+      "description": "Enumerated alarm",
+      "properties": {
+        "LABEL": {
+          "type": "string",
+          "description": "Enumerated value label",
+          "x-flatbuffer-type": "string"
+        },
+        "ALARM_LEVEL": {
+          "$ref": "#/definitions/AlarmSeverityType",
+          "description": "Alarm level for this value",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0,
+              "description": "Normal operation"
+            },
+            "WATCH": {
+              "value": 1,
+              "description": "Watch level - early warning"
+            },
+            "WARNING": {
+              "value": 2,
+              "description": "Warning level"
+            },
+            "DISTRESS": {
+              "value": 3,
+              "description": "Distress level - significant issue"
+            },
+            "CRITICAL": {
+              "value": 4,
+              "description": "Critical level - immediate action required"
+            },
+            "SEVERE": {
+              "value": 5,
+              "description": "Severe level - system failure"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DefaultAlarm": {
+      "type": "object",
+      "description": "Default alarm definition",
+      "properties": {
+        "MIN_VIOLATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Minimum violations before alarm triggers",
+          "x-flatbuffer-type": "uint16"
+        },
+        "STATIC_ALARM_RANGES": {
+          "$ref": "#/definitions/StaticAlarmRanges",
+          "description": "Static numeric alarm ranges",
+          "x-flatbuffer-type": "StaticAlarmRanges"
+        },
+        "ENUMERATION_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnumerationAlarm"
+          },
+          "description": "Enumeration alarms for enumerated types",
+          "x-flatbuffer-type": "[EnumerationAlarm]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContextAlarm": {
+      "type": "object",
+      "description": "Context-dependent alarm",
+      "properties": {
+        "MATCH_CRITERIA": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Match criteria for this alarm context",
+          "x-flatbuffer-type": "MatchCriteria"
+        },
+        "ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Alarm definition for this context",
+          "x-flatbuffer-type": "DefaultAlarm"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterComparison": {
+      "type": "object",
+      "description": "Parameter comparison for match criteria",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference path",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR": {
+          "$ref": "#/definitions/ComparisonOperator",
+          "description": "Comparison operator",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQ": {
+              "value": 0,
+              "description": "Equal to"
+            },
+            "NE": {
+              "value": 1,
+              "description": "Not equal to"
+            },
+            "GT": {
+              "value": 2,
+              "description": "Greater than"
+            },
+            "LT": {
+              "value": 3,
+              "description": "Less than"
+            },
+            "GE": {
+              "value": 4,
+              "description": "Greater than or equal to"
+            },
+            "LE": {
+              "value": 5,
+              "description": "Less than or equal to"
+            },
+            "STARTS_WITH": {
+              "value": 6,
+              "description": "String starts with"
+            },
+            "ENDS_WITH": {
+              "value": 7,
+              "description": "String ends with"
+            },
+            "CONTAINS": {
+              "value": 8,
+              "description": "String contains"
+            },
+            "NOT_STARTS_WITH": {
+              "value": 9,
+              "description": "String does not start with"
+            },
+            "NOT_ENDS_WITH": {
+              "value": 10,
+              "description": "String does not end with"
+            },
+            "NOT_CONTAINS": {
+              "value": 11,
+              "description": "String does not contain"
+            }
+          }
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Value to compare against",
+          "x-flatbuffer-type": "string"
+        },
+        "USE_CALIBRATED_VALUE": {
+          "type": "boolean",
+          "description": "Use calibrated value (true) or raw value (false)",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BooleanExpression": {
+      "type": "object",
+      "description": "Boolean expression combining comparisons",
+      "properties": {
+        "OPERATOR": {
+          "$ref": "#/definitions/BooleanOperatorType",
+          "description": "Boolean operator",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AND": {
+              "value": 0,
+              "description": "Logical AND"
+            },
+            "OR": {
+              "value": 1,
+              "description": "Logical OR"
+            },
+            "XOR": {
+              "value": 2,
+              "description": "Logical XOR"
+            }
+          }
+        },
+        "CONDITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParameterComparison"
+          },
+          "description": "Comparison conditions",
+          "x-flatbuffer-type": "[ParameterComparison]"
+        },
+        "EXPRESSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BooleanExpression"
+          },
+          "description": "Nested expressions",
+          "x-flatbuffer-type": "[BooleanExpression]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MatchCriteria": {
+      "type": "object",
+      "description": "Match criteria for conditional logic",
+      "properties": {
+        "COMPARISON": {
+          "$ref": "#/definitions/ParameterComparison",
+          "description": "Single comparison",
+          "x-flatbuffer-type": "ParameterComparison"
+        },
+        "COMPARISON_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParameterComparison"
+          },
+          "description": "List of comparisons (implicit AND)",
+          "x-flatbuffer-type": "[ParameterComparison]"
+        },
+        "BOOLEAN_EXPRESSION": {
+          "$ref": "#/definitions/BooleanExpression",
+          "description": "Boolean expression",
+          "x-flatbuffer-type": "BooleanExpression"
+        },
+        "CUSTOM_ALGORITHM": {
+          "type": "string",
+          "description": "Custom algorithm reference",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Unit": {
+      "type": "object",
+      "description": "Unit specification",
+      "properties": {
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Unit description (e.g., \"meters per second\")",
+          "x-flatbuffer-type": "string"
+        },
+        "SYMBOL": {
+          "type": "string",
+          "description": "Unit symbol (e.g., \"m/s\")",
+          "x-flatbuffer-type": "string"
+        },
+        "POWER": {
+          "type": "number",
+          "description": "Power/exponent for this unit",
+          "x-flatbuffer-type": "double"
+        },
+        "FACTOR": {
+          "type": "number",
+          "description": "Factor multiplier",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EnumerationValue": {
+      "type": "object",
+      "description": "Enumeration value mapping",
+      "properties": {
+        "LABEL": {
+          "type": "string",
+          "description": "Label/name for this value",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Numeric value",
+          "x-flatbuffer-type": "int64"
+        },
+        "MAX_VALUE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Maximum value (for ranges)",
+          "x-flatbuffer-type": "int64"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of this enumeration value",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IntegerParameterType": {
+      "type": "object",
+      "description": "Integer parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          },
+          "description": "Units",
+          "x-flatbuffer-type": "[Unit]"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        },
+        "VALID_MIN": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Minimum valid value",
+          "x-flatbuffer-type": "int64"
+        },
+        "VALID_MAX": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Maximum valid value",
+          "x-flatbuffer-type": "int64"
+        },
+        "SIGNED": {
+          "type": "boolean",
+          "description": "Signed integer (true) or unsigned (false)",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size in bits",
+          "x-flatbuffer-type": "uint16"
+        },
+        "INITIAL_VALUE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FloatParameterType": {
+      "type": "object",
+      "description": "Float parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          },
+          "description": "Units",
+          "x-flatbuffer-type": "[Unit]"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/FloatDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "FloatDataEncoding"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        },
+        "VALID_MIN": {
+          "type": "number",
+          "description": "Minimum valid value",
+          "x-flatbuffer-type": "double"
+        },
+        "VALID_MAX": {
+          "type": "number",
+          "description": "Maximum valid value",
+          "x-flatbuffer-type": "double"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size in bits (32 or 64)",
+          "x-flatbuffer-type": "uint16"
+        },
+        "INITIAL_VALUE": {
+          "type": "number",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StringParameterType": {
+      "type": "object",
+      "description": "String parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/StringDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "StringDataEncoding"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "string"
+        },
+        "RESTRICTION_PATTERN": {
+          "type": "string",
+          "description": "Restriction pattern (regex)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BooleanParameterType": {
+      "type": "object",
+      "description": "Boolean parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding (typically IntegerDataEncoding with 1 bit)",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "ONE_STRING_VALUE": {
+          "type": "string",
+          "description": "String representation of true value",
+          "x-flatbuffer-type": "string"
+        },
+        "ZERO_STRING_VALUE": {
+          "type": "string",
+          "description": "String representation of false value",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_VALUE": {
+          "type": "boolean",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EnumeratedParameterType": {
+      "type": "object",
+      "description": "Enumerated parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        },
+        "ENUMERATION_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnumerationValue"
+          },
+          "description": "Enumeration values list",
+          "x-flatbuffer-type": "[EnumerationValue]"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value label",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BinaryParameterType": {
+      "type": "object",
+      "description": "Binary parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/BinaryDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "BinaryDataEncoding"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value (hex string)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AbsoluteTimeParameterType": {
+      "type": "object",
+      "description": "Absolute time parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "$ref": "#/definitions/EpochType",
+          "description": "Reference epoch",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TAI": {
+              "value": 0,
+              "description": "TAI epoch (1958-01-01)"
+            },
+            "J2000": {
+              "value": 1,
+              "description": "J2000 epoch (2000-01-01 12:00:00 TT)"
+            },
+            "UNIX": {
+              "value": 2,
+              "description": "Unix epoch (1970-01-01)"
+            },
+            "GPS": {
+              "value": 3,
+              "description": "GPS epoch (1980-01-06)"
+            },
+            "CUSTOM": {
+              "value": 4,
+              "description": "Custom epoch specified in offset"
+            }
+          }
+        },
+        "EPOCH_DATE": {
+          "type": "string",
+          "description": "Custom epoch date (ISO 8601) when EPOCH=CUSTOM",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Time unit scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "OFFSET": {
+          "type": "number",
+          "description": "Time unit offset",
+          "x-flatbuffer-type": "double"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RelativeTimeParameterType": {
+      "type": "object",
+      "description": "Relative time parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          },
+          "description": "Units",
+          "x-flatbuffer-type": "[Unit]"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "DEFAULT_ALARM": {
+          "$ref": "#/definitions/DefaultAlarm",
+          "description": "Default alarm",
+          "x-flatbuffer-type": "DefaultAlarm"
+        },
+        "CONTEXT_ALARMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextAlarm"
+          },
+          "description": "Context alarms",
+          "x-flatbuffer-type": "[ContextAlarm]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArrayDimension": {
+      "type": "object",
+      "description": "Array dimension specification",
+      "properties": {
+        "SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fixed size of this dimension",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SIZE_PARAMETER_REF": {
+          "type": "string",
+          "description": "Dynamic size from parameter reference",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArrayParameterType": {
+      "type": "object",
+      "description": "Array parameter type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "ARRAY_TYPE_REF": {
+          "type": "string",
+          "description": "Reference to the array element type",
+          "x-flatbuffer-type": "string"
+        },
+        "DIMENSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArrayDimension"
+          },
+          "description": "Dimension list",
+          "x-flatbuffer-type": "[ArrayDimension]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AggregateMember": {
+      "type": "object",
+      "description": "Aggregate member definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Member name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE_REF": {
+          "type": "string",
+          "description": "Reference to parameter type",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AggregateParameterType": {
+      "type": "object",
+      "description": "Aggregate parameter type (structure)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "MEMBERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregateMember"
+          },
+          "description": "Member list",
+          "x-flatbuffer-type": "[AggregateMember]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterTypeSet": {
+      "type": "object",
+      "description": "Collection of all parameter types",
+      "properties": {
+        "INTEGER_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IntegerParameterType"
+          },
+          "description": "Integer parameter types",
+          "x-flatbuffer-type": "[IntegerParameterType]"
+        },
+        "FLOAT_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FloatParameterType"
+          },
+          "description": "Float parameter types",
+          "x-flatbuffer-type": "[FloatParameterType]"
+        },
+        "STRING_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StringParameterType"
+          },
+          "description": "String parameter types",
+          "x-flatbuffer-type": "[StringParameterType]"
+        },
+        "BOOLEAN_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BooleanParameterType"
+          },
+          "description": "Boolean parameter types",
+          "x-flatbuffer-type": "[BooleanParameterType]"
+        },
+        "ENUMERATED_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnumeratedParameterType"
+          },
+          "description": "Enumerated parameter types",
+          "x-flatbuffer-type": "[EnumeratedParameterType]"
+        },
+        "BINARY_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BinaryParameterType"
+          },
+          "description": "Binary parameter types",
+          "x-flatbuffer-type": "[BinaryParameterType]"
+        },
+        "ABSOLUTE_TIME_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AbsoluteTimeParameterType"
+          },
+          "description": "Absolute time parameter types",
+          "x-flatbuffer-type": "[AbsoluteTimeParameterType]"
+        },
+        "RELATIVE_TIME_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelativeTimeParameterType"
+          },
+          "description": "Relative time parameter types",
+          "x-flatbuffer-type": "[RelativeTimeParameterType]"
+        },
+        "ARRAY_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArrayParameterType"
+          },
+          "description": "Array parameter types",
+          "x-flatbuffer-type": "[ArrayParameterType]"
+        },
+        "AGGREGATE_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregateParameterType"
+          },
+          "description": "Aggregate parameter types",
+          "x-flatbuffer-type": "[AggregateParameterType]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterProperties": {
+      "type": "object",
+      "description": "Parameter properties",
+      "properties": {
+        "DATA_SOURCE": {
+          "$ref": "#/definitions/DataSourceType",
+          "description": "Data source type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TELEMETERED": {
+              "value": 0,
+              "description": "Data received from spacecraft telemetry"
+            },
+            "DERIVED": {
+              "value": 1,
+              "description": "Computed from other parameters"
+            },
+            "CONSTANT": {
+              "value": 2,
+              "description": "Fixed constant value"
+            },
+            "LOCAL": {
+              "value": 3,
+              "description": "Local ground system value"
+            },
+            "GROUND": {
+              "value": 4,
+              "description": "Ground-generated data"
+            }
+          }
+        },
+        "READ_ONLY": {
+          "type": "boolean",
+          "description": "Read-only parameter",
+          "x-flatbuffer-type": "bool"
+        },
+        "SYSTEM_NAME": {
+          "type": "string",
+          "description": "System/subsystem name",
+          "x-flatbuffer-type": "string"
+        },
+        "VALIDITY_CONDITION": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Validity condition",
+          "x-flatbuffer-type": "MatchCriteria"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Parameter": {
+      "type": "object",
+      "description": "Parameter definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Parameter name",
+          "x-flatbuffer-type": "string"
+        },
+        "PARAMETER_TYPE_REF": {
+          "type": "string",
+          "description": "Reference to parameter type",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPERTIES": {
+          "$ref": "#/definitions/ParameterProperties",
+          "description": "Parameter properties",
+          "x-flatbuffer-type": "ParameterProperties"
+        },
+        "PHYSICAL_ADDRESS": {
+          "type": "string",
+          "description": "Physical address mapping",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterSet": {
+      "type": "object",
+      "description": "Collection of parameters",
+      "properties": {
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Parameter"
+          },
+          "description": "Parameters",
+          "x-flatbuffer-type": "[Parameter]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LocationInContainer": {
+      "type": "object",
+      "description": "Location specification within a container",
+      "properties": {
+        "REFERENCE_LOCATION": {
+          "$ref": "#/definitions/ReferenceLocationType",
+          "description": "Reference location type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CONTAINER_START": {
+              "value": 0,
+              "description": "Start of the container"
+            },
+            "CONTAINER_END": {
+              "value": 1,
+              "description": "End of the container"
+            },
+            "PREVIOUS_ENTRY": {
+              "value": 2,
+              "description": "End of previous entry"
+            },
+            "NEXT_ENTRY": {
+              "value": 3,
+              "description": "Start of next entry"
+            }
+          }
+        },
+        "OFFSET_IN_BITS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Offset in bits from reference location",
+          "x-flatbuffer-type": "int32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RepeatEntry": {
+      "type": "object",
+      "description": "Repeat entry specification",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fixed repeat count",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COUNT_PARAMETER_REF": {
+          "type": "string",
+          "description": "Dynamic count from parameter reference",
+          "x-flatbuffer-type": "string"
+        },
+        "OFFSET_IN_BITS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Offset in bits between repetitions",
+          "x-flatbuffer-type": "int32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterRefEntry": {
+      "type": "object",
+      "description": "Parameter reference entry in container",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference path",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/LocationInContainer",
+          "description": "Location in container",
+          "x-flatbuffer-type": "LocationInContainer"
+        },
+        "REPEAT": {
+          "$ref": "#/definitions/RepeatEntry",
+          "description": "Repeat specification",
+          "x-flatbuffer-type": "RepeatEntry"
+        },
+        "INCLUDE_CONDITION": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Include condition",
+          "x-flatbuffer-type": "MatchCriteria"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContainerRefEntry": {
+      "type": "object",
+      "description": "Container reference entry (nested container)",
+      "properties": {
+        "CONTAINER_REF": {
+          "type": "string",
+          "description": "Container reference path",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/LocationInContainer",
+          "description": "Location in container",
+          "x-flatbuffer-type": "LocationInContainer"
+        },
+        "REPEAT": {
+          "$ref": "#/definitions/RepeatEntry",
+          "description": "Repeat specification",
+          "x-flatbuffer-type": "RepeatEntry"
+        },
+        "INCLUDE_CONDITION": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Include condition",
+          "x-flatbuffer-type": "MatchCriteria"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FixedValueEntry": {
+      "type": "object",
+      "description": "Fixed value entry (static padding/header)",
+      "properties": {
+        "BINARY_VALUE": {
+          "type": "string",
+          "description": "Binary value (hex string)",
+          "x-flatbuffer-type": "string"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size in bits",
+          "x-flatbuffer-type": "uint16"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name/description",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/LocationInContainer",
+          "description": "Location in container",
+          "x-flatbuffer-type": "LocationInContainer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArrayParameterRefEntry": {
+      "type": "object",
+      "description": "Array parameter reference entry",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference path",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/LocationInContainer",
+          "description": "Location in container",
+          "x-flatbuffer-type": "LocationInContainer"
+        },
+        "FIRST_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "First index to include",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Last index to include",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContainerEntry": {
+      "type": "object",
+      "description": "Container entry list item (union of entry types)",
+      "properties": {
+        "PARAMETER_REF_ENTRY": {
+          "$ref": "#/definitions/ParameterRefEntry",
+          "description": "Parameter reference entry",
+          "x-flatbuffer-type": "ParameterRefEntry"
+        },
+        "CONTAINER_REF_ENTRY": {
+          "$ref": "#/definitions/ContainerRefEntry",
+          "description": "Container reference entry",
+          "x-flatbuffer-type": "ContainerRefEntry"
+        },
+        "FIXED_VALUE_ENTRY": {
+          "$ref": "#/definitions/FixedValueEntry",
+          "description": "Fixed value entry",
+          "x-flatbuffer-type": "FixedValueEntry"
+        },
+        "ARRAY_PARAMETER_REF_ENTRY": {
+          "$ref": "#/definitions/ArrayParameterRefEntry",
+          "description": "Array parameter reference entry",
+          "x-flatbuffer-type": "ArrayParameterRefEntry"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BaseContainer": {
+      "type": "object",
+      "description": "Base container reference with restriction",
+      "properties": {
+        "CONTAINER_REF": {
+          "type": "string",
+          "description": "Container reference path",
+          "x-flatbuffer-type": "string"
+        },
+        "RESTRICTION_CRITERIA": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Restriction criteria",
+          "x-flatbuffer-type": "MatchCriteria"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RateInStream": {
+      "type": "object",
+      "description": "Rate specification for container in stream",
+      "properties": {
+        "STREAM_REF": {
+          "type": "string",
+          "description": "Stream reference",
+          "x-flatbuffer-type": "string"
+        },
+        "RATE": {
+          "type": "number",
+          "description": "Rate value",
+          "x-flatbuffer-type": "double"
+        },
+        "BASIS": {
+          "$ref": "#/definitions/RateBasisType",
+          "description": "Rate basis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PER_SECOND": {
+              "value": 0,
+              "description": "Rate per second"
+            },
+            "PER_CONTAINER": {
+              "value": 1,
+              "description": "Rate per container occurrence"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContainerBinaryEncoding": {
+      "type": "object",
+      "description": "Binary encoding specification for container",
+      "properties": {
+        "ERROR_DETECTION": {
+          "$ref": "#/definitions/ErrorDetectionType",
+          "description": "Error detection type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No error detection"
+            },
+            "CRC": {
+              "value": 1,
+              "description": "Cyclic redundancy check"
+            },
+            "CHECKSUM": {
+              "value": 2,
+              "description": "Checksum"
+            },
+            "PARITY": {
+              "value": 3,
+              "description": "Parity"
+            }
+          }
+        },
+        "CRC_POLYNOMIAL": {
+          "type": "string",
+          "description": "CRC polynomial (for CRC error detection)",
+          "x-flatbuffer-type": "string"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Size in bits",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SequenceContainer": {
+      "type": "object",
+      "description": "Sequence container (packet definition)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Container name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "ABSTRACT": {
+          "type": "boolean",
+          "description": "Abstract container (used as base only)",
+          "x-flatbuffer-type": "bool"
+        },
+        "ENTRY_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerEntry"
+          },
+          "description": "Container entry list",
+          "x-flatbuffer-type": "[ContainerEntry]"
+        },
+        "BASE_CONTAINER": {
+          "$ref": "#/definitions/BaseContainer",
+          "description": "Base container (inheritance)",
+          "x-flatbuffer-type": "BaseContainer"
+        },
+        "BINARY_ENCODING": {
+          "$ref": "#/definitions/ContainerBinaryEncoding",
+          "description": "Binary encoding",
+          "x-flatbuffer-type": "ContainerBinaryEncoding"
+        },
+        "RATE_IN_STREAM": {
+          "$ref": "#/definitions/RateInStream",
+          "description": "Rate in stream",
+          "x-flatbuffer-type": "RateInStream"
+        },
+        "IDLE_PATTERN": {
+          "type": "string",
+          "description": "Idle pattern (hex string for padding)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ContainerSet": {
+      "type": "object",
+      "description": "Collection of sequence containers",
+      "properties": {
+        "CONTAINERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SequenceContainer"
+          },
+          "description": "Sequence containers",
+          "x-flatbuffer-type": "[SequenceContainer]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AlgorithmInput": {
+      "type": "object",
+      "description": "Algorithm input binding",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_NAME": {
+          "type": "string",
+          "description": "Input name in algorithm",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AlgorithmOutput": {
+      "type": "object",
+      "description": "Algorithm output binding",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference",
+          "x-flatbuffer-type": "string"
+        },
+        "OUTPUT_NAME": {
+          "type": "string",
+          "description": "Output name in algorithm",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AlgorithmTrigger": {
+      "type": "object",
+      "description": "Trigger condition for algorithm execution",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Trigger on parameter update",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTAINER_REF": {
+          "type": "string",
+          "description": "Trigger on container reception",
+          "x-flatbuffer-type": "string"
+        },
+        "RATE": {
+          "type": "number",
+          "description": "Trigger rate (per second)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomAlgorithm": {
+      "type": "object",
+      "description": "Custom algorithm definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Algorithm name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "LANGUAGE": {
+          "type": "string",
+          "description": "Programming language",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM_TEXT": {
+          "type": "string",
+          "description": "Algorithm text/code",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_ALGORITHM_REF": {
+          "type": "string",
+          "description": "External algorithm reference",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlgorithmInput"
+          },
+          "description": "Input bindings",
+          "x-flatbuffer-type": "[AlgorithmInput]"
+        },
+        "OUTPUTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlgorithmOutput"
+          },
+          "description": "Output bindings",
+          "x-flatbuffer-type": "[AlgorithmOutput]"
+        },
+        "TRIGGERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlgorithmTrigger"
+          },
+          "description": "Trigger conditions",
+          "x-flatbuffer-type": "[AlgorithmTrigger]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MathAlgorithm": {
+      "type": "object",
+      "description": "Math algorithm (inline calculation)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Algorithm name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "MATH_OPERATION": {
+          "type": "string",
+          "description": "Math operation in RPN",
+          "x-flatbuffer-type": "string"
+        },
+        "OUTPUT_PARAMETER_REF": {
+          "type": "string",
+          "description": "Output parameter reference",
+          "x-flatbuffer-type": "string"
+        },
+        "TRIGGERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlgorithmTrigger"
+          },
+          "description": "Trigger conditions",
+          "x-flatbuffer-type": "[AlgorithmTrigger]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AlgorithmSet": {
+      "type": "object",
+      "description": "Collection of algorithms",
+      "properties": {
+        "CUSTOM_ALGORITHMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomAlgorithm"
+          },
+          "description": "Custom algorithms",
+          "x-flatbuffer-type": "[CustomAlgorithm]"
+        },
+        "MATH_ALGORITHMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MathAlgorithm"
+          },
+          "description": "Math algorithms",
+          "x-flatbuffer-type": "[MathAlgorithm]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IntegerArgumentType": {
+      "type": "object",
+      "description": "Integer argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          },
+          "description": "Units",
+          "x-flatbuffer-type": "[Unit]"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "VALID_MIN": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Minimum valid value",
+          "x-flatbuffer-type": "int64"
+        },
+        "VALID_MAX": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Maximum valid value",
+          "x-flatbuffer-type": "int64"
+        },
+        "SIGNED": {
+          "type": "boolean",
+          "description": "Signed integer (true) or unsigned (false)",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size in bits",
+          "x-flatbuffer-type": "uint16"
+        },
+        "INITIAL_VALUE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FloatArgumentType": {
+      "type": "object",
+      "description": "Float argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          },
+          "description": "Units",
+          "x-flatbuffer-type": "[Unit]"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/FloatDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "FloatDataEncoding"
+        },
+        "VALID_MIN": {
+          "type": "number",
+          "description": "Minimum valid value",
+          "x-flatbuffer-type": "double"
+        },
+        "VALID_MAX": {
+          "type": "number",
+          "description": "Maximum valid value",
+          "x-flatbuffer-type": "double"
+        },
+        "SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size in bits",
+          "x-flatbuffer-type": "uint16"
+        },
+        "INITIAL_VALUE": {
+          "type": "number",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StringArgumentType": {
+      "type": "object",
+      "description": "String argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/StringDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "StringDataEncoding"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "string"
+        },
+        "RESTRICTION_PATTERN": {
+          "type": "string",
+          "description": "Restriction pattern (regex)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BooleanArgumentType": {
+      "type": "object",
+      "description": "Boolean argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "ONE_STRING_VALUE": {
+          "type": "string",
+          "description": "String representation of true value",
+          "x-flatbuffer-type": "string"
+        },
+        "ZERO_STRING_VALUE": {
+          "type": "string",
+          "description": "String representation of false value",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_VALUE": {
+          "type": "boolean",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EnumeratedArgumentType": {
+      "type": "object",
+      "description": "Enumerated argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/IntegerDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "IntegerDataEncoding"
+        },
+        "ENUMERATION_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnumerationValue"
+          },
+          "description": "Enumeration values list",
+          "x-flatbuffer-type": "[EnumerationValue]"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value label",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BinaryArgumentType": {
+      "type": "object",
+      "description": "Binary argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_ENCODING": {
+          "$ref": "#/definitions/BinaryDataEncoding",
+          "description": "Data encoding",
+          "x-flatbuffer-type": "BinaryDataEncoding"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value (hex string)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AggregateArgumentType": {
+      "type": "object",
+      "description": "Aggregate argument type",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Type name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "MEMBERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregateMember"
+          },
+          "description": "Member list",
+          "x-flatbuffer-type": "[AggregateMember]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArgumentTypeSet": {
+      "type": "object",
+      "description": "Collection of argument types",
+      "properties": {
+        "INTEGER_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IntegerArgumentType"
+          },
+          "description": "Integer argument types",
+          "x-flatbuffer-type": "[IntegerArgumentType]"
+        },
+        "FLOAT_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FloatArgumentType"
+          },
+          "description": "Float argument types",
+          "x-flatbuffer-type": "[FloatArgumentType]"
+        },
+        "STRING_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StringArgumentType"
+          },
+          "description": "String argument types",
+          "x-flatbuffer-type": "[StringArgumentType]"
+        },
+        "BOOLEAN_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BooleanArgumentType"
+          },
+          "description": "Boolean argument types",
+          "x-flatbuffer-type": "[BooleanArgumentType]"
+        },
+        "ENUMERATED_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnumeratedArgumentType"
+          },
+          "description": "Enumerated argument types",
+          "x-flatbuffer-type": "[EnumeratedArgumentType]"
+        },
+        "BINARY_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BinaryArgumentType"
+          },
+          "description": "Binary argument types",
+          "x-flatbuffer-type": "[BinaryArgumentType]"
+        },
+        "AGGREGATE_TYPES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregateArgumentType"
+          },
+          "description": "Aggregate argument types",
+          "x-flatbuffer-type": "[AggregateArgumentType]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Argument": {
+      "type": "object",
+      "description": "Command argument definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Argument name",
+          "x-flatbuffer-type": "string"
+        },
+        "ARGUMENT_TYPE_REF": {
+          "type": "string",
+          "description": "Reference to argument type",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_VALUE": {
+          "type": "string",
+          "description": "Initial/default value",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArgumentRefEntry": {
+      "type": "object",
+      "description": "Argument reference entry in command container",
+      "properties": {
+        "ARGUMENT_REF": {
+          "type": "string",
+          "description": "Argument reference",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/LocationInContainer",
+          "description": "Location in container",
+          "x-flatbuffer-type": "LocationInContainer"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CommandContainerEntry": {
+      "type": "object",
+      "description": "Command container entry",
+      "properties": {
+        "ARGUMENT_REF_ENTRY": {
+          "$ref": "#/definitions/ArgumentRefEntry",
+          "description": "Argument reference entry",
+          "x-flatbuffer-type": "ArgumentRefEntry"
+        },
+        "PARAMETER_REF_ENTRY": {
+          "$ref": "#/definitions/ParameterRefEntry",
+          "description": "Parameter reference entry",
+          "x-flatbuffer-type": "ParameterRefEntry"
+        },
+        "FIXED_VALUE_ENTRY": {
+          "$ref": "#/definitions/FixedValueEntry",
+          "description": "Fixed value entry",
+          "x-flatbuffer-type": "FixedValueEntry"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CommandContainer": {
+      "type": "object",
+      "description": "Command container definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Container name",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTRY_LIST": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommandContainerEntry"
+          },
+          "description": "Entry list",
+          "x-flatbuffer-type": "[CommandContainerEntry]"
+        },
+        "BASE_CONTAINER": {
+          "$ref": "#/definitions/BaseContainer",
+          "description": "Base container reference",
+          "x-flatbuffer-type": "BaseContainer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CommandVerifier": {
+      "type": "object",
+      "description": "Command verifier definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Verifier name",
+          "x-flatbuffer-type": "string"
+        },
+        "VERIFIER_TYPE": {
+          "$ref": "#/definitions/VerifierType",
+          "description": "Verifier type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "START": {
+              "value": 0,
+              "description": "Execution started"
+            },
+            "PROGRESS": {
+              "value": 1,
+              "description": "Progress update"
+            },
+            "COMPLETE": {
+              "value": 2,
+              "description": "Execution complete"
+            },
+            "FAILED": {
+              "value": 3,
+              "description": "Command failed"
+            }
+          }
+        },
+        "CONDITION": {
+          "$ref": "#/definitions/MatchCriteria",
+          "description": "Verification condition",
+          "x-flatbuffer-type": "MatchCriteria"
+        },
+        "CONTAINER_REF": {
+          "type": "string",
+          "description": "Container reference for verification",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_WINDOW_START": {
+          "type": "number",
+          "description": "Time window start (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_WINDOW_STOP": {
+          "type": "number",
+          "description": "Time window stop (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_WINDOW_REF": {
+          "$ref": "#/definitions/TimeWindowRefType",
+          "description": "Time window reference type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "COMMAND_RELEASE": {
+              "value": 0,
+              "description": "Relative to command release time"
+            },
+            "TIME_LAST_VERIFIER_PASSED": {
+              "value": 1,
+              "description": "Relative to last verifier passed"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CommandSignificance": {
+      "type": "object",
+      "description": "Significance of command execution",
+      "properties": {
+        "CONSEQUENCE_LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Consequence level (1=lowest, higher=more severe)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "REASON_FOR_WARNING": {
+          "type": "string",
+          "description": "Reason for significance",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BaseMetaCommand": {
+      "type": "object",
+      "description": "Base metacommand reference",
+      "properties": {
+        "META_COMMAND_REF": {
+          "type": "string",
+          "description": "MetaCommand reference",
+          "x-flatbuffer-type": "string"
+        },
+        "ARGUMENT_ASSIGNMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArgumentAssignment"
+          },
+          "description": "Argument assignments for inherited arguments",
+          "x-flatbuffer-type": "[ArgumentAssignment]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArgumentAssignment": {
+      "type": "object",
+      "description": "Argument assignment (value binding)",
+      "properties": {
+        "ARGUMENT_NAME": {
+          "type": "string",
+          "description": "Argument name",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Assigned value",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Interlock": {
+      "type": "object",
+      "description": "Interlock constraint",
+      "properties": {
+        "PARAMETER_REF": {
+          "type": "string",
+          "description": "Parameter reference",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Required value",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR": {
+          "$ref": "#/definitions/ComparisonOperator",
+          "description": "Operator for comparison",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQ": {
+              "value": 0,
+              "description": "Equal to"
+            },
+            "NE": {
+              "value": 1,
+              "description": "Not equal to"
+            },
+            "GT": {
+              "value": 2,
+              "description": "Greater than"
+            },
+            "LT": {
+              "value": 3,
+              "description": "Less than"
+            },
+            "GE": {
+              "value": 4,
+              "description": "Greater than or equal to"
+            },
+            "LE": {
+              "value": 5,
+              "description": "Less than or equal to"
+            },
+            "STARTS_WITH": {
+              "value": 6,
+              "description": "String starts with"
+            },
+            "ENDS_WITH": {
+              "value": 7,
+              "description": "String ends with"
+            },
+            "CONTAINS": {
+              "value": 8,
+              "description": "String contains"
+            },
+            "NOT_STARTS_WITH": {
+              "value": 9,
+              "description": "String does not start with"
+            },
+            "NOT_ENDS_WITH": {
+              "value": 10,
+              "description": "String does not end with"
+            },
+            "NOT_CONTAINS": {
+              "value": 11,
+              "description": "String does not contain"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "MetaCommand": {
+      "type": "object",
+      "description": "MetaCommand definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Command name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "ABSTRACT": {
+          "type": "boolean",
+          "description": "Abstract command (base only)",
+          "x-flatbuffer-type": "bool"
+        },
+        "ARGUMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Argument"
+          },
+          "description": "Argument list",
+          "x-flatbuffer-type": "[Argument]"
+        },
+        "COMMAND_CONTAINER": {
+          "$ref": "#/definitions/CommandContainer",
+          "description": "Command container",
+          "x-flatbuffer-type": "CommandContainer"
+        },
+        "BASE_META_COMMAND": {
+          "$ref": "#/definitions/BaseMetaCommand",
+          "description": "Base metacommand (inheritance)",
+          "x-flatbuffer-type": "BaseMetaCommand"
+        },
+        "VERIFIERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommandVerifier"
+          },
+          "description": "Command verifiers",
+          "x-flatbuffer-type": "[CommandVerifier]"
+        },
+        "SIGNIFICANCE": {
+          "$ref": "#/definitions/CommandSignificance",
+          "description": "Command significance",
+          "x-flatbuffer-type": "CommandSignificance"
+        },
+        "INTERLOCKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Interlock"
+          },
+          "description": "Interlock constraints",
+          "x-flatbuffer-type": "[Interlock]"
+        },
+        "DEFAULT_SIGNIFICANCE": {
+          "$ref": "#/definitions/CommandSignificance",
+          "description": "Default significance",
+          "x-flatbuffer-type": "CommandSignificance"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MetaCommandSet": {
+      "type": "object",
+      "description": "Collection of metacommands",
+      "properties": {
+        "META_COMMANDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetaCommand"
+          },
+          "description": "MetaCommands",
+          "x-flatbuffer-type": "[MetaCommand]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FixedFrameStream": {
+      "type": "object",
+      "description": "Fixed frame stream",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Stream name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAME_SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Frame size in bits",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SYNC_PATTERN": {
+          "type": "string",
+          "description": "Sync pattern (hex string)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VariableFrameStream": {
+      "type": "object",
+      "description": "Variable frame stream",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Stream name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_FRAME_SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Minimum frame size in bits",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAX_FRAME_SIZE_IN_BITS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Maximum frame size in bits",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SIZE_FIELD_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Size field location in bits",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SIZE_FIELD_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Size field size in bits",
+          "x-flatbuffer-type": "uint16"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomStream": {
+      "type": "object",
+      "description": "Custom stream",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Stream name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM_REF": {
+          "type": "string",
+          "description": "Algorithm reference for parsing",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StreamSet": {
+      "type": "object",
+      "description": "Collection of streams",
+      "properties": {
+        "FIXED_FRAME_STREAMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FixedFrameStream"
+          },
+          "description": "Fixed frame streams",
+          "x-flatbuffer-type": "[FixedFrameStream]"
+        },
+        "VARIABLE_FRAME_STREAMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VariableFrameStream"
+          },
+          "description": "Variable frame streams",
+          "x-flatbuffer-type": "[VariableFrameStream]"
+        },
+        "CUSTOM_STREAMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomStream"
+          },
+          "description": "Custom streams",
+          "x-flatbuffer-type": "[CustomStream]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Service": {
+      "type": "object",
+      "description": "Service definition",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Service name",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTAINER_REFS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Container references provided by this service",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COMMAND_REFS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Command references accepted by this service",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ServiceSet": {
+      "type": "object",
+      "description": "Collection of services",
+      "properties": {
+        "SERVICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Service"
+          },
+          "description": "Services",
+          "x-flatbuffer-type": "[Service]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "XTCHeader": {
+      "type": "object",
+      "description": "Document header information",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "Version of this XTCE document",
+          "x-flatbuffer-type": "string"
+        },
+        "DATE": {
+          "type": "string",
+          "description": "Date of document creation (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification level",
+          "x-flatbuffer-type": "string"
+        },
+        "VALIDATION_STATUS": {
+          "type": "string",
+          "description": "Validation status",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR": {
+          "type": "string",
+          "description": "Author information",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Notes/comments",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TelemetryMetaData": {
+      "type": "object",
+      "description": "Telemetry metadata collection",
+      "properties": {
+        "PARAMETER_TYPE_SET": {
+          "$ref": "#/definitions/ParameterTypeSet",
+          "description": "Parameter type definitions",
+          "x-flatbuffer-type": "ParameterTypeSet"
+        },
+        "PARAMETER_SET": {
+          "$ref": "#/definitions/ParameterSet",
+          "description": "Parameter definitions",
+          "x-flatbuffer-type": "ParameterSet"
+        },
+        "CONTAINER_SET": {
+          "$ref": "#/definitions/ContainerSet",
+          "description": "Container definitions",
+          "x-flatbuffer-type": "ContainerSet"
+        },
+        "ALGORITHM_SET": {
+          "$ref": "#/definitions/AlgorithmSet",
+          "description": "Algorithm definitions",
+          "x-flatbuffer-type": "AlgorithmSet"
+        },
+        "STREAM_SET": {
+          "$ref": "#/definitions/StreamSet",
+          "description": "Stream definitions",
+          "x-flatbuffer-type": "StreamSet"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CommandMetaData": {
+      "type": "object",
+      "description": "Command metadata collection",
+      "properties": {
+        "ARGUMENT_TYPE_SET": {
+          "$ref": "#/definitions/ArgumentTypeSet",
+          "description": "Argument type definitions",
+          "x-flatbuffer-type": "ArgumentTypeSet"
+        },
+        "PARAMETER_TYPE_SET": {
+          "$ref": "#/definitions/ParameterTypeSet",
+          "description": "Parameter types used by commands",
+          "x-flatbuffer-type": "ParameterTypeSet"
+        },
+        "PARAMETER_SET": {
+          "$ref": "#/definitions/ParameterSet",
+          "description": "Parameters used by commands",
+          "x-flatbuffer-type": "ParameterSet"
+        },
+        "META_COMMAND_SET": {
+          "$ref": "#/definitions/MetaCommandSet",
+          "description": "MetaCommand definitions",
+          "x-flatbuffer-type": "MetaCommandSet"
+        },
+        "COMMAND_CONTAINER_SET": {
+          "$ref": "#/definitions/ContainerSet",
+          "description": "Command container set",
+          "x-flatbuffer-type": "ContainerSet"
+        },
+        "ALGORITHM_SET": {
+          "$ref": "#/definitions/AlgorithmSet",
+          "description": "Algorithm definitions",
+          "x-flatbuffer-type": "AlgorithmSet"
+        },
+        "STREAM_SET": {
+          "$ref": "#/definitions/StreamSet",
+          "description": "Stream definitions",
+          "x-flatbuffer-type": "StreamSet"
+        }
+      },
+      "additionalProperties": false
+    },
+    "XTC": {
+      "type": "object",
+      "description": "SpaceSystem - Root element for XTCE document\nA SpaceSystem defines the telemetry and command configuration for a space\nvehicle or subsystem. SpaceSystems can be nested hierarchically to represent\nthe structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of this space system",
+          "x-flatbuffer-type": "string"
+        },
+        "SHORT_DESCRIPTION": {
+          "type": "string",
+          "description": "Short description",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_DESCRIPTION": {
+          "type": "string",
+          "description": "Long description",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATIONAL_STATUS": {
+          "type": "string",
+          "description": "Operational status",
+          "x-flatbuffer-type": "string"
+        },
+        "HEADER": {
+          "$ref": "#/definitions/XTCHeader",
+          "description": "Document header",
+          "x-flatbuffer-type": "XTCHeader"
+        },
+        "TELEMETRY_META_DATA": {
+          "$ref": "#/definitions/TelemetryMetaData",
+          "description": "Telemetry metadata",
+          "x-flatbuffer-type": "TelemetryMetaData"
+        },
+        "COMMAND_META_DATA": {
+          "$ref": "#/definitions/CommandMetaData",
+          "description": "Command metadata",
+          "x-flatbuffer-type": "CommandMetaData"
+        },
+        "SERVICE_SET": {
+          "$ref": "#/definitions/ServiceSet",
+          "description": "Service definitions",
+          "x-flatbuffer-type": "ServiceSet"
+        },
+        "CHILD_SYSTEMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/XTC"
+          },
+          "description": "Child space systems (hierarchical structure)",
+          "x-flatbuffer-type": "[XTC]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/XTC",
+  "x-flatbuffer-root-type": "XTC",
+  "x-flatbuffer-file-identifier": "$XTC"
+}

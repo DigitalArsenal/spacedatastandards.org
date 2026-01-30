@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standards Explorer - Plain JS API Example</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 32px;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+    }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin: 24px 0 12px; color: #4a9eff; }
+    pre {
+      background: #12121a;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .tag {
+      display: inline-block;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #4a9eff;
+    }
+    #output { white-space: pre; }
+  </style>
+</head>
+<body>
+
+  <h1>Standards Explorer - Plain JS API</h1>
+  <p style="color: #9ca3af; margin-bottom: 24px;">Open the browser console to see the full output.</p>
+
+  <h2>All Standards</h2>
+  <div id="standards-list"></div>
+
+  <h2>OMM Standard Details</h2>
+  <pre id="omm-detail"></pre>
+
+  <h2>OMM FB JSON Schema (x-flatbuffer extensions)</h2>
+  <pre id="omm-fb-schema"></pre>
+
+  <h2>Generated TypeScript Code (OMM)</h2>
+  <pre id="generated-code">Generating...</pre>
+
+  <script type="module">
+    import { StandardsExplorer } from '../src/index.js';
+
+    const explorer = new StandardsExplorer();
+    await explorer.init();
+
+    // List all standards
+    const standards = explorer.getStandards();
+    console.log('Standards:', standards);
+
+    const listEl = document.getElementById('standards-list');
+    listEl.innerHTML = standards.map(s => `<span class="tag">${s}</span>`).join(' ');
+
+    // Get OMM details
+    const omm = explorer.getStandard('OMM');
+    console.log('OMM:', omm);
+    document.getElementById('omm-detail').textContent = JSON.stringify({
+      name: omm.name,
+      files: omm.files,
+      idlPreview: omm.idl?.substring(0, 200) + '...',
+    }, null, 2);
+
+    // Show FB JSON Schema
+    const fbSchema = explorer.getFBJsonSchema('OMM');
+    document.getElementById('omm-fb-schema').textContent =
+      fbSchema ? JSON.stringify(fbSchema, null, 2).substring(0, 2000) + '\n...' : 'Not available';
+
+    // Generate TypeScript code
+    try {
+      const code = await explorer.generateCode('OMM', 'ts');
+      const files = Object.entries(code);
+      console.log('Generated files:', files.map(([name]) => name));
+
+      const codeEl = document.getElementById('generated-code');
+      if (files.length > 0) {
+        codeEl.textContent = `// Files generated: ${files.map(([n]) => n).join(', ')}\n\n`;
+        // Show first file preview
+        const [fileName, fileContent] = files[0];
+        codeEl.textContent += `// === ${fileName} ===\n${fileContent.substring(0, 3000)}`;
+        if (fileContent.length > 3000) codeEl.textContent += '\n// ... (truncated)';
+      } else {
+        codeEl.textContent = 'No files generated';
+      }
+    } catch (e) {
+      document.getElementById('generated-code').textContent = `Error: ${e.message}`;
+      console.error('Code generation error:', e);
+    }
+  </script>
+
+</body>
+</html>

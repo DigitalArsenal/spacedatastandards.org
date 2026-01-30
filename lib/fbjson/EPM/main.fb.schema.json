@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "KeyType": {
+      "type": "string",
+      "enum": [
+        "Signing",
+        "Encryption"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Signing": {
+          "value": 0
+        },
+        "Encryption": {
+          "value": 1
+        }
+      }
+    },
+    "CryptoKey": {
+      "type": "object",
+      "description": "Represents cryptographic key information",
+      "properties": {
+        "PUBLIC_KEY": {
+          "type": "string",
+          "description": "Public part of the cryptographic key, in hexidecimal format",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIVATE_KEY": {
+          "type": "string",
+          "description": "Private part of the cryptographic key in hexidecimal format, should be kept secret",
+          "x-flatbuffer-type": "string"
+        },
+        "XPRIV": {
+          "type": "string",
+          "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_ADDRESS": {
+          "type": "string",
+          "description": "Address generated from the cryptographic key",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS_TYPE": {
+          "type": "string",
+          "description": "Type of the address generated from the cryptographic key",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_TYPE": {
+          "$ref": "#/definitions/KeyType",
+          "description": "Type of the cryptographic key (signing or encryption)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Signing": {
+              "value": 0
+            },
+            "Encryption": {
+              "value": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Address": {
+      "type": "object",
+      "description": "Represents a geographic address",
+      "properties": {
+        "COUNTRY": {
+          "type": "string",
+          "description": "Country of the address",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "type": "string",
+          "description": "Region of the address (e.g., state or province)",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCALITY": {
+          "type": "string",
+          "description": "Locality of the address (e.g., city or town)",
+          "x-flatbuffer-type": "string"
+        },
+        "POSTAL_CODE": {
+          "type": "string",
+          "description": "Postal code of the address",
+          "x-flatbuffer-type": "string"
+        },
+        "STREET": {
+          "type": "string",
+          "description": "Street address",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_OFFICE_BOX_NUMBER": {
+          "type": "string",
+          "description": "Post office box number",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EPM": {
+      "type": "object",
+      "description": "Entity Profile Message",
+      "properties": {
+        "DN": {
+          "type": "string",
+          "description": "Distinguished Name of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "LEGAL_NAME": {
+          "type": "string",
+          "description": "Common name of the entity (person or organization)",
+          "x-flatbuffer-type": "string"
+        },
+        "FAMILY_NAME": {
+          "type": "string",
+          "description": "Family name or surname of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "GIVEN_NAME": {
+          "type": "string",
+          "description": "Given name or first name of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDITIONAL_NAME": {
+          "type": "string",
+          "description": "Additional name or middle name of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "HONORIFIC_PREFIX": {
+          "type": "string",
+          "description": "Honorific prefix preceding the person's name (e.g., Mr., Dr.)",
+          "x-flatbuffer-type": "string"
+        },
+        "HONORIFIC_SUFFIX": {
+          "type": "string",
+          "description": "Honorific suffix following the person's name (e.g., Jr., Sr.)",
+          "x-flatbuffer-type": "string"
+        },
+        "JOB_TITLE": {
+          "type": "string",
+          "description": "Job title of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "OCCUPATION": {
+          "type": "string",
+          "description": "Occupation of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "$ref": "#/definitions/Address",
+          "description": "Physical Address",
+          "x-flatbuffer-type": "Address"
+        },
+        "ALTERNATE_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Alternate names for the entity",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EMAIL": {
+          "type": "string",
+          "description": "Email address of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "TELEPHONE": {
+          "type": "string",
+          "description": "Telephone number of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "KEYS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CryptoKey"
+          },
+          "description": "Cryptographic keys associated with the entity",
+          "x-flatbuffer-type": "[CryptoKey]"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Multiformat addresses associated with the entity",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/EPM",
+  "x-flatbuffer-root-type": "EPM",
+  "x-flatbuffer-file-identifier": "$EPM"
+}

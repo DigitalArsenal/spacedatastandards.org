@@ -1,0 +1,3744 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PolarizationType": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "circular",
+        "elliptical",
+        "unpolarized"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "linear": {
+          "value": 0
+        },
+        "circular": {
+          "value": 1
+        },
+        "elliptical": {
+          "value": 2
+        },
+        "unpolarized": {
+          "value": 3
+        }
+      }
+    },
+    "SimplePolarization": {
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal",
+        "leftHandCircular",
+        "rightHandCircular"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "vertical": {
+          "value": 0
+        },
+        "horizontal": {
+          "value": 1
+        },
+        "leftHandCircular": {
+          "value": 2
+        },
+        "rightHandCircular": {
+          "value": 3
+        }
+      }
+    },
+    "DataMode": {
+      "type": "string",
+      "enum": [
+        "EXERCISE",
+        "REAL",
+        "SIMULATED",
+        "TEST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EXERCISE": {
+          "value": 0,
+          "description": "Data collected during an exercise scenario."
+        },
+        "REAL": {
+          "value": 1,
+          "description": "Data collected from real-world observations."
+        },
+        "SIMULATED": {
+          "value": 2,
+          "description": "Data generated through simulation."
+        },
+        "TEST": {
+          "value": 3,
+          "description": "Data collected for testing purposes."
+        }
+      }
+    },
+    "DeviceType": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPTICAL",
+        "INFRARED_SENSOR",
+        "ULTRAVIOLET_SENSOR",
+        "X_RAY_SENSOR",
+        "GAMMA_RAY_SENSOR",
+        "RADAR",
+        "PHASED_ARRAY_RADAR",
+        "SYNTHETIC_APERTURE_RADAR",
+        "BISTATIC_RADIO_TELESCOPE",
+        "RADIO_TELESCOPE",
+        "ATMOSPHERIC_SENSOR",
+        "SPACE_WEATHER_SENSOR",
+        "ENVIRONMENTAL_SENSOR",
+        "SEISMIC_SENSOR",
+        "GRAVIMETRIC_SENSOR",
+        "MAGNETIC_SENSOR",
+        "ELECTROMAGNETIC_SENSOR",
+        "THERMAL_SENSOR",
+        "CHEMICAL_SENSOR",
+        "BIOLOGICAL_SENSOR",
+        "RADIATION_SENSOR",
+        "PARTICLE_DETECTOR",
+        "LIDAR",
+        "SONAR",
+        "TELESCOPE",
+        "SPECTROSCOPIC_SENSOR",
+        "PHOTOMETRIC_SENSOR",
+        "POLARIMETRIC_SENSOR",
+        "INTERFEROMETRIC_SENSOR",
+        "MULTISPECTRAL_SENSOR",
+        "HYPERSPECTRAL_SENSOR",
+        "GPS_RECEIVER",
+        "RADIO_COMMUNICATIONS",
+        "LASER_COMMUNICATIONS",
+        "SATELLITE_COMMUNICATIONS",
+        "LASER_INSTRUMENT",
+        "RF_ANALYZER",
+        "IONOSPHERIC_SENSOR",
+        "LASER_IMAGING",
+        "OPTICAL_TELESCOPE",
+        "HIGH_RESOLUTION_OPTICAL",
+        "RADIO",
+        "MICROWAVE_TRANSMITTER",
+        "RF_MONITOR",
+        "HF_RADIO_COMMUNICATIONS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0,
+          "description": "Basic and General Sensors Basic or undefined sensor type"
+        },
+        "OPTICAL": {
+          "value": 1,
+          "description": "General optical sensors"
+        },
+        "INFRARED_SENSOR": {
+          "value": 2,
+          "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+        },
+        "ULTRAVIOLET_SENSOR": {
+          "value": 3,
+          "description": "Sensitive to ultraviolet light"
+        },
+        "X_RAY_SENSOR": {
+          "value": 4,
+          "description": "For X-ray detection"
+        },
+        "GAMMA_RAY_SENSOR": {
+          "value": 5,
+          "description": "For gamma-ray detection"
+        },
+        "RADAR": {
+          "value": 6,
+          "description": "Radar and Radio Telescopes Basic radar systems"
+        },
+        "PHASED_ARRAY_RADAR": {
+          "value": 7,
+          "description": "Advanced radar with phased array technology"
+        },
+        "SYNTHETIC_APERTURE_RADAR": {
+          "value": 8,
+          "description": "For high-resolution imaging"
+        },
+        "BISTATIC_RADIO_TELESCOPE": {
+          "value": 9,
+          "description": "For astronomical observations using bistatic setup"
+        },
+        "RADIO_TELESCOPE": {
+          "value": 10,
+          "description": "For radio astronomy"
+        },
+        "ATMOSPHERIC_SENSOR": {
+          "value": 11,
+          "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+        },
+        "SPACE_WEATHER_SENSOR": {
+          "value": 12,
+          "description": "For observing space weather phenomena"
+        },
+        "ENVIRONMENTAL_SENSOR": {
+          "value": 13,
+          "description": "General environmental monitoring"
+        },
+        "SEISMIC_SENSOR": {
+          "value": 14,
+          "description": "Specialized Scientific Sensors For measuring seismic activities"
+        },
+        "GRAVIMETRIC_SENSOR": {
+          "value": 15,
+          "description": "For gravity measurements"
+        },
+        "MAGNETIC_SENSOR": {
+          "value": 16,
+          "description": "For magnetic field detection"
+        },
+        "ELECTROMAGNETIC_SENSOR": {
+          "value": 17,
+          "description": "For electromagnetic field analysis"
+        },
+        "THERMAL_SENSOR": {
+          "value": 18,
+          "description": "For temperature and heat detection"
+        },
+        "CHEMICAL_SENSOR": {
+          "value": 19,
+          "description": "For detecting chemicals and substances"
+        },
+        "BIOLOGICAL_SENSOR": {
+          "value": 20,
+          "description": "For biological research and detection"
+        },
+        "RADIATION_SENSOR": {
+          "value": 21,
+          "description": "For detecting ionizing radiation"
+        },
+        "PARTICLE_DETECTOR": {
+          "value": 22,
+          "description": "For detecting subatomic particles"
+        },
+        "LIDAR": {
+          "value": 23,
+          "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+        },
+        "SONAR": {
+          "value": 24,
+          "description": "Sound Navigation and Ranging"
+        },
+        "TELESCOPE": {
+          "value": 25,
+          "description": "General telescopes for astronomical observations"
+        },
+        "SPECTROSCOPIC_SENSOR": {
+          "value": 26,
+          "description": "For spectral analysis"
+        },
+        "PHOTOMETRIC_SENSOR": {
+          "value": 27,
+          "description": "For measuring light intensity"
+        },
+        "POLARIMETRIC_SENSOR": {
+          "value": 28,
+          "description": "For analyzing polarization of light"
+        },
+        "INTERFEROMETRIC_SENSOR": {
+          "value": 29,
+          "description": "For detailed imaging using interference"
+        },
+        "MULTISPECTRAL_SENSOR": {
+          "value": 30,
+          "description": "Capturing image data at multiple wavelengths"
+        },
+        "HYPERSPECTRAL_SENSOR": {
+          "value": 31,
+          "description": "Advanced imaging across many spectral bands"
+        },
+        "GPS_RECEIVER": {
+          "value": 32,
+          "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+        },
+        "RADIO_COMMUNICATIONS": {
+          "value": 33,
+          "description": "Communication Devices Standard radio communication device"
+        },
+        "LASER_COMMUNICATIONS": {
+          "value": 34,
+          "description": "Advanced laser communication system"
+        },
+        "SATELLITE_COMMUNICATIONS": {
+          "value": 35,
+          "description": "Satellite communication system"
+        },
+        "LASER_INSTRUMENT": {
+          "value": 36,
+          "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+        },
+        "RF_ANALYZER": {
+          "value": 37,
+          "description": "Radio frequency analysis and measurement device"
+        },
+        "IONOSPHERIC_SENSOR": {
+          "value": 38,
+          "description": "Device for ionospheric research"
+        },
+        "LASER_IMAGING": {
+          "value": 39,
+          "description": "Optical Devices Device for laser-based imaging"
+        },
+        "OPTICAL_TELESCOPE": {
+          "value": 40,
+          "description": "Advanced optical telescope"
+        },
+        "HIGH_RESOLUTION_OPTICAL": {
+          "value": 41,
+          "description": "Device for high-resolution optical observations"
+        },
+        "RADIO": {
+          "value": 42,
+          "description": "Radio and Microwave Devices"
+        },
+        "MICROWAVE_TRANSMITTER": {
+          "value": 43,
+          "description": "Microwave communication device"
+        },
+        "RF_MONITOR": {
+          "value": 44,
+          "description": "Device for radio frequency monitoring"
+        },
+        "HF_RADIO_COMMUNICATIONS": {
+          "value": 45,
+          "description": "High-frequency radio communication device"
+        }
+      }
+    },
+    "SiteType": {
+      "type": "string",
+      "enum": [
+        "LAUNCH_SITE",
+        "OBSERVATION_STATION",
+        "HOBBYIST_OBSERVER",
+        "RESEARCH_FACILITY",
+        "SATELLITE_GROUND_STATION",
+        "SPACEPORT",
+        "MILITARY_BASE",
+        "WEATHER_STATION",
+        "ASTRONOMICAL_OBSERVATORY",
+        "EDUCATIONAL_INSTITUTE",
+        "COMMUNICATION_HUB",
+        "POWER_PLANT",
+        "INDUSTRIAL_COMPLEX",
+        "TRANSPORTATION_HUB",
+        "URBAN_AREA",
+        "NATIONAL_PARK",
+        "HISTORICAL_SITE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LAUNCH_SITE": {
+          "value": 0
+        },
+        "OBSERVATION_STATION": {
+          "value": 1
+        },
+        "HOBBYIST_OBSERVER": {
+          "value": 2
+        },
+        "RESEARCH_FACILITY": {
+          "value": 3
+        },
+        "SATELLITE_GROUND_STATION": {
+          "value": 4
+        },
+        "SPACEPORT": {
+          "value": 5
+        },
+        "MILITARY_BASE": {
+          "value": 6
+        },
+        "WEATHER_STATION": {
+          "value": 7
+        },
+        "ASTRONOMICAL_OBSERVATORY": {
+          "value": 8
+        },
+        "EDUCATIONAL_INSTITUTE": {
+          "value": 9
+        },
+        "COMMUNICATION_HUB": {
+          "value": 10
+        },
+        "POWER_PLANT": {
+          "value": 11
+        },
+        "INDUSTRIAL_COMPLEX": {
+          "value": 12
+        },
+        "TRANSPORTATION_HUB": {
+          "value": 13
+        },
+        "URBAN_AREA": {
+          "value": 14
+        },
+        "NATIONAL_PARK": {
+          "value": 15
+        },
+        "HISTORICAL_SITE": {
+          "value": 16
+        },
+        "OTHER": {
+          "value": 17
+        }
+      }
+    },
+    "KeyType": {
+      "type": "string",
+      "enum": [
+        "Signing",
+        "Encryption"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Signing": {
+          "value": 0
+        },
+        "Encryption": {
+          "value": 1
+        }
+      }
+    },
+    "legacyCountryCode": {
+      "type": "string",
+      "enum": [
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AB": {
+          "value": 0,
+          "description": "Arab Satellite Communications Organization"
+        },
+        "ABS": {
+          "value": 1,
+          "description": "Asia Broadcast Satellite"
+        },
+        "AC": {
+          "value": 2,
+          "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+        },
+        "ALG": {
+          "value": 3,
+          "description": "Algeria"
+        },
+        "ANG": {
+          "value": 4,
+          "description": "Angola"
+        },
+        "ARGN": {
+          "value": 5,
+          "description": "Argentina"
+        },
+        "ARM": {
+          "value": 6,
+          "description": "Republic of Armenia"
+        },
+        "ASRA": {
+          "value": 7,
+          "description": "Austria"
+        },
+        "AUS": {
+          "value": 8,
+          "description": "Australia"
+        },
+        "AZER": {
+          "value": 9,
+          "description": "Azerbaijan"
+        },
+        "BEL": {
+          "value": 10,
+          "description": "Belgium"
+        },
+        "BELA": {
+          "value": 11,
+          "description": "Belarus"
+        },
+        "BERM": {
+          "value": 12,
+          "description": "Bermuda"
+        },
+        "BGD": {
+          "value": 13,
+          "description": "People's Republic of Bangladesh"
+        },
+        "BHUT": {
+          "value": 14,
+          "description": "Kingdom of Bhutan"
+        },
+        "BOL": {
+          "value": 15,
+          "description": "Bolivia"
+        },
+        "BRAZ": {
+          "value": 16,
+          "description": "Brazil"
+        },
+        "BUL": {
+          "value": 17,
+          "description": "Bulgaria"
+        },
+        "CA": {
+          "value": 18,
+          "description": "Canada"
+        },
+        "CHBZ": {
+          "value": 19,
+          "description": "China/Brazil"
+        },
+        "CHTU": {
+          "value": 20,
+          "description": "China/Turkey"
+        },
+        "CHLE": {
+          "value": 21,
+          "description": "Chile"
+        },
+        "CIS": {
+          "value": 22,
+          "description": "Commonwealth of Independent States (former USSR)"
+        },
+        "COL": {
+          "value": 23,
+          "description": "Colombia"
+        },
+        "CRI": {
+          "value": 24,
+          "description": "Republic of Costa Rica"
+        },
+        "CZCH": {
+          "value": 25,
+          "description": "Czech Republic (former Czechoslovakia)"
+        },
+        "DEN": {
+          "value": 26,
+          "description": "Denmark"
+        },
+        "DJI": {
+          "value": 27,
+          "description": "Republic of Djibouti"
+        },
+        "ECU": {
+          "value": 28,
+          "description": "Ecuador"
+        },
+        "EGYP": {
+          "value": 29,
+          "description": "Egypt"
+        },
+        "ESA": {
+          "value": 30,
+          "description": "European Space Agency"
+        },
+        "ESRO": {
+          "value": 31,
+          "description": "European Space Research Organization"
+        },
+        "EST": {
+          "value": 32,
+          "description": "Estonia"
+        },
+        "ETH": {
+          "value": 33,
+          "description": "Ethiopia"
+        },
+        "EUME": {
+          "value": 34,
+          "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+        },
+        "EUTE": {
+          "value": 35,
+          "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+        },
+        "FGER": {
+          "value": 36,
+          "description": "France/Germany"
+        },
+        "FIN": {
+          "value": 37,
+          "description": "Finland"
+        },
+        "FR": {
+          "value": 38,
+          "description": "France"
+        },
+        "FRIT": {
+          "value": 39,
+          "description": "France/Italy"
+        },
+        "GER": {
+          "value": 40,
+          "description": "Germany"
+        },
+        "GHA": {
+          "value": 41,
+          "description": "Republic of Ghana"
+        },
+        "GLOB": {
+          "value": 42,
+          "description": "Globalstar"
+        },
+        "GREC": {
+          "value": 43,
+          "description": "Greece"
+        },
+        "GRSA": {
+          "value": 44,
+          "description": "Greece/Saudi Arabia"
+        },
+        "GUAT": {
+          "value": 45,
+          "description": "Guatemala"
+        },
+        "HUN": {
+          "value": 46,
+          "description": "Hungary"
+        },
+        "IM": {
+          "value": 47,
+          "description": "International Mobile Satellite Organization (INMARSAT)"
+        },
+        "IND": {
+          "value": 48,
+          "description": "India"
+        },
+        "INDO": {
+          "value": 49,
+          "description": "Indonesia"
+        },
+        "IRAN": {
+          "value": 50,
+          "description": "Iran"
+        },
+        "IRAQ": {
+          "value": 51,
+          "description": "Iraq"
+        },
+        "IRID": {
+          "value": 52,
+          "description": "Iridium"
+        },
+        "IRL": {
+          "value": 53,
+          "description": "Ireland"
+        },
+        "ISRA": {
+          "value": 54,
+          "description": "Israel"
+        },
+        "ISRO": {
+          "value": 55,
+          "description": "Indian Space Research Organisation"
+        },
+        "ISS": {
+          "value": 56,
+          "description": "International Space Station"
+        },
+        "IT": {
+          "value": 57,
+          "description": "Italy"
+        },
+        "ITSO": {
+          "value": 58,
+          "description": "International Telecommunications Satellite Organization (INTELSAT)"
+        },
+        "JPN": {
+          "value": 59,
+          "description": "Japan"
+        },
+        "KAZ": {
+          "value": 60,
+          "description": "Kazakhstan"
+        },
+        "KEN": {
+          "value": 61,
+          "description": "Republic of Kenya"
+        },
+        "LAOS": {
+          "value": 62,
+          "description": "Laos"
+        },
+        "LKA": {
+          "value": 63,
+          "description": "Democratic Socialist Republic of Sri Lanka"
+        },
+        "LTU": {
+          "value": 64,
+          "description": "Lithuania"
+        },
+        "LUXE": {
+          "value": 65,
+          "description": "Luxembourg"
+        },
+        "MA": {
+          "value": 66,
+          "description": "Morocco"
+        },
+        "MALA": {
+          "value": 67,
+          "description": "Malaysia"
+        },
+        "MCO": {
+          "value": 68,
+          "description": "Principality of Monaco"
+        },
+        "MDA": {
+          "value": 69,
+          "description": "Republic of Moldova"
+        },
+        "MEX": {
+          "value": 70,
+          "description": "Mexico"
+        },
+        "MMR": {
+          "value": 71,
+          "description": "Republic of the Union of Myanmar"
+        },
+        "MNG": {
+          "value": 72,
+          "description": "Mongolia"
+        },
+        "MUS": {
+          "value": 73,
+          "description": "Mauritius"
+        },
+        "NATO": {
+          "value": 74,
+          "description": "North Atlantic Treaty Organization"
+        },
+        "NETH": {
+          "value": 75,
+          "description": "Netherlands"
+        },
+        "NICO": {
+          "value": 76,
+          "description": "New ICO"
+        },
+        "NIG": {
+          "value": 77,
+          "description": "Nigeria"
+        },
+        "NKOR": {
+          "value": 78,
+          "description": "Democratic People's Republic of Korea"
+        },
+        "NOR": {
+          "value": 79,
+          "description": "Norway"
+        },
+        "NPL": {
+          "value": 80,
+          "description": "Federal Democratic Republic of Nepal"
+        },
+        "NZ": {
+          "value": 81,
+          "description": "New Zealand"
+        },
+        "O3B": {
+          "value": 82,
+          "description": "O3b Networks"
+        },
+        "ORB": {
+          "value": 83,
+          "description": "ORBCOMM"
+        },
+        "PAKI": {
+          "value": 84,
+          "description": "Pakistan"
+        },
+        "PERU": {
+          "value": 85,
+          "description": "Peru"
+        },
+        "POL": {
+          "value": 86,
+          "description": "Poland"
+        },
+        "POR": {
+          "value": 87,
+          "description": "Portugal"
+        },
+        "PRC": {
+          "value": 88,
+          "description": "People's Republic of China"
+        },
+        "PRY": {
+          "value": 89,
+          "description": "Republic of Paraguay"
+        },
+        "PRES": {
+          "value": 90,
+          "description": "People's Republic of China/European Space Agency"
+        },
+        "QAT": {
+          "value": 91,
+          "description": "State of Qatar"
+        },
+        "RASC": {
+          "value": 92,
+          "description": "RascomStar-QAF"
+        },
+        "ROC": {
+          "value": 93,
+          "description": "Taiwan (Republic of China)"
+        },
+        "ROM": {
+          "value": 94,
+          "description": "Romania"
+        },
+        "RP": {
+          "value": 95,
+          "description": "Philippines (Republic of the Philippines)"
+        },
+        "RWA": {
+          "value": 96,
+          "description": "Republic of Rwanda"
+        },
+        "SAFR": {
+          "value": 97,
+          "description": "South Africa"
+        },
+        "SAUD": {
+          "value": 98,
+          "description": "Saudi Arabia"
+        },
+        "SDN": {
+          "value": 99,
+          "description": "Republic of Sudan"
+        },
+        "SEAL": {
+          "value": 100,
+          "description": "Sea Launch"
+        },
+        "SES": {
+          "value": 101,
+          "description": "SES"
+        },
+        "SGJP": {
+          "value": 102,
+          "description": "Singapore/Japan"
+        },
+        "SING": {
+          "value": 103,
+          "description": "Singapore"
+        },
+        "SKOR": {
+          "value": 104,
+          "description": "Republic of Korea"
+        },
+        "SPN": {
+          "value": 105,
+          "description": "Spain"
+        },
+        "STCT": {
+          "value": 106,
+          "description": "Singapore/Taiwan"
+        },
+        "SVN": {
+          "value": 107,
+          "description": "Slovenia"
+        },
+        "SWED": {
+          "value": 108,
+          "description": "Sweden"
+        },
+        "SWTZ": {
+          "value": 109,
+          "description": "Switzerland"
+        },
+        "TBD": {
+          "value": 110,
+          "description": "To Be Determined"
+        },
+        "THAI": {
+          "value": 111,
+          "description": "Thailand"
+        },
+        "TMMC": {
+          "value": 112,
+          "description": "Turkmenistan/Monaco"
+        },
+        "TUN": {
+          "value": 113,
+          "description": "Republic of Tunisia"
+        },
+        "TURK": {
+          "value": 114,
+          "description": "Turkey"
+        },
+        "UAE": {
+          "value": 115,
+          "description": "United Arab Emirates"
+        },
+        "UK": {
+          "value": 116,
+          "description": "United Kingdom"
+        },
+        "UKR": {
+          "value": 117,
+          "description": "Ukraine"
+        },
+        "UNK": {
+          "value": 118,
+          "description": "Unknown"
+        },
+        "URY": {
+          "value": 119,
+          "description": "Uruguay"
+        },
+        "US": {
+          "value": 120,
+          "description": "United States"
+        },
+        "USBZ": {
+          "value": 121,
+          "description": "United States/Brazil"
+        },
+        "VAT": {
+          "value": 122,
+          "description": "Vatican City State"
+        },
+        "VENZ": {
+          "value": 123,
+          "description": "Venezuela"
+        },
+        "VTNM": {
+          "value": 124,
+          "description": "Vietnam"
+        },
+        "ZWE": {
+          "value": 125,
+          "description": "Republic of Zimbabwe"
+        }
+      }
+    },
+    "objectType": {
+      "type": "string",
+      "enum": [
+        "PAYLOAD",
+        "ROCKET_BODY",
+        "DEBRIS",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PAYLOAD": {
+          "value": 0,
+          "description": "0"
+        },
+        "ROCKET_BODY": {
+          "value": 1,
+          "description": "1"
+        },
+        "DEBRIS": {
+          "value": 2,
+          "description": "2"
+        },
+        "UNKNOWN": {
+          "value": 3,
+          "description": "3"
+        }
+      }
+    },
+    "opsStatusCode": {
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "NONOPERATIONAL",
+        "PARTIALLY_OPERATIONAL",
+        "BACKUP_STANDBY",
+        "SPARE",
+        "EXTENDED_MISSION",
+        "DECAYED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPERATIONAL": {
+          "value": 0,
+          "description": "+"
+        },
+        "NONOPERATIONAL": {
+          "value": 1,
+          "description": "-"
+        },
+        "PARTIALLY_OPERATIONAL": {
+          "value": 2,
+          "description": "P"
+        },
+        "BACKUP_STANDBY": {
+          "value": 3,
+          "description": "B"
+        },
+        "SPARE": {
+          "value": 4,
+          "description": "S"
+        },
+        "EXTENDED_MISSION": {
+          "value": 5,
+          "description": "X"
+        },
+        "DECAYED": {
+          "value": 6,
+          "description": "D"
+        },
+        "UNKNOWN": {
+          "value": 7,
+          "description": "?"
+        }
+      }
+    },
+    "dataStatusCode": {
+      "type": "string",
+      "enum": [
+        "NO_CURRENT_ELEMENTS",
+        "NO_INITIAL_ELEMENTS",
+        "NO_ELEMENTS_AVAILABLE",
+        "OK"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NO_CURRENT_ELEMENTS": {
+          "value": 0,
+          "description": "NCE"
+        },
+        "NO_INITIAL_ELEMENTS": {
+          "value": 1,
+          "description": "NIE"
+        },
+        "NO_ELEMENTS_AVAILABLE": {
+          "value": 2,
+          "description": "NEA"
+        },
+        "OK": {
+          "value": 3,
+          "description": "OK"
+        }
+      }
+    },
+    "orbitType": {
+      "type": "string",
+      "enum": [
+        "ORBIT",
+        "LANDING",
+        "IMPACT",
+        "DOCKED",
+        "ROUNDTRIP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ORBIT": {
+          "value": 0,
+          "description": "0"
+        },
+        "LANDING": {
+          "value": 1,
+          "description": "1"
+        },
+        "IMPACT": {
+          "value": 2,
+          "description": "2"
+        },
+        "DOCKED": {
+          "value": 3,
+          "description": "3"
+        },
+        "ROUNDTRIP": {
+          "value": 4,
+          "description": "4"
+        }
+      }
+    },
+    "massType": {
+      "type": "string",
+      "enum": [
+        "DRY",
+        "WET"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DRY": {
+          "value": 0
+        },
+        "WET": {
+          "value": 1
+        }
+      }
+    },
+    "ENGINE_TYPE": {
+      "type": "string",
+      "enum": [
+        "LIQUID",
+        "SOLID",
+        "HYBRID",
+        "ION",
+        "NUCLEAR_THERMAL",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LIQUID": {
+          "value": 0
+        },
+        "SOLID": {
+          "value": 1
+        },
+        "HYBRID": {
+          "value": 2
+        },
+        "ION": {
+          "value": 3
+        },
+        "NUCLEAR_THERMAL": {
+          "value": 4
+        },
+        "OTHER": {
+          "value": 5
+        }
+      }
+    },
+    "FrequencyRange": {
+      "type": "object",
+      "description": "Frequency range with lower and upper limits",
+      "properties": {
+        "LOWER": {
+          "type": "number",
+          "description": "Lower frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER": {
+          "type": "number",
+          "description": "Upper frequency in MHz",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StokesParameters": {
+      "type": "object",
+      "description": "Stokes parameters, representing different aspects of polarization",
+      "properties": {
+        "I": {
+          "type": "number",
+          "description": "Intensity",
+          "x-flatbuffer-type": "double"
+        },
+        "Q": {
+          "type": "number",
+          "description": "Linear polarization",
+          "x-flatbuffer-type": "double"
+        },
+        "U": {
+          "type": "number",
+          "description": "Another linear polarization, orthogonal to Q",
+          "x-flatbuffer-type": "double"
+        },
+        "V": {
+          "type": "number",
+          "description": "Circular polarization",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Band": {
+      "type": "object",
+      "description": "Table representing a frequency band with a name and frequency range",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the band",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_RANGE": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Frequency range of the band",
+          "x-flatbuffer-type": "FrequencyRange"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IDM": {
+      "type": "object",
+      "description": "Integrated Device Message",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the EMT",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_MODE": {
+          "$ref": "#/definitions/DataMode",
+          "description": "Mode of the data (real, simulated, synthetic)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EXERCISE": {
+              "value": 0,
+              "description": "Data collected during an exercise scenario."
+            },
+            "REAL": {
+              "value": 1,
+              "description": "Data collected from real-world observations."
+            },
+            "SIMULATED": {
+              "value": 2,
+              "description": "Data generated through simulation."
+            },
+            "TEST": {
+              "value": 3,
+              "description": "Data collected for testing purposes."
+            }
+          }
+        },
+        "UPLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Uplink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "DOWNLINK": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Downlink frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BEACON": {
+          "$ref": "#/definitions/FrequencyRange",
+          "description": "Beacon frequency range",
+          "x-flatbuffer-type": "FrequencyRange"
+        },
+        "BAND": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Band"
+          },
+          "description": "Bands associated with the EMT",
+          "x-flatbuffer-type": "[Band]"
+        },
+        "POLARIZATION_TYPE": {
+          "$ref": "#/definitions/PolarizationType",
+          "description": "Type of polarization used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "linear": {
+              "value": 0
+            },
+            "circular": {
+              "value": 1
+            },
+            "elliptical": {
+              "value": 2
+            },
+            "unpolarized": {
+              "value": 3
+            }
+          }
+        },
+        "SIMPLE_POLARIZATION": {
+          "$ref": "#/definitions/SimplePolarization",
+          "description": "Simple polarization configuration",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "vertical": {
+              "value": 0
+            },
+            "horizontal": {
+              "value": 1
+            },
+            "leftHandCircular": {
+              "value": 2
+            },
+            "rightHandCircular": {
+              "value": 3
+            }
+          }
+        },
+        "STOKES_PARAMETERS": {
+          "$ref": "#/definitions/StokesParameters",
+          "description": "Stokes parameters for polarization characterization",
+          "x-flatbuffer-type": "StokesParameters"
+        },
+        "POWER_REQUIRED": {
+          "type": "number",
+          "description": "Power required in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_TYPE": {
+          "type": "string",
+          "description": "Type of power (eg. AC or DC)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can transmit",
+          "x-flatbuffer-type": "bool"
+        },
+        "RECEIVE": {
+          "type": "boolean",
+          "description": "Indicates if the EMT can receive",
+          "x-flatbuffer-type": "bool"
+        },
+        "SENSOR_TYPE": {
+          "$ref": "#/definitions/DeviceType",
+          "description": "Type of the sensor",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0,
+              "description": "Basic and General Sensors Basic or undefined sensor type"
+            },
+            "OPTICAL": {
+              "value": 1,
+              "description": "General optical sensors"
+            },
+            "INFRARED_SENSOR": {
+              "value": 2,
+              "description": "Electromagnetic Spectrum Sensors Detects infrared radiation"
+            },
+            "ULTRAVIOLET_SENSOR": {
+              "value": 3,
+              "description": "Sensitive to ultraviolet light"
+            },
+            "X_RAY_SENSOR": {
+              "value": 4,
+              "description": "For X-ray detection"
+            },
+            "GAMMA_RAY_SENSOR": {
+              "value": 5,
+              "description": "For gamma-ray detection"
+            },
+            "RADAR": {
+              "value": 6,
+              "description": "Radar and Radio Telescopes Basic radar systems"
+            },
+            "PHASED_ARRAY_RADAR": {
+              "value": 7,
+              "description": "Advanced radar with phased array technology"
+            },
+            "SYNTHETIC_APERTURE_RADAR": {
+              "value": 8,
+              "description": "For high-resolution imaging"
+            },
+            "BISTATIC_RADIO_TELESCOPE": {
+              "value": 9,
+              "description": "For astronomical observations using bistatic setup"
+            },
+            "RADIO_TELESCOPE": {
+              "value": 10,
+              "description": "For radio astronomy"
+            },
+            "ATMOSPHERIC_SENSOR": {
+              "value": 11,
+              "description": "Environmental and Atmospheric Sensors For atmospheric studies"
+            },
+            "SPACE_WEATHER_SENSOR": {
+              "value": 12,
+              "description": "For observing space weather phenomena"
+            },
+            "ENVIRONMENTAL_SENSOR": {
+              "value": 13,
+              "description": "General environmental monitoring"
+            },
+            "SEISMIC_SENSOR": {
+              "value": 14,
+              "description": "Specialized Scientific Sensors For measuring seismic activities"
+            },
+            "GRAVIMETRIC_SENSOR": {
+              "value": 15,
+              "description": "For gravity measurements"
+            },
+            "MAGNETIC_SENSOR": {
+              "value": 16,
+              "description": "For magnetic field detection"
+            },
+            "ELECTROMAGNETIC_SENSOR": {
+              "value": 17,
+              "description": "For electromagnetic field analysis"
+            },
+            "THERMAL_SENSOR": {
+              "value": 18,
+              "description": "For temperature and heat detection"
+            },
+            "CHEMICAL_SENSOR": {
+              "value": 19,
+              "description": "For detecting chemicals and substances"
+            },
+            "BIOLOGICAL_SENSOR": {
+              "value": 20,
+              "description": "For biological research and detection"
+            },
+            "RADIATION_SENSOR": {
+              "value": 21,
+              "description": "For detecting ionizing radiation"
+            },
+            "PARTICLE_DETECTOR": {
+              "value": 22,
+              "description": "For detecting subatomic particles"
+            },
+            "LIDAR": {
+              "value": 23,
+              "description": "Advanced Optical and Imaging Sensors Light Detection and Ranging"
+            },
+            "SONAR": {
+              "value": 24,
+              "description": "Sound Navigation and Ranging"
+            },
+            "TELESCOPE": {
+              "value": 25,
+              "description": "General telescopes for astronomical observations"
+            },
+            "SPECTROSCOPIC_SENSOR": {
+              "value": 26,
+              "description": "For spectral analysis"
+            },
+            "PHOTOMETRIC_SENSOR": {
+              "value": 27,
+              "description": "For measuring light intensity"
+            },
+            "POLARIMETRIC_SENSOR": {
+              "value": 28,
+              "description": "For analyzing polarization of light"
+            },
+            "INTERFEROMETRIC_SENSOR": {
+              "value": 29,
+              "description": "For detailed imaging using interference"
+            },
+            "MULTISPECTRAL_SENSOR": {
+              "value": 30,
+              "description": "Capturing image data at multiple wavelengths"
+            },
+            "HYPERSPECTRAL_SENSOR": {
+              "value": 31,
+              "description": "Advanced imaging across many spectral bands"
+            },
+            "GPS_RECEIVER": {
+              "value": 32,
+              "description": "Positioning and Tracking Sensors For Global Positioning System reception"
+            },
+            "RADIO_COMMUNICATIONS": {
+              "value": 33,
+              "description": "Communication Devices Standard radio communication device"
+            },
+            "LASER_COMMUNICATIONS": {
+              "value": 34,
+              "description": "Advanced laser communication system"
+            },
+            "SATELLITE_COMMUNICATIONS": {
+              "value": 35,
+              "description": "Satellite communication system"
+            },
+            "LASER_INSTRUMENT": {
+              "value": 36,
+              "description": "Specialized Scientific Instruments Device for laser-based experiments and measurements"
+            },
+            "RF_ANALYZER": {
+              "value": 37,
+              "description": "Radio frequency analysis and measurement device"
+            },
+            "IONOSPHERIC_SENSOR": {
+              "value": 38,
+              "description": "Device for ionospheric research"
+            },
+            "LASER_IMAGING": {
+              "value": 39,
+              "description": "Optical Devices Device for laser-based imaging"
+            },
+            "OPTICAL_TELESCOPE": {
+              "value": 40,
+              "description": "Advanced optical telescope"
+            },
+            "HIGH_RESOLUTION_OPTICAL": {
+              "value": 41,
+              "description": "Device for high-resolution optical observations"
+            },
+            "RADIO": {
+              "value": 42,
+              "description": "Radio and Microwave Devices"
+            },
+            "MICROWAVE_TRANSMITTER": {
+              "value": 43,
+              "description": "Microwave communication device"
+            },
+            "RF_MONITOR": {
+              "value": 44,
+              "description": "Device for radio frequency monitoring"
+            },
+            "HF_RADIO_COMMUNICATIONS": {
+              "value": 45,
+              "description": "High-frequency radio communication device"
+            }
+          }
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the data",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_TIME": {
+          "type": "string",
+          "description": "Timestamp of the last observation",
+          "x-flatbuffer-type": "string"
+        },
+        "LOWER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Lower right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_LEFT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower left azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper right elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Upper right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LOWER_RIGHT_AZIMUTH_LIMIT": {
+          "type": "number",
+          "description": "Lower right azimuth limit",
+          "x-flatbuffer-type": "double"
+        },
+        "UPPER_LEFT_ELEVATION_LIMIT": {
+          "type": "number",
+          "description": "Upper left elevation limit",
+          "x-flatbuffer-type": "double"
+        },
+        "RIGHT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Right geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "LEFT_GEO_BELT_LIMIT": {
+          "type": "number",
+          "description": "Left geostationary belt limit",
+          "x-flatbuffer-type": "double"
+        },
+        "MAGNITUDE_LIMIT": {
+          "type": "number",
+          "description": "Magnitude limit of the sensor",
+          "x-flatbuffer-type": "double"
+        },
+        "TASKABLE": {
+          "type": "boolean",
+          "description": "Indicates if the site is taskable",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Geometry": {
+      "type": "object",
+      "description": "Geometry table with information about geometric properties",
+      "properties": {
+        "GEOMETRY_TYPE": {
+          "type": "string",
+          "description": "Type of geometry",
+          "x-flatbuffer-type": "string"
+        },
+        "COORDINATES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Coordinates of the geometry",
+          "x-flatbuffer-type": "[float]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SIT": {
+      "type": "object",
+      "description": "Site Information Message",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for the site, BE_NUMBER",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "ABBREVIATION": {
+          "type": "string",
+          "description": "Abbreviation",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_TYPE": {
+          "$ref": "#/definitions/SiteType",
+          "description": "Site type as defined in SiteType enum",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LAUNCH_SITE": {
+              "value": 0
+            },
+            "OBSERVATION_STATION": {
+              "value": 1
+            },
+            "HOBBYIST_OBSERVER": {
+              "value": 2
+            },
+            "RESEARCH_FACILITY": {
+              "value": 3
+            },
+            "SATELLITE_GROUND_STATION": {
+              "value": 4
+            },
+            "SPACEPORT": {
+              "value": 5
+            },
+            "MILITARY_BASE": {
+              "value": 6
+            },
+            "WEATHER_STATION": {
+              "value": 7
+            },
+            "ASTRONOMICAL_OBSERVATORY": {
+              "value": 8
+            },
+            "EDUCATIONAL_INSTITUTE": {
+              "value": 9
+            },
+            "COMMUNICATION_HUB": {
+              "value": 10
+            },
+            "POWER_PLANT": {
+              "value": 11
+            },
+            "INDUSTRIAL_COMPLEX": {
+              "value": 12
+            },
+            "TRANSPORTATION_HUB": {
+              "value": 13
+            },
+            "URBAN_AREA": {
+              "value": 14
+            },
+            "NATIONAL_PARK": {
+              "value": 15
+            },
+            "HISTORICAL_SITE": {
+              "value": 16
+            },
+            "OTHER": {
+              "value": 17
+            }
+          }
+        },
+        "CATCODE": {
+          "type": "string",
+          "description": "Site type CATCODE",
+          "x-flatbuffer-type": "string"
+        },
+        "NETWORK": {
+          "type": "string",
+          "description": "Network identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude of the site",
+          "x-flatbuffer-type": "float"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/Geometry",
+          "description": "Geometry of the site",
+          "x-flatbuffer-type": "Geometry"
+        },
+        "CENTER_POINT_GEOMETRY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Center point geometry coordinates",
+          "x-flatbuffer-type": "[float]"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "Classification marking of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "CTR_ID": {
+          "type": "string",
+          "description": "CTR ISO 3166 Numeric code as string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_BY": {
+          "type": "string",
+          "description": "Identifier of the user who created the site data",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_URL": {
+          "type": "string",
+          "description": "URL for the 3D model of the site",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of the site data",
+          "x-flatbuffer-type": "string"
+        },
+        "TASKABLE": {
+          "type": "boolean",
+          "description": "Indicates if the site is taskable",
+          "x-flatbuffer-type": "bool"
+        },
+        "OPERATIONAL_STATUS": {
+          "type": "string",
+          "description": "Operational status of the site (e.g., active, inactive, under construction)",
+          "x-flatbuffer-type": "string"
+        },
+        "ESTABLISHMENT_DATE": {
+          "type": "string",
+          "description": "Date of establishment",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTACT_INFO": {
+          "type": "string",
+          "description": "Contact information for the site",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENTAL_IMPACT": {
+          "type": "string",
+          "description": "Environmental impact or considerations",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESSIBILITY_INFRA": {
+          "type": "string",
+          "description": "Accessibility and infrastructure details",
+          "x-flatbuffer-type": "string"
+        },
+        "INTEGRATED_DEVICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IDM"
+          },
+          "description": "Vector of Integrated Devices (IDM)",
+          "x-flatbuffer-type": "[IDM]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CryptoKey": {
+      "type": "object",
+      "description": "Represents cryptographic key information",
+      "properties": {
+        "PUBLIC_KEY": {
+          "type": "string",
+          "description": "Public part of the cryptographic key, in hexidecimal format",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIVATE_KEY": {
+          "type": "string",
+          "description": "Private part of the cryptographic key in hexidecimal format, should be kept secret",
+          "x-flatbuffer-type": "string"
+        },
+        "XPRIV": {
+          "type": "string",
+          "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_ADDRESS": {
+          "type": "string",
+          "description": "Address generated from the cryptographic key",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS_TYPE": {
+          "type": "string",
+          "description": "Type of the address generated from the cryptographic key",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_TYPE": {
+          "$ref": "#/definitions/KeyType",
+          "description": "Type of the cryptographic key (signing or encryption)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Signing": {
+              "value": 0
+            },
+            "Encryption": {
+              "value": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Address": {
+      "type": "object",
+      "description": "Represents a geographic address",
+      "properties": {
+        "COUNTRY": {
+          "type": "string",
+          "description": "Country of the address",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "type": "string",
+          "description": "Region of the address (e.g., state or province)",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCALITY": {
+          "type": "string",
+          "description": "Locality of the address (e.g., city or town)",
+          "x-flatbuffer-type": "string"
+        },
+        "POSTAL_CODE": {
+          "type": "string",
+          "description": "Postal code of the address",
+          "x-flatbuffer-type": "string"
+        },
+        "STREET": {
+          "type": "string",
+          "description": "Street address",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_OFFICE_BOX_NUMBER": {
+          "type": "string",
+          "description": "Post office box number",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EPM": {
+      "type": "object",
+      "description": "Entity Profile Message",
+      "properties": {
+        "DN": {
+          "type": "string",
+          "description": "Distinguished Name of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "LEGAL_NAME": {
+          "type": "string",
+          "description": "Common name of the entity (person or organization)",
+          "x-flatbuffer-type": "string"
+        },
+        "FAMILY_NAME": {
+          "type": "string",
+          "description": "Family name or surname of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "GIVEN_NAME": {
+          "type": "string",
+          "description": "Given name or first name of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDITIONAL_NAME": {
+          "type": "string",
+          "description": "Additional name or middle name of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "HONORIFIC_PREFIX": {
+          "type": "string",
+          "description": "Honorific prefix preceding the person's name (e.g., Mr., Dr.)",
+          "x-flatbuffer-type": "string"
+        },
+        "HONORIFIC_SUFFIX": {
+          "type": "string",
+          "description": "Honorific suffix following the person's name (e.g., Jr., Sr.)",
+          "x-flatbuffer-type": "string"
+        },
+        "JOB_TITLE": {
+          "type": "string",
+          "description": "Job title of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "OCCUPATION": {
+          "type": "string",
+          "description": "Occupation of the person",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "$ref": "#/definitions/Address",
+          "description": "Physical Address",
+          "x-flatbuffer-type": "Address"
+        },
+        "ALTERNATE_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Alternate names for the entity",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EMAIL": {
+          "type": "string",
+          "description": "Email address of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "TELEPHONE": {
+          "type": "string",
+          "description": "Telephone number of the entity",
+          "x-flatbuffer-type": "string"
+        },
+        "KEYS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CryptoKey"
+          },
+          "description": "Cryptographic keys associated with the entity",
+          "x-flatbuffer-type": "[CryptoKey]"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Multiformat addresses associated with the entity",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PLD": {
+      "type": "object",
+      "description": "Payload Information",
+      "properties": {
+        "PAYLOAD_DURATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MASS_AT_LAUNCH": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "DIMENSIONS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLAR_ARRAY_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "SOLAR_ARRAY_DIMENSIONS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NOMINAL_OPERATIONAL_LIFETIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTRUMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IDM"
+          },
+          "x-flatbuffer-type": "[IDM]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LCC": {
+      "type": "object",
+      "description": "Legacy Country Code",
+      "properties": {
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AB": {
+              "value": 0,
+              "description": "Arab Satellite Communications Organization"
+            },
+            "ABS": {
+              "value": 1,
+              "description": "Asia Broadcast Satellite"
+            },
+            "AC": {
+              "value": 2,
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+            },
+            "ALG": {
+              "value": 3,
+              "description": "Algeria"
+            },
+            "ANG": {
+              "value": 4,
+              "description": "Angola"
+            },
+            "ARGN": {
+              "value": 5,
+              "description": "Argentina"
+            },
+            "ARM": {
+              "value": 6,
+              "description": "Republic of Armenia"
+            },
+            "ASRA": {
+              "value": 7,
+              "description": "Austria"
+            },
+            "AUS": {
+              "value": 8,
+              "description": "Australia"
+            },
+            "AZER": {
+              "value": 9,
+              "description": "Azerbaijan"
+            },
+            "BEL": {
+              "value": 10,
+              "description": "Belgium"
+            },
+            "BELA": {
+              "value": 11,
+              "description": "Belarus"
+            },
+            "BERM": {
+              "value": 12,
+              "description": "Bermuda"
+            },
+            "BGD": {
+              "value": 13,
+              "description": "People's Republic of Bangladesh"
+            },
+            "BHUT": {
+              "value": 14,
+              "description": "Kingdom of Bhutan"
+            },
+            "BOL": {
+              "value": 15,
+              "description": "Bolivia"
+            },
+            "BRAZ": {
+              "value": 16,
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CAT": {
+      "type": "object",
+      "description": "Catalog Entity Message",
+      "properties": {
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Satellite Name(s)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International Designator (YYYY-NNNAAA)",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD Catalog Number",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_TYPE": {
+          "$ref": "#/definitions/objectType",
+          "description": "Object type (Payload, Rocket body, Debris, Unknown)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PAYLOAD": {
+              "value": 0,
+              "description": "0"
+            },
+            "ROCKET_BODY": {
+              "value": 1,
+              "description": "1"
+            },
+            "DEBRIS": {
+              "value": 2,
+              "description": "2"
+            },
+            "UNKNOWN": {
+              "value": 3,
+              "description": "3"
+            }
+          }
+        },
+        "OPS_STATUS_CODE": {
+          "$ref": "#/definitions/opsStatusCode",
+          "description": "Operational Status Code",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPERATIONAL": {
+              "value": 0,
+              "description": "+"
+            },
+            "NONOPERATIONAL": {
+              "value": 1,
+              "description": "-"
+            },
+            "PARTIALLY_OPERATIONAL": {
+              "value": 2,
+              "description": "P"
+            },
+            "BACKUP_STANDBY": {
+              "value": 3,
+              "description": "B"
+            },
+            "SPARE": {
+              "value": 4,
+              "description": "S"
+            },
+            "EXTENDED_MISSION": {
+              "value": 5,
+              "description": "X"
+            },
+            "DECAYED": {
+              "value": 6,
+              "description": "D"
+            },
+            "UNKNOWN": {
+              "value": 7,
+              "description": "?"
+            }
+          }
+        },
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
+          "description": "Ownership, typically country or company",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AB": {
+              "value": 0,
+              "description": "Arab Satellite Communications Organization"
+            },
+            "ABS": {
+              "value": 1,
+              "description": "Asia Broadcast Satellite"
+            },
+            "AC": {
+              "value": 2,
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
+            },
+            "ALG": {
+              "value": 3,
+              "description": "Algeria"
+            },
+            "ANG": {
+              "value": 4,
+              "description": "Angola"
+            },
+            "ARGN": {
+              "value": 5,
+              "description": "Argentina"
+            },
+            "ARM": {
+              "value": 6,
+              "description": "Republic of Armenia"
+            },
+            "ASRA": {
+              "value": 7,
+              "description": "Austria"
+            },
+            "AUS": {
+              "value": 8,
+              "description": "Australia"
+            },
+            "AZER": {
+              "value": 9,
+              "description": "Azerbaijan"
+            },
+            "BEL": {
+              "value": 10,
+              "description": "Belgium"
+            },
+            "BELA": {
+              "value": 11,
+              "description": "Belarus"
+            },
+            "BERM": {
+              "value": 12,
+              "description": "Bermuda"
+            },
+            "BGD": {
+              "value": 13,
+              "description": "People's Republic of Bangladesh"
+            },
+            "BHUT": {
+              "value": 14,
+              "description": "Kingdom of Bhutan"
+            },
+            "BOL": {
+              "value": 15,
+              "description": "Bolivia"
+            },
+            "BRAZ": {
+              "value": 16,
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
+            }
+          }
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "description": "Launch Date [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_SITE": {
+          "type": "string",
+          "description": "Launch Site",
+          "x-flatbuffer-type": "string"
+        },
+        "DECAY_DATE": {
+          "type": "string",
+          "description": "Decay Date, if applicable [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Orbital period [minutes]",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination [degrees]",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee Altitude [kilometers]",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee Altitude [kilometers]",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS": {
+          "type": "number",
+          "description": "Radar Cross Section [meters2]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_STATUS_CODE": {
+          "$ref": "#/definitions/dataStatusCode",
+          "description": "Data status code; blank otherwise",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NO_CURRENT_ELEMENTS": {
+              "value": 0,
+              "description": "NCE"
+            },
+            "NO_INITIAL_ELEMENTS": {
+              "value": 1,
+              "description": "NIE"
+            },
+            "NO_ELEMENTS_AVAILABLE": {
+              "value": 2,
+              "description": "NEA"
+            },
+            "OK": {
+              "value": 3,
+              "description": "OK"
+            }
+          }
+        },
+        "ORBIT_CENTER": {
+          "type": "string",
+          "description": "Orbit center",
+          "x-flatbuffer-type": "string"
+        },
+        "ORBIT_TYPE": {
+          "$ref": "#/definitions/orbitType",
+          "description": "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ORBIT": {
+              "value": 0,
+              "description": "0"
+            },
+            "LANDING": {
+              "value": 1,
+              "description": "1"
+            },
+            "IMPACT": {
+              "value": 2,
+              "description": "2"
+            },
+            "DOCKED": {
+              "value": 3,
+              "description": "3"
+            },
+            "ROUNDTRIP": {
+              "value": 4,
+              "description": "4"
+            }
+          }
+        },
+        "DEPLOYMENT_DATE": {
+          "type": "string",
+          "description": "Deployment Date [year-month-day] (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MANEUVERABLE": {
+          "type": "boolean",
+          "description": "Indicates if the object is maneuverable",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIZE": {
+          "type": "number",
+          "description": "Size [meters]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Mass [kilograms]; blank if no data available",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS_TYPE": {
+          "$ref": "#/definitions/massType",
+          "description": "Mass type (Dry, Wet)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DRY": {
+              "value": 0
+            },
+            "WET": {
+              "value": 1
+            }
+          }
+        },
+        "PAYLOADS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLD"
+          },
+          "description": "Vector of PAYLOADS",
+          "x-flatbuffer-type": "[PLD]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ROC": {
+      "type": "object",
+      "description": "Rocket Configuration",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Rocket Name",
+          "x-flatbuffer-type": "string"
+        },
+        "FAMILY": {
+          "type": "string",
+          "description": "Rocket Family",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIANT": {
+          "type": "string",
+          "description": "Rocket Variant",
+          "x-flatbuffer-type": "string"
+        },
+        "STAGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/STAGE"
+          },
+          "description": "Stages in the Rocket",
+          "x-flatbuffer-type": "[STAGE]"
+        },
+        "SUSTAINERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SUSTAINER"
+          },
+          "description": "Sustainers in the Rocket",
+          "x-flatbuffer-type": "[SUSTAINER]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "STAGE": {
+      "type": "object",
+      "description": "Stage Details",
+      "properties": {
+        "STAGE_NUMBER": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Stage Number",
+          "x-flatbuffer-type": "int"
+        },
+        "ENGINES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ENGINE"
+          },
+          "description": "Engines Used in This Stage",
+          "x-flatbuffer-type": "[ENGINE]"
+        },
+        "FUEL_TYPE": {
+          "type": "string",
+          "description": "Fuel Type Used in This Stage",
+          "x-flatbuffer-type": "string"
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by This Stage (in Newtons)",
+          "x-flatbuffer-type": "double"
+        },
+        "BURN_DURATION": {
+          "type": "number",
+          "description": "Duration of the Burn (in Seconds)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SUSTAINER": {
+      "type": "object",
+      "description": "Sustainer Details",
+      "properties": {
+        "SUSTAINER_NAME": {
+          "type": "string",
+          "description": "Name of the Sustainer",
+          "x-flatbuffer-type": "string"
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by the Sustainer (in Newtons)",
+          "x-flatbuffer-type": "double"
+        },
+        "BURN_DURATION": {
+          "type": "number",
+          "description": "Duration of the Burn (in Seconds)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ENGINE": {
+      "type": "object",
+      "description": "Engine Details",
+      "properties": {
+        "ENGINE_NAME": {
+          "type": "string",
+          "description": "Engine Name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/ENGINE_TYPE",
+          "description": "Type of Engine",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LIQUID": {
+              "value": 0
+            },
+            "SOLID": {
+              "value": 1
+            },
+            "HYBRID": {
+              "value": 2
+            },
+            "ION": {
+              "value": 3
+            },
+            "NUCLEAR_THERMAL": {
+              "value": 4
+            },
+            "OTHER": {
+              "value": 5
+            }
+          }
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust Produced by the Engine (in Newtons)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BOV": {
+      "type": "object",
+      "description": "Burn Out Vector Message",
+      "properties": {
+        "E_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "F_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "G_COORDINATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "E_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "F_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "G_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_FROM_LAUNCH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LDM": {
+      "type": "object",
+      "description": "Launch Data Message",
+      "properties": {
+        "SITE": {
+          "$ref": "#/definitions/SIT",
+          "description": "Launch Site Information",
+          "x-flatbuffer-type": "SIT"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth at Launch (in Degrees)",
+          "x-flatbuffer-type": "float"
+        },
+        "REFERENCES": {
+          "type": "string",
+          "description": "References for Launch Data",
+          "x-flatbuffer-type": "string"
+        },
+        "AGENCY_NAME": {
+          "type": "string",
+          "description": "Launching Agency Name",
+          "x-flatbuffer-type": "string"
+        },
+        "POINTS_OF_CONTACT": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EPM"
+          },
+          "description": "Points of Contact for Launch",
+          "x-flatbuffer-type": "[EPM]"
+        },
+        "OPERATIONS_POINTS_OF_CONTACT": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EPM"
+          },
+          "description": "Operations Points of Contact for Launch",
+          "x-flatbuffer-type": "[EPM]"
+        },
+        "NET": {
+          "type": "string",
+          "description": "Net Launch Time (UTC Format)",
+          "x-flatbuffer-type": "string"
+        },
+        "ROCKET_CONFIGURATION": {
+          "$ref": "#/definitions/ROC",
+          "description": "Rocket Configuration Details",
+          "x-flatbuffer-type": "ROC"
+        },
+        "MISSION_NAME": {
+          "type": "string",
+          "description": "Mission Name",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSION_DESCRIPTION": {
+          "type": "string",
+          "description": "Description of the Mission",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSION_TYPE": {
+          "type": "string",
+          "description": "Type of the Mission (e.g., Test Flight, Satellite Deployment)",
+          "x-flatbuffer-type": "string"
+        },
+        "ORBIT_TYPE": {
+          "type": "string",
+          "description": "Target Orbit Type (e.g., LEO, GEO)",
+          "x-flatbuffer-type": "string"
+        },
+        "WEATHER_CONDITIONS": {
+          "type": "string",
+          "description": "Weather and Environmental Conditions at Launch",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_STATUS": {
+          "type": "string",
+          "description": "Launch Outcome and Status (e.g., Successful, Failed)",
+          "x-flatbuffer-type": "string"
+        },
+        "WEBCAST_URL": {
+          "type": "string",
+          "description": "Webcast URL for the Launch",
+          "x-flatbuffer-type": "string"
+        },
+        "MEDIA_LINKS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Media Links Related to the Launch",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EARLIEST_LAUNCH_TIMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Earliest Possible Launch Times",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LATEST_LAUNCH_TIMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Latest Possible Launch Times",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LCOLA_WINDOW_CLOSURES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Launch Collision Avoidance Information",
+          "x-flatbuffer-type": "[string]"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CAT"
+          },
+          "description": "Payload Information (Catalog Entities)",
+          "x-flatbuffer-type": "[CAT]"
+        },
+        "TRACKING_REQUIREMENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tracking and Collision Avoidance Requirements",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COLA_SCREEN_DURATION": {
+          "type": "string",
+          "description": "Duration of Collision Avoidance Screen (in Seconds)",
+          "x-flatbuffer-type": "string"
+        },
+        "PROBABILITY_OF_COLLISION_THRESHOLD": {
+          "type": "string",
+          "description": "Probability of Collision Threshold (Percentage)",
+          "x-flatbuffer-type": "string"
+        },
+        "COLA_RUNS_REQUIRED": {
+          "type": "string",
+          "description": "Number of Required Collision Avoidance Runs",
+          "x-flatbuffer-type": "string"
+        },
+        "COLA_POINTS_OF_CONTACT": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EPM"
+          },
+          "description": "Points of Contact for Collision Avoidance",
+          "x-flatbuffer-type": "[EPM]"
+        },
+        "ORBITAL_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Orbital Parameters of the Launch",
+          "x-flatbuffer-type": "[string]"
+        },
+        "BURN_OUT_VECTORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BOV"
+          },
+          "description": "Burn Out Vectors for the Launch",
+          "x-flatbuffer-type": "[BOV]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LDM",
+  "x-flatbuffer-root-type": "LDM",
+  "x-flatbuffer-file-identifier": "$LDM"
+}
