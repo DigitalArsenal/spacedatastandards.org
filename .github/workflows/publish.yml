@@ -680,7 +680,7 @@ jobs:
 
           go 1.21
 
-          require github.com/google/flatbuffers/go v23.3.3+incompatible
+          require github.com/google/flatbuffers v25.12.19+incompatible
           EOF
 
       - name: Create and push Go module tag
