@@ -79,6 +79,9 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     if: |
       github.event_name == 'release' ||
       contains(inputs.packages, 'npm') ||
@@ -102,9 +105,7 @@ jobs:
         run: npm ci
 
       - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
 
   # ============================================
   # GitHub Packages (npm)
