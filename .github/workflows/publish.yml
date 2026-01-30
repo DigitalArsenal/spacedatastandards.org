@@ -686,10 +686,11 @@ jobs:
       - name: Create and push Go module tag
         run: |
           VERSION="v${{ needs.build.outputs.version }}"
+          git checkout main
           git add lib/go/
           git commit -m "chore: Update Go module to ${VERSION}" || true
-          git tag "lib/go/${VERSION}"
-          git push origin "lib/go/${VERSION}"
+          git tag -f "lib/go/${VERSION}"
+          git push origin main "lib/go/${VERSION}" --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -749,9 +750,9 @@ jobs:
       - name: Commit and tag for Packagist
         run: |
           VERSION="v${{ needs.build.outputs.version }}"
+          git checkout main
           git add lib/php/
           git commit -m "chore: Update PHP package to ${VERSION}" || true
-          # Packagist reads from main repo tags
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
