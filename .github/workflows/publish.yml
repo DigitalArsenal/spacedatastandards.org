@@ -43,6 +43,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Install Python dependencies
+        run: pip install flatbuffers
+
       - name: Install dependencies
         run: npm ci
 
