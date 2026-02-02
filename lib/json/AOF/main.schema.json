@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AOF" : {
+      "type" : "object",
+      "description" : "AOS Transfer Frame (CCSDS 732.0-B-3)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Transfer frame version"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft identifier"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel identifier"
+              },
+        "VIRTUAL_FRAME_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Virtual channel frame count"
+              },
+        "REPLAY_FLAG" : {
+                "type" : "boolean",
+                "description" : "Replay flag"
+              },
+        "VC_FRAME_COUNT_USAGE" : {
+                "type" : "boolean",
+                "description" : "VC frame count usage flag"
+              },
+        "VC_FRAME_COUNT_CYCLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "VC frame count cycle"
+              },
+        "INSERT_ZONE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Insert zone"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data field"
+              },
+        "OCF" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Operational control field"
+              },
+        "FECF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame error control field"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AOF"
+}

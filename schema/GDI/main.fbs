@@ -1,0 +1,29 @@
+// Hash: 6bf101bb9d71a9b451270963c30cef924c63add49d8f14fe2856cf2e037d7815
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Ground Imagery
+table GDI {
+  ID:string;
+  ID_SENSOR:string;
+  IMAGE_TIME:string;
+  FILENAME:string;
+  REGION:string;
+  REGION_TEXT:string;
+  REGION_GEO_JSON:string;
+  REGION_TYPE:string;
+  REGION_NDIMS:int;
+  REGION_SRID:int;
+  ORIG_SENSOR_ID:string;
+  SUBJECT_ID:string;
+  NAME:string;
+  TRANSACTION_ID:string;
+  TAGS:[string];
+  KEYWORDS:[string];
+  NOTES:string;
+  FORMAT:string;
+  FILESIZE:long;
+  CHECKSUM_VALUE:string;
+}
+
+root_type GDI;
+file_identifier "$GDI";

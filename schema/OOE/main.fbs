@@ -1,0 +1,56 @@
+// Hash: 52a8a82dbbc7b8e1f48b8bc7d36cf9179e0a99186a796a63832d3045f7a50bb2
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Event
+table OOE {
+  ID:string;
+  DERIVED_FROM:string;
+  DECLASSIFICATION_DATE:string;
+  DECLASSIFICATION_STRING:string;
+  SAT_NO:int;
+  ORIG_OBJECT_ID:string;
+  EVENT_TIME:string;
+  EVENT_TIME_NOTES:string;
+  OPERATOR_ORG_ID:string;
+  OWNER_ORG_ID:string;
+  LESSEE_ORG_ID:string;
+  OPERATED_ON_BEHALF_OF_ORG_ID:string;
+  GEO_POSITION:double;
+  PLANE_SLOT:string;
+  PLANE_NUMBER:string;
+  POSITION_STATUS:string;
+  UNTIL_TIME:string;
+  OFFICIAL_LOSS_DATE:string;
+  NET_AMOUNT:double;
+  UNDERLYING_CAUSE:string;
+  CAPABILITY_LOSS:double;
+  CAPACITY_LOSS:double;
+  INSURANCE_LOSS:double;
+  THIRD_PARTY_INSURANCE_LOSS:double;
+  INJURED:int;
+  KILLED:int;
+  LIFE_LOST:double;
+  AGE_AT_EVENT:double;
+  ACHIEVED_FLIGHT_PHASE:string;
+  OCCURRENCE_FLIGHT_PHASE:string;
+  STAGE_AT_FAULT:string;
+  EQUIPMENT_AT_FAULT:string;
+  EQUIPMENT_TYPE_AT_FAULT:string;
+  EQUIPMENT_PART_AT_FAULT:string;
+  CONSEQUENTIAL_EQUIPMENT_FAILURE:string;
+  INCLINED:bool;
+  DESCRIPTION:string;
+  REMARKS:string;
+  INSURANCE_LOSS_NOTES:string;
+  CAPABILITY_LOSS_NOTES:string;
+  INSURANCE_CARRIED_NOTES:string;
+  EQUIPMENT_CAUSING_LOSS_NOTES:string;
+  EVENT_TYPE:string;
+  EVENT_RESULT:string;
+  OBJECT_STATUS:string;
+  SATELLITE_POSITION:string;
+  ON_ORBIT:string;
+}
+
+root_type OOE;
+file_identifier "$OOE";

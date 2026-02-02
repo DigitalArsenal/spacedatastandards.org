@@ -1,0 +1,15 @@
+export declare enum AircraftType {
+    FIGHTER = 0,
+    ATTACK = 1,
+    BOMBER = 2,
+    TRANSPORT = 3,
+    TRAINER = 4,
+    RECON = 5,
+    TANKER = 6,
+    AWACS = 7,
+    UAV = 8,
+    PROP_SINGLE = 9,
+    PROP_MULTI = 10,
+    SEAPLANE = 11
+}
+//# sourceMappingURL=AircraftType.d.ts.map

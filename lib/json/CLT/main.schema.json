@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cltuPduType" : {
+      "type" : "string",
+      "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_DATA_INVOCATION", "TRANSFER_DATA_RETURN", "PEER_ABORT"]
+    },
+    "CLT" : {
+      "type" : "object",
+      "description" : "Command Link Transmission Unit Service (CCSDS 912.3-B-2)",
+      "properties" : {
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/cltuPduType",
+                "description" : "PDU type"
+              },
+        "INITIATOR_ID" : {
+                "type" : "string",
+                "description" : "Initiator identifier"
+              },
+        "RESPONDER_PORT_ID" : {
+                "type" : "string",
+                "description" : "Responder port identifier"
+              },
+        "SERVICE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Service type"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Version number"
+              },
+        "INVOKE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Invoke ID"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "CLTU data"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CLT"
+}

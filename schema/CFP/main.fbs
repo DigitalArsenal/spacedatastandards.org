@@ -1,0 +1,49 @@
+// Hash: 5bae876830108ca1bbc7b2496865c81b86cd1687717a5151b88c9ce3af8f7f39
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum pduType : byte {
+  FILE_DIRECTIVE,
+  FILE_DATA
+}
+
+enum transmissionMode : byte {
+  ACKNOWLEDGED,
+  UNACKNOWLEDGED
+}
+
+/// CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)
+table CFP {
+  /// PDU version
+  VERSION:ubyte;
+  /// PDU type
+  PDU_TYPE:pduType;
+  /// Direction (toward receiver or sender)
+  DIRECTION:ubyte;
+  /// Transmission mode
+  TRANSMISSION_MODE:transmissionMode;
+  /// CRC present flag
+  CRC_FLAG:bool;
+  /// Large file flag
+  LARGE_FILE_FLAG:bool;
+  /// Data field length
+  DATA_FIELD_LENGTH:ushort;
+  /// Source entity ID
+  SOURCE_ENTITY_ID:ulong;
+  /// Transaction sequence number
+  TRANSACTION_SEQ_NUM:ulong;
+  /// Destination entity ID
+  DESTINATION_ENTITY_ID:ulong;
+  /// File checksum type
+  CHECKSUM_TYPE:ubyte;
+  /// File size
+  FILE_SIZE:ulong;
+  /// Source filename
+  SOURCE_FILENAME:string;
+  /// Destination filename
+  DESTINATION_FILENAME:string;
+  /// PDU data
+  DATA:[ubyte];
+}
+
+root_type CFP;
+file_identifier "$CFP";

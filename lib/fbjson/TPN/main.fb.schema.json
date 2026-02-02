@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TPN": {
+      "type": "object",
+      "description": "Transponder",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TTF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SYMBOL_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FEC": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "MODULATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANNELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TPN",
+  "x-flatbuffer-root-type": "TPN",
+  "x-flatbuffer-file-identifier": "$TPN"
+}

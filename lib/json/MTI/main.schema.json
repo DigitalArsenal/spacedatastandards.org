@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MTI" : {
+      "type" : "object",
+      "description" : "Moving Target Indicator",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "P3" : {
+                "type" : "string"
+              },
+        "P6" : {
+                "type" : "string"
+              },
+        "P7" : {
+                "type" : "string"
+              },
+        "P8" : {
+                "type" : "string"
+              },
+        "P9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "P10" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MISSIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DWELLS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "HRRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "JOB_DEFS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FREE_TEXTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "PLATFORM_LOCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "JOB_REQUESTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MTI"
+}

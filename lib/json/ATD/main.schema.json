@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ATD" : {
+      "type" : "object",
+      "description" : "Attitude Data Point",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "AS_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "MOTION_TYPE" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              },
+        "Q1_DOT" : {
+                "type" : "number"
+              },
+        "Q2_DOT" : {
+                "type" : "number"
+              },
+        "Q3_DOT" : {
+                "type" : "number"
+              },
+        "QC_DOT" : {
+                "type" : "number"
+              },
+        "X_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Y_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Z_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "X_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Y_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Z_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "DECLINATION" : {
+                "type" : "number"
+              },
+        "CONING_ANGLE" : {
+                "type" : "number"
+              },
+        "PREC_PERIOD" : {
+                "type" : "number"
+              },
+        "SPIN_PERIOD" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ATD"
+}

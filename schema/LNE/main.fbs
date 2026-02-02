@@ -1,0 +1,22 @@
+// Hash: 0809f8a08fdb75405a5ddab885758b455241caab8bcfbd0a1ec64771b3a07db2
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Launch Event
+table LNE {
+  ID:string;
+  ORIG_OBJECT_ID:string;
+  DERIVED_FROM:string;
+  DECLASSIFICATION_DATE:string;
+  DECLASSIFICATION_STRING:string;
+  MSG_CREATE_DATE:string;
+  LAUNCH_FAILURE_CODE:string;
+  LAUNCH_DATE:string;
+  BE_NUMBER:string;
+  O_SUFFIX:string;
+  LAUNCH_FACILITY_NAME:string;
+  ON_ORBIT:string;
+  SAT_NO:int;
+}
+
+root_type LNE;
+file_identifier "$LNE";

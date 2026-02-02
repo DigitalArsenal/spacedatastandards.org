@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GDI" : {
+      "type" : "object",
+      "description" : "Ground Imagery",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "IMAGE_TIME" : {
+                "type" : "string"
+              },
+        "FILENAME" : {
+                "type" : "string"
+              },
+        "REGION" : {
+                "type" : "string"
+              },
+        "REGION_TEXT" : {
+                "type" : "string"
+              },
+        "REGION_GEO_JSON" : {
+                "type" : "string"
+              },
+        "REGION_TYPE" : {
+                "type" : "string"
+              },
+        "REGION_NDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "REGION_SRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SUBJECT_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "KEYWORDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOTES" : {
+                "type" : "string"
+              },
+        "FORMAT" : {
+                "type" : "string"
+              },
+        "FILESIZE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "CHECKSUM_VALUE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GDI"
+}

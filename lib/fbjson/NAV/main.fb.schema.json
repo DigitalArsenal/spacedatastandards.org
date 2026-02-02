@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "VesselType": {
+      "type": "string",
+      "enum": [
+        "CARRIER",
+        "BATTLESHIP",
+        "CRUISER",
+        "DESTROYER",
+        "FRIGATE",
+        "CORVETTE",
+        "PATROL",
+        "SUBMARINE_SSN",
+        "SUBMARINE_SSBN",
+        "SUBMARINE_SSK",
+        "AMPHIBIOUS",
+        "CARGO",
+        "TANKER",
+        "AUXILIARY",
+        "FAST_ATTACK",
+        "TORPEDO_BOAT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CARRIER": {
+          "value": 0
+        },
+        "BATTLESHIP": {
+          "value": 1
+        },
+        "CRUISER": {
+          "value": 2
+        },
+        "DESTROYER": {
+          "value": 3
+        },
+        "FRIGATE": {
+          "value": 4
+        },
+        "CORVETTE": {
+          "value": 5
+        },
+        "PATROL": {
+          "value": 6
+        },
+        "SUBMARINE_SSN": {
+          "value": 7
+        },
+        "SUBMARINE_SSBN": {
+          "value": 8
+        },
+        "SUBMARINE_SSK": {
+          "value": 9
+        },
+        "AMPHIBIOUS": {
+          "value": 10
+        },
+        "CARGO": {
+          "value": 11
+        },
+        "TANKER": {
+          "value": 12
+        },
+        "AUXILIARY": {
+          "value": 13
+        },
+        "FAST_ATTACK": {
+          "value": 14
+        },
+        "TORPEDO_BOAT": {
+          "value": 15
+        }
+      }
+    },
+    "PropulsionType": {
+      "type": "string",
+      "enum": [
+        "STEAM",
+        "GAS_TURBINE",
+        "DIESEL",
+        "DIESEL_ELECTRIC",
+        "NUCLEAR",
+        "CODAG",
+        "COGAG",
+        "CODLAG",
+        "AIP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STEAM": {
+          "value": 0
+        },
+        "GAS_TURBINE": {
+          "value": 1
+        },
+        "DIESEL": {
+          "value": 2
+        },
+        "DIESEL_ELECTRIC": {
+          "value": 3
+        },
+        "NUCLEAR": {
+          "value": 4
+        },
+        "CODAG": {
+          "value": 5
+        },
+        "COGAG": {
+          "value": 6
+        },
+        "CODLAG": {
+          "value": 7
+        },
+        "AIP": {
+          "value": 8
+        }
+      }
+    },
+    "DCState": {
+      "type": "string",
+      "enum": [
+        "NORMAL",
+        "MINOR_DAMAGE",
+        "MODERATE_DAMAGE",
+        "SEVERE_DAMAGE",
+        "CRITICAL",
+        "SINKING",
+        "ABANDONED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NORMAL": {
+          "value": 0
+        },
+        "MINOR_DAMAGE": {
+          "value": 1
+        },
+        "MODERATE_DAMAGE": {
+          "value": 2
+        },
+        "SEVERE_DAMAGE": {
+          "value": 3
+        },
+        "CRITICAL": {
+          "value": 4
+        },
+        "SINKING": {
+          "value": 5
+        },
+        "ABANDONED": {
+          "value": 6
+        }
+      }
+    },
+    "NAV": {
+      "type": "object",
+      "description": "Naval Vessels",
+      "properties": {
+        "POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SPEED_KNOTS": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "HEADING": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "COURSE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RUDDER_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "HULL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPULSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_STATE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FIRES_ACTIVE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLOODING_ACTIVE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "CREW_CASUALTIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "HULL_INTEGRITY": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "POWER_AVAILABLE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "WEAPONS_ONLINE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SENSORS_ONLINE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "FUEL_REMAINING": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "AMMO_MAIN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "MISSILES_REMAINING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TORPEDOES_REMAINING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "VESSEL_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PROPULSION_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/NAV",
+  "x-flatbuffer-root-type": "NAV",
+  "x-flatbuffer-file-identifier": "$NAV"
+}

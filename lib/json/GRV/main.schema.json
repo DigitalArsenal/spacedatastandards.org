@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GravityModelType" : {
+      "type" : "string",
+      "enum": ["POINT_MASS", "J2_ONLY", "J2_J4", "J2_J6", "SPHERICAL_HARMONICS", "CUSTOM"]
+    },
+    "GravityModelName" : {
+      "type" : "string",
+      "enum": ["WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL"]
+    },
+    "CentralBody" : {
+      "type" : "string",
+      "enum": ["EARTH", "MOON", "SUN", "MARS", "JUPITER", "SATURN", "VENUS", "MERCURY", "CUSTOM_BODY"]
+    },
+    "GRV" : {
+      "type" : "object",
+      "description" : "Gravity Models",
+      "properties" : {
+        "MODEL_TYPE" : {
+                "$ref" : "#/definitions/GravityModelType"
+              },
+        "MODEL_NAME" : {
+                "$ref" : "#/definitions/GravityModelName"
+              },
+        "CENTRAL_BODY" : {
+                "$ref" : "#/definitions/CentralBody"
+              },
+        "MAX_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MAX_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "INCLUDE_SUN" : {
+                "type" : "boolean"
+              },
+        "INCLUDE_MOON" : {
+                "type" : "boolean"
+              },
+        "INCLUDE_PLANETS" : {
+                "type" : "boolean"
+              },
+        "SOLID_TIDES" : {
+                "type" : "boolean"
+              },
+        "OCEAN_TIDES" : {
+                "type" : "boolean"
+              },
+        "POLE_TIDES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GRV"
+}

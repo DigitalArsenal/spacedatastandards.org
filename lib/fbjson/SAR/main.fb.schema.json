@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SAR": {
+      "type": "object",
+      "description": "SAR Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_END": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CENTER_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTION_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTION_END": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DWELL_TIME": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ORBIT_STATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAR_MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATING_BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATING_FREQ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SNR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TX_POLARIZATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RX_POLARIZATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GRAZE_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INCIDENCE_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SQUINT_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PULSE_BANDWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PULSE_DURATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CONTINUOUS_SPOT_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SLANT_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NEAR_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FAR_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SWATH_LENGTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AREA": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATEXT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AGJSON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ANDIMS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ASRID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SPACING_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SPACING_AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LOOKS_AZIMUTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "LOOKS_RANGE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "RESOLUTION_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RESOLUTION_AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OB_DIRECTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COORD_SYS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGETPOSX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGETPOSY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGETPOSZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLAT_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLON_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLAT_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLON_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SAR",
+  "x-flatbuffer-root-type": "SAR",
+  "x-flatbuffer-file-identifier": "$SAR"
+}

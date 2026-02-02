@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OPM": {
+      "type": "object",
+      "description": "Orbit Parameter Message",
+      "properties": {
+        "CCSDS_OPM_VERS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRUE_ANOMALY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OPM",
+  "x-flatbuffer-root-type": "OPM",
+  "x-flatbuffer-file-identifier": "$OPM"
+}

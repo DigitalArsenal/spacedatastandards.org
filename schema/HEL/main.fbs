@@ -1,0 +1,47 @@
+// Hash: d19175c58d254d4c35255fcf6464216bf25df63e6fe5215e3bc38937dad642b1
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum RotorType : byte {
+  MAIN = 0,           // Main rotor
+  TAIL = 1,           // Anti-torque tail rotor
+  TANDEM_FRONT = 2,   // Tandem front rotor
+  TANDEM_REAR = 3,    // Tandem rear rotor
+  COAXIAL_UPPER = 4,  // Coaxial upper rotor
+  COAXIAL_LOWER = 5,  // Coaxial lower rotor
+}
+
+enum RotorFlags : byte {
+  NORMAL = 0,
+  VRS_WARNING = 1,    // Vortex Ring State warning
+  VRS_ACTIVE = 2,     // In VRS
+  RBS_WARNING = 3,    // Retreating Blade Stall warning
+  RBS_ACTIVE = 4,     // In RBS
+  OVERSPEED = 5,      // Rotor overspeed
+  UNDERSPEED = 6,     // Rotor underspeed
+}
+
+/// Helicopter Dynamics
+table HEL {
+  POSITION_X:double;
+  POSITION_Y:double;
+  POSITION_Z:double;
+  VELOCITY_X:double;
+  VELOCITY_Y:double;
+  VELOCITY_Z:double;
+  QUAT_W:double;
+  QUAT_X:double;
+  QUAT_Y:double;
+  QUAT_Z:double;
+  OMEGA_BODY_X:double;
+  OMEGA_BODY_Y:double;
+  OMEGA_BODY_Z:double;
+  MAIN_ROTOR:string;
+  TAIL_ROTOR:string;
+  ENGINE_N1:double;
+  ENGINE_TORQUE:double;
+  FLAGS:uint;
+  FUEL_REMAINING:float;
+}
+
+root_type HEL;
+file_identifier "$HEL";

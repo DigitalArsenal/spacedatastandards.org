@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SDL": {
+      "type": "object",
+      "description": "Space Data Link Security (CCSDS 355.0-B-1)",
+      "properties": {
+        "SPI": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Security Parameter Index",
+          "x-flatbuffer-type": "ushort"
+        },
+        "IV_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Initialization vector length in bytes",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "IV": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Initialization vector",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "MAC_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "MAC length in bytes",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MAC": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Message authentication code",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PAD_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Pad length",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PAYLOAD": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Security payload",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SDL",
+  "x-flatbuffer-root-type": "SDL",
+  "x-flatbuffer-file-identifier": "$SDL"
+}

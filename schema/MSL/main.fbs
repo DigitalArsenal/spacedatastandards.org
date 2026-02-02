@@ -1,0 +1,111 @@
+// Hash: 8ce941f915fbd11b2725bce6c972072b288f7f4945c8e4c7117e9d584ac1a84c
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum MissileType : byte {
+  AAM_IR = 0,         // Air-to-air infrared
+  AAM_SARH = 1,       // Air-to-air semi-active radar
+  AAM_ARH = 2,        // Air-to-air active radar
+  SAM_IR = 3,         // Surface-to-air IR
+  SAM_SARH = 4,       // Surface-to-air SARH
+  SAM_COMMAND = 5,    // Surface-to-air command guided
+  ASM_AR = 6,         // Air-to-surface anti-radiation
+  ASM_TV = 7,         // Air-to-surface TV guided
+  ASM_LASER = 8,      // Air-to-surface laser guided
+  ATGM_SACLOS = 9,    // Anti-tank SACLOS
+  ATGM_BEAM = 10,     // Anti-tank beam riding
+  ATGM_TOP = 11,      // Anti-tank top attack
+  CRUISE = 12,        // Cruise missile
+  BALLISTIC = 13,     // Ballistic missile
+  TORPEDO = 14,       // Torpedo
+}
+
+enum SeekerType : byte {
+  NONE = 0,
+  IR_UNCOOLED = 1,    // Uncooled IR (early gen)
+  IR_COOLED = 2,      // Cooled IR (all-aspect)
+  IR_IMAGING = 3,     // Imaging IR
+  IR_2COLOR = 4,      // Two-color IR (IRCCM)
+  RADAR_SARH = 5,     // Semi-active radar homing
+  RADAR_ARH = 6,      // Active radar homing
+  RADAR_PASSIVE = 7,  // Anti-radiation (passive)
+  TV_OPTICAL = 8,     // TV/optical
+  LASER_SH = 9,       // Laser semi-active
+  GPS_INS = 10,       // GPS/INS (no terminal)
+  ACOUSTIC = 11,      // Acoustic (torpedo)
+  WIRE = 12,          // Wire guided
+}
+
+enum GuidanceLaw : byte {
+  NONE = 0,
+  PURE_PURSUIT = 1,       // Direct pursuit
+  LEAD_PURSUIT = 2,       // Lead angle pursuit
+  PROPORTIONAL_NAV = 3,   // Proportional navigation
+  AUGMENTED_PN = 4,       // Augmented proportional nav
+  OPTIMAL_GUIDANCE = 5,   // Optimal guidance law
+  COMMAND_LOS = 6,        // Command to line of sight
+  BEAM_RIDING = 7,        // Beam riding
+  TVM = 8,                // Track via missile
+  LOFT = 9,               // Lofted trajectory
+  TERRAIN_FOLLOW = 10,    // Terrain following
+}
+
+enum MissilePhase : byte {
+  CAPTIVE = 0,        // On rail/launcher
+  LAUNCH = 1,         // Just launched
+  BOOST = 2,          // Boost phase
+  SUSTAIN = 3,        // Sustain phase
+  COAST = 4,          // Coasting (motor burnout)
+  TERMINAL = 5,       // Terminal guidance
+  INTERCEPT = 6,      // Intercept/impact
+  MISS = 7,           // Missed target
+  SELF_DESTRUCT = 8,  // Self-destructed
+}
+
+enum SeekerStatus : byte {
+  OFF = 0,
+  CAGED = 1,          // Slaved to boresight
+  UNCAGED = 2,        // Free to track
+  ACQUIRING = 3,      // Searching for target
+  TRACKING = 4,       // Locked on target
+  MEMORY = 5,         // Lost lock, using memory
+  JAMMED = 6,         // Jammed by countermeasures
+}
+
+/// Guided Missiles
+table MSL {
+  POSITION_X:double;
+  POSITION_Y:double;
+  POSITION_Z:double;
+  VELOCITY_X:double;
+  VELOCITY_Y:double;
+  VELOCITY_Z:double;
+  ATTITUDE_X:double;
+  ATTITUDE_Y:double;
+  ATTITUDE_Z:double;
+  ATTITUDE_W:double;
+  OMEGA_X:double;
+  OMEGA_Y:double;
+  OMEGA_Z:double;
+  MASS:double;
+  MASS_INITIAL:double;
+  TARGET_POSITION_X:double;
+  TARGET_POSITION_Y:double;
+  TARGET_POSITION_Z:double;
+  TARGET_VELOCITY_X:double;
+  TARGET_VELOCITY_Y:double;
+  TARGET_VELOCITY_Z:double;
+  MISS_DISTANCE:double;
+  SEEKER:string;
+  MOTOR:string;
+  GUIDANCE_CMD:string;
+  PHASE:ubyte;
+  GUIDANCE_LAW:ubyte;
+  TYPE:ubyte;
+  ARMED:ubyte;
+  TIME_OF_FLIGHT:float;
+  MAX_G:float;
+  RESERVED:[uint8];
+}
+
+root_type MSL;
+file_identifier "$MSL";

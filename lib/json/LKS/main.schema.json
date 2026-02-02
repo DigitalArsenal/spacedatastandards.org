@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LKS" : {
+      "type" : "object",
+      "description" : "Link Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ON_ORBIT1" : {
+                "type" : "string"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string"
+              },
+        "CONSTELLATION" : {
+                "type" : "string"
+              },
+        "LINK_NAME" : {
+                "type" : "string"
+              },
+        "LINK_TYPE" : {
+                "type" : "string"
+              },
+        "BAND" : {
+                "type" : "string"
+              },
+        "ID_BEAM1" : {
+                "type" : "string"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number"
+              },
+        "ID_BEAM2" : {
+                "type" : "string"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number"
+              },
+        "LINK_STATE" : {
+                "type" : "string"
+              },
+        "SYS_CAP" : {
+                "type" : "string"
+              },
+        "OPS_CAP" : {
+                "type" : "string"
+              },
+        "SAT_NO1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SAT_NO2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LKS"
+}

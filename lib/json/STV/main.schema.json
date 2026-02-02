@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "STVReferenceFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ITRF", "EME2000", "TEME", "ICRF", "MOON_CI", "MARS_CI"]
+    },
+    "STV" : {
+      "type" : "object",
+      "description" : "State Vector",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "number"
+              },
+        "POS_X" : {
+                "type" : "number"
+              },
+        "POS_Y" : {
+                "type" : "number"
+              },
+        "POS_Z" : {
+                "type" : "number"
+              },
+        "VEL_X" : {
+                "type" : "number"
+              },
+        "VEL_Y" : {
+                "type" : "number"
+              },
+        "VEL_Z" : {
+                "type" : "number"
+              },
+        "REF_FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/STV"
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GEO" : {
+      "type" : "object",
+      "description" : "GEO Spacecraft Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SS" : {
+                "type" : "number"
+              },
+        "SC" : {
+                "type" : "number"
+              },
+        "RELATIVE_ENERGY" : {
+                "type" : "number"
+              },
+        "LONGITUDE_RATE" : {
+                "type" : "number"
+              },
+        "LONGITUDE_MIN" : {
+                "type" : "number"
+              },
+        "LONGITUDE_MAX" : {
+                "type" : "number"
+              },
+        "CONFIDENCE_LEVEL" : {
+                "type" : "string"
+              },
+        "PLANE_CHANGE_STATUS" : {
+                "type" : "string"
+              },
+        "TROUGH_TYPE" : {
+                "type" : "string"
+              },
+        "LOST_FLAG" : {
+                "type" : "boolean"
+              },
+        "SEMI_ANNUAL_CORR_FLAG" : {
+                "type" : "boolean"
+              },
+        "OBJECT_STATUS" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GEO"
+}

@@ -1,0 +1,44 @@
+// Hash: ff3aef29252ed39a04ec890473c56369c070e67399b7e90191fc1f963d805deb
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Difference of Arrival
+table DOA {
+  ID:string;
+  OB_TIME:string;
+  ID_SENSOR1:string;
+  ID_SENSOR2:string;
+  SAT_NO:int;
+  TASK_ID:string;
+  ORIG_OBJECT_ID:string;
+  ORIG_SENSOR_ID1:string;
+  ORIG_SENSOR_ID2:string;
+  UCT:bool;
+  SENSOR1_DELAY:double;
+  SENSOR2_DELAY:double;
+  SENLAT:double;
+  SENLON:double;
+  SENALT:double;
+  SEN2LAT:double;
+  SEN2LON:double;
+  SEN2ALT:double;
+  FREQUENCY:double;
+  BANDWIDTH:double;
+  DELTA_RANGE:double;
+  DELTA_RANGE_UNC:double;
+  DELTA_RANGE_RATE:double;
+  DELTA_RANGE_RATE_UNC:double;
+  SNR:double;
+  TDOA:double;
+  TDOA_UNC:double;
+  FDOA:double;
+  FDOA_UNC:double;
+  COLLECTION_MODE:string;
+  RAW_FILE_URI:string;
+  TAGS:[string];
+  ON_ORBIT:string;
+  DESCRIPTOR:string;
+  TRANSACTION_ID:string;
+}
+
+root_type DOA;
+file_identifier "$DOA";

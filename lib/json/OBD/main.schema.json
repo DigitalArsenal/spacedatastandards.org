@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OBD" : {
+      "type" : "object",
+      "description" : "Orbit Determination Results",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "APRIORI_ID_ELSET" : {
+                "type" : "string"
+              },
+        "APRIORI_ELSET" : {
+                "type" : "string"
+              },
+        "APRIORI_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "APRIORI_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "INITIAL_OD" : {
+                "type" : "boolean"
+              },
+        "LAST_OB_START" : {
+                "type" : "string"
+              },
+        "LAST_OB_END" : {
+                "type" : "string"
+              },
+        "TIME_SPAN" : {
+                "type" : "number"
+              },
+        "EFFECTIVE_FROM" : {
+                "type" : "string"
+              },
+        "EFFECTIVE_UNTIL" : {
+                "type" : "string"
+              },
+        "WRMS" : {
+                "type" : "number"
+              },
+        "PREVIOUS_WRMS" : {
+                "type" : "number"
+              },
+        "FIRST_PASS_WRMS" : {
+                "type" : "number"
+              },
+        "BEST_PASS_WRMS" : {
+                "type" : "number"
+              },
+        "ERROR_GROWTH_RATE" : {
+                "type" : "number"
+              },
+        "EDR" : {
+                "type" : "number"
+              },
+        "METHOD" : {
+                "type" : "string"
+              },
+        "METHOD_SOURCE" : {
+                "type" : "string"
+              },
+        "FIT_SPAN" : {
+                "type" : "number"
+              },
+        "BALLISTIC_COEFF_EST" : {
+                "type" : "boolean"
+              },
+        "BALLISTIC_COEFF_MODEL" : {
+                "type" : "string"
+              },
+        "AGOM_EST" : {
+                "type" : "boolean"
+              },
+        "AGOM_MODEL" : {
+                "type" : "string"
+              },
+        "RMS_CONVERGENCE_CRITERIA" : {
+                "type" : "number"
+              },
+        "NUM_ITERATIONS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ACCEPTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ACCEPTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REJECTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REJECTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SENSOR_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OBD"
+}

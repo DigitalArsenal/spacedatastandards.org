@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "WeaponType": {
+      "type": "string",
+      "enum": [
+        "MG_SMALL",
+        "MG_HEAVY",
+        "AUTOCANNON",
+        "CANNON",
+        "TANK_GUN",
+        "ARTILLERY",
+        "MORTAR",
+        "ROCKET_UNGUIDED",
+        "BOMB_DUMB",
+        "BOMB_GUIDED",
+        "TORPEDO",
+        "DEPTH_CHARGE",
+        "MINE",
+        "GRENADE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MG_SMALL": {
+          "value": 0
+        },
+        "MG_HEAVY": {
+          "value": 1
+        },
+        "AUTOCANNON": {
+          "value": 2
+        },
+        "CANNON": {
+          "value": 3
+        },
+        "TANK_GUN": {
+          "value": 4
+        },
+        "ARTILLERY": {
+          "value": 5
+        },
+        "MORTAR": {
+          "value": 6
+        },
+        "ROCKET_UNGUIDED": {
+          "value": 7
+        },
+        "BOMB_DUMB": {
+          "value": 8
+        },
+        "BOMB_GUIDED": {
+          "value": 9
+        },
+        "TORPEDO": {
+          "value": 10
+        },
+        "DEPTH_CHARGE": {
+          "value": 11
+        },
+        "MINE": {
+          "value": 12
+        },
+        "GRENADE": {
+          "value": 13
+        }
+      }
+    },
+    "FuzeType": {
+      "type": "string",
+      "enum": [
+        "CONTACT",
+        "DELAY",
+        "TIMED",
+        "PROXIMITY",
+        "AIRBURST",
+        "MAGNETIC",
+        "PRESSURE",
+        "SEISMIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CONTACT": {
+          "value": 0
+        },
+        "DELAY": {
+          "value": 1
+        },
+        "TIMED": {
+          "value": 2
+        },
+        "PROXIMITY": {
+          "value": 3
+        },
+        "AIRBURST": {
+          "value": 4
+        },
+        "MAGNETIC": {
+          "value": 5
+        },
+        "PRESSURE": {
+          "value": 6
+        },
+        "SEISMIC": {
+          "value": 7
+        }
+      }
+    },
+    "ProjectilePhase": {
+      "type": "string",
+      "enum": [
+        "LOADED",
+        "IN_FLIGHT",
+        "DETONATED",
+        "DUD",
+        "IMPACT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LOADED": {
+          "value": 0
+        },
+        "IN_FLIGHT": {
+          "value": 1
+        },
+        "DETONATED": {
+          "value": 2
+        },
+        "DUD": {
+          "value": 3
+        },
+        "IMPACT": {
+          "value": 4
+        }
+      }
+    },
+    "WPN": {
+      "type": "object",
+      "description": "Weapons and Munitions",
+      "properties": {
+        "CALIBER": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MUZZLE_VELOCITY": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RATE_OF_FIRE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "DISPERSION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "AMMO_CAPACITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "BURST_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "RELOAD_TIME": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "OVERHEAT_ROUNDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "COOLDOWN_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "TRAVERSE_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "TRAVERSE_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "SLEW_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "WEAPON_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FUZE_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/WPN",
+  "x-flatbuffer-root-type": "WPN",
+  "x-flatbuffer-file-identifier": "$WPN"
+}

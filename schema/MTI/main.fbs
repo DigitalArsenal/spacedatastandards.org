@@ -1,0 +1,23 @@
+// Hash: 870d20ead9f9e3189572c4087e7de2298712e98479a56d014c54a8319ae11358
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Moving Target Indicator
+table MTI {
+  ID:string;
+  P3:string;
+  P6:string;
+  P7:string;
+  P8:string;
+  P9:int;
+  P10:int;
+  MISSIONS:[string];
+  DWELLS:[string];
+  HRRS:[string];
+  JOB_DEFS:[string];
+  FREE_TEXTS:[string];
+  PLATFORM_LOCS:[string];
+  JOB_REQUESTS:[string];
+}
+
+root_type MTI;
+file_identifier "$MTI";

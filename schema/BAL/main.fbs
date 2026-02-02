@@ -1,0 +1,71 @@
+// Hash: fa2cd0d11ca94e65b6a38e7b37bf5b9d90a6bb28061c7a694be4d74ffc211b83
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum DragModel : byte {
+  G1,                     // Standard rifle bullet,
+  G2,                     // Aberdeen J projectile,
+  G5,                     // Low base boat tail,
+  G6,                     // Flat base,
+  G7,                     // Long 7.5 deg boat tail,
+  G8,                     // Flat base w/ boat tail,
+  GI,                     // Ingalls,
+  GL,                     // Ball,
+  GS,                     // Sphere,
+  RA4,                    // Artillery,
+  CUSTOM
+}
+
+enum BallisticModel : byte {
+  POINT_MASS_2D,          // Simple 2D,
+  POINT_MASS_3D,          // 3D point mass,
+  MODIFIED_POINT_MASS,    // 4DOF with spin,
+  SIX_DOF                 // Full 6DOF
+}
+
+enum ProjectileType : byte {
+  BALL,                   // Ball/FMJ,
+  HOLLOW_POINT,           // HP,
+  BOAT_TAIL,             // BT,
+  ARMOR_PIERCING,        // AP,
+  ARMOR_PIERCING_INCENDIARY, // API,
+  TRACER,
+  SABOT,
+  SUBCALIBER,
+  HEAT,                   // High Explosive Anti-Tank,
+  HESH,                   // High Explosive Squash Head,
+  HE,                     // High Explosive,
+  APFSDS,                // Armor Piercing Fin Stabilized Discarding Sabot,
+  ARTILLERY_HE,
+  MORTAR,
+  GRENADE,
+  ROCKET
+}
+
+enum StabilizationType : byte {
+  SPIN,                   // Spin stabilized,
+  FIN,                    // Fin stabilized,
+  DUAL                    // Spin + fin (e.g., APFSDS)
+}
+
+enum PenetrationModel : byte {
+  DE_MARRE,               // Krupp/de Marre formula,
+  THOR,                   // THOR equations,
+  ODERMATT,               // Odermatt-Lanz,
+  ANDERSON,               // Anderson penetration,
+  BRL                     // Ballistic Research Lab
+}
+
+/// Ballistics
+table BAL {
+  COMMAND:string;
+  TRAJECTORY_REQUEST:string;
+  TABLE_REQUEST:string;
+  FIRE_CONTROL:string;
+  PENETRATION_PROJECTILE:string;
+  PENETRATION_ARMOR:string;
+  IMPACT_VELOCITY_MPS:double;
+  IMPACT_ANGLE_DEG:double;
+}
+
+root_type BAL;
+file_identifier "$BAL";

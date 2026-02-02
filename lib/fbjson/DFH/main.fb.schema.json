@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DFH": {
+      "type": "object",
+      "description": "GEO Drift History",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EFFECTIVE_UNTIL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DRIFT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/DFH",
+  "x-flatbuffer-root-type": "DFH",
+  "x-flatbuffer-file-identifier": "$DFH"
+}

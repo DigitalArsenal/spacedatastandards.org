@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CoordFrame": {
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "ECI_J2000",
+        "ECI_MOD",
+        "ECI_TOD",
+        "TEME",
+        "NED",
+        "ENU",
+        "BODY",
+        "MOON_CI",
+        "MOON_CF",
+        "MARS_CI",
+        "GEOCENTRIC",
+        "GEODETIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECEF": {
+          "value": 0,
+          "description": "Earth-centered frames"
+        },
+        "ECI_J2000": {
+          "value": 1
+        },
+        "ECI_MOD": {
+          "value": 2
+        },
+        "ECI_TOD": {
+          "value": 3
+        },
+        "TEME": {
+          "value": 4
+        },
+        "NED": {
+          "value": 5,
+          "description": "Local frames"
+        },
+        "ENU": {
+          "value": 6
+        },
+        "BODY": {
+          "value": 7
+        },
+        "MOON_CI": {
+          "value": 8,
+          "description": "Other bodies"
+        },
+        "MOON_CF": {
+          "value": 9
+        },
+        "MARS_CI": {
+          "value": 10
+        },
+        "GEOCENTRIC": {
+          "value": 11,
+          "description": "Specialized"
+        },
+        "GEODETIC": {
+          "value": 12
+        }
+      }
+    },
+    "Ellipsoid": {
+      "type": "string",
+      "enum": [
+        "WGS84",
+        "GRS80",
+        "WGS72",
+        "SPHERE",
+        "MOON",
+        "MARS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "WGS84": {
+          "value": 0
+        },
+        "GRS80": {
+          "value": 1
+        },
+        "WGS72": {
+          "value": 2
+        },
+        "SPHERE": {
+          "value": 3
+        },
+        "MOON": {
+          "value": 4
+        },
+        "MARS": {
+          "value": 5
+        }
+      }
+    },
+    "CRD": {
+      "type": "object",
+      "description": "Coordinate Systems",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ELLIPSOID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CRD",
+  "x-flatbuffer-root-type": "CRD",
+  "x-flatbuffer-file-identifier": "$CRD"
+}

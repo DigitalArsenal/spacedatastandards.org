@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GDI": {
+      "type": "object",
+      "description": "Ground Imagery",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILENAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION_TEXT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION_GEO_JSON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION_NDIMS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "REGION_SRID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEYWORDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILESIZE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        },
+        "CHECKSUM_VALUE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GDI",
+  "x-flatbuffer-root-type": "GDI",
+  "x-flatbuffer-file-identifier": "$GDI"
+}

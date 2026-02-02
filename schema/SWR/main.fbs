@@ -1,0 +1,23 @@
+// Hash: cf0bfcbe16efd1bf3fbb4f802cffa174a8e08bd835192737f44e474e2d0e1937
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Short-Wave Infrared
+table SWR {
+  ID:string;
+  ON_ORBIT:string;
+  TS:string;
+  SOLAR_PHASE_ANGLE:double;
+  LAT:double;
+  LON:double;
+  LOCATION_NAME:string;
+  BAD_WAVE:string;
+  WAVELENGTHS:[string];
+  ABS_FLUXES:[string];
+  RATIO_WAVELENGTHS:[string];
+  FLUX_RATIOS:[string];
+  ORIG_OBJECT_ID:string;
+  SAT_NO:int;
+}
+
+root_type SWR;
+file_identifier "$SWR";

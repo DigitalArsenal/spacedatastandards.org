@@ -1,0 +1,63 @@
+// Hash: 19b3af8418b0de6f7f747f8f0645bdc1040d7a5caba5686bbb4e9f24a61bb96a
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum AtmosphereModel : byte {
+  ISA = 0,                // International Standard Atmosphere
+  US_STD_1976 = 1,        // US Standard Atmosphere 1976
+  NRLMSISE_00 = 2,        // NRLMSISE-00 (includes space weather)
+  SIMPLE = 3,             // Simple exponential model
+  CUSTOM = 4,             // User-defined
+}
+
+enum WeatherCondition : byte {
+  CLEAR = 0,
+  FEW_CLOUDS = 1,
+  SCATTERED = 2,
+  BROKEN = 3,
+  OVERCAST = 4,
+  RAIN_LIGHT = 5,
+  RAIN_MODERATE = 6,
+  RAIN_HEAVY = 7,
+  SNOW_LIGHT = 8,
+  SNOW_MODERATE = 9,
+  SNOW_HEAVY = 10,
+  FOG = 11,
+  MIST = 12,
+  HAZE = 13,
+  THUNDERSTORM = 14,
+  SANDSTORM = 15,
+}
+
+enum TerrainType : byte {
+  OCEAN = 0,
+  WATER_FRESH = 1,
+  SAND = 2,
+  GRASS = 3,
+  FOREST = 4,
+  CONCRETE = 5,
+  ASPHALT = 6,
+  SNOW = 7,
+  ICE = 8,
+  ROCK = 9,
+  MARSH = 10,
+  URBAN = 11,
+}
+
+/// Atmosphere and Environment
+table ENV {
+  ATMOSPHERE:string;
+  WEATHER:string;
+  TIME_UTC:double;
+  LATITUDE:double;
+  LONGITUDE:double;
+  SUN_AZIMUTH:float;
+  SUN_ELEVATION:float;
+  MOON_PHASE:float;
+  ILLUMINATION:float;
+  MAGNETIC_DECLINATION:float;
+  MAGNETIC_INCLINATION:float;
+  RESERVED:[uint8];
+}
+
+root_type ENV;
+file_identifier "$ENV";

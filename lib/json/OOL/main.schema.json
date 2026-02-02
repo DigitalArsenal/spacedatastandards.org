@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOL" : {
+      "type" : "object",
+      "description" : "On-Orbit Object List",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ONORBITS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOL"
+}

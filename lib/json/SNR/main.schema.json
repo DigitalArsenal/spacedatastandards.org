@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SensorType" : {
+      "type" : "string",
+      "enum": ["RADAR_PULSE", "RADAR_DOPPLER", "RADAR_CW", "RADAR_AESA", "RADAR_PESA", "IR_SEARCH", "IR_IMAGING", "EO_TV", "EO_LLLTV", "LASER_DESIGNATOR", "LASER_RANGEFINDER", "RWR", "MAW", "SONAR_ACTIVE", "SONAR_PASSIVE", "ACOUSTIC"]
+    },
+    "SensorMode" : {
+      "type" : "string",
+      "enum": ["OFF", "STANDBY", "SEARCH", "ACQUISITION", "TRACK", "TRACK_WHILE_SCAN", "DESIGNATE", "JAMMED"]
+    },
+    "TrackQuality" : {
+      "type" : "string",
+      "enum": ["NONE", "TENTATIVE", "FIRM", "LOCKED", "COASTING", "LOST"]
+    },
+    "SNR" : {
+      "type" : "object",
+      "description" : "Sensor Systems",
+      "properties" : {
+        "TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MAX_RANGE" : {
+                "type" : "number"
+              },
+        "MIN_RANGE" : {
+                "type" : "number"
+              },
+        "FOV_AZIMUTH" : {
+                "type" : "number"
+              },
+        "FOV_ELEVATION" : {
+                "type" : "number"
+              },
+        "ANGULAR_RESOLUTION" : {
+                "type" : "number"
+              },
+        "RANGE_RESOLUTION" : {
+                "type" : "number"
+              },
+        "UPDATE_RATE" : {
+                "type" : "number"
+              },
+        "DETECTION_THRESHOLD" : {
+                "type" : "number"
+              },
+        "AZIMUTH_SCAN_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION_SCAN_RATE" : {
+                "type" : "number"
+              },
+        "POWER" : {
+                "type" : "number"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SNR"
+}

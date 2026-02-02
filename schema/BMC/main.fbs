@@ -1,0 +1,20 @@
+// Hash: 7fad9f966e4cd258c4b77313a3991252c12fc252c4e4cb7c3c029e03782550b8
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Beam Contour
+table BMC {
+  ID:string;
+  TYPE:string;
+  CONTOUR_IDX:int;
+  GAIN:double;
+  REGION_NAME:string;
+  GEOGRAPHY:string;
+  GEOGRAPHY_TEXT:string;
+  GEOGRAPHY_JSON:string;
+  GEOGRAPHY_TYPE:string;
+  GEOGRAPHY_NDIMS:int;
+  GEOGRAPHY_SRID:int;
+}
+
+root_type BMC;
+file_identifier "$BMC";

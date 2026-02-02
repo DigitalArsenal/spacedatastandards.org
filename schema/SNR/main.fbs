@@ -1,0 +1,64 @@
+// Hash: 9ec4d51a29649ca1bd414f3fd9ad64f2d79faef9619638958cdd371ccf7a8f45
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum SensorType : byte {
+  RADAR_PULSE = 0,        // Pulse radar
+  RADAR_DOPPLER = 1,      // Pulse-Doppler radar
+  RADAR_CW = 2,           // Continuous wave radar
+  RADAR_AESA = 3,         // Active electronically scanned array
+  RADAR_PESA = 4,         // Passive electronically scanned array
+  IR_SEARCH = 5,          // Infrared search & track
+  IR_IMAGING = 6,         // Imaging infrared
+  EO_TV = 7,              // Electro-optical TV
+  EO_LLLTV = 8,           // Low-light level TV
+  LASER_DESIGNATOR = 9,   // Laser target designator
+  LASER_RANGEFINDER = 10, // Laser rangefinder
+  RWR = 11,               // Radar warning receiver
+  MAW = 12,               // Missile approach warning
+  SONAR_ACTIVE = 13,      // Active sonar
+  SONAR_PASSIVE = 14,     // Passive sonar
+  ACOUSTIC = 15,          // Acoustic sensor
+}
+
+enum SensorMode : byte {
+  OFF = 0,
+  STANDBY = 1,
+  SEARCH = 2,
+  ACQUISITION = 3,
+  TRACK = 4,
+  TRACK_WHILE_SCAN = 5,
+  DESIGNATE = 6,
+  JAMMED = 7,
+}
+
+enum TrackQuality : byte {
+  NONE = 0,
+  TENTATIVE = 1,
+  FIRM = 2,
+  LOCKED = 3,
+  COASTING = 4,
+  LOST = 5,
+}
+
+/// Sensor Systems
+table SNR {
+  TYPE:ubyte;
+  MODE:ubyte;
+  RESERVED1:ushort;
+  MAX_RANGE:double;
+  MIN_RANGE:double;
+  FOV_AZIMUTH:float;
+  FOV_ELEVATION:float;
+  ANGULAR_RESOLUTION:float;
+  RANGE_RESOLUTION:float;
+  UPDATE_RATE:float;
+  DETECTION_THRESHOLD:float;
+  AZIMUTH_SCAN_RATE:float;
+  ELEVATION_SCAN_RATE:float;
+  POWER:float;
+  FREQUENCY:float;
+  RESERVED:[uint8];
+}
+
+root_type SNR;
+file_identifier "$SNR";

@@ -1,0 +1,13 @@
+// Hash: 5db69c90383740a79e731a66223eed764edf703792c04448e179e65851fb25e4
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Antenna Beam
+table BEM {
+  ID:string;
+  BEAM_NAME:string;
+  NOTES:string;
+  BEAM_CONTOURS:[string];
+}
+
+root_type BEM;
+file_identifier "$BEM";

@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOI": {
+      "type": "object",
+      "description": "Object of Interest",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_TASKING_START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_TASKING_STOP_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIORITY": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSED_OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DELTA_VS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DELTA_TS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SV_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "XVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "YVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ZVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ELSET_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN_MOTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REV_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "B_STAR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DDOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AFFECTED_OBJECTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MANIFOLDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOI",
+  "x-flatbuffer-root-type": "OOI",
+  "x-flatbuffer-file-identifier": "$OOI"
+}

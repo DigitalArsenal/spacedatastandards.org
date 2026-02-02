@@ -1,0 +1,48 @@
+// Hash: 455561a82fa328ade311f09e3fc1c4b0f97cd1c0c5f089c9959a1040418ea92b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Star Catalog Entry
+table STR {
+  ID:string;
+  CS_ID:long;
+  GNC_CAT_ID:int;
+  GAIADR3_CAT_ID:long;
+  HIP_CAT_ID:int;
+  CAT_VERSION:string;
+  RA:double;
+  RA_UNC:double;
+  DEC:double;
+  DEC_UNC:double;
+  POS_UNC_FLAG:bool;
+  PARALLAX:double;
+  PARALLAX_UNC:double;
+  PMRA:double;
+  PMRA_UNC:double;
+  PMDEC:double;
+  PMDEC_UNC:double;
+  PM_UNC_FLAG:bool;
+  ASTROMETRY_ORIGIN:string;
+  STAR_EPOCH:double;
+  GMAG:double;
+  GMAG_UNC:double;
+  BPMAG:double;
+  BPMAG_UNC:double;
+  RPMAG:double;
+  RPMAG_UNC:double;
+  JMAG:double;
+  JMAG_UNC:double;
+  KMAG:double;
+  KMAG_UNC:double;
+  HMAG:double;
+  HMAG_UNC:double;
+  VAR_FLAG:bool;
+  MULT_FLAG:bool;
+  NEIGHBOR_ID:int;
+  NEIGHBOR_FLAG:bool;
+  NEIGHBOR_DISTANCE:double;
+  SHIFT_FLAG:bool;
+  SHIFT:double;
+}
+
+root_type STR;
+file_identifier "$STR";

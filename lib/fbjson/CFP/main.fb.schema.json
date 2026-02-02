@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pduType": {
+      "type": "string",
+      "enum": [
+        "FILE_DIRECTIVE",
+        "FILE_DATA"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FILE_DIRECTIVE": {
+          "value": 0
+        },
+        "FILE_DATA": {
+          "value": 1
+        }
+      }
+    },
+    "transmissionMode": {
+      "type": "string",
+      "enum": [
+        "ACKNOWLEDGED",
+        "UNACKNOWLEDGED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACKNOWLEDGED": {
+          "value": 0
+        },
+        "UNACKNOWLEDGED": {
+          "value": 1
+        }
+      }
+    },
+    "CFP": {
+      "type": "object",
+      "description": "CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "PDU version",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PDU_TYPE": {
+          "$ref": "#/definitions/pduType",
+          "description": "PDU type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FILE_DIRECTIVE": {
+              "value": 0
+            },
+            "FILE_DATA": {
+              "value": 1
+            }
+          }
+        },
+        "DIRECTION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Direction (toward receiver or sender)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TRANSMISSION_MODE": {
+          "$ref": "#/definitions/transmissionMode",
+          "description": "Transmission mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACKNOWLEDGED": {
+              "value": 0
+            },
+            "UNACKNOWLEDGED": {
+              "value": 1
+            }
+          }
+        },
+        "CRC_FLAG": {
+          "type": "boolean",
+          "description": "CRC present flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "LARGE_FILE_FLAG": {
+          "type": "boolean",
+          "description": "Large file flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "DATA_FIELD_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Data field length",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SOURCE_ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Source entity ID",
+          "x-flatbuffer-type": "ulong"
+        },
+        "TRANSACTION_SEQ_NUM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Transaction sequence number",
+          "x-flatbuffer-type": "ulong"
+        },
+        "DESTINATION_ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Destination entity ID",
+          "x-flatbuffer-type": "ulong"
+        },
+        "CHECKSUM_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "File checksum type",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FILE_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "File size",
+          "x-flatbuffer-type": "ulong"
+        },
+        "SOURCE_FILENAME": {
+          "type": "string",
+          "description": "Source filename",
+          "x-flatbuffer-type": "string"
+        },
+        "DESTINATION_FILENAME": {
+          "type": "string",
+          "description": "Destination filename",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "PDU data",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CFP",
+  "x-flatbuffer-root-type": "CFP",
+  "x-flatbuffer-file-identifier": "$CFP"
+}

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RotorType": {
+      "type": "string",
+      "enum": [
+        "MAIN",
+        "TAIL",
+        "TANDEM_FRONT",
+        "TANDEM_REAR",
+        "COAXIAL_UPPER",
+        "COAXIAL_LOWER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MAIN": {
+          "value": 0
+        },
+        "TAIL": {
+          "value": 1
+        },
+        "TANDEM_FRONT": {
+          "value": 2
+        },
+        "TANDEM_REAR": {
+          "value": 3
+        },
+        "COAXIAL_UPPER": {
+          "value": 4
+        },
+        "COAXIAL_LOWER": {
+          "value": 5
+        }
+      }
+    },
+    "RotorFlags": {
+      "type": "string",
+      "enum": [
+        "NORMAL",
+        "VRS_WARNING",
+        "VRS_ACTIVE",
+        "RBS_WARNING",
+        "RBS_ACTIVE",
+        "OVERSPEED",
+        "UNDERSPEED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NORMAL": {
+          "value": 0
+        },
+        "VRS_WARNING": {
+          "value": 1
+        },
+        "VRS_ACTIVE": {
+          "value": 2
+        },
+        "RBS_WARNING": {
+          "value": 3
+        },
+        "RBS_ACTIVE": {
+          "value": 4
+        },
+        "OVERSPEED": {
+          "value": 5
+        },
+        "UNDERSPEED": {
+          "value": 6
+        }
+      }
+    },
+    "HEL": {
+      "type": "object",
+      "description": "Helicopter Dynamics",
+      "properties": {
+        "POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUAT_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUAT_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUAT_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUAT_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_BODY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_BODY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_BODY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAIN_ROTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAIL_ROTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENGINE_N1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ENGINE_TORQUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "FUEL_REMAINING": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/HEL",
+  "x-flatbuffer-root-type": "HEL",
+  "x-flatbuffer-file-identifier": "$HEL"
+}

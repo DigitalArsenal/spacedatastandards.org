@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OPM" : {
+      "type" : "object",
+      "description" : "Orbit Parameter Message",
+      "properties" : {
+        "CCSDS_OPM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "CENTER_NAME" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "TRUE_ANOMALY" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "GM" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number"
+              },
+        "DRAG_AREA" : {
+                "type" : "number"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OPM"
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "BMC" : {
+      "type" : "object",
+      "description" : "Beam Contour",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "CONTOUR_IDX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GAIN" : {
+                "type" : "number"
+              },
+        "REGION_NAME" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_TEXT" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_JSON" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_TYPE" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_NDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GEOGRAPHY_SRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/BMC"
+}

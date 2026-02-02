@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SWR" : {
+      "type" : "object",
+      "description" : "Short-Wave Infrared",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "SOLAR_PHASE_ANGLE" : {
+                "type" : "number"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "LOCATION_NAME" : {
+                "type" : "string"
+              },
+        "BAD_WAVE" : {
+                "type" : "string"
+              },
+        "WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ABS_FLUXES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RATIO_WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FLUX_RATIOS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SWR"
+}

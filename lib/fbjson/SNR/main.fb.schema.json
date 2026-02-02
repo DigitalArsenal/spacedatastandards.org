@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SensorType": {
+      "type": "string",
+      "enum": [
+        "RADAR_PULSE",
+        "RADAR_DOPPLER",
+        "RADAR_CW",
+        "RADAR_AESA",
+        "RADAR_PESA",
+        "IR_SEARCH",
+        "IR_IMAGING",
+        "EO_TV",
+        "EO_LLLTV",
+        "LASER_DESIGNATOR",
+        "LASER_RANGEFINDER",
+        "RWR",
+        "MAW",
+        "SONAR_ACTIVE",
+        "SONAR_PASSIVE",
+        "ACOUSTIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RADAR_PULSE": {
+          "value": 0
+        },
+        "RADAR_DOPPLER": {
+          "value": 1
+        },
+        "RADAR_CW": {
+          "value": 2
+        },
+        "RADAR_AESA": {
+          "value": 3
+        },
+        "RADAR_PESA": {
+          "value": 4
+        },
+        "IR_SEARCH": {
+          "value": 5
+        },
+        "IR_IMAGING": {
+          "value": 6
+        },
+        "EO_TV": {
+          "value": 7
+        },
+        "EO_LLLTV": {
+          "value": 8
+        },
+        "LASER_DESIGNATOR": {
+          "value": 9
+        },
+        "LASER_RANGEFINDER": {
+          "value": 10
+        },
+        "RWR": {
+          "value": 11
+        },
+        "MAW": {
+          "value": 12
+        },
+        "SONAR_ACTIVE": {
+          "value": 13
+        },
+        "SONAR_PASSIVE": {
+          "value": 14
+        },
+        "ACOUSTIC": {
+          "value": 15
+        }
+      }
+    },
+    "SensorMode": {
+      "type": "string",
+      "enum": [
+        "OFF",
+        "STANDBY",
+        "SEARCH",
+        "ACQUISITION",
+        "TRACK",
+        "TRACK_WHILE_SCAN",
+        "DESIGNATE",
+        "JAMMED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OFF": {
+          "value": 0
+        },
+        "STANDBY": {
+          "value": 1
+        },
+        "SEARCH": {
+          "value": 2
+        },
+        "ACQUISITION": {
+          "value": 3
+        },
+        "TRACK": {
+          "value": 4
+        },
+        "TRACK_WHILE_SCAN": {
+          "value": 5
+        },
+        "DESIGNATE": {
+          "value": 6
+        },
+        "JAMMED": {
+          "value": 7
+        }
+      }
+    },
+    "TrackQuality": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "TENTATIVE",
+        "FIRM",
+        "LOCKED",
+        "COASTING",
+        "LOST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "TENTATIVE": {
+          "value": 1
+        },
+        "FIRM": {
+          "value": 2
+        },
+        "LOCKED": {
+          "value": 3
+        },
+        "COASTING": {
+          "value": 4
+        },
+        "LOST": {
+          "value": 5
+        }
+      }
+    },
+    "SNR": {
+      "type": "object",
+      "description": "Sensor Systems",
+      "properties": {
+        "TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MODE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FOV_AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "FOV_ELEVATION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ANGULAR_RESOLUTION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RANGE_RESOLUTION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "UPDATE_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "DETECTION_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "AZIMUTH_SCAN_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ELEVATION_SCAN_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "POWER": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SNR",
+  "x-flatbuffer-root-type": "SNR",
+  "x-flatbuffer-file-identifier": "$SNR"
+}

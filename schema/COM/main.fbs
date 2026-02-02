@@ -1,0 +1,106 @@
+// Hash: 840b925abcbd036bfd81925cda410cac5477ad81f7b440d27067292ef64d8fd1
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum ModulationType : byte {
+  AM,
+  FM,
+  PM,
+  BPSK,
+  QPSK,
+  PSK8,
+  QAM16,
+  QAM64,
+  QAM256,
+  FSK,
+  MSK,
+  OFDM,
+  SPREAD_SPECTRUM,
+  FHSS,
+  DSSS
+}
+
+enum BandType : byte {
+  HF,         // 3-30 MHz
+  VHF,        // 30-300 MHz
+  UHF,        // 300-3000 MHz
+  L_BAND,     // 1-2 GHz
+  S_BAND,     // 2-4 GHz
+  C_BAND,     // 4-8 GHz
+  X_BAND,     // 8-12 GHz
+  KU_BAND,    // 12-18 GHz
+  K_BAND,     // 18-27 GHz
+  KA_BAND,    // 27-40 GHz
+  V_BAND,     // 40-75 GHz
+  W_BAND,     // 75-110 GHz
+  MM_WAVE     // >110 GHz
+}
+
+enum PropagationModel : byte {
+  FREE_SPACE,
+  TWO_RAY_GROUND,
+  HATA_URBAN,
+  HATA_SUBURBAN,
+  COST231,
+  ITU_R_P525,
+  ITU_R_P676,     // Atmospheric gases
+  ITU_R_P838,     // Rain attenuation
+  ITU_R_P840,     // Clouds and fog
+  LONGLEY_RICE,
+  OKUMURA,
+  LOG_DISTANCE,
+  TERRAIN_INTEGRATED
+}
+
+enum DataLinkType : byte {
+  LINK_16,        // TADIL-J
+  LINK_11,        // TADIL-A
+  LINK_22,        // NATO Improved Link Eleven
+  CDL,            // Common Data Link
+  TCDL,           // Tactical CDL
+  SADL,           // Situational Awareness Data Link
+  IFDL,           // Intra-Flight Data Link
+  VMF,            // Variable Message Format
+  JREAP,          // Joint Range Extension Applications Protocol
+  SATCOM,         // Satellite Communications
+  ADS_B,          // Automatic Dependent Surveillance-Broadcast
+  AIS,            // Automatic Identification System
+  HAVEQUICK,      // Frequency-hopping radio
+  SINCGARS,       // Single Channel Ground and Airborne Radio System
+  CUSTOM
+}
+
+enum AntennaPattern : byte {
+  ISOTROPIC,
+  DIPOLE,
+  YAGI,
+  PARABOLIC,
+  PHASED_ARRAY,
+  HORN,
+  PATCH,
+  HELICAL,
+  LOG_PERIODIC,
+  OMNIDIRECTIONAL,
+  SECTOR,
+  CUSTOM_PATTERN
+}
+
+/// Communications Systems
+table COM {
+  SYSTEM_ID:uint;
+  ENTITY_ID:uint;
+  IS_TRANSMITTING:bool;
+  IS_RECEIVING:bool;
+  CURRENT_FREQUENCY_HZ:double;
+  CURRENT_POWER_WATTS:double;
+  CURRENT_DATA_RATE_BPS:double;
+  MESSAGES_SENT:ulong;
+  MESSAGES_RECEIVED:ulong;
+  BYTES_SENT:ulong;
+  BYTES_RECEIVED:ulong;
+  CONNECTED_NODES:[uint];
+  ACTIVE_LINKS:[DataLinkType];
+  LAST_UPDATE_MS:long;
+}
+
+root_type COM;
+file_identifier "$COM";

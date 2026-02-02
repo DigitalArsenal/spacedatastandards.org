@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ACM": {
+      "type": "object",
+      "description": "Attitude Comprehensive Message",
+      "properties": {
+        "CCSDS_ACM_VERS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ACM",
+  "x-flatbuffer-root-type": "ACM",
+  "x-flatbuffer-file-identifier": "$ACM"
+}

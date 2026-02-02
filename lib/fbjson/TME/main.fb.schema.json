@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TimeScale": {
+      "type": "string",
+      "enum": [
+        "UTC",
+        "TAI",
+        "TT",
+        "TDB",
+        "TCG",
+        "TCB",
+        "GPS",
+        "GLONASS",
+        "GALILEO",
+        "BEIDOU",
+        "UT1",
+        "LOCAL_MEAN_SOLAR",
+        "LOCAL_APPARENT_SOLAR",
+        "SIDEREAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UTC": {
+          "value": 0
+        },
+        "TAI": {
+          "value": 1
+        },
+        "TT": {
+          "value": 2
+        },
+        "TDB": {
+          "value": 3
+        },
+        "TCG": {
+          "value": 4
+        },
+        "TCB": {
+          "value": 5
+        },
+        "GPS": {
+          "value": 6
+        },
+        "GLONASS": {
+          "value": 7
+        },
+        "GALILEO": {
+          "value": 8
+        },
+        "BEIDOU": {
+          "value": 9
+        },
+        "UT1": {
+          "value": 10
+        },
+        "LOCAL_MEAN_SOLAR": {
+          "value": 11
+        },
+        "LOCAL_APPARENT_SOLAR": {
+          "value": 12
+        },
+        "SIDEREAL": {
+          "value": 13
+        }
+      }
+    },
+    "DateFormat": {
+      "type": "string",
+      "enum": [
+        "ISO8601",
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE",
+        "GPS_WEEK_SOW",
+        "YEAR_DOY",
+        "UNIX_EPOCH",
+        "MISSION_ELAPSED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ISO8601": {
+          "value": 0
+        },
+        "JULIAN_DATE": {
+          "value": 1
+        },
+        "MODIFIED_JULIAN_DATE": {
+          "value": 2
+        },
+        "GPS_WEEK_SOW": {
+          "value": 3
+        },
+        "YEAR_DOY": {
+          "value": 4
+        },
+        "UNIX_EPOCH": {
+          "value": 5
+        },
+        "MISSION_ELAPSED": {
+          "value": 6
+        }
+      }
+    },
+    "ClockType": {
+      "type": "string",
+      "enum": [
+        "CESIUM",
+        "RUBIDIUM",
+        "QUARTZ_TCXO",
+        "QUARTZ_OCXO",
+        "HYDROGEN_MASER",
+        "GPS_DISCIPLINED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CESIUM": {
+          "value": 0
+        },
+        "RUBIDIUM": {
+          "value": 1
+        },
+        "QUARTZ_TCXO": {
+          "value": 2
+        },
+        "QUARTZ_OCXO": {
+          "value": 3
+        },
+        "HYDROGEN_MASER": {
+          "value": 4
+        },
+        "GPS_DISCIPLINED": {
+          "value": 5
+        }
+      }
+    },
+    "TME": {
+      "type": "object",
+      "description": "Time Systems",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERSION_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAP_SECOND_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EOP_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIDEREAL_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INTERVAL_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLAR_POSITION_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LUNAR_POSITION_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUNRISE_SUNSET_QUERY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "CLOCK_PROPAGATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TME",
+  "x-flatbuffer-root-type": "TME",
+  "x-flatbuffer-file-identifier": "$TME"
+}

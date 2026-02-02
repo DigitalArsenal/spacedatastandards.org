@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AEMAttitudeEntry" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              },
+        "RATE_X" : {
+                "type" : "number"
+              },
+        "RATE_Y" : {
+                "type" : "number"
+              },
+        "RATE_Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AEMSegment" : {
+      "type" : "object",
+      "properties" : {
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REF_FRAME_A" : {
+                "type" : "string"
+              },
+        "REF_FRAME_B" : {
+                "type" : "string"
+              },
+        "ATTITUDE_DIR" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "ATTITUDE_TYPE" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "STOP_TIME" : {
+                "type" : "string"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AEMAttitudeEntry"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AEM" : {
+      "type" : "object",
+      "description" : "Attitude Ephemeris Message",
+      "properties" : {
+        "CCSDS_AEM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AEMSegment"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AEM"
+}

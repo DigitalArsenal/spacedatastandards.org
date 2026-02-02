@@ -1,0 +1,27 @@
+// Hash: 8e2bfebf2b6064dfad8e80e89671220644a603bd7c7cc5b501918169154165f6
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Launch Detection
+table LND {
+  ID:string;
+  LAUNCH_TIME:string;
+  MESSAGE_TYPE:string;
+  LAUNCH_LATITUDE:double;
+  LAUNCH_LONGITUDE:double;
+  LAUNCH_AZIMUTH:double;
+  RAAN:double;
+  INCLINATION:double;
+  OBSERVATION_TIME:string;
+  OBSERVATION_LATITUDE:double;
+  OBSERVATION_LONGITUDE:double;
+  OBSERVATION_ALTITUDE:double;
+  STEREO_FLAG:bool;
+  HIGH_ZENITH_AZIMUTH:bool;
+  SEQUENCE_NUMBER:int;
+  EVENT_ID:string;
+  DESCRIPTOR:string;
+  TAGS:[string];
+}
+
+root_type LND;
+file_identifier "$LND";

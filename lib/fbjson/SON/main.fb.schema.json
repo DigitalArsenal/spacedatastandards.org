@@ -1,0 +1,350 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SonarType": {
+      "type": "string",
+      "enum": [
+        "ACTIVE_HULL",
+        "ACTIVE_VDS",
+        "ACTIVE_DIPPING",
+        "PASSIVE_HULL",
+        "PASSIVE_TOWED",
+        "PASSIVE_SONOBUOY",
+        "MINE_HUNTING",
+        "SIDESCAN",
+        "BOTTOM_PROFILER",
+        "INTERCEPT",
+        "TORPEDO"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACTIVE_HULL": {
+          "value": 0
+        },
+        "ACTIVE_VDS": {
+          "value": 1
+        },
+        "ACTIVE_DIPPING": {
+          "value": 2
+        },
+        "PASSIVE_HULL": {
+          "value": 3
+        },
+        "PASSIVE_TOWED": {
+          "value": 4
+        },
+        "PASSIVE_SONOBUOY": {
+          "value": 5
+        },
+        "MINE_HUNTING": {
+          "value": 6
+        },
+        "SIDESCAN": {
+          "value": 7
+        },
+        "BOTTOM_PROFILER": {
+          "value": 8
+        },
+        "INTERCEPT": {
+          "value": 9
+        },
+        "TORPEDO": {
+          "value": 10
+        }
+      }
+    },
+    "SONPropagationModel": {
+      "type": "string",
+      "enum": [
+        "RAY_TRACING",
+        "PARABOLIC_EQUATION",
+        "NORMAL_MODES",
+        "ISOVELOCITY",
+        "RANGE_DEPENDENT",
+        "FAST_FIELD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RAY_TRACING": {
+          "value": 0
+        },
+        "PARABOLIC_EQUATION": {
+          "value": 1
+        },
+        "NORMAL_MODES": {
+          "value": 2
+        },
+        "ISOVELOCITY": {
+          "value": 3
+        },
+        "RANGE_DEPENDENT": {
+          "value": 4
+        },
+        "FAST_FIELD": {
+          "value": 5
+        }
+      }
+    },
+    "BottomType": {
+      "type": "string",
+      "enum": [
+        "HARD_ROCK",
+        "SOFT_ROCK",
+        "SAND",
+        "SILT",
+        "CLAY",
+        "MUD",
+        "GRAVEL",
+        "CORAL",
+        "MIXED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HARD_ROCK": {
+          "value": 0
+        },
+        "SOFT_ROCK": {
+          "value": 1
+        },
+        "SAND": {
+          "value": 2
+        },
+        "SILT": {
+          "value": 3
+        },
+        "CLAY": {
+          "value": 4
+        },
+        "MUD": {
+          "value": 5
+        },
+        "GRAVEL": {
+          "value": 6
+        },
+        "CORAL": {
+          "value": 7
+        },
+        "MIXED": {
+          "value": 8
+        }
+      }
+    },
+    "SeaState": {
+      "type": "string",
+      "enum": [
+        "SS0",
+        "SS1",
+        "SS2",
+        "SS3",
+        "SS4",
+        "SS5",
+        "SS6",
+        "SS7",
+        "SS8",
+        "SS9"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SS0": {
+          "value": 0
+        },
+        "SS1": {
+          "value": 1
+        },
+        "SS2": {
+          "value": 2
+        },
+        "SS3": {
+          "value": 3
+        },
+        "SS4": {
+          "value": 4
+        },
+        "SS5": {
+          "value": 5
+        },
+        "SS6": {
+          "value": 6
+        },
+        "SS7": {
+          "value": 7
+        },
+        "SS8": {
+          "value": 8
+        },
+        "SS9": {
+          "value": 9
+        }
+      }
+    },
+    "NoiseSource": {
+      "type": "string",
+      "enum": [
+        "AMBIENT",
+        "SHIPPING",
+        "BIOLOGICAL",
+        "WIND",
+        "RAIN",
+        "ICE",
+        "SEISMIC",
+        "MACHINERY",
+        "FLOW",
+        "SELF_NOISE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AMBIENT": {
+          "value": 0
+        },
+        "SHIPPING": {
+          "value": 1
+        },
+        "BIOLOGICAL": {
+          "value": 2
+        },
+        "WIND": {
+          "value": 3
+        },
+        "RAIN": {
+          "value": 4
+        },
+        "ICE": {
+          "value": 5
+        },
+        "SEISMIC": {
+          "value": 6
+        },
+        "MACHINERY": {
+          "value": 7
+        },
+        "FLOW": {
+          "value": 8
+        },
+        "SELF_NOISE": {
+          "value": 9
+        }
+      }
+    },
+    "TargetType": {
+      "type": "string",
+      "enum": [
+        "SUBMARINE",
+        "SURFACE_SHIP",
+        "TORPEDO",
+        "MINE",
+        "BIOLOGICAL",
+        "WRECK",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SUBMARINE": {
+          "value": 0
+        },
+        "SURFACE_SHIP": {
+          "value": 1
+        },
+        "TORPEDO": {
+          "value": 2
+        },
+        "MINE": {
+          "value": 3
+        },
+        "BIOLOGICAL": {
+          "value": 4
+        },
+        "WRECK": {
+          "value": 5
+        },
+        "UNKNOWN": {
+          "value": 6
+        }
+      }
+    },
+    "TorpedoGuidanceMode": {
+      "type": "string",
+      "enum": [
+        "WIRE_GUIDED",
+        "ACTIVE_HOMING",
+        "PASSIVE_HOMING",
+        "WAKE_HOMING",
+        "PATTERN_SEARCH",
+        "SNAKE_SEARCH",
+        "CEILING_BOUNCE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "WIRE_GUIDED": {
+          "value": 0
+        },
+        "ACTIVE_HOMING": {
+          "value": 1
+        },
+        "PASSIVE_HOMING": {
+          "value": 2
+        },
+        "WAKE_HOMING": {
+          "value": 3
+        },
+        "PATTERN_SEARCH": {
+          "value": 4
+        },
+        "SNAKE_SEARCH": {
+          "value": 5
+        },
+        "CEILING_BOUNCE": {
+          "value": 6
+        }
+      }
+    },
+    "SON": {
+      "type": "object",
+      "description": "Sonar and Underwater Acoustics",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACTIVE_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PASSIVE_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TL_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_SIGNATURE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TMA_INPUT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TORPEDO_SEEKER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SON",
+  "x-flatbuffer-root-type": "SON",
+  "x-flatbuffer-file-identifier": "$SON"
+}

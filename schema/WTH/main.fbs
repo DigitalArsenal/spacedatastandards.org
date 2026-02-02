@@ -1,0 +1,41 @@
+// Hash: 92e90241381df55eae26326177a8cd8c2f9e944340ae8462043f61c8979b8f0e
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Weather Data
+table WTH {
+  ID:string;
+  ID_SENSOR:string;
+  ORIG_SENSOR_ID:string;
+  OB_TIME:string;
+  SIG_PWRS:[string];
+  NOISE_LVLS:[string];
+  SPEC_WIDTHS:[string];
+  FIRST_GUESS_AVGS:[string];
+  QC_VALUE:int;
+  FILE_CREATION:string;
+  TERM_ALT:double;
+  AVG_TX_PWR:double;
+  AVG_REF_PWR:double;
+  SECTOR_NUM:int;
+  NUM_ELEMENTS:int;
+  TD_AVG_SAMPLE_NUMS:[string];
+  CHECKSUM:int;
+  CO_INTEGS:[string];
+  SPEC_AVGS:[string];
+  INTERPULSE_PERIODS:[string];
+  DOPP_VELS:[string];
+  CONS_RECS:[string];
+  SNRS:[string];
+  SIG_STRENGTH:double;
+  SEMI_MAJOR_AXIS:double;
+  SEMI_MINOR_AXIS:double;
+  ANGLE_ORIENTATION:double;
+  LIGHT_EVENT_NUM:int;
+  LIGHT_DET_SENSORS:[string];
+  POS_CONFIDENCE:double;
+  SRC_TYPS:[string];
+  SRC_IDS:[string];
+}
+
+root_type WTH;
+file_identifier "$WTH";

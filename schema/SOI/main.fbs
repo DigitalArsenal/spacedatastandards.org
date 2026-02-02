@@ -1,0 +1,72 @@
+// Hash: 1ff65c3f9e3eef7b4d27134943a292ec7efcad667e04567ec731f25fb1ff2449
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Space Object Identification Observation Set
+table SOI {
+  ID:string;
+  MSG_CREATE_DATE:string;
+  ID_SENSOR:string;
+  ORIG_SENSOR_ID:string;
+  SENSOR_AS_ID:string;
+  SAT_NO:int;
+  ORIG_OBJECT_ID:string;
+  SENLAT:double;
+  SENLON:double;
+  SENALT:double;
+  SENX:double;
+  SENY:double;
+  SENZ:double;
+  SENVELX:double;
+  SENVELY:double;
+  SENVELZ:double;
+  START_TIME:string;
+  END_TIME:string;
+  NUM_OBS:int;
+  TYPE:string;
+  POLAR_ANGLE_START:double;
+  POLAR_ANGLE_END:double;
+  REFERENCE_FRAME:string;
+  SEN_REFERENCE_FRAME:string;
+  LOS_DECLINATION_START:double;
+  LOS_DECLINATION_END:double;
+  POINTING_ANGLE_AZ_START:double;
+  POINTING_ANGLE_AZ_END:double;
+  POINTING_ANGLE_EL_START:double;
+  POINTING_ANGLE_EL_END:double;
+  PIXEL_ARRAY_WIDTH:int;
+  PIXEL_ARRAY_HEIGHT:int;
+  NUM_SPECTRAL_FILTERS:int;
+  SPECTRAL_FILTERS:[string];
+  COLLECTION_MODE:string;
+  GAIN:double;
+  BINNING_HORIZ:int;
+  BINNING_VERT:int;
+  SOLAR_MAG:double;
+  PIXEL_MIN:int;
+  PIXEL_MAX:int;
+  SOFTWARE_VERSION:string;
+  SATELLITE_NAME:string;
+  STAR_CAT_NAME:string;
+  CORR_QUALITY:double;
+  UCT:bool;
+  VALID_CALIBRATIONS:string;
+  CALIBRATION_TYPE:string;
+  PERCENT_SAT_THRESHOLD:double;
+  CHANGE_DETECTED:bool;
+  PERIODICITY_CHANGE_DETECTED:bool;
+  BRIGHTNESS_VARIANCE_CHANGE_DETECTED:bool;
+  SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED:bool;
+  CHANGE_CONF:string;
+  COLLECTION_DENSITY_CONF:string;
+  PERIODICITY_SAMPLING_CONF:string;
+  PERIODICITY_DETECTION_CONF:string;
+  COLLECTION_ID:string;
+  CALIBRATIONS:[string];
+  TAGS:[string];
+  TRANSACTION_ID:string;
+  OPTICAL_SOIOBSERVATION_LIST:[string];
+  RADAR_SOIOBSERVATION_LIST:[string];
+}
+
+root_type SOI;
+file_identifier "$SOI";

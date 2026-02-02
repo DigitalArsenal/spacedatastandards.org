@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OBD": {
+      "type": "object",
+      "description": "Orbit Determination Results",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "APRIORI_ID_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_ID_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_OD": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "LAST_OB_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_END": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SPAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EFFECTIVE_FROM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EFFECTIVE_UNTIL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WRMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PREVIOUS_WRMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FIRST_PASS_WRMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BEST_PASS_WRMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ERROR_GROWTH_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EDR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "METHOD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD_SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIT_SPAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BALLISTIC_COEFF_EST": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "BALLISTIC_COEFF_MODEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AGOM_EST": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "AGOM_MODEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RMS_CONVERGENCE_CRITERIA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_ITERATIONS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ACCEPTED_OB_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ACCEPTED_OB_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REJECTED_OB_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REJECTED_OB_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OBD",
+  "x-flatbuffer-root-type": "OBD",
+  "x-flatbuffer-file-identifier": "$OBD"
+}

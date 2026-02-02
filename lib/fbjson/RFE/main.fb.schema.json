@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RFE": {
+      "type": "object",
+      "description": "RF Emitter",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RF_EMITTER_DETAILS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RFE",
+  "x-flatbuffer-root-type": "RFE",
+  "x-flatbuffer-file-identifier": "$RFE"
+}

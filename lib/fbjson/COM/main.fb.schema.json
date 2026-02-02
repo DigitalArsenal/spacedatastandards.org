@@ -1,0 +1,410 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModulationType": {
+      "type": "string",
+      "enum": [
+        "AM",
+        "FM",
+        "PM",
+        "BPSK",
+        "QPSK",
+        "PSK8",
+        "QAM16",
+        "QAM64",
+        "QAM256",
+        "FSK",
+        "MSK",
+        "OFDM",
+        "SPREAD_SPECTRUM",
+        "FHSS",
+        "DSSS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AM": {
+          "value": 0
+        },
+        "FM": {
+          "value": 1
+        },
+        "PM": {
+          "value": 2
+        },
+        "BPSK": {
+          "value": 3
+        },
+        "QPSK": {
+          "value": 4
+        },
+        "PSK8": {
+          "value": 5
+        },
+        "QAM16": {
+          "value": 6
+        },
+        "QAM64": {
+          "value": 7
+        },
+        "QAM256": {
+          "value": 8
+        },
+        "FSK": {
+          "value": 9
+        },
+        "MSK": {
+          "value": 10
+        },
+        "OFDM": {
+          "value": 11
+        },
+        "SPREAD_SPECTRUM": {
+          "value": 12
+        },
+        "FHSS": {
+          "value": 13
+        },
+        "DSSS": {
+          "value": 14
+        }
+      }
+    },
+    "BandType": {
+      "type": "string",
+      "enum": [
+        "HF",
+        "VHF",
+        "UHF",
+        "L_BAND",
+        "S_BAND",
+        "C_BAND",
+        "X_BAND",
+        "KU_BAND",
+        "K_BAND",
+        "KA_BAND",
+        "V_BAND",
+        "W_BAND",
+        "MM_WAVE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HF": {
+          "value": 0
+        },
+        "VHF": {
+          "value": 1
+        },
+        "UHF": {
+          "value": 2
+        },
+        "L_BAND": {
+          "value": 3
+        },
+        "S_BAND": {
+          "value": 4
+        },
+        "C_BAND": {
+          "value": 5
+        },
+        "X_BAND": {
+          "value": 6
+        },
+        "KU_BAND": {
+          "value": 7
+        },
+        "K_BAND": {
+          "value": 8
+        },
+        "KA_BAND": {
+          "value": 9
+        },
+        "V_BAND": {
+          "value": 10
+        },
+        "W_BAND": {
+          "value": 11
+        },
+        "MM_WAVE": {
+          "value": 12
+        }
+      }
+    },
+    "PropagationModel": {
+      "type": "string",
+      "enum": [
+        "FREE_SPACE",
+        "TWO_RAY_GROUND",
+        "HATA_URBAN",
+        "HATA_SUBURBAN",
+        "COST231",
+        "ITU_R_P525",
+        "ITU_R_P676",
+        "ITU_R_P838",
+        "ITU_R_P840",
+        "LONGLEY_RICE",
+        "OKUMURA",
+        "LOG_DISTANCE",
+        "TERRAIN_INTEGRATED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FREE_SPACE": {
+          "value": 0
+        },
+        "TWO_RAY_GROUND": {
+          "value": 1
+        },
+        "HATA_URBAN": {
+          "value": 2
+        },
+        "HATA_SUBURBAN": {
+          "value": 3
+        },
+        "COST231": {
+          "value": 4
+        },
+        "ITU_R_P525": {
+          "value": 5
+        },
+        "ITU_R_P676": {
+          "value": 6
+        },
+        "ITU_R_P838": {
+          "value": 7
+        },
+        "ITU_R_P840": {
+          "value": 8
+        },
+        "LONGLEY_RICE": {
+          "value": 9
+        },
+        "OKUMURA": {
+          "value": 10
+        },
+        "LOG_DISTANCE": {
+          "value": 11
+        },
+        "TERRAIN_INTEGRATED": {
+          "value": 12
+        }
+      }
+    },
+    "DataLinkType": {
+      "type": "string",
+      "enum": [
+        "LINK_16",
+        "LINK_11",
+        "LINK_22",
+        "CDL",
+        "TCDL",
+        "SADL",
+        "IFDL",
+        "VMF",
+        "JREAP",
+        "SATCOM",
+        "ADS_B",
+        "AIS",
+        "HAVEQUICK",
+        "SINCGARS",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LINK_16": {
+          "value": 0
+        },
+        "LINK_11": {
+          "value": 1
+        },
+        "LINK_22": {
+          "value": 2
+        },
+        "CDL": {
+          "value": 3
+        },
+        "TCDL": {
+          "value": 4
+        },
+        "SADL": {
+          "value": 5
+        },
+        "IFDL": {
+          "value": 6
+        },
+        "VMF": {
+          "value": 7
+        },
+        "JREAP": {
+          "value": 8
+        },
+        "SATCOM": {
+          "value": 9
+        },
+        "ADS_B": {
+          "value": 10
+        },
+        "AIS": {
+          "value": 11
+        },
+        "HAVEQUICK": {
+          "value": 12
+        },
+        "SINCGARS": {
+          "value": 13
+        },
+        "CUSTOM": {
+          "value": 14
+        }
+      }
+    },
+    "AntennaPattern": {
+      "type": "string",
+      "enum": [
+        "ISOTROPIC",
+        "DIPOLE",
+        "YAGI",
+        "PARABOLIC",
+        "PHASED_ARRAY",
+        "HORN",
+        "PATCH",
+        "HELICAL",
+        "LOG_PERIODIC",
+        "OMNIDIRECTIONAL",
+        "SECTOR",
+        "CUSTOM_PATTERN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ISOTROPIC": {
+          "value": 0
+        },
+        "DIPOLE": {
+          "value": 1
+        },
+        "YAGI": {
+          "value": 2
+        },
+        "PARABOLIC": {
+          "value": 3
+        },
+        "PHASED_ARRAY": {
+          "value": 4
+        },
+        "HORN": {
+          "value": 5
+        },
+        "PATCH": {
+          "value": 6
+        },
+        "HELICAL": {
+          "value": 7
+        },
+        "LOG_PERIODIC": {
+          "value": 8
+        },
+        "OMNIDIRECTIONAL": {
+          "value": 9
+        },
+        "SECTOR": {
+          "value": 10
+        },
+        "CUSTOM_PATTERN": {
+          "value": 11
+        }
+      }
+    },
+    "COM": {
+      "type": "object",
+      "description": "Communications Systems",
+      "properties": {
+        "SYSTEM_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "IS_TRANSMITTING": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "IS_RECEIVING": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "CURRENT_FREQUENCY_HZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CURRENT_POWER_WATTS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CURRENT_DATA_RATE_BPS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MESSAGES_SENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "MESSAGES_RECEIVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "BYTES_SENT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "BYTES_RECEIVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "CONNECTED_NODES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint]"
+        },
+        "ACTIVE_LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataLinkType"
+          },
+          "x-flatbuffer-type": "[DataLinkType]"
+        },
+        "LAST_UPDATE_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/COM",
+  "x-flatbuffer-root-type": "COM",
+  "x-flatbuffer-file-identifier": "$COM"
+}

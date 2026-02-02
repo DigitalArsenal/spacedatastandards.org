@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FCSMode" : {
+      "type" : "string",
+      "enum": ["OFF", "STANDBY", "RANGING", "TRACKING", "SOLUTION", "CCIP", "CCRP", "MANUAL"]
+    },
+    "LeadMethod" : {
+      "type" : "string",
+      "enum": ["NONE", "PREDICTIVE", "COLLISION", "CONSTANT_BEARING", "PURSUIT"]
+    },
+    "RangefinderType" : {
+      "type" : "string",
+      "enum": ["STADIAMETRIC", "STEREOSCOPIC", "COINCIDENCE", "LASER", "RADAR"]
+    },
+    "FCS" : {
+      "type" : "object",
+      "description" : "Fire Control Systems",
+      "properties" : {
+        "MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LEAD_METHOD" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RANGEFINDER_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "AMMO_SELECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TARGET" : {
+                "type" : "string"
+              },
+        "SOLUTION" : {
+                "type" : "string"
+              },
+        "LAST_RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "ROUNDS_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "TEMPERATURE" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FCS"
+}

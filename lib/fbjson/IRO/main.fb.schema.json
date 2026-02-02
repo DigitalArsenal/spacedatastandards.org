@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IRO": {
+      "type": "object",
+      "description": "Infrared Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/IRO",
+  "x-flatbuffer-root-type": "IRO",
+  "x-flatbuffer-file-identifier": "$IRO"
+}

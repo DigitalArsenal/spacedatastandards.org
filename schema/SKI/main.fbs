@@ -1,0 +1,50 @@
+// Hash: 87803001607ea5a19c4256f05c20081a34554bd20102fc61cc11ec25ea01ca02
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Sky Imagery
+table SKI {
+  ID:string;
+  ON_ORBIT:string;
+  ORIG_OBJECT_ID:string;
+  ID_SENSOR:string;
+  SAT_NO:int;
+  ORIG_SENSOR_ID:string;
+  SENLAT:double;
+  SENLON:double;
+  SENALT:double;
+  SENX:double;
+  SENY:double;
+  SENZ:double;
+  SEN_QUAT:[string];
+  SEN_QUAT_DOT:[string];
+  IMAGE_TYPE:string;
+  EXP_START_TIME:string;
+  EXP_END_TIME:string;
+  IMAGE_SOURCE_INFO:string;
+  TOP_LEFT_START_AZ:double;
+  TOP_LEFT_START_EL:double;
+  TOP_LEFT_STOP_AZ:double;
+  TOP_LEFT_STOP_EL:double;
+  IMAGE_SET_ID:string;
+  IMAGE_SET_LENGTH:int;
+  SEQUENCE_ID:int;
+  FRAME_FOVWIDTH:double;
+  FRAME_FOVHEIGHT:double;
+  PIXEL_FOVWIDTH:double;
+  PIXEL_FOVHEIGHT:double;
+  FRAME_WIDTH_PIXELS:int;
+  FRAME_HEIGHT_PIXELS:int;
+  PIXEL_BIT_DEPTH:int;
+  ANNOTATION_KEY:string;
+  CALIBRATION_KEY:string;
+  FILENAME:string;
+  FILESIZE:long;
+  CHECKSUM_VALUE:string;
+  TRANSACTION_ID:string;
+  TAGS:[string];
+  DESCRIPTION:string;
+  EO_OBSERVATIONS:[string];
+}
+
+root_type SKI;
+file_identifier "$SKI";

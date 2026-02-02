@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "VesselType" : {
+      "type" : "string",
+      "enum": ["CARRIER", "BATTLESHIP", "CRUISER", "DESTROYER", "FRIGATE", "CORVETTE", "PATROL", "SUBMARINE_SSN", "SUBMARINE_SSBN", "SUBMARINE_SSK", "AMPHIBIOUS", "CARGO", "TANKER", "AUXILIARY", "FAST_ATTACK", "TORPEDO_BOAT"]
+    },
+    "PropulsionType" : {
+      "type" : "string",
+      "enum": ["STEAM", "GAS_TURBINE", "DIESEL", "DIESEL_ELECTRIC", "NUCLEAR", "CODAG", "COGAG", "CODLAG", "AIP"]
+    },
+    "DCState" : {
+      "type" : "string",
+      "enum": ["NORMAL", "MINOR_DAMAGE", "MODERATE_DAMAGE", "SEVERE_DAMAGE", "CRITICAL", "SINKING", "ABANDONED"]
+    },
+    "NAV" : {
+      "type" : "object",
+      "description" : "Naval Vessels",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "SPEED_KNOTS" : {
+                "type" : "number"
+              },
+        "HEADING" : {
+                "type" : "number"
+              },
+        "COURSE" : {
+                "type" : "number"
+              },
+        "RUDDER_ANGLE" : {
+                "type" : "number"
+              },
+        "HULL" : {
+                "type" : "string"
+              },
+        "PROPULSION" : {
+                "type" : "string"
+              },
+        "DC_STATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FIRES_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLOODING_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_CASUALTIES" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "HULL_INTEGRITY" : {
+                "type" : "number"
+              },
+        "POWER_AVAILABLE" : {
+                "type" : "number"
+              },
+        "WEAPONS_ONLINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "SENSORS_ONLINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              },
+        "AMMO_MAIN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MISSILES_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TORPEDOES_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "VESSEL_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "PROPULSION_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NAV"
+}

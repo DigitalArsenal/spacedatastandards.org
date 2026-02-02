@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MFE": {
+      "type": "object",
+      "description": "Manifold Element Set",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TMP_SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN_MOTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REV_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "B_STAR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DDOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LINE1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINE2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MFE",
+  "x-flatbuffer-root-type": "MFE",
+  "x-flatbuffer-file-identifier": "$MFE"
+}

@@ -1,0 +1,28 @@
+// Hash: a39f92e18f641f9170006cf91fa8da65f33c4bbba55c96926d49b2cd555350dc
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Manifold Element Set
+table MFE {
+  ID:string;
+  TMP_SAT_NO:int;
+  EPOCH:string;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RAAN:double;
+  ARG_OF_PERIGEE:double;
+  MEAN_ANOMALY:double;
+  REV_NO:int;
+  B_STAR:double;
+  MEAN_MOTION_DOT:double;
+  MEAN_MOTION_DDOT:double;
+  SEMI_MAJOR_AXIS:double;
+  PERIOD:double;
+  APOGEE:double;
+  PERIGEE:double;
+  LINE1:string;
+  LINE2:string;
+}
+
+root_type MFE;
+file_identifier "$MFE";

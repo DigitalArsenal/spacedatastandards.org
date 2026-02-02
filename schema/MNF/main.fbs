@@ -1,0 +1,14 @@
+// Hash: 5e3e2cd7d0caed1e43e76d25713c45ab2c40b596d8dffb6261979b2a3c6c88f1
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Orbit Manifold
+table MNF {
+  ID:string;
+  STATUS:string;
+  WEIGHT:double;
+  DELTA_V:double;
+  DELTA_T:double;
+}
+
+root_type MNF;
+file_identifier "$MNF";

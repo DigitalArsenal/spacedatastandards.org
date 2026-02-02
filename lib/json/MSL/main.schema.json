@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MissileType" : {
+      "type" : "string",
+      "enum": ["AAM_IR", "AAM_SARH", "AAM_ARH", "SAM_IR", "SAM_SARH", "SAM_COMMAND", "ASM_AR", "ASM_TV", "ASM_LASER", "ATGM_SACLOS", "ATGM_BEAM", "ATGM_TOP", "CRUISE", "BALLISTIC", "TORPEDO"]
+    },
+    "SeekerType" : {
+      "type" : "string",
+      "enum": ["NONE", "IR_UNCOOLED", "IR_COOLED", "IR_IMAGING", "IR_2COLOR", "RADAR_SARH", "RADAR_ARH", "RADAR_PASSIVE", "TV_OPTICAL", "LASER_SH", "GPS_INS", "ACOUSTIC", "WIRE"]
+    },
+    "GuidanceLaw" : {
+      "type" : "string",
+      "enum": ["NONE", "PURE_PURSUIT", "LEAD_PURSUIT", "PROPORTIONAL_NAV", "AUGMENTED_PN", "OPTIMAL_GUIDANCE", "COMMAND_LOS", "BEAM_RIDING", "TVM", "LOFT", "TERRAIN_FOLLOW"]
+    },
+    "MissilePhase" : {
+      "type" : "string",
+      "enum": ["CAPTIVE", "LAUNCH", "BOOST", "SUSTAIN", "COAST", "TERMINAL", "INTERCEPT", "MISS", "SELF_DESTRUCT"]
+    },
+    "SeekerStatus" : {
+      "type" : "string",
+      "enum": ["OFF", "CAGED", "UNCAGED", "ACQUIRING", "TRACKING", "MEMORY", "JAMMED"]
+    },
+    "MSL" : {
+      "type" : "object",
+      "description" : "Guided Missiles",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "MASS_INITIAL" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_X" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_Y" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_Z" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_X" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "MISS_DISTANCE" : {
+                "type" : "number"
+              },
+        "SEEKER" : {
+                "type" : "string"
+              },
+        "MOTOR" : {
+                "type" : "string"
+              },
+        "GUIDANCE_CMD" : {
+                "type" : "string"
+              },
+        "PHASE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "GUIDANCE_LAW" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ARMED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TIME_OF_FLIGHT" : {
+                "type" : "number"
+              },
+        "MAX_G" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MSL"
+}

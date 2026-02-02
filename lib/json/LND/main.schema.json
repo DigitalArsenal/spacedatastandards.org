@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LND" : {
+      "type" : "object",
+      "description" : "Launch Detection",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "LAUNCH_TIME" : {
+                "type" : "string"
+              },
+        "MESSAGE_TYPE" : {
+                "type" : "string"
+              },
+        "LAUNCH_LATITUDE" : {
+                "type" : "number"
+              },
+        "LAUNCH_LONGITUDE" : {
+                "type" : "number"
+              },
+        "LAUNCH_AZIMUTH" : {
+                "type" : "number"
+              },
+        "RAAN" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "OBSERVATION_TIME" : {
+                "type" : "string"
+              },
+        "OBSERVATION_LATITUDE" : {
+                "type" : "number"
+              },
+        "OBSERVATION_LONGITUDE" : {
+                "type" : "number"
+              },
+        "OBSERVATION_ALTITUDE" : {
+                "type" : "number"
+              },
+        "STEREO_FLAG" : {
+                "type" : "boolean"
+              },
+        "HIGH_ZENITH_AZIMUTH" : {
+                "type" : "boolean"
+              },
+        "SEQUENCE_NUMBER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "EVENT_ID" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LND"
+}

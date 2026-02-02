@@ -1,0 +1,98 @@
+// Hash: 25136bd01cc11034e549ad56d2b8cfe65a6d05d073b1639d87f785705d3cb4e4
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum SonarType : byte {
+  ACTIVE_HULL,            // Hull-mounted active,
+  ACTIVE_VDS,             // Variable depth sonar,
+  ACTIVE_DIPPING,         // Helicopter dipping sonar,
+  PASSIVE_HULL,           // Hull-mounted passive,
+  PASSIVE_TOWED,          // Towed array,
+  PASSIVE_SONOBUOY,       // Sonobuoy,
+  MINE_HUNTING,           // Mine detection,
+  SIDESCAN,               // Side-scan sonar,
+  BOTTOM_PROFILER,        // Sub-bottom profiler,
+  INTERCEPT,              // Acoustic intercept,
+  TORPEDO                 // Torpedo seeker
+}
+
+enum SONPropagationModel : byte {
+  RAY_TRACING,            // Bellhop-style ray trace,
+  PARABOLIC_EQUATION,     // RAM PE model,
+  NORMAL_MODES,           // KRAKEN modes,
+  ISOVELOCITY,            // Simple constant velocity,
+  RANGE_DEPENDENT,        // Range-dependent environment,
+  FAST_FIELD              // FFP method
+}
+
+enum BottomType : byte {
+  HARD_ROCK,
+  SOFT_ROCK,
+  SAND,
+  SILT,
+  CLAY,
+  MUD,
+  GRAVEL,
+  CORAL,
+  MIXED
+}
+
+enum SeaState : byte {
+  SS0,                    // Calm (glassy),
+  SS1,                    // Calm (rippled),
+  SS2,                    // Smooth,
+  SS3,                    // Slight,
+  SS4,                    // Moderate,
+  SS5,                    // Rough,
+  SS6,                    // Very rough,
+  SS7,                    // High,
+  SS8,                    // Very high,
+  SS9                     // Phenomenal
+}
+
+enum NoiseSource : byte {
+  AMBIENT,
+  SHIPPING,
+  BIOLOGICAL,
+  WIND,
+  RAIN,
+  ICE,
+  SEISMIC,
+  MACHINERY,
+  FLOW,
+  SELF_NOISE
+}
+
+enum TargetType : byte {
+  SUBMARINE,
+  SURFACE_SHIP,
+  TORPEDO,
+  MINE,
+  BIOLOGICAL,
+  WRECK,
+  UNKNOWN
+}
+
+enum TorpedoGuidanceMode : byte {
+  WIRE_GUIDED,
+  ACTIVE_HOMING,
+  PASSIVE_HOMING,
+  WAKE_HOMING,
+  PATTERN_SEARCH,
+  SNAKE_SEARCH,
+  CEILING_BOUNCE
+}
+
+/// Sonar and Underwater Acoustics
+table SON {
+  COMMAND:string;
+  ACTIVE_CONFIG:string;
+  PASSIVE_CONFIG:string;
+  TL_REQUEST:string;
+  ENVIRONMENT:string;
+  TARGET_SIGNATURE:string;
+  TMA_INPUT:string;
+  TORPEDO_SEEKER:string;
+}
+
+root_type SON;
+file_identifier "$SON";

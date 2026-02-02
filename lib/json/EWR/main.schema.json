@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "JammingType" : {
+      "type" : "string",
+      "enum": ["NOISE_BARRAGE", "NOISE_SPOT", "NOISE_SWEPT", "DECEPTION_RANGE_GATE", "DECEPTION_VELOCITY_GATE", "DECEPTION_ANGLE", "DECEPTION_FALSE_TARGET", "DRFM", "REPEATER", "CROSS_EYE", "CROSS_POLARIZATION", "CHAFF", "FLARE", "TOWED_DECOY"]
+    },
+    "ThreatCategory" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "EARLY_WARNING", "ACQUISITION", "TRACKING", "GUIDANCE", "HEIGHT_FINDER", "GCI", "AIRBORNE_INTERCEPT", "SURFACE_SEARCH", "AIR_SEARCH", "NAVIGATION", "WEATHER", "CIVIL", "FRIENDLY", "IFF"]
+    },
+    "ESMFunction" : {
+      "type" : "string",
+      "enum": ["SEARCH", "CLASSIFICATION", "IDENTIFICATION", "DIRECTION_FINDING", "LOCATION", "RECORDING", "SITUATIONAL_AWARENESS"]
+    },
+    "CountermeasureStatus" : {
+      "type" : "string",
+      "enum": ["READY", "DEPLOYING", "ACTIVE", "EXPENDED", "RELOADING", "FAILED"]
+    },
+    "WaveformType" : {
+      "type" : "string",
+      "enum": ["CW", "PULSED", "PULSE_DOPPLER", "FM_CW", "CHIRP", "PHASE_CODED", "FREQUENCY_AGILE", "PRI_AGILE", "COMPLEX", "LPI"]
+    },
+    "EWR" : {
+      "type" : "object",
+      "description" : "Electronic Warfare",
+      "properties" : {
+        "SYSTEM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ESM_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "ECM_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "RWR_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "ESM_CONTACTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ACTIVE_JAMMING" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COUNTERMEASURES" : {
+                "type" : "string"
+              },
+        "THREAT_WARNINGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "EMCON_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LAST_UPDATE_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/EWR"
+}

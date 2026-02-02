@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SAR" : {
+      "type" : "object",
+      "description" : "SAR Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "EXTERNAL_ID" : {
+                "type" : "string"
+              },
+        "COLLECTION_ID" : {
+                "type" : "string"
+              },
+        "DETECTION_ID" : {
+                "type" : "string"
+              },
+        "COLLECTION_START" : {
+                "type" : "string"
+              },
+        "COLLECTION_END" : {
+                "type" : "string"
+              },
+        "CENTER_TIME" : {
+                "type" : "string"
+              },
+        "DETECTION_START" : {
+                "type" : "string"
+              },
+        "DETECTION_END" : {
+                "type" : "string"
+              },
+        "DWELL_TIME" : {
+                "type" : "number"
+              },
+        "ORBIT_STATE" : {
+                "type" : "string"
+              },
+        "SAR_MODE" : {
+                "type" : "string"
+              },
+        "OPERATING_BAND" : {
+                "type" : "string"
+              },
+        "OPERATING_FREQ" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "TX_POLARIZATION" : {
+                "type" : "string"
+              },
+        "RX_POLARIZATION" : {
+                "type" : "string"
+              },
+        "GRAZE_ANGLE" : {
+                "type" : "number"
+              },
+        "INCIDENCE_ANGLE" : {
+                "type" : "number"
+              },
+        "SQUINT_ANGLE" : {
+                "type" : "number"
+              },
+        "PULSE_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "PULSE_DURATION" : {
+                "type" : "number"
+              },
+        "CONTINUOUS_SPOT_ANGLE" : {
+                "type" : "number"
+              },
+        "SLANT_RANGE" : {
+                "type" : "number"
+              },
+        "NEAR_RANGE" : {
+                "type" : "number"
+              },
+        "FAR_RANGE" : {
+                "type" : "number"
+              },
+        "SWATH_LENGTH" : {
+                "type" : "number"
+              },
+        "AREA" : {
+                "type" : "string"
+              },
+        "ATEXT" : {
+                "type" : "string"
+              },
+        "AGJSON" : {
+                "type" : "string"
+              },
+        "ATYPE" : {
+                "type" : "string"
+              },
+        "ANDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ASRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SPACING_RANGE" : {
+                "type" : "number"
+              },
+        "SPACING_AZIMUTH" : {
+                "type" : "number"
+              },
+        "LOOKS_AZIMUTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LOOKS_RANGE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "RESOLUTION_RANGE" : {
+                "type" : "number"
+              },
+        "RESOLUTION_AZIMUTH" : {
+                "type" : "number"
+              },
+        "OB_DIRECTION" : {
+                "type" : "string"
+              },
+        "COORD_SYS" : {
+                "type" : "string"
+              },
+        "TARGETPOSX" : {
+                "type" : "number"
+              },
+        "TARGETPOSY" : {
+                "type" : "number"
+              },
+        "TARGETPOSZ" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENVELX" : {
+                "type" : "number"
+              },
+        "SENVELY" : {
+                "type" : "number"
+              },
+        "SENVELZ" : {
+                "type" : "number"
+              },
+        "SENLAT_START" : {
+                "type" : "number"
+              },
+        "SENLON_START" : {
+                "type" : "number"
+              },
+        "SENLAT_END" : {
+                "type" : "number"
+              },
+        "SENLON_END" : {
+                "type" : "number"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SAR"
+}

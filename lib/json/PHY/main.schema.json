@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IntegrationMethod" : {
+      "type" : "string",
+      "enum": ["EULER", "EULER_IMPROVED", "RK2", "RK4", "RK45", "RK78", "VERLET", "LEAPFROG", "ADAMS_BASHFORTH", "GAUSS_JACKSON"]
+    },
+    "CollisionShape" : {
+      "type" : "string",
+      "enum": ["SPHERE", "BOX", "CYLINDER", "CAPSULE", "CONE", "CONVEX_HULL", "MESH", "COMPOUND"]
+    },
+    "MaterialType" : {
+      "type" : "string",
+      "enum": ["STEEL", "ALUMINUM", "TITANIUM", "CERAMIC", "COMPOSITE", "CONCRETE", "WOOD", "RUBBER", "WATER", "AIR", "CUSTOM"]
+    },
+    "ForceType" : {
+      "type" : "string",
+      "enum": ["GRAVITY", "THRUST", "DRAG", "LIFT", "FRICTION", "SPRING", "DAMPER", "CONTACT", "MAGNETIC", "ELECTRIC", "CUSTOM"]
+    },
+    "PHY" : {
+      "type" : "object",
+      "description" : "Physics and Rigid Body Dynamics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "SIMULATION_STEP" : {
+                "type" : "string"
+              },
+        "RIGID_BODY" : {
+                "type" : "string"
+              },
+        "INTEGRATION_CONFIG" : {
+                "type" : "string"
+              },
+        "COLLISION_QUERY_A" : {
+                "type" : "string"
+              },
+        "COLLISION_QUERY_B" : {
+                "type" : "string"
+              },
+        "TRANSFORM_A" : {
+                "type" : "string"
+              },
+        "TRANSFORM_B" : {
+                "type" : "string"
+              },
+        "POSITION_A" : {
+                "type" : "string"
+              },
+        "POSITION_B" : {
+                "type" : "string"
+              },
+        "FLUID" : {
+                "type" : "string"
+              },
+        "AERO_QUERY" : {
+                "type" : "string"
+              },
+        "DRAG_MODEL" : {
+                "type" : "string"
+              },
+        "THERMAL_STATE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PHY"
+}

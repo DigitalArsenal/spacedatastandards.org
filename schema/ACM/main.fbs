@@ -1,0 +1,14 @@
+// Hash: 151bbcc588f72d915ffe525dcd65a85539a9da2baa4e1982d70848e8ed0f6099
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Attitude Comprehensive Message
+table ACM {
+  CCSDS_ACM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+}
+
+root_type ACM;
+file_identifier "$ACM";

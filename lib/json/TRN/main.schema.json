@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TerrainDataSource" : {
+      "type" : "string",
+      "enum": ["SRTM", "ASTER", "DTED_0", "DTED_1", "DTED_2", "NED", "LIDAR", "CUSTOM"]
+    },
+    "LandCoverType" : {
+      "type" : "string",
+      "enum": ["WATER", "URBAN", "SUBURBAN", "FOREST_DECIDUOUS", "FOREST_CONIFEROUS", "FOREST_MIXED", "GRASSLAND", "SHRUBLAND", "CROPLAND", "BARREN", "WETLAND", "SNOW_ICE", "DESERT", "ROCK", "ROAD", "RUNWAY", "BUILDING"]
+    },
+    "TerrainInterpolation" : {
+      "type" : "string",
+      "enum": ["NEAREST", "BILINEAR", "BICUBIC", "KRIGING"]
+    },
+    "TRN" : {
+      "type" : "object",
+      "description" : "Terrain Models",
+      "properties" : {
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TerrainDataSource"}
+              },
+        "INTERPOLATION" : {
+                "$ref" : "#/definitions/TerrainInterpolation"
+              },
+        "CACHE_ENABLED" : {
+                "type" : "boolean"
+              },
+        "MAX_CACHE_TILES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "VERTICAL_EXAGGERATION" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TRN"
+}

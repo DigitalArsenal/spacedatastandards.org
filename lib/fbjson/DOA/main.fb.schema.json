@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DOA": {
+      "type": "object",
+      "description": "Difference of Arrival",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TASK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SENSOR1_DELAY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR2_DELAY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN2LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN2LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN2ALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_RATE_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SNR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TDOA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TDOA_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FDOA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FDOA_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COLLECTION_MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RAW_FILE_URI": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/DOA",
+  "x-flatbuffer-root-type": "DOA",
+  "x-flatbuffer-file-identifier": "$DOA"
+}

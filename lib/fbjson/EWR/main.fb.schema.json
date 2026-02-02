@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "JammingType": {
+      "type": "string",
+      "enum": [
+        "NOISE_BARRAGE",
+        "NOISE_SPOT",
+        "NOISE_SWEPT",
+        "DECEPTION_RANGE_GATE",
+        "DECEPTION_VELOCITY_GATE",
+        "DECEPTION_ANGLE",
+        "DECEPTION_FALSE_TARGET",
+        "DRFM",
+        "REPEATER",
+        "CROSS_EYE",
+        "CROSS_POLARIZATION",
+        "CHAFF",
+        "FLARE",
+        "TOWED_DECOY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NOISE_BARRAGE": {
+          "value": 0
+        },
+        "NOISE_SPOT": {
+          "value": 1
+        },
+        "NOISE_SWEPT": {
+          "value": 2
+        },
+        "DECEPTION_RANGE_GATE": {
+          "value": 3
+        },
+        "DECEPTION_VELOCITY_GATE": {
+          "value": 4
+        },
+        "DECEPTION_ANGLE": {
+          "value": 5
+        },
+        "DECEPTION_FALSE_TARGET": {
+          "value": 6
+        },
+        "DRFM": {
+          "value": 7
+        },
+        "REPEATER": {
+          "value": 8
+        },
+        "CROSS_EYE": {
+          "value": 9
+        },
+        "CROSS_POLARIZATION": {
+          "value": 10
+        },
+        "CHAFF": {
+          "value": 11
+        },
+        "FLARE": {
+          "value": 12
+        },
+        "TOWED_DECOY": {
+          "value": 13
+        }
+      }
+    },
+    "ThreatCategory": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "EARLY_WARNING",
+        "ACQUISITION",
+        "TRACKING",
+        "GUIDANCE",
+        "HEIGHT_FINDER",
+        "GCI",
+        "AIRBORNE_INTERCEPT",
+        "SURFACE_SEARCH",
+        "AIR_SEARCH",
+        "NAVIGATION",
+        "WEATHER",
+        "CIVIL",
+        "FRIENDLY",
+        "IFF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "EARLY_WARNING": {
+          "value": 1
+        },
+        "ACQUISITION": {
+          "value": 2
+        },
+        "TRACKING": {
+          "value": 3
+        },
+        "GUIDANCE": {
+          "value": 4
+        },
+        "HEIGHT_FINDER": {
+          "value": 5
+        },
+        "GCI": {
+          "value": 6
+        },
+        "AIRBORNE_INTERCEPT": {
+          "value": 7
+        },
+        "SURFACE_SEARCH": {
+          "value": 8
+        },
+        "AIR_SEARCH": {
+          "value": 9
+        },
+        "NAVIGATION": {
+          "value": 10
+        },
+        "WEATHER": {
+          "value": 11
+        },
+        "CIVIL": {
+          "value": 12
+        },
+        "FRIENDLY": {
+          "value": 13
+        },
+        "IFF": {
+          "value": 14
+        }
+      }
+    },
+    "ESMFunction": {
+      "type": "string",
+      "enum": [
+        "SEARCH",
+        "CLASSIFICATION",
+        "IDENTIFICATION",
+        "DIRECTION_FINDING",
+        "LOCATION",
+        "RECORDING",
+        "SITUATIONAL_AWARENESS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SEARCH": {
+          "value": 0
+        },
+        "CLASSIFICATION": {
+          "value": 1
+        },
+        "IDENTIFICATION": {
+          "value": 2
+        },
+        "DIRECTION_FINDING": {
+          "value": 3
+        },
+        "LOCATION": {
+          "value": 4
+        },
+        "RECORDING": {
+          "value": 5
+        },
+        "SITUATIONAL_AWARENESS": {
+          "value": 6
+        }
+      }
+    },
+    "CountermeasureStatus": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "DEPLOYING",
+        "ACTIVE",
+        "EXPENDED",
+        "RELOADING",
+        "FAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "READY": {
+          "value": 0
+        },
+        "DEPLOYING": {
+          "value": 1
+        },
+        "ACTIVE": {
+          "value": 2
+        },
+        "EXPENDED": {
+          "value": 3
+        },
+        "RELOADING": {
+          "value": 4
+        },
+        "FAILED": {
+          "value": 5
+        }
+      }
+    },
+    "WaveformType": {
+      "type": "string",
+      "enum": [
+        "CW",
+        "PULSED",
+        "PULSE_DOPPLER",
+        "FM_CW",
+        "CHIRP",
+        "PHASE_CODED",
+        "FREQUENCY_AGILE",
+        "PRI_AGILE",
+        "COMPLEX",
+        "LPI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CW": {
+          "value": 0
+        },
+        "PULSED": {
+          "value": 1
+        },
+        "PULSE_DOPPLER": {
+          "value": 2
+        },
+        "FM_CW": {
+          "value": 3
+        },
+        "CHIRP": {
+          "value": 4
+        },
+        "PHASE_CODED": {
+          "value": 5
+        },
+        "FREQUENCY_AGILE": {
+          "value": 6
+        },
+        "PRI_AGILE": {
+          "value": 7
+        },
+        "COMPLEX": {
+          "value": 8
+        },
+        "LPI": {
+          "value": 9
+        }
+      }
+    },
+    "EWR": {
+      "type": "object",
+      "description": "Electronic Warfare",
+      "properties": {
+        "SYSTEM_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "ESM_ACTIVE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "ECM_ACTIVE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "RWR_ACTIVE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "ESM_CONTACTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ACTIVE_JAMMING": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COUNTERMEASURES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "THREAT_WARNINGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "EMCON_LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "LAST_UPDATE_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/EWR",
+  "x-flatbuffer-root-type": "EWR",
+  "x-flatbuffer-file-identifier": "$EWR"
+}

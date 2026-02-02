@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MNF" : {
+      "type" : "object",
+      "description" : "Orbit Manifold",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string"
+              },
+        "WEIGHT" : {
+                "type" : "number"
+              },
+        "DELTA_V" : {
+                "type" : "number"
+              },
+        "DELTA_T" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MNF"
+}

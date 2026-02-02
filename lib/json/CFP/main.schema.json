@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pduType" : {
+      "type" : "string",
+      "enum": ["FILE_DIRECTIVE", "FILE_DATA"]
+    },
+    "transmissionMode" : {
+      "type" : "string",
+      "enum": ["ACKNOWLEDGED", "UNACKNOWLEDGED"]
+    },
+    "CFP" : {
+      "type" : "object",
+      "description" : "CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "PDU version"
+              },
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/pduType",
+                "description" : "PDU type"
+              },
+        "DIRECTION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Direction (toward receiver or sender)"
+              },
+        "TRANSMISSION_MODE" : {
+                "$ref" : "#/definitions/transmissionMode",
+                "description" : "Transmission mode"
+              },
+        "CRC_FLAG" : {
+                "type" : "boolean",
+                "description" : "CRC present flag"
+              },
+        "LARGE_FILE_FLAG" : {
+                "type" : "boolean",
+                "description" : "Large file flag"
+              },
+        "DATA_FIELD_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Data field length"
+              },
+        "SOURCE_ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Source entity ID"
+              },
+        "TRANSACTION_SEQ_NUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Transaction sequence number"
+              },
+        "DESTINATION_ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Destination entity ID"
+              },
+        "CHECKSUM_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "File checksum type"
+              },
+        "FILE_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "File size"
+              },
+        "SOURCE_FILENAME" : {
+                "type" : "string",
+                "description" : "Source filename"
+              },
+        "DESTINATION_FILENAME" : {
+                "type" : "string",
+                "description" : "Destination filename"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "PDU data"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CFP"
+}

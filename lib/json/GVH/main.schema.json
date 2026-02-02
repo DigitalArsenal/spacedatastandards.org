@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "VehicleType" : {
+      "type" : "string",
+      "enum": ["MBT", "LIGHT_TANK", "IFV", "APC", "SPAA", "SPG", "MLRS", "RECON", "TRUCK", "JEEP", "MRAP", "ENGINEERING", "RECOVERY", "AAA", "SAM", "RADAR"]
+    },
+    "DriveType" : {
+      "type" : "string",
+      "enum": ["TRACKED", "WHEELED_4X4", "WHEELED_6X6", "WHEELED_8X8", "HALF_TRACK"]
+    },
+    "GVHEngineType" : {
+      "type" : "string",
+      "enum": ["DIESEL", "GASOLINE", "GAS_TURBINE", "MULTIFUEL", "HYBRID", "ELECTRIC"]
+    },
+    "GVH" : {
+      "type" : "object",
+      "description" : "Ground Vehicles",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "SPEED" : {
+                "type" : "number"
+              },
+        "HEADING" : {
+                "type" : "number"
+              },
+        "LATERAL_G" : {
+                "type" : "number"
+              },
+        "LONGITUDINAL_G" : {
+                "type" : "number"
+              },
+        "TURRET" : {
+                "type" : "string"
+              },
+        "DRIVETRAIN" : {
+                "type" : "string"
+              },
+        "SUSPENSION_LF" : {
+                "type" : "string"
+              },
+        "SUSPENSION_RF" : {
+                "type" : "string"
+              },
+        "SUSPENSION_LR" : {
+                "type" : "string"
+              },
+        "SUSPENSION_RR" : {
+                "type" : "string"
+              },
+        "VEHICLE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DRIVE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ENGINE_RUNNING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LIGHTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FUEL_LEVEL" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GVH"
+}

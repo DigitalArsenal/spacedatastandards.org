@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AircraftType" : {
+      "type" : "string",
+      "enum": ["FIGHTER", "ATTACK", "BOMBER", "TRANSPORT", "TRAINER", "RECON", "TANKER", "AWACS", "UAV", "PROP_SINGLE", "PROP_MULTI", "SEAPLANE"]
+    },
+    "EngineType" : {
+      "type" : "string",
+      "enum": ["TURBOJET", "TURBOFAN_LOW", "TURBOFAN_HIGH", "TURBOPROP", "PISTON", "RAMJET", "SCRAMJET", "ELECTRIC"]
+    },
+    "FlightPhase" : {
+      "type" : "string",
+      "enum": ["PARKED", "TAXI", "TAKEOFF", "CLIMB", "CRUISE", "DESCENT", "APPROACH", "LANDING", "GO_AROUND", "EMERGENCY"]
+    },
+    "GearState" : {
+      "type" : "string",
+      "enum": ["UP", "TRANSIT_DOWN", "DOWN", "TRANSIT_UP", "DAMAGED"]
+    },
+    "ACR" : {
+      "type" : "object",
+      "description" : "Aircraft Dynamics",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "CG_X" : {
+                "type" : "number"
+              },
+        "CG_Z" : {
+                "type" : "number"
+              },
+        "AERO" : {
+                "type" : "string"
+              },
+        "CONTROLS" : {
+                "type" : "string"
+              },
+        "ENGINE" : {
+                "type" : "string"
+              },
+        "GEAR_STATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "GEAR_POSITION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLAP_POSITION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "SPEEDBRAKE_POS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLIGHT_PHASE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "AUTOPILOT_MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "WEIGHT_ON_WHEELS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ACR"
+}

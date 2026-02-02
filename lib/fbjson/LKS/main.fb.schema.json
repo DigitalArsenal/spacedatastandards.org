@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LKS": {
+      "type": "object",
+      "description": "Link Status",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_STOP_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_BEAM1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT1_LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ID_BEAM2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT2_LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE1_TO2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE2_TO1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LINK_STATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SYS_CAP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPS_CAP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SAT_NO2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LKS",
+  "x-flatbuffer-root-type": "LKS",
+  "x-flatbuffer-file-identifier": "$LKS"
+}

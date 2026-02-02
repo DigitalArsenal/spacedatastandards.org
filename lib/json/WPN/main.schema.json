@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "WeaponType" : {
+      "type" : "string",
+      "enum": ["MG_SMALL", "MG_HEAVY", "AUTOCANNON", "CANNON", "TANK_GUN", "ARTILLERY", "MORTAR", "ROCKET_UNGUIDED", "BOMB_DUMB", "BOMB_GUIDED", "TORPEDO", "DEPTH_CHARGE", "MINE", "GRENADE"]
+    },
+    "FuzeType" : {
+      "type" : "string",
+      "enum": ["CONTACT", "DELAY", "TIMED", "PROXIMITY", "AIRBURST", "MAGNETIC", "PRESSURE", "SEISMIC"]
+    },
+    "ProjectilePhase" : {
+      "type" : "string",
+      "enum": ["LOADED", "IN_FLIGHT", "DETONATED", "DUD", "IMPACT"]
+    },
+    "WPN" : {
+      "type" : "object",
+      "description" : "Weapons and Munitions",
+      "properties" : {
+        "CALIBER" : {
+                "type" : "number"
+              },
+        "MUZZLE_VELOCITY" : {
+                "type" : "number"
+              },
+        "RATE_OF_FIRE" : {
+                "type" : "number"
+              },
+        "DISPERSION" : {
+                "type" : "number"
+              },
+        "AMMO_CAPACITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "BURST_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "RELOAD_TIME" : {
+                "type" : "number"
+              },
+        "OVERHEAT_ROUNDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "COOLDOWN_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION_MIN" : {
+                "type" : "number"
+              },
+        "ELEVATION_MAX" : {
+                "type" : "number"
+              },
+        "TRAVERSE_MIN" : {
+                "type" : "number"
+              },
+        "TRAVERSE_MAX" : {
+                "type" : "number"
+              },
+        "SLEW_RATE" : {
+                "type" : "number"
+              },
+        "WEAPON_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FUZE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/WPN"
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SKI": {
+      "type": "object",
+      "description": "Sky Imagery",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENLAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN_QUAT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SEN_QUAT_DOT": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "IMAGE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EXP_START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EXP_END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_SOURCE_INFO": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TOP_LEFT_START_AZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOP_LEFT_START_EL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOP_LEFT_STOP_AZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOP_LEFT_STOP_EL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "IMAGE_SET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_SET_LENGTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SEQUENCE_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "FRAME_FOVWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME_FOVHEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_FOVWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_FOVHEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAME_WIDTH_PIXELS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "FRAME_HEIGHT_PIXELS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "PIXEL_BIT_DEPTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ANNOTATION_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CALIBRATION_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILENAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILESIZE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        },
+        "CHECKSUM_VALUE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EO_OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SKI",
+  "x-flatbuffer-root-type": "SKI",
+  "x-flatbuffer-file-identifier": "$SKI"
+}

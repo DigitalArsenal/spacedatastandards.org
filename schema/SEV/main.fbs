@@ -1,0 +1,17 @@
+// Hash: 0c2488cc8ee961c19aaa12084be912986531dff117ecfbfb2d486567960c047a
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Space Environment Observation Detail
+table SEV {
+  OB_TYPE:string;
+  OB_UO_M:string;
+  OB_VALUE:double;
+  OB_STRING:string;
+  OB_ARRAY:[string];
+  OB_BOOL:bool;
+  OB_QUALITY:string;
+  OB_DESCRIPTION:string;
+}
+
+root_type SEV;
+file_identifier "$SEV";

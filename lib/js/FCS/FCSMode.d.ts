@@ -1,0 +1,11 @@
+export declare enum FCSMode {
+    OFF = 0,
+    STANDBY = 1,
+    RANGING = 2,
+    TRACKING = 3,
+    SOLUTION = 4,
+    CCIP = 5,
+    CCRP = 6,
+    MANUAL = 7
+}
+//# sourceMappingURL=FCSMode.d.ts.map

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "rcfPduType" : {
+      "type" : "string",
+      "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_BUFFER", "STATUS_REPORT", "PEER_ABORT"]
+    },
+    "RCF" : {
+      "type" : "object",
+      "description" : "Return Channel Frames Service (CCSDS 913.5-B-2)",
+      "properties" : {
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/rcfPduType",
+                "description" : "PDU type"
+              },
+        "INITIATOR_ID" : {
+                "type" : "string",
+                "description" : "Initiator identifier"
+              },
+        "RESPONDER_PORT_ID" : {
+                "type" : "string",
+                "description" : "Responder port identifier"
+              },
+        "SERVICE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Service type"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Version number"
+              },
+        "INVOKE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Invoke ID"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft ID filter"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel ID filter"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RCF"
+}

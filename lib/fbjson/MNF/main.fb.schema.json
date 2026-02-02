@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MNF": {
+      "type": "object",
+      "description": "Orbit Manifold",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_T": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MNF",
+  "x-flatbuffer-root-type": "MNF",
+  "x-flatbuffer-file-identifier": "$MNF"
+}

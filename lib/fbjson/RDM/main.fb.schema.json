@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RDM": {
+      "type": "object",
+      "description": "Reentry Data Message",
+      "properties": {
+        "CCSDS_RDM_VERS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REENTRY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REENTRY_LATITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REENTRY_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RDM",
+  "x-flatbuffer-root-type": "RDM",
+  "x-flatbuffer-file-identifier": "$RDM"
+}

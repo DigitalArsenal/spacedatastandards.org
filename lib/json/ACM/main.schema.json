@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ACM" : {
+      "type" : "object",
+      "description" : "Attitude Comprehensive Message",
+      "properties" : {
+        "CCSDS_ACM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ACM"
+}

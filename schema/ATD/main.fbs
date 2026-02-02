@@ -1,0 +1,34 @@
+// Hash: c4944a84ed159ab22e6fedd7a3e83602d125d248cff34e568a9d3653acce2def
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Attitude Data Point
+table ATD {
+  ID:string;
+  AS_ID:string;
+  SAT_NO:int;
+  ORIG_OBJECT_ID:string;
+  TS:string;
+  MOTION_TYPE:string;
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+  Q1_DOT:double;
+  Q2_DOT:double;
+  Q3_DOT:double;
+  QC_DOT:double;
+  X_ANGLE:[string];
+  Y_ANGLE:[string];
+  Z_ANGLE:[string];
+  X_RATE:[string];
+  Y_RATE:[string];
+  Z_RATE:[string];
+  RA:double;
+  DECLINATION:double;
+  CONING_ANGLE:double;
+  PREC_PERIOD:double;
+  SPIN_PERIOD:double;
+}
+
+root_type ATD;
+file_identifier "$ATD";

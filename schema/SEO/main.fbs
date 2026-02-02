@@ -1,0 +1,42 @@
+// Hash: edae4555bd8ea84b32c76254dab992138490031d153a17afcc6b8f05ef20c5a9
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Space Environment Observation
+table SEO {
+  ID:string;
+  MSG_TYPE:string;
+  GEN_SYSTEM:string;
+  EXTERNAL_ID:string;
+  DATA_TYPE:string;
+  GEN_TIME:string;
+  FORECAST:bool;
+  DERIVED:bool;
+  SAT_NO:int;
+  ORIG_OBJECT_ID:string;
+  ID_SENSOR:string;
+  ORIG_SENSOR_ID:string;
+  OBSERVATORY_TYPE:string;
+  OBSERVATORY_NAME:string;
+  OBSERVATORY_NOTES:string;
+  INSTRUMENT_TYPE:string;
+  LAT:double;
+  LON:double;
+  ALT:double;
+  SEN_REFERENCE_FRAME:string;
+  SEN_POS:[string];
+  SEN_VEL:[string];
+  MEAS_TYPE:string;
+  SEN_ENERGY_LEVEL:string;
+  OB_SET_ID:string;
+  PARTICLE_TYPE:string;
+  OB_TIME:string;
+  SEO_LIST:[string];
+  QUALITY:string;
+  DESCRIPTION:string;
+  DESCRIPTOR:string;
+  SRC_TYPS:[string];
+  SRC_IDS:[string];
+}
+
+root_type SEO;
+file_identifier "$SEO";

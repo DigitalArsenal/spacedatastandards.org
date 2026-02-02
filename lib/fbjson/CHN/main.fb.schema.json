@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CHN": {
+      "type": "object",
+      "description": "Communications Channel",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BEAM_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_RFBAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCRYPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PKG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPRESSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VPID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "APID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OWNER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CHN",
+  "x-flatbuffer-root-type": "CHN",
+  "x-flatbuffer-file-identifier": "$CHN"
+}

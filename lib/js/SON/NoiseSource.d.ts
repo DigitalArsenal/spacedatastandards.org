@@ -1,0 +1,13 @@
+export declare enum NoiseSource {
+    AMBIENT = 0,
+    SHIPPING = 1,
+    BIOLOGICAL = 2,
+    WIND = 3,
+    RAIN = 4,
+    ICE = 5,
+    SEISMIC = 6,
+    MACHINERY = 7,
+    FLOW = 8,
+    SELF_NOISE = 9
+}
+//# sourceMappingURL=NoiseSource.d.ts.map

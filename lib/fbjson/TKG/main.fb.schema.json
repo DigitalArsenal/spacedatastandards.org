@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FilterType": {
+      "type": "string",
+      "enum": [
+        "ALPHA_BETA",
+        "ALPHA_BETA_GAMMA",
+        "KALMAN",
+        "EXTENDED_KALMAN",
+        "UNSCENTED_KALMAN",
+        "PARTICLE",
+        "IMM",
+        "JPDA",
+        "MHT",
+        "GNN",
+        "NNKF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ALPHA_BETA": {
+          "value": 0
+        },
+        "ALPHA_BETA_GAMMA": {
+          "value": 1
+        },
+        "KALMAN": {
+          "value": 2
+        },
+        "EXTENDED_KALMAN": {
+          "value": 3
+        },
+        "UNSCENTED_KALMAN": {
+          "value": 4
+        },
+        "PARTICLE": {
+          "value": 5
+        },
+        "IMM": {
+          "value": 6
+        },
+        "JPDA": {
+          "value": 7
+        },
+        "MHT": {
+          "value": 8
+        },
+        "GNN": {
+          "value": 9
+        },
+        "NNKF": {
+          "value": 10
+        }
+      }
+    },
+    "MotionModel": {
+      "type": "string",
+      "enum": [
+        "CONSTANT_VELOCITY",
+        "CONSTANT_ACCELERATION",
+        "COORDINATED_TURN",
+        "SINGER_ACCELERATION",
+        "JUMP_MARKOV",
+        "BALLISTIC",
+        "ORBITAL",
+        "SURFACE_VEHICLE",
+        "CURVILINEAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CONSTANT_VELOCITY": {
+          "value": 0
+        },
+        "CONSTANT_ACCELERATION": {
+          "value": 1
+        },
+        "COORDINATED_TURN": {
+          "value": 2
+        },
+        "SINGER_ACCELERATION": {
+          "value": 3
+        },
+        "JUMP_MARKOV": {
+          "value": 4
+        },
+        "BALLISTIC": {
+          "value": 5
+        },
+        "ORBITAL": {
+          "value": 6
+        },
+        "SURFACE_VEHICLE": {
+          "value": 7
+        },
+        "CURVILINEAR": {
+          "value": 8
+        }
+      }
+    },
+    "MeasurementType": {
+      "type": "string",
+      "enum": [
+        "POSITION_3D",
+        "POSITION_2D",
+        "RANGE_BEARING",
+        "RANGE_BEARING_ELEVATION",
+        "RANGE_ONLY",
+        "BEARING_ONLY",
+        "RANGE_RATE",
+        "ANGLES_ONLY",
+        "TLE",
+        "GPS",
+        "RADAR",
+        "ADSB",
+        "SONAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POSITION_3D": {
+          "value": 0
+        },
+        "POSITION_2D": {
+          "value": 1
+        },
+        "RANGE_BEARING": {
+          "value": 2
+        },
+        "RANGE_BEARING_ELEVATION": {
+          "value": 3
+        },
+        "RANGE_ONLY": {
+          "value": 4
+        },
+        "BEARING_ONLY": {
+          "value": 5
+        },
+        "RANGE_RATE": {
+          "value": 6
+        },
+        "ANGLES_ONLY": {
+          "value": 7
+        },
+        "TLE": {
+          "value": 8
+        },
+        "GPS": {
+          "value": 9
+        },
+        "RADAR": {
+          "value": 10
+        },
+        "ADSB": {
+          "value": 11
+        },
+        "SONAR": {
+          "value": 12
+        }
+      }
+    },
+    "TrackStatus": {
+      "type": "string",
+      "enum": [
+        "TENTATIVE",
+        "CONFIRMED",
+        "COASTING",
+        "LOST",
+        "DELETED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TENTATIVE": {
+          "value": 0
+        },
+        "CONFIRMED": {
+          "value": 1
+        },
+        "COASTING": {
+          "value": 2
+        },
+        "LOST": {
+          "value": 3
+        },
+        "DELETED": {
+          "value": 4
+        }
+      }
+    },
+    "AssociationMethod": {
+      "type": "string",
+      "enum": [
+        "NEAREST_NEIGHBOR",
+        "GLOBAL_NEAREST_NEIGHBOR",
+        "PROBABILISTIC_DATA",
+        "JOINT_PROBABILISTIC",
+        "AUCTION",
+        "HUNGARIAN",
+        "MUNKRES"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NEAREST_NEIGHBOR": {
+          "value": 0
+        },
+        "GLOBAL_NEAREST_NEIGHBOR": {
+          "value": 1
+        },
+        "PROBABILISTIC_DATA": {
+          "value": 2
+        },
+        "JOINT_PROBABILISTIC": {
+          "value": 3
+        },
+        "AUCTION": {
+          "value": 4
+        },
+        "HUNGARIAN": {
+          "value": 5
+        },
+        "MUNKRES": {
+          "value": 6
+        }
+      }
+    },
+    "FusionMethod": {
+      "type": "string",
+      "enum": [
+        "SIMPLE_AVERAGE",
+        "WEIGHTED_AVERAGE",
+        "COVARIANCE_INTERSECTION",
+        "BAR_SHALOM_CAMPO",
+        "FEDERATED",
+        "SEQUENTIAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SIMPLE_AVERAGE": {
+          "value": 0
+        },
+        "WEIGHTED_AVERAGE": {
+          "value": 1
+        },
+        "COVARIANCE_INTERSECTION": {
+          "value": 2
+        },
+        "BAR_SHALOM_CAMPO": {
+          "value": 3
+        },
+        "FEDERATED": {
+          "value": 4
+        },
+        "SEQUENTIAL": {
+          "value": 5
+        }
+      }
+    },
+    "TKG": {
+      "type": "object",
+      "description": "Tracking and Data Fusion",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILTER_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMM_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MHT_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "JPDA_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FUSION_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEASUREMENTS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_STATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_TO_UPDATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACKS_TO_CORRELATE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TKG",
+  "x-flatbuffer-root-type": "TKG",
+  "x-flatbuffer-file-identifier": "$TKG"
+}

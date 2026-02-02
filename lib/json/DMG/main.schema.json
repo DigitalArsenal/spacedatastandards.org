@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModuleType" : {
+      "type" : "string",
+      "enum": ["ENGINE", "TRANSMISSION", "FUEL_TANK", "AMMO_RACK", "AMMO_FIRST_STAGE", "GUN_BREECH", "GUN_BARREL", "TURRET_RING", "TURRET_DRIVE", "TRACKS", "WHEELS", "SUSPENSION", "DRIVER_PORT", "OPTICS_GUNNER", "OPTICS_COMMANDER", "FCS", "RADIO", "HYDRAULICS", "AUTOLOADER", "ERA_BLOCK", "RADAR", "WING_LEFT", "WING_RIGHT", "TAIL", "AILERON_LEFT", "AILERON_RIGHT", "ELEVATOR", "RUDDER", "LANDING_GEAR", "MAIN_ROTOR", "TAIL_ROTOR", "PROPELLER", "BRIDGE", "MAGAZINE"]
+    },
+    "ModuleState" : {
+      "type" : "string",
+      "enum": ["OPERATIONAL", "DAMAGED", "CRITICAL", "DESTROYED", "REPAIRING"]
+    },
+    "CrewRole" : {
+      "type" : "string",
+      "enum": ["COMMANDER", "GUNNER", "DRIVER", "LOADER", "RADIO_OP", "PILOT", "COPILOT", "ENGINEER", "HELMSMAN"]
+    },
+    "CrewState" : {
+      "type" : "string",
+      "enum": ["ALIVE", "WOUNDED", "UNCONSCIOUS", "DEAD", "BAILED"]
+    },
+    "DestructionCause" : {
+      "type" : "string",
+      "enum": ["NONE", "AMMO_DETONATION", "FUEL_FIRE", "CREW_LOST", "STRUCTURAL_FAILURE", "FLOODING"]
+    },
+    "DMG" : {
+      "type" : "object",
+      "description" : "Damage Models",
+      "properties" : {
+        "OVERALL_HEALTH" : {
+                "type" : "number"
+              },
+        "MOBILITY" : {
+                "type" : "number"
+              },
+        "FIREPOWER" : {
+                "type" : "number"
+              },
+        "MODULE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FIRE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLOOD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "IS_DESTROYED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DESTRUCTION_CAUSE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "EXTINGUISHERS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "REPAIR_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RELOAD_MULTIPLIER" : {
+                "type" : "number"
+              },
+        "ACCURACY_MULTIPLIER" : {
+                "type" : "number"
+              },
+        "CREW_ALIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_WOUNDED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DMG"
+}

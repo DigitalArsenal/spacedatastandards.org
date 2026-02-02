@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GravityModelType": {
+      "type": "string",
+      "enum": [
+        "POINT_MASS",
+        "J2_ONLY",
+        "J2_J4",
+        "J2_J6",
+        "SPHERICAL_HARMONICS",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POINT_MASS": {
+          "value": 0
+        },
+        "J2_ONLY": {
+          "value": 1
+        },
+        "J2_J4": {
+          "value": 2
+        },
+        "J2_J6": {
+          "value": 3
+        },
+        "SPHERICAL_HARMONICS": {
+          "value": 4
+        },
+        "CUSTOM": {
+          "value": 5
+        }
+      }
+    },
+    "GravityModelName": {
+      "type": "string",
+      "enum": [
+        "WGS84",
+        "EGM96",
+        "EGM2008",
+        "GGM05C",
+        "JGM3",
+        "EIGEN_6C4",
+        "GOCO06S",
+        "XGM2019E",
+        "CUSTOM_MODEL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "WGS84": {
+          "value": 0
+        },
+        "EGM96": {
+          "value": 1
+        },
+        "EGM2008": {
+          "value": 2
+        },
+        "GGM05C": {
+          "value": 3
+        },
+        "JGM3": {
+          "value": 4
+        },
+        "EIGEN_6C4": {
+          "value": 5
+        },
+        "GOCO06S": {
+          "value": 6
+        },
+        "XGM2019E": {
+          "value": 7
+        },
+        "CUSTOM_MODEL": {
+          "value": 8
+        }
+      }
+    },
+    "CentralBody": {
+      "type": "string",
+      "enum": [
+        "EARTH",
+        "MOON",
+        "SUN",
+        "MARS",
+        "JUPITER",
+        "SATURN",
+        "VENUS",
+        "MERCURY",
+        "CUSTOM_BODY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EARTH": {
+          "value": 0
+        },
+        "MOON": {
+          "value": 1
+        },
+        "SUN": {
+          "value": 2
+        },
+        "MARS": {
+          "value": 3
+        },
+        "JUPITER": {
+          "value": 4
+        },
+        "SATURN": {
+          "value": 5
+        },
+        "VENUS": {
+          "value": 6
+        },
+        "MERCURY": {
+          "value": 7
+        },
+        "CUSTOM_BODY": {
+          "value": 8
+        }
+      }
+    },
+    "GRV": {
+      "type": "object",
+      "description": "Gravity Models",
+      "properties": {
+        "MODEL_TYPE": {
+          "$ref": "#/definitions/GravityModelType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "POINT_MASS": {
+              "value": 0
+            },
+            "J2_ONLY": {
+              "value": 1
+            },
+            "J2_J4": {
+              "value": 2
+            },
+            "J2_J6": {
+              "value": 3
+            },
+            "SPHERICAL_HARMONICS": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        },
+        "MODEL_NAME": {
+          "$ref": "#/definitions/GravityModelName",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "WGS84": {
+              "value": 0
+            },
+            "EGM96": {
+              "value": 1
+            },
+            "EGM2008": {
+              "value": 2
+            },
+            "GGM05C": {
+              "value": 3
+            },
+            "JGM3": {
+              "value": 4
+            },
+            "EIGEN_6C4": {
+              "value": 5
+            },
+            "GOCO06S": {
+              "value": 6
+            },
+            "XGM2019E": {
+              "value": 7
+            },
+            "CUSTOM_MODEL": {
+              "value": 8
+            }
+          }
+        },
+        "CENTRAL_BODY": {
+          "$ref": "#/definitions/CentralBody",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EARTH": {
+              "value": 0
+            },
+            "MOON": {
+              "value": 1
+            },
+            "SUN": {
+              "value": 2
+            },
+            "MARS": {
+              "value": 3
+            },
+            "JUPITER": {
+              "value": 4
+            },
+            "SATURN": {
+              "value": 5
+            },
+            "VENUS": {
+              "value": 6
+            },
+            "MERCURY": {
+              "value": 7
+            },
+            "CUSTOM_BODY": {
+              "value": 8
+            }
+          }
+        },
+        "MAX_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "MAX_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "INCLUDE_SUN": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "INCLUDE_MOON": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "INCLUDE_PLANETS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SOLID_TIDES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "OCEAN_TIDES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "POLE_TIDES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GRV",
+  "x-flatbuffer-root-type": "GRV",
+  "x-flatbuffer-file-identifier": "$GRV"
+}

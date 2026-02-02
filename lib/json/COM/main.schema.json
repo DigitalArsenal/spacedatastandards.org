@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModulationType" : {
+      "type" : "string",
+      "enum": ["AM", "FM", "PM", "BPSK", "QPSK", "PSK8", "QAM16", "QAM64", "QAM256", "FSK", "MSK", "OFDM", "SPREAD_SPECTRUM", "FHSS", "DSSS"]
+    },
+    "BandType" : {
+      "type" : "string",
+      "enum": ["HF", "VHF", "UHF", "L_BAND", "S_BAND", "C_BAND", "X_BAND", "KU_BAND", "K_BAND", "KA_BAND", "V_BAND", "W_BAND", "MM_WAVE"]
+    },
+    "PropagationModel" : {
+      "type" : "string",
+      "enum": ["FREE_SPACE", "TWO_RAY_GROUND", "HATA_URBAN", "HATA_SUBURBAN", "COST231", "ITU_R_P525", "ITU_R_P676", "ITU_R_P838", "ITU_R_P840", "LONGLEY_RICE", "OKUMURA", "LOG_DISTANCE", "TERRAIN_INTEGRATED"]
+    },
+    "DataLinkType" : {
+      "type" : "string",
+      "enum": ["LINK_16", "LINK_11", "LINK_22", "CDL", "TCDL", "SADL", "IFDL", "VMF", "JREAP", "SATCOM", "ADS_B", "AIS", "HAVEQUICK", "SINCGARS", "CUSTOM"]
+    },
+    "AntennaPattern" : {
+      "type" : "string",
+      "enum": ["ISOTROPIC", "DIPOLE", "YAGI", "PARABOLIC", "PHASED_ARRAY", "HORN", "PATCH", "HELICAL", "LOG_PERIODIC", "OMNIDIRECTIONAL", "SECTOR", "CUSTOM_PATTERN"]
+    },
+    "COM" : {
+      "type" : "object",
+      "description" : "Communications Systems",
+      "properties" : {
+        "SYSTEM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "IS_TRANSMITTING" : {
+                "type" : "boolean"
+              },
+        "IS_RECEIVING" : {
+                "type" : "boolean"
+              },
+        "CURRENT_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "CURRENT_POWER_WATTS" : {
+                "type" : "number"
+              },
+        "CURRENT_DATA_RATE_BPS" : {
+                "type" : "number"
+              },
+        "MESSAGES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MESSAGES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "CONNECTED_NODES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "ACTIVE_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DataLinkType"}
+              },
+        "LAST_UPDATE_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/COM"
+}

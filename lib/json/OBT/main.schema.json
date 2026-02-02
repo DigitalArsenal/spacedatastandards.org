@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OBT" : {
+      "type" : "object",
+      "description" : "Orbit Track",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "RDF_RF" : {
+                "type" : "number"
+              },
+        "CALL_SIGN" : {
+                "type" : "string"
+              },
+        "RPT_NUM" : {
+                "type" : "string"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string"
+              },
+        "IDENT_AMP" : {
+                "type" : "string"
+              },
+        "SAT_STATUS" : {
+                "type" : "string"
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string"
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string"
+              },
+        "DECAY" : {
+                "type" : "number"
+              },
+        "CHARLIE_LINE" : {
+                "type" : "string"
+              },
+        "AOU_TYPE" : {
+                "type" : "string"
+              },
+        "AOU_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPD" : {
+                "type" : "number"
+              },
+        "ANG_ELEV" : {
+                "type" : "number"
+              },
+        "CNTNMNT" : {
+                "type" : "number"
+              },
+        "XREF" : {
+                "type" : "string"
+              },
+        "CH_XREF" : {
+                "type" : "string"
+              },
+        "AMPLIFICATION" : {
+                "type" : "string"
+              },
+        "IFF" : {
+                "type" : "string"
+              },
+        "REINFORCED" : {
+                "type" : "boolean"
+              },
+        "REDUCED" : {
+                "type" : "boolean"
+              },
+        "HQ" : {
+                "type" : "boolean"
+              },
+        "DUMMY" : {
+                "type" : "boolean"
+              },
+        "TASK_FORCE" : {
+                "type" : "boolean"
+              },
+        "FEINT" : {
+                "type" : "boolean"
+              },
+        "INSTALLATION" : {
+                "type" : "boolean"
+              },
+        "VEH_TYPE" : {
+                "type" : "string"
+              },
+        "TRK_ID" : {
+                "type" : "string"
+              },
+        "TRACK_SENSORS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OBT"
+}

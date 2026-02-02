@@ -1,0 +1,25 @@
+// Hash: 6c4311afa33e0d798fd33ecbe268e40a71544cb06cd9b188c9056239cd17d408
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// RF Band
+table RFB {
+  ID:string;
+  ID_ENTITY:string;
+  NAME:string;
+  BAND:string;
+  MODE:string;
+  PURPOSE:string;
+  FREQ_MIN:double;
+  FREQ_MAX:double;
+  CENTER_FREQ:double;
+  PEAK_GAIN:double;
+  EDGE_GAIN:double;
+  BANDWIDTH:double;
+  BEAMWIDTH:double;
+  POLARIZATION:string;
+  ERP:double;
+  EIRP:double;
+}
+
+root_type RFB;
+file_identifier "$RFB";

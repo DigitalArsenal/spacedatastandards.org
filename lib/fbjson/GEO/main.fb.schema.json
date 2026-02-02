@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GEO": {
+      "type": "object",
+      "description": "GEO Spacecraft Status",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_ENERGY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CONFIDENCE_LEVEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PLANE_CHANGE_STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TROUGH_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LOST_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEMI_ANNUAL_CORR_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "OBJECT_STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RAW_FILE_URI": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GEO",
+  "x-flatbuffer-root-type": "GEO",
+  "x-flatbuffer-file-identifier": "$GEO"
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CMS" : {
+      "type" : "object",
+      "description" : "Communications Payload",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ENTITY" : {
+                "type" : "string"
+              },
+        "TRANSPONDERS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CMS"
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "packetType": {
+      "type": "string",
+      "enum": [
+        "TM",
+        "TC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TM": {
+          "value": 0
+        },
+        "TC": {
+          "value": 1
+        }
+      }
+    },
+    "SPP": {
+      "type": "object",
+      "description": "Space Packet Protocol (CCSDS 133.0-B-1)",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Packet version number",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PACKET_TYPE": {
+          "$ref": "#/definitions/packetType",
+          "description": "Packet type (TM or TC)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TM": {
+              "value": 0
+            },
+            "TC": {
+              "value": 1
+            }
+          }
+        },
+        "SEC_HDR_FLAG": {
+          "type": "boolean",
+          "description": "Secondary header flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "APID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Application Process Identifier",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SEQUENCE_FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SEQUENCE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Sequence count",
+          "x-flatbuffer-type": "ushort"
+        },
+        "DATA_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Data length minus 1",
+          "x-flatbuffer-type": "ushort"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Packet data zone",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SPP",
+  "x-flatbuffer-root-type": "SPP",
+  "x-flatbuffer-file-identifier": "$SPP"
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LNE" : {
+      "type" : "object",
+      "description" : "Launch Event",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "DERIVED_FROM" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_DATE" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_STRING" : {
+                "type" : "string"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string"
+              },
+        "LAUNCH_FAILURE_CODE" : {
+                "type" : "string"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string"
+              },
+        "BE_NUMBER" : {
+                "type" : "string"
+              },
+        "O_SUFFIX" : {
+                "type" : "string"
+              },
+        "LAUNCH_FACILITY_NAME" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LNE"
+}

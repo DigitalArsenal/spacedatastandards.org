@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PropagatorType": {
+      "type": "string",
+      "enum": [
+        "KEPLER",
+        "SGP4",
+        "SDP4",
+        "HPOP",
+        "COWELL",
+        "ENCKE",
+        "GAUSS_JACKSON",
+        "RK78",
+        "BROUWER",
+        "KOZAI",
+        "DSST"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "KEPLER": {
+          "value": 0
+        },
+        "SGP4": {
+          "value": 1
+        },
+        "SDP4": {
+          "value": 2
+        },
+        "HPOP": {
+          "value": 3
+        },
+        "COWELL": {
+          "value": 4
+        },
+        "ENCKE": {
+          "value": 5
+        },
+        "GAUSS_JACKSON": {
+          "value": 6
+        },
+        "RK78": {
+          "value": 7
+        },
+        "BROUWER": {
+          "value": 8
+        },
+        "KOZAI": {
+          "value": 9
+        },
+        "DSST": {
+          "value": 10
+        }
+      }
+    },
+    "ForceModel": {
+      "type": "string",
+      "enum": [
+        "POINT_MASS",
+        "J2",
+        "J2_J4",
+        "SPHERICAL_HARMONICS",
+        "THIRD_BODY_SUN",
+        "THIRD_BODY_MOON",
+        "ATMOSPHERIC_DRAG",
+        "SOLAR_RADIATION_PRESSURE",
+        "RELATIVISTIC",
+        "SOLID_TIDES",
+        "OCEAN_TIDES",
+        "MANEUVER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POINT_MASS": {
+          "value": 0
+        },
+        "J2": {
+          "value": 1
+        },
+        "J2_J4": {
+          "value": 2
+        },
+        "SPHERICAL_HARMONICS": {
+          "value": 3
+        },
+        "THIRD_BODY_SUN": {
+          "value": 4
+        },
+        "THIRD_BODY_MOON": {
+          "value": 5
+        },
+        "ATMOSPHERIC_DRAG": {
+          "value": 6
+        },
+        "SOLAR_RADIATION_PRESSURE": {
+          "value": 7
+        },
+        "RELATIVISTIC": {
+          "value": 8
+        },
+        "SOLID_TIDES": {
+          "value": 9
+        },
+        "OCEAN_TIDES": {
+          "value": 10
+        },
+        "MANEUVER": {
+          "value": 11
+        }
+      }
+    },
+    "OrbitType": {
+      "type": "string",
+      "enum": [
+        "LEO",
+        "MEO",
+        "GEO",
+        "HEO",
+        "SSO",
+        "MOLNIYA",
+        "TUNDRA",
+        "POLAR",
+        "EQUATORIAL",
+        "HYPERBOLIC",
+        "PARABOLIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LEO": {
+          "value": 0
+        },
+        "MEO": {
+          "value": 1
+        },
+        "GEO": {
+          "value": 2
+        },
+        "HEO": {
+          "value": 3
+        },
+        "SSO": {
+          "value": 4
+        },
+        "MOLNIYA": {
+          "value": 5
+        },
+        "TUNDRA": {
+          "value": 6
+        },
+        "POLAR": {
+          "value": 7
+        },
+        "EQUATORIAL": {
+          "value": 8
+        },
+        "HYPERBOLIC": {
+          "value": 9
+        },
+        "PARABOLIC": {
+          "value": 10
+        }
+      }
+    },
+    "TimeSystem": {
+      "type": "string",
+      "enum": [
+        "UTC",
+        "TAI",
+        "TT",
+        "TDB",
+        "GPS_TIME",
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UTC": {
+          "value": 0
+        },
+        "TAI": {
+          "value": 1
+        },
+        "TT": {
+          "value": 2
+        },
+        "TDB": {
+          "value": 3
+        },
+        "GPS_TIME": {
+          "value": 4
+        },
+        "JULIAN_DATE": {
+          "value": 5
+        },
+        "MODIFIED_JULIAN_DATE": {
+          "value": 6
+        }
+      }
+    },
+    "ReferenceFrame": {
+      "type": "string",
+      "enum": [
+        "ECI_J2000",
+        "ECEF",
+        "TEME",
+        "GCRF",
+        "ITRF",
+        "RIC",
+        "VNC",
+        "NTW",
+        "SEZ",
+        "LVLH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECI_J2000": {
+          "value": 0
+        },
+        "ECEF": {
+          "value": 1
+        },
+        "TEME": {
+          "value": 2
+        },
+        "GCRF": {
+          "value": 3
+        },
+        "ITRF": {
+          "value": 4
+        },
+        "RIC": {
+          "value": 5
+        },
+        "VNC": {
+          "value": 6
+        },
+        "NTW": {
+          "value": 7
+        },
+        "SEZ": {
+          "value": 8
+        },
+        "LVLH": {
+          "value": 9
+        }
+      }
+    },
+    "AST": {
+      "type": "object",
+      "description": "Astrodynamics",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATION_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TLE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_ELEMENTS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INITIAL_STATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        },
+        "MANEUVER_PLAN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONJUNCTION_PRIMARY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONJUNCTION_SECONDARY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "OD_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUND_STATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMATION_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ELEMENTS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AST",
+  "x-flatbuffer-root-type": "AST",
+  "x-flatbuffer-file-identifier": "$AST"
+}

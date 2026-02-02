@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CMS": {
+      "type": "object",
+      "description": "Communications Payload",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSPONDERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CMS",
+  "x-flatbuffer-root-type": "CMS",
+  "x-flatbuffer-file-identifier": "$CMS"
+}

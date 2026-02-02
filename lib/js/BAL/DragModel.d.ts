@@ -1,0 +1,14 @@
+export declare enum DragModel {
+    G1 = 0,
+    G2 = 1,
+    G5 = 2,
+    G6 = 3,
+    G7 = 4,
+    G8 = 5,
+    GI = 6,
+    GL = 7,
+    GS = 8,
+    RA4 = 9,
+    CUSTOM = 10
+}
+//# sourceMappingURL=DragModel.d.ts.map

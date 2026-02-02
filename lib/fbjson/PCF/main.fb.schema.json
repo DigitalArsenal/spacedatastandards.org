@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IntegratorType": {
+      "type": "string",
+      "enum": [
+        "RK4",
+        "RK45",
+        "RK78",
+        "DOPRI5",
+        "DOPRI853",
+        "ABM",
+        "BS",
+        "ANALYTICAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "RK4": {
+          "value": 0
+        },
+        "RK45": {
+          "value": 1
+        },
+        "RK78": {
+          "value": 2
+        },
+        "DOPRI5": {
+          "value": 3
+        },
+        "DOPRI853": {
+          "value": 4
+        },
+        "ABM": {
+          "value": 5
+        },
+        "BS": {
+          "value": 6
+        },
+        "ANALYTICAL": {
+          "value": 255
+        }
+      }
+    },
+    "PCF": {
+      "type": "object",
+      "description": "Propagator Configuration",
+      "properties": {
+        "STEP_SIZE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_STEP": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_STEP": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "GRAVITY_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "GRAVITY_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "INTEGRATOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "OUTPUT_FRAME": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FORCE_FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "DRAG_COEFFICIENT": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "SRP_COEFFICIENT": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "AREA_MASS_RATIO": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PCF",
+  "x-flatbuffer-root-type": "PCF",
+  "x-flatbuffer-file-identifier": "$PCF"
+}

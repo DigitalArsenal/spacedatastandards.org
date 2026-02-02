@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IntegratorType" : {
+      "type" : "string",
+      "enum": ["RK4", "RK45", "RK78", "DOPRI5", "DOPRI853", "ABM", "BS", "ANALYTICAL"]
+    },
+    "PCF" : {
+      "type" : "object",
+      "description" : "Propagator Configuration",
+      "properties" : {
+        "STEP_SIZE" : {
+                "type" : "number"
+              },
+        "TOLERANCE" : {
+                "type" : "number"
+              },
+        "MIN_STEP" : {
+                "type" : "number"
+              },
+        "MAX_STEP" : {
+                "type" : "number"
+              },
+        "MAX_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GRAVITY_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "GRAVITY_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "INTEGRATOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "OUTPUT_FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FORCE_FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "DRAG_COEFFICIENT" : {
+                "type" : "number"
+              },
+        "SRP_COEFFICIENT" : {
+                "type" : "number"
+              },
+        "AREA_MASS_RATIO" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PCF"
+}

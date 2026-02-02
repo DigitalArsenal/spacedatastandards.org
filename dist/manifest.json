@@ -1,6 +1,46 @@
 {
-    "version": "1.65.0+1769606054971",
+    "version": "1.66.0+1769860290588",
     "STANDARDS": {
+        "PCF": {
+            "IDL": "// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier \"$PCF\";",
+            "files": [
+                "./dist/PCF/PCF.sw.tar.gz",
+                "./dist/PCF/PCF.py.tar.gz",
+                "./dist/PCF/PCF.lob.tar.gz",
+                "./dist/PCF/PCF.go.tar.gz",
+                "./dist/PCF/PCF.js.tar.gz",
+                "./dist/PCF/PCF.dart.tar.gz",
+                "./dist/PCF/PCF.cs.tar.gz",
+                "./dist/PCF/PCF.java.tar.gz",
+                "./dist/PCF/PCF.rs.tar.gz",
+                "./dist/PCF/PCF.php.tar.gz",
+                "./dist/PCF/PCF.json.tar.gz",
+                "./dist/PCF/PCF.fbjson.tar.gz",
+                "./dist/PCF/PCF.cpp.tar.gz",
+                "./dist/PCF/PCF.kt.tar.gz",
+                "./dist/PCF/PCF.ts.tar.gz"
+            ]
+        },
+        "CHN": {
+            "IDL": "// Hash: a50e812191cea637902c13f54a04270c9eeaa4780dbadc7fc701b194328a9c3b\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Communications Channel\ntable CHN {\n  ID:string;\n  NAME:string;\n  TYPE:string;\n  BEAM_NAME:string;\n  ID_RFBAND:string;\n  ENCRYPTION:string;\n  PKG:string;\n  RES:string;\n  COMPRESSION:string;\n  VPID:string;\n  APID:string;\n  SID:string;\n  OWNER:string;\n}\n\nroot_type CHN;\nfile_identifier \"$CHN\";",
+            "files": [
+                "./dist/CHN/CHN.sw.tar.gz",
+                "./dist/CHN/CHN.py.tar.gz",
+                "./dist/CHN/CHN.lob.tar.gz",
+                "./dist/CHN/CHN.go.tar.gz",
+                "./dist/CHN/CHN.js.tar.gz",
+                "./dist/CHN/CHN.dart.tar.gz",
+                "./dist/CHN/CHN.cs.tar.gz",
+                "./dist/CHN/CHN.java.tar.gz",
+                "./dist/CHN/CHN.rs.tar.gz",
+                "./dist/CHN/CHN.php.tar.gz",
+                "./dist/CHN/CHN.json.tar.gz",
+                "./dist/CHN/CHN.fbjson.tar.gz",
+                "./dist/CHN/CHN.cpp.tar.gz",
+                "./dist/CHN/CHN.kt.tar.gz",
+                "./dist/CHN/CHN.ts.tar.gz"
+            ]
+        },
         "CAT": {
             "IDL": "// Hash: 44d0ac66e039b9a459a4e2216958c6bdde12b4397d82f8235d2b2eddc969df07\n// Version: 1.0.1\n// -----------------------------------END_HEADER\ninclude \"../PLD/main.fbs\";\ninclude \"../LCC/main.fbs\";\n\n// https://www.celestrak.com/satcat/satcat-format.php\n\nenum objectType: byte {\n  /// 0\n  PAYLOAD,\n  /// 1\n  ROCKET_BODY,\n  /// 2\n  DEBRIS,\n  /// 3\n  UNKNOWN\n}\n\nenum opsStatusCode: byte {\n  /// +\n  OPERATIONAL,\n  /// -\n  NONOPERATIONAL,\n  /// P\n  PARTIALLY_OPERATIONAL,\n  /// B\n  BACKUP_STANDBY,\n  /// S\n  SPARE,\n  /// X\n  EXTENDED_MISSION,\n  /// D\n  DECAYED,\n  /// ?\n  UNKNOWN\n}\n\nenum dataStatusCode: byte {\n  /// NCE\n  NO_CURRENT_ELEMENTS,\n  /// NIE\n  NO_INITIAL_ELEMENTS,\n  /// NEA\n  NO_ELEMENTS_AVAILABLE,\n  /// OK\n  OK\n}\n\nenum orbitType: byte {\n  /// 0\n  ORBIT,\n  /// 1\n  LANDING,\n  /// 2\n  IMPACT,\n  /// 3\n  DOCKED,\n  /// 4\n  ROUNDTRIP\n}\n\nenum massType: byte {\n  DRY,\n  WET\n}\n\n/// Catalog Entity Message\ntable CAT {\n  /// Satellite Name(s)\n  OBJECT_NAME: string;\n  /// International Designator (YYYY-NNNAAA)\n  OBJECT_ID: string;\n  /// NORAD Catalog Number\n  NORAD_CAT_ID: uint;\n  /// Object type (Payload, Rocket body, Debris, Unknown)\n  OBJECT_TYPE: objectType = UNKNOWN;\n  /// Operational Status Code\n  OPS_STATUS_CODE: opsStatusCode = UNKNOWN;\n  /// Ownership, typically country or company\n  OWNER: legacyCountryCode;\n  /// Launch Date [year-month-day] (ISO 8601)\n  LAUNCH_DATE: string;\n  /// Launch Site\n  LAUNCH_SITE: string;\n  /// Decay Date, if applicable [year-month-day] (ISO 8601)\n  DECAY_DATE: string;\n  /// Orbital period [minutes]\n  PERIOD: double;\n  /// Inclination [degrees]\n  INCLINATION: double;\n  /// Apogee Altitude [kilometers]\n  APOGEE: double;\n  /// Perigee Altitude [kilometers]\n  PERIGEE: double;\n  /// Radar Cross Section [meters2]; blank if no data available\n  RCS: double;\n  /// Data status code; blank otherwise\n  DATA_STATUS_CODE: dataStatusCode;\n  /// Orbit center\n  ORBIT_CENTER: string;\n  /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)\n  ORBIT_TYPE: orbitType;\n  /// Deployment Date [year-month-day] (ISO 8601)\n  DEPLOYMENT_DATE: string;\n  /// Indicates if the object is maneuverable\n  MANEUVERABLE: bool;\n  /// Size [meters]; blank if no data available\n  SIZE: double;\n  /// Mass [kilograms]; blank if no data available\n  MASS: double;\n  /// Mass type (Dry, Wet)\n  MASS_TYPE: massType = DRY;\n  /// Vector of PAYLOADS\n  PAYLOADS: [PLD];\n}\n\nroot_type CAT;\nfile_identifier \"$CAT\";",
             "files": [
@@ -15,9 +55,30 @@
                 "./dist/CAT/CAT.rs.tar.gz",
                 "./dist/CAT/CAT.php.tar.gz",
                 "./dist/CAT/CAT.json.tar.gz",
+                "./dist/CAT/CAT.fbjson.tar.gz",
                 "./dist/CAT/CAT.cpp.tar.gz",
                 "./dist/CAT/CAT.kt.tar.gz",
                 "./dist/CAT/CAT.ts.tar.gz"
+            ]
+        },
+        "SPP": {
+            "IDL": "// Hash: 59daeed99d0f75bf954b82f4b899e6e170fd4dee63c90c6358616320a10fe16a\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum packetType : byte {\n  TM,\n  TC\n}\n\n/// Space Packet Protocol (CCSDS 133.0-B-1)\ntable SPP {\n  /// Packet version number\n  VERSION:ubyte;\n  /// Packet type (TM or TC)\n  PACKET_TYPE:packetType;\n  /// Secondary header flag\n  SEC_HDR_FLAG:bool;\n  /// Application Process Identifier\n  APID:ushort;\n  /// Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)\n  SEQUENCE_FLAGS:ubyte;\n  /// Sequence count\n  SEQUENCE_COUNT:ushort;\n  /// Data length minus 1\n  DATA_LENGTH:ushort;\n  /// Packet data zone\n  DATA:[ubyte];\n}\n\nroot_type SPP;\nfile_identifier \"$SPP\";",
+            "files": [
+                "./dist/SPP/SPP.sw.tar.gz",
+                "./dist/SPP/SPP.py.tar.gz",
+                "./dist/SPP/SPP.lob.tar.gz",
+                "./dist/SPP/SPP.go.tar.gz",
+                "./dist/SPP/SPP.js.tar.gz",
+                "./dist/SPP/SPP.dart.tar.gz",
+                "./dist/SPP/SPP.cs.tar.gz",
+                "./dist/SPP/SPP.java.tar.gz",
+                "./dist/SPP/SPP.rs.tar.gz",
+                "./dist/SPP/SPP.php.tar.gz",
+                "./dist/SPP/SPP.json.tar.gz",
+                "./dist/SPP/SPP.fbjson.tar.gz",
+                "./dist/SPP/SPP.cpp.tar.gz",
+                "./dist/SPP/SPP.kt.tar.gz",
+                "./dist/SPP/SPP.ts.tar.gz"
             ]
         },
         "PLK": {
@@ -34,9 +95,30 @@
                 "./dist/PLK/PLK.rs.tar.gz",
                 "./dist/PLK/PLK.php.tar.gz",
                 "./dist/PLK/PLK.json.tar.gz",
+                "./dist/PLK/PLK.fbjson.tar.gz",
                 "./dist/PLK/PLK.cpp.tar.gz",
                 "./dist/PLK/PLK.kt.tar.gz",
                 "./dist/PLK/PLK.ts.tar.gz"
+            ]
+        },
+        "SPW": {
+            "IDL": "// Hash: be6dac70f41acb6310e5f601c9e9a7986d51d724b3f3ef983f979e79de1389aa\n// Version: 1.0.2\n// -----------------------------------END_HEADER\nenum FluxQualifier: byte {\n  OBSERVED = 0,\n  BURST_ADJUSTED = 1,\n  INTERPOLATED_EXTRAPOLATED = 2,\n  NO_OBSERVATION = 3,\n  CELESTRAK_INTERPOLATED = 4\n}\n\nenum F107DataType: byte {\n  OBS = 0,  // Observed flux measurement\n  INT = 1,  // CelesTrak linear interpolation\n  PRD = 2,  // 45-Day predicted flux\n  PRM = 3   // Monthly predicted flux\n}\n\n/// Space Weather Data Record\ntable SPW {\n  /// Date in ISO 8601 format\n  DATE: string;\n  \n  /// Bartels Solar Rotation Number\n  BSRN: int;\n  \n  /// Day within Bartels cycle (1-27)\n  ND: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10\n  KP1: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10\n  KP2: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10\n  KP3: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10\n  KP4: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10\n  KP5: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10\n  KP6: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10\n  KP7: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10\n  KP8: int;\n  \n  /// Sum of the 8 Kp indices for the day\n  KP_SUM: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT\n  AP1: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT\n  AP2: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT\n  AP3: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT\n  AP4: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT\n  AP5: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT\n  AP6: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT\n  AP7: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT\n  AP8: int;\n  \n  /// Arithmetic average of the 8 Ap indices for the day\n  AP_AVG: int;\n  \n  /// Planetary Daily Character Figure (0.0 to 2.5)\n  CP: float;\n  \n  /// C9 index (0-9)\n  C9: int;\n  \n  /// International Sunspot Number\n  ISN: int;\n  \n  /// Observed 10.7cm Solar Radio Flux\n  F107_OBS: float;\n  \n  /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)\n  F107_ADJ: float;\n  \n  /// F10.7 Data Type\n  F107_DATA_TYPE: F107DataType;\n  \n  /// 81-day centered average of observed F10.7\n  F107_OBS_CENTER81: float;\n  \n  /// 81-day trailing average of observed F10.7\n  F107_OBS_LAST81: float;\n  \n  /// 81-day centered average of adjusted F10.7\n  F107_ADJ_CENTER81: float;\n  \n  /// 81-day trailing average of adjusted F10.7\n  F107_ADJ_LAST81: float;\n}\n\ntable SPWCOLLECTION {\n  RECORDS: [SPW];\n}\n\nroot_type SPW;\nfile_identifier \"$SPW\";",
+            "files": [
+                "./dist/SPW/SPW.sw.tar.gz",
+                "./dist/SPW/SPW.py.tar.gz",
+                "./dist/SPW/SPW.lob.tar.gz",
+                "./dist/SPW/SPW.go.tar.gz",
+                "./dist/SPW/SPW.js.tar.gz",
+                "./dist/SPW/SPW.dart.tar.gz",
+                "./dist/SPW/SPW.cs.tar.gz",
+                "./dist/SPW/SPW.java.tar.gz",
+                "./dist/SPW/SPW.rs.tar.gz",
+                "./dist/SPW/SPW.php.tar.gz",
+                "./dist/SPW/SPW.json.tar.gz",
+                "./dist/SPW/SPW.fbjson.tar.gz",
+                "./dist/SPW/SPW.cpp.tar.gz",
+                "./dist/SPW/SPW.kt.tar.gz",
+                "./dist/SPW/SPW.ts.tar.gz"
             ]
         },
         "VCM": {
@@ -53,9 +135,50 @@
                 "./dist/VCM/VCM.rs.tar.gz",
                 "./dist/VCM/VCM.php.tar.gz",
                 "./dist/VCM/VCM.json.tar.gz",
+                "./dist/VCM/VCM.fbjson.tar.gz",
                 "./dist/VCM/VCM.cpp.tar.gz",
                 "./dist/VCM/VCM.kt.tar.gz",
                 "./dist/VCM/VCM.ts.tar.gz"
+            ]
+        },
+        "RFO": {
+            "IDL": "// Hash: 02ff946057229b8aa83265b3e65e4cbba0a3edcdef5b9d90a0e0ab03cd5b34b4\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// RF Observation\ntable RFO {\n  ID:string;\n  OB_TIME:string;\n  ID_SENSOR:string;\n  TYPE:string;\n  SAT_NO:int;\n  TASK_ID:string;\n  TRANSACTION_ID:string;\n  TRACK_ID:string;\n  ORIG_OBJECT_ID:string;\n  ORIG_SENSOR_ID:string;\n  UCT:bool;\n  TRANSPONDER:string;\n  AZIMUTH:double;\n  AZIMUTH_UNC:double;\n  AZIMUTH_RATE:double;\n  ELEVATION:double;\n  ELEVATION_UNC:double;\n  ELEVATION_RATE:double;\n  RANGE:double;\n  RANGE_UNC:double;\n  RANGE_RATE:double;\n  RANGE_RATE_UNC:double;\n  TRACK_RANGE:double;\n  SENLAT:double;\n  SENLON:double;\n  SENALT:double;\n  ELNOT:string;\n  FREQUENCY:double;\n  NOMINAL_FREQUENCY:double;\n  START_FREQUENCY:double;\n  END_FREQUENCY:double;\n  RELATIVE_CARRIER_POWER:double;\n  SPECTRUM_ANALYZER_POWER:double;\n  RELATIVE_NOISE_FLOOR:double;\n  REFERENCE_LEVEL:double;\n  PGRI:double;\n  CONFIDENCE:double;\n  INCOMING:bool;\n  SWITCH_POINT:int;\n  BAUD_RATE:double;\n  SNR:double;\n  NOMINAL_SNR:double;\n  POLARITY:double;\n  POLARITY_TYPE:string;\n  CHANNEL:int;\n  POWER_OVER_NOISE:double;\n  NOMINAL_POWER_OVER_NOISE:double;\n  BANDWIDTH:double;\n  NOMINAL_BANDWIDTH:double;\n  RESOLUTION_BANDWIDTH:double;\n  VIDEO_BANDWIDTH:double;\n  EIRP:double;\n  NOMINAL_EIRP:double;\n  MIN_PSD:double;\n  MAX_PSD:double;\n  FREQUENCY_SHIFT:double;\n  PEAK:bool;\n  ANTENNA_NAME:string;\n  DETECTION_STATUS:string;\n  COLLECTION_MODE:string;\n  RAW_FILE_URI:string;\n  TAGS:[string];\n  NOISE_PWR_DENSITY:double;\n  CARRIER_STANDARD:string;\n  MODULATION:string;\n  INNER_CODING_RATE:int;\n  OUTER_CODING_RATE:int;\n  TRANSMIT_FILTER_TYPE:string;\n  TRANSMIT_FILTER_ROLL_OFF:double;\n  SYMBOL_TO_NOISE_RATIO:double;\n  BIT_ERROR_RATE:double;\n  ON_ORBIT:string;\n  DESCRIPTOR:string;\n  URL:string;\n}\n\nroot_type RFO;\nfile_identifier \"$RFO\";",
+            "files": [
+                "./dist/RFO/RFO.sw.tar.gz",
+                "./dist/RFO/RFO.py.tar.gz",
+                "./dist/RFO/RFO.lob.tar.gz",
+                "./dist/RFO/RFO.go.tar.gz",
+                "./dist/RFO/RFO.js.tar.gz",
+                "./dist/RFO/RFO.dart.tar.gz",
+                "./dist/RFO/RFO.cs.tar.gz",
+                "./dist/RFO/RFO.java.tar.gz",
+                "./dist/RFO/RFO.rs.tar.gz",
+                "./dist/RFO/RFO.php.tar.gz",
+                "./dist/RFO/RFO.json.tar.gz",
+                "./dist/RFO/RFO.fbjson.tar.gz",
+                "./dist/RFO/RFO.cpp.tar.gz",
+                "./dist/RFO/RFO.kt.tar.gz",
+                "./dist/RFO/RFO.ts.tar.gz"
+            ]
+        },
+        "MNV": {
+            "IDL": "// Hash: 34ac48f9a52c7224634c2cc2b80207e8fd62dd29de5712f53d37ff36a2cf0afb\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Spacecraft Maneuver\ntable MNV {\n  ID:string;\n  SAT_NO:int;\n  REPORT_TIME:string;\n  EVENT_START_TIME:string;\n  EVENT_END_TIME:string;\n  TOTAL_BURN_TIME:double;\n  OD_FIT_END_TIME:string;\n  ID_SENSOR:string;\n  UCT:bool;\n  MANEUVER_UNC:double;\n  CHARACTERIZATION:string;\n  CHARACTERIZATION_UNC:double;\n  EVENT_ID:string;\n  ORIG_OBJECT_ID:string;\n  ORIG_SENSOR_ID:string;\n  STATUS:string;\n  DELTA_POS:double;\n  DELTA_POS_U:double;\n  DELTA_POS_V:double;\n  DELTA_POS_W:double;\n  DELTA_VEL:double;\n  DELTA_VEL_U:double;\n  DELTA_VEL_V:double;\n  DELTA_VEL_W:double;\n  DELTA_MASS:double;\n  PRE_EVENT_ID_ELSET:string;\n  PRE_EVENT_ELSET:string;\n  PRE_EVENT_ID_STATE_VECTOR:string;\n  PRE_EVENT_STATE_VECTOR:string;\n  PRE_POS_X:double;\n  PRE_POS_Y:double;\n  PRE_POS_Z:double;\n  PRE_VEL_X:double;\n  PRE_VEL_Y:double;\n  PRE_VEL_Z:double;\n  PRE_RADIATION_PRESS_COEFF:double;\n  PRE_BALLISTIC_COEFF:double;\n  PRE_APOGEE:double;\n  PRE_PERIGEE:double;\n  PRE_INCLINATION:double;\n  PRE_ECCENTRICITY:double;\n  PRE_PERIOD:double;\n  PRE_RAAN:double;\n  PRE_SMA:double;\n  PRE_GEO_LONGITUDE:double;\n  PRE_DRIFT_RATE:double;\n  PRE_SIGMA_U:double;\n  PRE_SIGMA_V:double;\n  PRE_SIGMA_W:double;\n  POST_EVENT_ID_ELSET:string;\n  POST_EVENT_ELSET:string;\n  POST_EVENT_ID_STATE_VECTOR:string;\n  POST_EVENT_STATE_VECTOR:string;\n  POST_POS_X:double;\n  POST_POS_Y:double;\n  POST_POS_Z:double;\n  POST_VEL_X:double;\n  POST_VEL_Y:double;\n  POST_VEL_Z:double;\n  POST_RADIATION_PRESS_COEFF:double;\n  POST_BALLISTIC_COEFF:double;\n  POST_APOGEE:double;\n  POST_PERIGEE:double;\n  POST_INCLINATION:double;\n  POST_ECCENTRICITY:double;\n  POST_PERIOD:double;\n  POST_RAAN:double;\n  POST_SMA:double;\n  POST_GEO_LONGITUDE:double;\n  POST_DRIFT_RATE:double;\n  POST_SIGMA_U:double;\n  POST_SIGMA_V:double;\n  POST_SIGMA_W:double;\n  COV:[string];\n  POST_MASS:double;\n  POST_AREA:double;\n  NUM_OBS:int;\n  DESCRIPTION:string;\n  DESCRIPTOR:string;\n  STATE_MODEL:string;\n  STATE_MODEL_VERSION:double;\n  NUM_ACCEL_POINTS:int;\n  MNVR_ACCEL_TIMES:[string];\n  MNVR_ACCELS:[string];\n  MNVR_ACCEL_UNCS:[string];\n  TAGS:[string];\n  ALGORITHM:string;\n  SOURCED_DATA:[string];\n  SOURCED_DATA_TYPES:string;\n  ON_ORBIT:string;\n  TRANSACTION_ID:string;\n}\n\nroot_type MNV;\nfile_identifier \"$MNV\";",
+            "files": [
+                "./dist/MNV/MNV.sw.tar.gz",
+                "./dist/MNV/MNV.py.tar.gz",
+                "./dist/MNV/MNV.lob.tar.gz",
+                "./dist/MNV/MNV.go.tar.gz",
+                "./dist/MNV/MNV.js.tar.gz",
+                "./dist/MNV/MNV.dart.tar.gz",
+                "./dist/MNV/MNV.cs.tar.gz",
+                "./dist/MNV/MNV.java.tar.gz",
+                "./dist/MNV/MNV.rs.tar.gz",
+                "./dist/MNV/MNV.php.tar.gz",
+                "./dist/MNV/MNV.json.tar.gz",
+                "./dist/MNV/MNV.fbjson.tar.gz",
+                "./dist/MNV/MNV.cpp.tar.gz",
+                "./dist/MNV/MNV.kt.tar.gz",
+                "./dist/MNV/MNV.ts.tar.gz"
             ]
         },
         "CDM": {
@@ -72,6 +195,7 @@
                 "./dist/CDM/CDM.rs.tar.gz",
                 "./dist/CDM/CDM.php.tar.gz",
                 "./dist/CDM/CDM.json.tar.gz",
+                "./dist/CDM/CDM.fbjson.tar.gz",
                 "./dist/CDM/CDM.cpp.tar.gz",
                 "./dist/CDM/CDM.kt.tar.gz",
                 "./dist/CDM/CDM.ts.tar.gz"
@@ -91,6 +215,7 @@
                 "./dist/IDM/IDM.rs.tar.gz",
                 "./dist/IDM/IDM.php.tar.gz",
                 "./dist/IDM/IDM.json.tar.gz",
+                "./dist/IDM/IDM.fbjson.tar.gz",
                 "./dist/IDM/IDM.cpp.tar.gz",
                 "./dist/IDM/IDM.kt.tar.gz",
                 "./dist/IDM/IDM.ts.tar.gz"
@@ -110,9 +235,70 @@
                 "./dist/PLD/PLD.rs.tar.gz",
                 "./dist/PLD/PLD.php.tar.gz",
                 "./dist/PLD/PLD.json.tar.gz",
+                "./dist/PLD/PLD.fbjson.tar.gz",
                 "./dist/PLD/PLD.cpp.tar.gz",
                 "./dist/PLD/PLD.kt.tar.gz",
                 "./dist/PLD/PLD.ts.tar.gz"
+            ]
+        },
+        "OBD": {
+            "IDL": "// Hash: 39965ec1bd915c0147503b1dbf6ad7a90dbfa6d5417496145c467cb1257bbada\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Orbit Determination Results\ntable OBD {\n  ID:string;\n  START_TIME:string;\n  END_TIME:string;\n  ORIG_OBJECT_ID:string;\n  SAT_NO:int;\n  APRIORI_ID_ELSET:string;\n  APRIORI_ELSET:string;\n  APRIORI_ID_STATE_VECTOR:string;\n  APRIORI_STATE_VECTOR:string;\n  INITIAL_OD:bool;\n  LAST_OB_START:string;\n  LAST_OB_END:string;\n  TIME_SPAN:double;\n  EFFECTIVE_FROM:string;\n  EFFECTIVE_UNTIL:string;\n  WRMS:double;\n  PREVIOUS_WRMS:double;\n  FIRST_PASS_WRMS:double;\n  BEST_PASS_WRMS:double;\n  ERROR_GROWTH_RATE:double;\n  EDR:double;\n  METHOD:string;\n  METHOD_SOURCE:string;\n  FIT_SPAN:double;\n  BALLISTIC_COEFF_EST:bool;\n  BALLISTIC_COEFF_MODEL:string;\n  AGOM_EST:bool;\n  AGOM_MODEL:string;\n  RMS_CONVERGENCE_CRITERIA:double;\n  NUM_ITERATIONS:int;\n  ACCEPTED_OB_TYPS:[string];\n  ACCEPTED_OB_IDS:[string];\n  REJECTED_OB_TYPS:[string];\n  REJECTED_OB_IDS:[string];\n  SENSOR_IDS:[string];\n  ON_ORBIT:string;\n}\n\nroot_type OBD;\nfile_identifier \"$OBD\";",
+            "files": [
+                "./dist/OBD/OBD.sw.tar.gz",
+                "./dist/OBD/OBD.py.tar.gz",
+                "./dist/OBD/OBD.lob.tar.gz",
+                "./dist/OBD/OBD.go.tar.gz",
+                "./dist/OBD/OBD.js.tar.gz",
+                "./dist/OBD/OBD.dart.tar.gz",
+                "./dist/OBD/OBD.cs.tar.gz",
+                "./dist/OBD/OBD.java.tar.gz",
+                "./dist/OBD/OBD.rs.tar.gz",
+                "./dist/OBD/OBD.php.tar.gz",
+                "./dist/OBD/OBD.json.tar.gz",
+                "./dist/OBD/OBD.fbjson.tar.gz",
+                "./dist/OBD/OBD.cpp.tar.gz",
+                "./dist/OBD/OBD.kt.tar.gz",
+                "./dist/OBD/OBD.ts.tar.gz"
+            ]
+        },
+        "TCF": {
+            "IDL": "// Hash: cc3f8afe805f9c4ca5f66b4966935d0b09e9ee8b1661457e0daa2cf45794e623\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Telecommand Transfer Frame (CCSDS 232.0-B-3)\ntable TCF {\n  /// Transfer frame version\n  VERSION:ubyte;\n  /// Bypass flag\n  BYPASS_FLAG:bool;\n  /// Control command flag\n  CONTROL_CMD_FLAG:bool;\n  /// Spacecraft identifier\n  SPACECRAFT_ID:ushort;\n  /// Virtual channel identifier\n  VIRTUAL_CHANNEL_ID:ubyte;\n  /// Frame length\n  FRAME_LENGTH:ushort;\n  /// Frame sequence number\n  FRAME_SEQUENCE_NUM:ubyte;\n  /// Data field\n  DATA:[ubyte];\n  /// Frame error control field\n  FECF:ushort;\n}\n\nroot_type TCF;\nfile_identifier \"$TCF\";",
+            "files": [
+                "./dist/TCF/TCF.sw.tar.gz",
+                "./dist/TCF/TCF.py.tar.gz",
+                "./dist/TCF/TCF.lob.tar.gz",
+                "./dist/TCF/TCF.go.tar.gz",
+                "./dist/TCF/TCF.js.tar.gz",
+                "./dist/TCF/TCF.dart.tar.gz",
+                "./dist/TCF/TCF.cs.tar.gz",
+                "./dist/TCF/TCF.java.tar.gz",
+                "./dist/TCF/TCF.rs.tar.gz",
+                "./dist/TCF/TCF.php.tar.gz",
+                "./dist/TCF/TCF.json.tar.gz",
+                "./dist/TCF/TCF.fbjson.tar.gz",
+                "./dist/TCF/TCF.cpp.tar.gz",
+                "./dist/TCF/TCF.kt.tar.gz",
+                "./dist/TCF/TCF.ts.tar.gz"
+            ]
+        },
+        "MST": {
+            "IDL": "// Hash: 15370c3702ae49a726b51dc843d2aef12ecac61a6ad0faa1d86ab087e2a0c053\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Missile Track\ntable MST {\n  ID:string;\n  MSG_TYPE:string;\n  MSG_SUB_TYPE:string;\n  MSG_CREATE_DATE:string;\n  ENVIRONMENT:string;\n  OBJ_TYPE:string;\n  OBJ_TYPE_CONF:int;\n  OBJ_PLAT:string;\n  OBJ_IDENT:string;\n  SPACE_AMP:string;\n  OBJ_ACT:string;\n  SPACE_SPEC_TYPE:string;\n  ACFT_SUB_TYPE:string;\n  NAME:string;\n  CALL_SIGN:string;\n  LOST_TRK_IND:bool;\n  TRACK_ID:string;\n  PARENT_TRACK_ID:string;\n  MUID_SRC_TRK:string;\n  MUID_SRC:string;\n  ALERT:string;\n  MSL_STATUS:string;\n  TS:string;\n  AOU_RPT_TYPE:string;\n  AOU_RPT_DATA:[string];\n  CONTAINMENT:double;\n  TRK_CONF:double;\n  TRK_QUAL:int;\n  ANG_ELEV:double;\n  SEN_MODE:string;\n  INFO_SOURCE:string;\n  BOOSTING:bool;\n  POLAR_SING_LOC_LAT:double;\n  POLAR_SING_LOC_LON:double;\n  EMG_IND:bool;\n  DROP_PT_IND:bool;\n  SPACE_AMP_CONF:int;\n  LAUNCH_TIME:string;\n  LAUNCH_LAT:double;\n  LAUNCH_LON:double;\n  AZ_CORR:double;\n  BURNOUT_ALT:double;\n  LAUNCH_AOU_TYPE:string;\n  LAUNCH_AOU_DATA:[string];\n  IMPACT_TIME:string;\n  IMPACT_LAT:double;\n  IMPACT_LON:double;\n  IMPACT_AOU_TYPE:string;\n  IMPACT_AOU_DATA:[string];\n  VECTORS:[string];\n}\n\nroot_type MST;\nfile_identifier \"$MST\";",
+            "files": [
+                "./dist/MST/MST.sw.tar.gz",
+                "./dist/MST/MST.py.tar.gz",
+                "./dist/MST/MST.lob.tar.gz",
+                "./dist/MST/MST.go.tar.gz",
+                "./dist/MST/MST.js.tar.gz",
+                "./dist/MST/MST.dart.tar.gz",
+                "./dist/MST/MST.cs.tar.gz",
+                "./dist/MST/MST.java.tar.gz",
+                "./dist/MST/MST.rs.tar.gz",
+                "./dist/MST/MST.php.tar.gz",
+                "./dist/MST/MST.json.tar.gz",
+                "./dist/MST/MST.fbjson.tar.gz",
+                "./dist/MST/MST.cpp.tar.gz",
+                "./dist/MST/MST.kt.tar.gz",
+                "./dist/MST/MST.ts.tar.gz"
             ]
         },
         "BOV": {
@@ -129,9 +315,90 @@
                 "./dist/BOV/BOV.rs.tar.gz",
                 "./dist/BOV/BOV.php.tar.gz",
                 "./dist/BOV/BOV.json.tar.gz",
+                "./dist/BOV/BOV.fbjson.tar.gz",
                 "./dist/BOV/BOV.cpp.tar.gz",
                 "./dist/BOV/BOV.kt.tar.gz",
                 "./dist/BOV/BOV.ts.tar.gz"
+            ]
+        },
+        "DOA": {
+            "IDL": "// Hash: ff3aef29252ed39a04ec890473c56369c070e67399b7e90191fc1f963d805deb\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Difference of Arrival\ntable DOA {\n  ID:string;\n  OB_TIME:string;\n  ID_SENSOR1:string;\n  ID_SENSOR2:string;\n  SAT_NO:int;\n  TASK_ID:string;\n  ORIG_OBJECT_ID:string;\n  ORIG_SENSOR_ID1:string;\n  ORIG_SENSOR_ID2:string;\n  UCT:bool;\n  SENSOR1_DELAY:double;\n  SENSOR2_DELAY:double;\n  SENLAT:double;\n  SENLON:double;\n  SENALT:double;\n  SEN2LAT:double;\n  SEN2LON:double;\n  SEN2ALT:double;\n  FREQUENCY:double;\n  BANDWIDTH:double;\n  DELTA_RANGE:double;\n  DELTA_RANGE_UNC:double;\n  DELTA_RANGE_RATE:double;\n  DELTA_RANGE_RATE_UNC:double;\n  SNR:double;\n  TDOA:double;\n  TDOA_UNC:double;\n  FDOA:double;\n  FDOA_UNC:double;\n  COLLECTION_MODE:string;\n  RAW_FILE_URI:string;\n  TAGS:[string];\n  ON_ORBIT:string;\n  DESCRIPTOR:string;\n  TRANSACTION_ID:string;\n}\n\nroot_type DOA;\nfile_identifier \"$DOA\";",
+            "files": [
+                "./dist/DOA/DOA.sw.tar.gz",
+                "./dist/DOA/DOA.py.tar.gz",
+                "./dist/DOA/DOA.lob.tar.gz",
+                "./dist/DOA/DOA.go.tar.gz",
+                "./dist/DOA/DOA.js.tar.gz",
+                "./dist/DOA/DOA.dart.tar.gz",
+                "./dist/DOA/DOA.cs.tar.gz",
+                "./dist/DOA/DOA.java.tar.gz",
+                "./dist/DOA/DOA.rs.tar.gz",
+                "./dist/DOA/DOA.php.tar.gz",
+                "./dist/DOA/DOA.json.tar.gz",
+                "./dist/DOA/DOA.fbjson.tar.gz",
+                "./dist/DOA/DOA.cpp.tar.gz",
+                "./dist/DOA/DOA.kt.tar.gz",
+                "./dist/DOA/DOA.ts.tar.gz"
+            ]
+        },
+        "TRN": {
+            "IDL": "// Hash: 70847b4cadae30109f0716de75bd5d0c1d85da5c507c09de8bf27d65d58187a7\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum TerrainDataSource : byte {\n  SRTM,                   // Shuttle Radar Topography Mission,\n  ASTER,                  // Advanced Spaceborne Thermal Emission,\n  DTED_0,                 // Digital Terrain Elevation Data Level 0,\n  DTED_1,                 // Level 1 (~90m),\n  DTED_2,                 // Level 2 (~30m),\n  NED,                    // National Elevation Dataset,\n  LIDAR,                  // LiDAR point cloud,\n  CUSTOM\n}\n\nenum LandCoverType : byte {\n  WATER,\n  URBAN,\n  SUBURBAN,\n  FOREST_DECIDUOUS,\n  FOREST_CONIFEROUS,\n  FOREST_MIXED,\n  GRASSLAND,\n  SHRUBLAND,\n  CROPLAND,\n  BARREN,\n  WETLAND,\n  SNOW_ICE,\n  DESERT,\n  ROCK,\n  ROAD,\n  RUNWAY,\n  BUILDING\n}\n\nenum TerrainInterpolation : byte {\n  NEAREST,\n  BILINEAR,\n  BICUBIC,\n  KRIGING\n}\n\n/// Terrain Models\ntable TRN {\n  SOURCES:[TerrainDataSource];\n  INTERPOLATION:TerrainInterpolation = BILINEAR;\n  CACHE_ENABLED:bool = true;\n  MAX_CACHE_TILES:uint16 = 100;\n  VERTICAL_EXAGGERATION:double = 1.0;\n}\n\nroot_type TRN;\nfile_identifier \"$TRN\";",
+            "files": [
+                "./dist/TRN/TRN.sw.tar.gz",
+                "./dist/TRN/TRN.py.tar.gz",
+                "./dist/TRN/TRN.lob.tar.gz",
+                "./dist/TRN/TRN.go.tar.gz",
+                "./dist/TRN/TRN.js.tar.gz",
+                "./dist/TRN/TRN.dart.tar.gz",
+                "./dist/TRN/TRN.cs.tar.gz",
+                "./dist/TRN/TRN.java.tar.gz",
+                "./dist/TRN/TRN.rs.tar.gz",
+                "./dist/TRN/TRN.php.tar.gz",
+                "./dist/TRN/TRN.json.tar.gz",
+                "./dist/TRN/TRN.fbjson.tar.gz",
+                "./dist/TRN/TRN.cpp.tar.gz",
+                "./dist/TRN/TRN.kt.tar.gz",
+                "./dist/TRN/TRN.ts.tar.gz"
+            ]
+        },
+        "BEM": {
+            "IDL": "// Hash: 5db69c90383740a79e731a66223eed764edf703792c04448e179e65851fb25e4\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Antenna Beam\ntable BEM {\n  ID:string;\n  BEAM_NAME:string;\n  NOTES:string;\n  BEAM_CONTOURS:[string];\n}\n\nroot_type BEM;\nfile_identifier \"$BEM\";",
+            "files": [
+                "./dist/BEM/BEM.sw.tar.gz",
+                "./dist/BEM/BEM.py.tar.gz",
+                "./dist/BEM/BEM.lob.tar.gz",
+                "./dist/BEM/BEM.go.tar.gz",
+                "./dist/BEM/BEM.js.tar.gz",
+                "./dist/BEM/BEM.dart.tar.gz",
+                "./dist/BEM/BEM.cs.tar.gz",
+                "./dist/BEM/BEM.java.tar.gz",
+                "./dist/BEM/BEM.rs.tar.gz",
+                "./dist/BEM/BEM.php.tar.gz",
+                "./dist/BEM/BEM.json.tar.gz",
+                "./dist/BEM/BEM.fbjson.tar.gz",
+                "./dist/BEM/BEM.cpp.tar.gz",
+                "./dist/BEM/BEM.kt.tar.gz",
+                "./dist/BEM/BEM.ts.tar.gz"
+            ]
+        },
+        "OPM": {
+            "IDL": "// Hash: 69c179e20f32f2326222df05a60d3c6f89af21308075b7fc6b6a66a2cd949efa\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Orbit Parameter Message\ntable OPM {\n  CCSDS_OPM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  CENTER_NAME:string;\n  REF_FRAME:string;\n  TIME_SYSTEM:string;\n  EPOCH:string;\n  X:double;\n  Y:double;\n  Z:double;\n  X_DOT:double;\n  Y_DOT:double;\n  Z_DOT:double;\n  SEMI_MAJOR_AXIS:double;\n  ECCENTRICITY:double;\n  INCLINATION:double;\n  RA_OF_ASC_NODE:double;\n  ARG_OF_PERICENTER:double;\n  TRUE_ANOMALY:double;\n  MEAN_ANOMALY:double;\n  GM:double;\n  MASS:double;\n  SOLAR_RAD_AREA:double;\n  SOLAR_RAD_COEFF:double;\n  DRAG_AREA:double;\n  DRAG_COEFF:double;\n}\n\nroot_type OPM;\nfile_identifier \"$OPM\";",
+            "files": [
+                "./dist/OPM/OPM.sw.tar.gz",
+                "./dist/OPM/OPM.py.tar.gz",
+                "./dist/OPM/OPM.lob.tar.gz",
+                "./dist/OPM/OPM.go.tar.gz",
+                "./dist/OPM/OPM.js.tar.gz",
+                "./dist/OPM/OPM.dart.tar.gz",
+                "./dist/OPM/OPM.cs.tar.gz",
+                "./dist/OPM/OPM.java.tar.gz",
+                "./dist/OPM/OPM.rs.tar.gz",
+                "./dist/OPM/OPM.php.tar.gz",
+                "./dist/OPM/OPM.json.tar.gz",
+                "./dist/OPM/OPM.fbjson.tar.gz",
+                "./dist/OPM/OPM.cpp.tar.gz",
+                "./dist/OPM/OPM.kt.tar.gz",
+                "./dist/OPM/OPM.ts.tar.gz"
             ]
         },
         "EPM": {
@@ -148,9 +415,110 @@
                 "./dist/EPM/EPM.rs.tar.gz",
                 "./dist/EPM/EPM.php.tar.gz",
                 "./dist/EPM/EPM.json.tar.gz",
+                "./dist/EPM/EPM.fbjson.tar.gz",
                 "./dist/EPM/EPM.cpp.tar.gz",
                 "./dist/EPM/EPM.kt.tar.gz",
                 "./dist/EPM/EPM.ts.tar.gz"
+            ]
+        },
+        "APM": {
+            "IDL": "// Hash: 8786facdc073384acf17eebb6f7f28c49a88140fe1b5dfdbd645f5b525311716\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Attitude Parameter Message\ntable APM {\n  CCSDS_APM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  EPOCH:string;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n  QC:double;\n}\n\nroot_type APM;\nfile_identifier \"$APM\";",
+            "files": [
+                "./dist/APM/APM.sw.tar.gz",
+                "./dist/APM/APM.py.tar.gz",
+                "./dist/APM/APM.lob.tar.gz",
+                "./dist/APM/APM.go.tar.gz",
+                "./dist/APM/APM.js.tar.gz",
+                "./dist/APM/APM.dart.tar.gz",
+                "./dist/APM/APM.cs.tar.gz",
+                "./dist/APM/APM.java.tar.gz",
+                "./dist/APM/APM.rs.tar.gz",
+                "./dist/APM/APM.php.tar.gz",
+                "./dist/APM/APM.json.tar.gz",
+                "./dist/APM/APM.fbjson.tar.gz",
+                "./dist/APM/APM.cpp.tar.gz",
+                "./dist/APM/APM.kt.tar.gz",
+                "./dist/APM/APM.ts.tar.gz"
+            ]
+        },
+        "HEL": {
+            "IDL": "// Hash: d19175c58d254d4c35255fcf6464216bf25df63e6fe5215e3bc38937dad642b1\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum RotorType : byte {\n  MAIN = 0,           // Main rotor\n  TAIL = 1,           // Anti-torque tail rotor\n  TANDEM_FRONT = 2,   // Tandem front rotor\n  TANDEM_REAR = 3,    // Tandem rear rotor\n  COAXIAL_UPPER = 4,  // Coaxial upper rotor\n  COAXIAL_LOWER = 5,  // Coaxial lower rotor\n}\n\nenum RotorFlags : byte {\n  NORMAL = 0,\n  VRS_WARNING = 1,    // Vortex Ring State warning\n  VRS_ACTIVE = 2,     // In VRS\n  RBS_WARNING = 3,    // Retreating Blade Stall warning\n  RBS_ACTIVE = 4,     // In RBS\n  OVERSPEED = 5,      // Rotor overspeed\n  UNDERSPEED = 6,     // Rotor underspeed\n}\n\n/// Helicopter Dynamics\ntable HEL {\n  POSITION_X:double;\n  POSITION_Y:double;\n  POSITION_Z:double;\n  VELOCITY_X:double;\n  VELOCITY_Y:double;\n  VELOCITY_Z:double;\n  QUAT_W:double;\n  QUAT_X:double;\n  QUAT_Y:double;\n  QUAT_Z:double;\n  OMEGA_BODY_X:double;\n  OMEGA_BODY_Y:double;\n  OMEGA_BODY_Z:double;\n  MAIN_ROTOR:string;\n  TAIL_ROTOR:string;\n  ENGINE_N1:double;\n  ENGINE_TORQUE:double;\n  FLAGS:uint;\n  FUEL_REMAINING:float;\n}\n\nroot_type HEL;\nfile_identifier \"$HEL\";",
+            "files": [
+                "./dist/HEL/HEL.sw.tar.gz",
+                "./dist/HEL/HEL.py.tar.gz",
+                "./dist/HEL/HEL.lob.tar.gz",
+                "./dist/HEL/HEL.go.tar.gz",
+                "./dist/HEL/HEL.js.tar.gz",
+                "./dist/HEL/HEL.dart.tar.gz",
+                "./dist/HEL/HEL.cs.tar.gz",
+                "./dist/HEL/HEL.java.tar.gz",
+                "./dist/HEL/HEL.rs.tar.gz",
+                "./dist/HEL/HEL.php.tar.gz",
+                "./dist/HEL/HEL.json.tar.gz",
+                "./dist/HEL/HEL.fbjson.tar.gz",
+                "./dist/HEL/HEL.cpp.tar.gz",
+                "./dist/HEL/HEL.kt.tar.gz",
+                "./dist/HEL/HEL.ts.tar.gz"
+            ]
+        },
+        "DFH": {
+            "IDL": "// Hash: d881c2bab930e87aff99f452efd36ed672340a7c88a95c2af31c8393604ed399\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// GEO Drift History\ntable DFH {\n  ID:string;\n  EFFECTIVE_UNTIL:string;\n  DRIFT_RATE:double;\n}\n\nroot_type DFH;\nfile_identifier \"$DFH\";",
+            "files": [
+                "./dist/DFH/DFH.sw.tar.gz",
+                "./dist/DFH/DFH.py.tar.gz",
+                "./dist/DFH/DFH.lob.tar.gz",
+                "./dist/DFH/DFH.go.tar.gz",
+                "./dist/DFH/DFH.js.tar.gz",
+                "./dist/DFH/DFH.dart.tar.gz",
+                "./dist/DFH/DFH.cs.tar.gz",
+                "./dist/DFH/DFH.java.tar.gz",
+                "./dist/DFH/DFH.rs.tar.gz",
+                "./dist/DFH/DFH.php.tar.gz",
+                "./dist/DFH/DFH.json.tar.gz",
+                "./dist/DFH/DFH.fbjson.tar.gz",
+                "./dist/DFH/DFH.cpp.tar.gz",
+                "./dist/DFH/DFH.kt.tar.gz",
+                "./dist/DFH/DFH.ts.tar.gz"
+            ]
+        },
+        "SNR": {
+            "IDL": "// Hash: 9ec4d51a29649ca1bd414f3fd9ad64f2d79faef9619638958cdd371ccf7a8f45\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum SensorType : byte {\n  RADAR_PULSE = 0,        // Pulse radar\n  RADAR_DOPPLER = 1,      // Pulse-Doppler radar\n  RADAR_CW = 2,           // Continuous wave radar\n  RADAR_AESA = 3,         // Active electronically scanned array\n  RADAR_PESA = 4,         // Passive electronically scanned array\n  IR_SEARCH = 5,          // Infrared search & track\n  IR_IMAGING = 6,         // Imaging infrared\n  EO_TV = 7,              // Electro-optical TV\n  EO_LLLTV = 8,           // Low-light level TV\n  LASER_DESIGNATOR = 9,   // Laser target designator\n  LASER_RANGEFINDER = 10, // Laser rangefinder\n  RWR = 11,               // Radar warning receiver\n  MAW = 12,               // Missile approach warning\n  SONAR_ACTIVE = 13,      // Active sonar\n  SONAR_PASSIVE = 14,     // Passive sonar\n  ACOUSTIC = 15,          // Acoustic sensor\n}\n\nenum SensorMode : byte {\n  OFF = 0,\n  STANDBY = 1,\n  SEARCH = 2,\n  ACQUISITION = 3,\n  TRACK = 4,\n  TRACK_WHILE_SCAN = 5,\n  DESIGNATE = 6,\n  JAMMED = 7,\n}\n\nenum TrackQuality : byte {\n  NONE = 0,\n  TENTATIVE = 1,\n  FIRM = 2,\n  LOCKED = 3,\n  COASTING = 4,\n  LOST = 5,\n}\n\n/// Sensor Systems\ntable SNR {\n  TYPE:ubyte;\n  MODE:ubyte;\n  RESERVED1:ushort;\n  MAX_RANGE:double;\n  MIN_RANGE:double;\n  FOV_AZIMUTH:float;\n  FOV_ELEVATION:float;\n  ANGULAR_RESOLUTION:float;\n  RANGE_RESOLUTION:float;\n  UPDATE_RATE:float;\n  DETECTION_THRESHOLD:float;\n  AZIMUTH_SCAN_RATE:float;\n  ELEVATION_SCAN_RATE:float;\n  POWER:float;\n  FREQUENCY:float;\n  RESERVED:[uint8];\n}\n\nroot_type SNR;\nfile_identifier \"$SNR\";",
+            "files": [
+                "./dist/SNR/SNR.sw.tar.gz",
+                "./dist/SNR/SNR.py.tar.gz",
+                "./dist/SNR/SNR.lob.tar.gz",
+                "./dist/SNR/SNR.go.tar.gz",
+                "./dist/SNR/SNR.js.tar.gz",
+                "./dist/SNR/SNR.dart.tar.gz",
+                "./dist/SNR/SNR.cs.tar.gz",
+                "./dist/SNR/SNR.java.tar.gz",
+                "./dist/SNR/SNR.rs.tar.gz",
+                "./dist/SNR/SNR.php.tar.gz",
+                "./dist/SNR/SNR.json.tar.gz",
+                "./dist/SNR/SNR.fbjson.tar.gz",
+                "./dist/SNR/SNR.cpp.tar.gz",
+                "./dist/SNR/SNR.kt.tar.gz",
+                "./dist/SNR/SNR.ts.tar.gz"
+            ]
+        },
+        "FCS": {
+            "IDL": "// Hash: 7167fcc5f984a8ce91b1145b2e55ae36fac9015997990a95e09d8d25feae8c0b\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum FCSMode : byte {\n  OFF = 0,            // FCS disabled\n  STANDBY = 1,        // Powered, no solution\n  RANGING = 2,        // Acquiring range\n  TRACKING = 3,       // Tracking target\n  SOLUTION = 4,       // Valid fire solution\n  CCIP = 5,           // Continuously Computed Impact Point\n  CCRP = 6,           // Continuously Computed Release Point\n  MANUAL = 7,         // Manual override\n}\n\nenum LeadMethod : byte {\n  NONE = 0,           // No lead\n  PREDICTIVE = 1,     // Full trajectory prediction\n  COLLISION = 2,      // Collision course\n  CONSTANT_BEARING = 3, // Constant bearing approach\n  PURSUIT = 4,        // Pure pursuit\n}\n\nenum RangefinderType : byte {\n  STADIAMETRIC = 0,   // Optical stadiametric\n  STEREOSCOPIC = 1,   // Stereoscopic\n  COINCIDENCE = 2,    // Coincidence\n  LASER = 3,          // Laser rangefinder\n  RADAR = 4,          // Radar ranging\n}\n\n/// Fire Control Systems\ntable FCS {\n  MODE:ubyte;\n  LEAD_METHOD:ubyte;\n  RANGEFINDER_TYPE:ubyte;\n  AMMO_SELECTED:ubyte;\n  TARGET:string;\n  SOLUTION:string;\n  LAST_RANGE:double;\n  RANGE_RATE:double;\n  ROUNDS_REMAINING:ushort;\n  TEMPERATURE:float;\n  RESERVED:[uint8];\n}\n\nroot_type FCS;\nfile_identifier \"$FCS\";",
+            "files": [
+                "./dist/FCS/FCS.sw.tar.gz",
+                "./dist/FCS/FCS.py.tar.gz",
+                "./dist/FCS/FCS.lob.tar.gz",
+                "./dist/FCS/FCS.go.tar.gz",
+                "./dist/FCS/FCS.js.tar.gz",
+                "./dist/FCS/FCS.dart.tar.gz",
+                "./dist/FCS/FCS.cs.tar.gz",
+                "./dist/FCS/FCS.java.tar.gz",
+                "./dist/FCS/FCS.rs.tar.gz",
+                "./dist/FCS/FCS.php.tar.gz",
+                "./dist/FCS/FCS.json.tar.gz",
+                "./dist/FCS/FCS.fbjson.tar.gz",
+                "./dist/FCS/FCS.cpp.tar.gz",
+                "./dist/FCS/FCS.kt.tar.gz",
+                "./dist/FCS/FCS.ts.tar.gz"
             ]
         },
         "OSM": {
@@ -167,6 +535,7 @@
                 "./dist/OSM/OSM.rs.tar.gz",
                 "./dist/OSM/OSM.php.tar.gz",
                 "./dist/OSM/OSM.json.tar.gz",
+                "./dist/OSM/OSM.fbjson.tar.gz",
                 "./dist/OSM/OSM.cpp.tar.gz",
                 "./dist/OSM/OSM.kt.tar.gz",
                 "./dist/OSM/OSM.ts.tar.gz"
@@ -186,9 +555,30 @@
                 "./dist/PRG/PRG.rs.tar.gz",
                 "./dist/PRG/PRG.php.tar.gz",
                 "./dist/PRG/PRG.json.tar.gz",
+                "./dist/PRG/PRG.fbjson.tar.gz",
                 "./dist/PRG/PRG.cpp.tar.gz",
                 "./dist/PRG/PRG.kt.tar.gz",
                 "./dist/PRG/PRG.ts.tar.gz"
+            ]
+        },
+        "ATD": {
+            "IDL": "// Hash: c4944a84ed159ab22e6fedd7a3e83602d125d248cff34e568a9d3653acce2def\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Attitude Data Point\ntable ATD {\n  ID:string;\n  AS_ID:string;\n  SAT_NO:int;\n  ORIG_OBJECT_ID:string;\n  TS:string;\n  MOTION_TYPE:string;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n  QC:double;\n  Q1_DOT:double;\n  Q2_DOT:double;\n  Q3_DOT:double;\n  QC_DOT:double;\n  X_ANGLE:[string];\n  Y_ANGLE:[string];\n  Z_ANGLE:[string];\n  X_RATE:[string];\n  Y_RATE:[string];\n  Z_RATE:[string];\n  RA:double;\n  DECLINATION:double;\n  CONING_ANGLE:double;\n  PREC_PERIOD:double;\n  SPIN_PERIOD:double;\n}\n\nroot_type ATD;\nfile_identifier \"$ATD\";",
+            "files": [
+                "./dist/ATD/ATD.sw.tar.gz",
+                "./dist/ATD/ATD.py.tar.gz",
+                "./dist/ATD/ATD.lob.tar.gz",
+                "./dist/ATD/ATD.go.tar.gz",
+                "./dist/ATD/ATD.js.tar.gz",
+                "./dist/ATD/ATD.dart.tar.gz",
+                "./dist/ATD/ATD.cs.tar.gz",
+                "./dist/ATD/ATD.java.tar.gz",
+                "./dist/ATD/ATD.rs.tar.gz",
+                "./dist/ATD/ATD.php.tar.gz",
+                "./dist/ATD/ATD.json.tar.gz",
+                "./dist/ATD/ATD.fbjson.tar.gz",
+                "./dist/ATD/ATD.cpp.tar.gz",
+                "./dist/ATD/ATD.kt.tar.gz",
+                "./dist/ATD/ATD.ts.tar.gz"
             ]
         },
         "ATM": {
@@ -205,9 +595,50 @@
                 "./dist/ATM/ATM.rs.tar.gz",
                 "./dist/ATM/ATM.php.tar.gz",
                 "./dist/ATM/ATM.json.tar.gz",
+                "./dist/ATM/ATM.fbjson.tar.gz",
                 "./dist/ATM/ATM.cpp.tar.gz",
                 "./dist/ATM/ATM.kt.tar.gz",
                 "./dist/ATM/ATM.ts.tar.gz"
+            ]
+        },
+        "BAL": {
+            "IDL": "// Hash: fa2cd0d11ca94e65b6a38e7b37bf5b9d90a6bb28061c7a694be4d74ffc211b83\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum DragModel : byte {\n  G1,                     // Standard rifle bullet,\n  G2,                     // Aberdeen J projectile,\n  G5,                     // Low base boat tail,\n  G6,                     // Flat base,\n  G7,                     // Long 7.5 deg boat tail,\n  G8,                     // Flat base w/ boat tail,\n  GI,                     // Ingalls,\n  GL,                     // Ball,\n  GS,                     // Sphere,\n  RA4,                    // Artillery,\n  CUSTOM\n}\n\nenum BallisticModel : byte {\n  POINT_MASS_2D,          // Simple 2D,\n  POINT_MASS_3D,          // 3D point mass,\n  MODIFIED_POINT_MASS,    // 4DOF with spin,\n  SIX_DOF                 // Full 6DOF\n}\n\nenum ProjectileType : byte {\n  BALL,                   // Ball/FMJ,\n  HOLLOW_POINT,           // HP,\n  BOAT_TAIL,             // BT,\n  ARMOR_PIERCING,        // AP,\n  ARMOR_PIERCING_INCENDIARY, // API,\n  TRACER,\n  SABOT,\n  SUBCALIBER,\n  HEAT,                   // High Explosive Anti-Tank,\n  HESH,                   // High Explosive Squash Head,\n  HE,                     // High Explosive,\n  APFSDS,                // Armor Piercing Fin Stabilized Discarding Sabot,\n  ARTILLERY_HE,\n  MORTAR,\n  GRENADE,\n  ROCKET\n}\n\nenum StabilizationType : byte {\n  SPIN,                   // Spin stabilized,\n  FIN,                    // Fin stabilized,\n  DUAL                    // Spin + fin (e.g., APFSDS)\n}\n\nenum PenetrationModel : byte {\n  DE_MARRE,               // Krupp/de Marre formula,\n  THOR,                   // THOR equations,\n  ODERMATT,               // Odermatt-Lanz,\n  ANDERSON,               // Anderson penetration,\n  BRL                     // Ballistic Research Lab\n}\n\n/// Ballistics\ntable BAL {\n  COMMAND:string;\n  TRAJECTORY_REQUEST:string;\n  TABLE_REQUEST:string;\n  FIRE_CONTROL:string;\n  PENETRATION_PROJECTILE:string;\n  PENETRATION_ARMOR:string;\n  IMPACT_VELOCITY_MPS:double;\n  IMPACT_ANGLE_DEG:double;\n}\n\nroot_type BAL;\nfile_identifier \"$BAL\";",
+            "files": [
+                "./dist/BAL/BAL.sw.tar.gz",
+                "./dist/BAL/BAL.py.tar.gz",
+                "./dist/BAL/BAL.lob.tar.gz",
+                "./dist/BAL/BAL.go.tar.gz",
+                "./dist/BAL/BAL.js.tar.gz",
+                "./dist/BAL/BAL.dart.tar.gz",
+                "./dist/BAL/BAL.cs.tar.gz",
+                "./dist/BAL/BAL.java.tar.gz",
+                "./dist/BAL/BAL.rs.tar.gz",
+                "./dist/BAL/BAL.php.tar.gz",
+                "./dist/BAL/BAL.json.tar.gz",
+                "./dist/BAL/BAL.fbjson.tar.gz",
+                "./dist/BAL/BAL.cpp.tar.gz",
+                "./dist/BAL/BAL.kt.tar.gz",
+                "./dist/BAL/BAL.ts.tar.gz"
+            ]
+        },
+        "GRV": {
+            "IDL": "// Hash: 69456166cb20cbc46856e74928b8f13f15df2b133a918b55b9220abe854e08f3\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum GravityModelType : byte {\n  POINT_MASS,\n  J2_ONLY,\n  J2_J4,\n  J2_J6,\n  SPHERICAL_HARMONICS,\n  CUSTOM\n}\n\nenum GravityModelName : byte {\n  WGS84,\n  EGM96,\n  EGM2008,\n  GGM05C,\n  JGM3,\n  EIGEN_6C4,\n  GOCO06S,\n  XGM2019E,\n  CUSTOM_MODEL\n}\n\nenum CentralBody : byte {\n  EARTH,\n  MOON,\n  SUN,\n  MARS,\n  JUPITER,\n  SATURN,\n  VENUS,\n  MERCURY,\n  CUSTOM_BODY\n}\n\n/// Gravity Models\ntable GRV {\n  MODEL_TYPE:GravityModelType = J2_J4;\n  MODEL_NAME:GravityModelName = EGM2008;\n  CENTRAL_BODY:CentralBody = EARTH;\n  MAX_DEGREE:uint16 = 70;\n  MAX_ORDER:uint16 = 70;\n  // Third body perturbations\n  INCLUDE_SUN:bool = true;\n  INCLUDE_MOON:bool = true;\n  INCLUDE_PLANETS:bool = false;\n  // Tidal effects\n  SOLID_TIDES:bool = false;\n  OCEAN_TIDES:bool = false;\n  POLE_TIDES:bool = false;\n}\n\nroot_type GRV;\nfile_identifier \"$GRV\";",
+            "files": [
+                "./dist/GRV/GRV.sw.tar.gz",
+                "./dist/GRV/GRV.py.tar.gz",
+                "./dist/GRV/GRV.lob.tar.gz",
+                "./dist/GRV/GRV.go.tar.gz",
+                "./dist/GRV/GRV.js.tar.gz",
+                "./dist/GRV/GRV.dart.tar.gz",
+                "./dist/GRV/GRV.cs.tar.gz",
+                "./dist/GRV/GRV.java.tar.gz",
+                "./dist/GRV/GRV.rs.tar.gz",
+                "./dist/GRV/GRV.php.tar.gz",
+                "./dist/GRV/GRV.json.tar.gz",
+                "./dist/GRV/GRV.fbjson.tar.gz",
+                "./dist/GRV/GRV.cpp.tar.gz",
+                "./dist/GRV/GRV.kt.tar.gz",
+                "./dist/GRV/GRV.ts.tar.gz"
             ]
         },
         "CTR": {
@@ -224,6 +655,7 @@
                 "./dist/CTR/CTR.rs.tar.gz",
                 "./dist/CTR/CTR.php.tar.gz",
                 "./dist/CTR/CTR.json.tar.gz",
+                "./dist/CTR/CTR.fbjson.tar.gz",
                 "./dist/CTR/CTR.cpp.tar.gz",
                 "./dist/CTR/CTR.kt.tar.gz",
                 "./dist/CTR/CTR.ts.tar.gz"
@@ -243,9 +675,30 @@
                 "./dist/SIT/SIT.rs.tar.gz",
                 "./dist/SIT/SIT.php.tar.gz",
                 "./dist/SIT/SIT.json.tar.gz",
+                "./dist/SIT/SIT.fbjson.tar.gz",
                 "./dist/SIT/SIT.cpp.tar.gz",
                 "./dist/SIT/SIT.kt.tar.gz",
                 "./dist/SIT/SIT.ts.tar.gz"
+            ]
+        },
+        "SEV": {
+            "IDL": "// Hash: 0c2488cc8ee961c19aaa12084be912986531dff117ecfbfb2d486567960c047a\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Space Environment Observation Detail\ntable SEV {\n  OB_TYPE:string;\n  OB_UO_M:string;\n  OB_VALUE:double;\n  OB_STRING:string;\n  OB_ARRAY:[string];\n  OB_BOOL:bool;\n  OB_QUALITY:string;\n  OB_DESCRIPTION:string;\n}\n\nroot_type SEV;\nfile_identifier \"$SEV\";",
+            "files": [
+                "./dist/SEV/SEV.sw.tar.gz",
+                "./dist/SEV/SEV.py.tar.gz",
+                "./dist/SEV/SEV.lob.tar.gz",
+                "./dist/SEV/SEV.go.tar.gz",
+                "./dist/SEV/SEV.js.tar.gz",
+                "./dist/SEV/SEV.dart.tar.gz",
+                "./dist/SEV/SEV.cs.tar.gz",
+                "./dist/SEV/SEV.java.tar.gz",
+                "./dist/SEV/SEV.rs.tar.gz",
+                "./dist/SEV/SEV.php.tar.gz",
+                "./dist/SEV/SEV.json.tar.gz",
+                "./dist/SEV/SEV.fbjson.tar.gz",
+                "./dist/SEV/SEV.cpp.tar.gz",
+                "./dist/SEV/SEV.kt.tar.gz",
+                "./dist/SEV/SEV.ts.tar.gz"
             ]
         },
         "PUR": {
@@ -262,9 +715,50 @@
                 "./dist/PUR/PUR.rs.tar.gz",
                 "./dist/PUR/PUR.php.tar.gz",
                 "./dist/PUR/PUR.json.tar.gz",
+                "./dist/PUR/PUR.fbjson.tar.gz",
                 "./dist/PUR/PUR.cpp.tar.gz",
                 "./dist/PUR/PUR.kt.tar.gz",
                 "./dist/PUR/PUR.ts.tar.gz"
+            ]
+        },
+        "MTI": {
+            "IDL": "// Hash: 870d20ead9f9e3189572c4087e7de2298712e98479a56d014c54a8319ae11358\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Moving Target Indicator\ntable MTI {\n  ID:string;\n  P3:string;\n  P6:string;\n  P7:string;\n  P8:string;\n  P9:int;\n  P10:int;\n  MISSIONS:[string];\n  DWELLS:[string];\n  HRRS:[string];\n  JOB_DEFS:[string];\n  FREE_TEXTS:[string];\n  PLATFORM_LOCS:[string];\n  JOB_REQUESTS:[string];\n}\n\nroot_type MTI;\nfile_identifier \"$MTI\";",
+            "files": [
+                "./dist/MTI/MTI.sw.tar.gz",
+                "./dist/MTI/MTI.py.tar.gz",
+                "./dist/MTI/MTI.lob.tar.gz",
+                "./dist/MTI/MTI.go.tar.gz",
+                "./dist/MTI/MTI.js.tar.gz",
+                "./dist/MTI/MTI.dart.tar.gz",
+                "./dist/MTI/MTI.cs.tar.gz",
+                "./dist/MTI/MTI.java.tar.gz",
+                "./dist/MTI/MTI.rs.tar.gz",
+                "./dist/MTI/MTI.php.tar.gz",
+                "./dist/MTI/MTI.json.tar.gz",
+                "./dist/MTI/MTI.fbjson.tar.gz",
+                "./dist/MTI/MTI.cpp.tar.gz",
+                "./dist/MTI/MTI.kt.tar.gz",
+                "./dist/MTI/MTI.ts.tar.gz"
+            ]
+        },
+        "CRD": {
+            "IDL": "// Hash: c0d3d10c04dcf003379de19531769eb137639e9e1084c737833eccb121a7e5f0\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum CoordFrame : byte {\n  // Earth-centered frames\n  ECEF = 0,               // Earth-Centered Earth-Fixed\n  ECI_J2000 = 1,          // Earth-Centered Inertial (J2000)\n  ECI_MOD = 2,            // Mean of Date\n  ECI_TOD = 3,            // True of Date\n  TEME = 4,               // True Equator Mean Equinox\n\n  // Local frames\n  NED = 5,                // North-East-Down (local)\n  ENU = 6,                // East-North-Up (local)\n  BODY = 7,               // Body-fixed\n\n  // Other bodies\n  MOON_CI = 8,            // Moon-centered inertial\n  MOON_CF = 9,            // Moon-centered fixed\n  MARS_CI = 10,           // Mars-centered inertial\n\n  // Specialized\n  GEOCENTRIC = 11,        // Geocentric spherical\n  GEODETIC = 12,          // Geodetic (lat/lon/alt)\n}\n\nenum Ellipsoid : byte {\n  WGS84 = 0,              // World Geodetic System 1984\n  GRS80 = 1,              // Geodetic Reference System 1980\n  WGS72 = 2,              // World Geodetic System 1972\n  SPHERE = 3,             // Perfect sphere\n  MOON = 4,               // Lunar reference ellipsoid\n  MARS = 5,               // Mars reference ellipsoid\n}\n\n/// Coordinate Systems\ntable CRD {\n  X:double;\n  Y:double;\n  Z:double;\n  VX:double;\n  VY:double;\n  VZ:double;\n  FRAME:ubyte;\n  ELLIPSOID:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type CRD;\nfile_identifier \"$CRD\";",
+            "files": [
+                "./dist/CRD/CRD.sw.tar.gz",
+                "./dist/CRD/CRD.py.tar.gz",
+                "./dist/CRD/CRD.lob.tar.gz",
+                "./dist/CRD/CRD.go.tar.gz",
+                "./dist/CRD/CRD.js.tar.gz",
+                "./dist/CRD/CRD.dart.tar.gz",
+                "./dist/CRD/CRD.cs.tar.gz",
+                "./dist/CRD/CRD.java.tar.gz",
+                "./dist/CRD/CRD.rs.tar.gz",
+                "./dist/CRD/CRD.php.tar.gz",
+                "./dist/CRD/CRD.json.tar.gz",
+                "./dist/CRD/CRD.fbjson.tar.gz",
+                "./dist/CRD/CRD.cpp.tar.gz",
+                "./dist/CRD/CRD.kt.tar.gz",
+                "./dist/CRD/CRD.ts.tar.gz"
             ]
         },
         "CRM": {
@@ -281,6 +775,7 @@
                 "./dist/CRM/CRM.rs.tar.gz",
                 "./dist/CRM/CRM.php.tar.gz",
                 "./dist/CRM/CRM.json.tar.gz",
+                "./dist/CRM/CRM.fbjson.tar.gz",
                 "./dist/CRM/CRM.cpp.tar.gz",
                 "./dist/CRM/CRM.kt.tar.gz",
                 "./dist/CRM/CRM.ts.tar.gz"
@@ -300,9 +795,110 @@
                 "./dist/EOP/EOP.rs.tar.gz",
                 "./dist/EOP/EOP.php.tar.gz",
                 "./dist/EOP/EOP.json.tar.gz",
+                "./dist/EOP/EOP.fbjson.tar.gz",
                 "./dist/EOP/EOP.cpp.tar.gz",
                 "./dist/EOP/EOP.kt.tar.gz",
                 "./dist/EOP/EOP.ts.tar.gz"
+            ]
+        },
+        "GEO": {
+            "IDL": "// Hash: 9f794b516d1fd59c04e8d7c2f5303ff639599da2b0f930d08919136693c5632a\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// GEO Spacecraft Status\ntable GEO {\n  ID:string;\n  ORIG_OBJECT_ID:string;\n  SS:double;\n  SC:double;\n  RELATIVE_ENERGY:double;\n  LONGITUDE_RATE:double;\n  LONGITUDE_MIN:double;\n  LONGITUDE_MAX:double;\n  CONFIDENCE_LEVEL:string;\n  PLANE_CHANGE_STATUS:string;\n  TROUGH_TYPE:string;\n  LOST_FLAG:bool;\n  SEMI_ANNUAL_CORR_FLAG:bool;\n  OBJECT_STATUS:string;\n  RAW_FILE_URI:string;\n  ON_ORBIT:string;\n  SAT_NO:int;\n}\n\nroot_type GEO;\nfile_identifier \"$GEO\";",
+            "files": [
+                "./dist/GEO/GEO.sw.tar.gz",
+                "./dist/GEO/GEO.py.tar.gz",
+                "./dist/GEO/GEO.lob.tar.gz",
+                "./dist/GEO/GEO.go.tar.gz",
+                "./dist/GEO/GEO.js.tar.gz",
+                "./dist/GEO/GEO.dart.tar.gz",
+                "./dist/GEO/GEO.cs.tar.gz",
+                "./dist/GEO/GEO.java.tar.gz",
+                "./dist/GEO/GEO.rs.tar.gz",
+                "./dist/GEO/GEO.php.tar.gz",
+                "./dist/GEO/GEO.json.tar.gz",
+                "./dist/GEO/GEO.fbjson.tar.gz",
+                "./dist/GEO/GEO.cpp.tar.gz",
+                "./dist/GEO/GEO.kt.tar.gz",
+                "./dist/GEO/GEO.ts.tar.gz"
+            ]
+        },
+        "TMF": {
+            "IDL": "// Hash: f722f539320b4cec9b89a0e4af6bb5924757667244b566d666f5450cdfc488d3\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Telemetry Transfer Frame (CCSDS 132.0-B-2)\ntable TMF {\n  /// Transfer frame version\n  VERSION:ubyte;\n  /// Spacecraft identifier\n  SPACECRAFT_ID:ushort;\n  /// Virtual channel identifier\n  VIRTUAL_CHANNEL_ID:ubyte;\n  /// Operational control field flag\n  OCF_FLAG:bool;\n  /// Master channel frame count\n  MASTER_FRAME_COUNT:ubyte;\n  /// Virtual channel frame count\n  VIRTUAL_FRAME_COUNT:ubyte;\n  /// Secondary header flag\n  SEC_HDR_FLAG:bool;\n  /// Synchronization flag\n  SYNCH_FLAG:bool;\n  /// Packet order flag\n  PACKET_ORDER_FLAG:bool;\n  /// Segment length identifier\n  SEGMENT_LENGTH_ID:ubyte;\n  /// First header pointer\n  FIRST_HDR_POINTER:ushort;\n  /// Data field\n  DATA:[ubyte];\n  /// Operational control field\n  OCF:[ubyte];\n  /// Frame error control field\n  FECF:ushort;\n}\n\nroot_type TMF;\nfile_identifier \"$TMF\";",
+            "files": [
+                "./dist/TMF/TMF.sw.tar.gz",
+                "./dist/TMF/TMF.py.tar.gz",
+                "./dist/TMF/TMF.lob.tar.gz",
+                "./dist/TMF/TMF.go.tar.gz",
+                "./dist/TMF/TMF.js.tar.gz",
+                "./dist/TMF/TMF.dart.tar.gz",
+                "./dist/TMF/TMF.cs.tar.gz",
+                "./dist/TMF/TMF.java.tar.gz",
+                "./dist/TMF/TMF.rs.tar.gz",
+                "./dist/TMF/TMF.php.tar.gz",
+                "./dist/TMF/TMF.json.tar.gz",
+                "./dist/TMF/TMF.fbjson.tar.gz",
+                "./dist/TMF/TMF.cpp.tar.gz",
+                "./dist/TMF/TMF.kt.tar.gz",
+                "./dist/TMF/TMF.ts.tar.gz"
+            ]
+        },
+        "STV": {
+            "IDL": "// Hash: 5685ddaa732fdb6703aa0c0e862b2af1f11fbd7933bca131181b30ce678d1c16\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum STVReferenceFrame : byte {\n  GCRF = 0,       // Geocentric Celestial Reference Frame\n  ITRF = 1,       // International Terrestrial Reference Frame\n  EME2000 = 2,    // Earth Mean Equator J2000\n  TEME = 3,       // True Equator Mean Equinox\n  ICRF = 4,       // International Celestial Reference Frame\n  MOON_CI = 5,    // Moon-centered inertial\n  MARS_CI = 6,    // Mars-centered inertial\n}\n\n/// State Vector\ntable STV {\n  EPOCH:double;\n  POS_X:double;\n  POS_Y:double;\n  POS_Z:double;\n  VEL_X:double;\n  VEL_Y:double;\n  VEL_Z:double;\n  REF_FRAME:ubyte;\n  FLAGS:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type STV;\nfile_identifier \"$STV\";",
+            "files": [
+                "./dist/STV/STV.sw.tar.gz",
+                "./dist/STV/STV.py.tar.gz",
+                "./dist/STV/STV.lob.tar.gz",
+                "./dist/STV/STV.go.tar.gz",
+                "./dist/STV/STV.js.tar.gz",
+                "./dist/STV/STV.dart.tar.gz",
+                "./dist/STV/STV.cs.tar.gz",
+                "./dist/STV/STV.java.tar.gz",
+                "./dist/STV/STV.rs.tar.gz",
+                "./dist/STV/STV.php.tar.gz",
+                "./dist/STV/STV.json.tar.gz",
+                "./dist/STV/STV.fbjson.tar.gz",
+                "./dist/STV/STV.cpp.tar.gz",
+                "./dist/STV/STV.kt.tar.gz",
+                "./dist/STV/STV.ts.tar.gz"
+            ]
+        },
+        "CLT": {
+            "IDL": "// Hash: b1d160ce5675a3d7c990b20f195577214c733b04093ad42cf8c27357b5eb135b\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum cltuPduType : byte {\n  BIND_INVOCATION,\n  BIND_RETURN,\n  UNBIND_INVOCATION,\n  UNBIND_RETURN,\n  START_INVOCATION,\n  START_RETURN,\n  STOP_INVOCATION,\n  STOP_RETURN,\n  TRANSFER_DATA_INVOCATION,\n  TRANSFER_DATA_RETURN,\n  PEER_ABORT\n}\n\n/// Command Link Transmission Unit Service (CCSDS 912.3-B-2)\ntable CLT {\n  /// PDU type\n  PDU_TYPE:cltuPduType;\n  /// Initiator identifier\n  INITIATOR_ID:string;\n  /// Responder port identifier\n  RESPONDER_PORT_ID:string;\n  /// Service type\n  SERVICE_TYPE:ubyte;\n  /// Version number\n  VERSION:ushort;\n  /// Invoke ID\n  INVOKE_ID:uint;\n  /// CLTU data\n  DATA:[ubyte];\n}\n\nroot_type CLT;\nfile_identifier \"$CLT\";",
+            "files": [
+                "./dist/CLT/CLT.sw.tar.gz",
+                "./dist/CLT/CLT.py.tar.gz",
+                "./dist/CLT/CLT.lob.tar.gz",
+                "./dist/CLT/CLT.go.tar.gz",
+                "./dist/CLT/CLT.js.tar.gz",
+                "./dist/CLT/CLT.dart.tar.gz",
+                "./dist/CLT/CLT.cs.tar.gz",
+                "./dist/CLT/CLT.java.tar.gz",
+                "./dist/CLT/CLT.rs.tar.gz",
+                "./dist/CLT/CLT.php.tar.gz",
+                "./dist/CLT/CLT.json.tar.gz",
+                "./dist/CLT/CLT.fbjson.tar.gz",
+                "./dist/CLT/CLT.cpp.tar.gz",
+                "./dist/CLT/CLT.kt.tar.gz",
+                "./dist/CLT/CLT.ts.tar.gz"
+            ]
+        },
+        "OOE": {
+            "IDL": "// Hash: 52a8a82dbbc7b8e1f48b8bc7d36cf9179e0a99186a796a63832d3045f7a50bb2\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// On-Orbit Event\ntable OOE {\n  ID:string;\n  DERIVED_FROM:string;\n  DECLASSIFICATION_DATE:string;\n  DECLASSIFICATION_STRING:string;\n  SAT_NO:int;\n  ORIG_OBJECT_ID:string;\n  EVENT_TIME:string;\n  EVENT_TIME_NOTES:string;\n  OPERATOR_ORG_ID:string;\n  OWNER_ORG_ID:string;\n  LESSEE_ORG_ID:string;\n  OPERATED_ON_BEHALF_OF_ORG_ID:string;\n  GEO_POSITION:double;\n  PLANE_SLOT:string;\n  PLANE_NUMBER:string;\n  POSITION_STATUS:string;\n  UNTIL_TIME:string;\n  OFFICIAL_LOSS_DATE:string;\n  NET_AMOUNT:double;\n  UNDERLYING_CAUSE:string;\n  CAPABILITY_LOSS:double;\n  CAPACITY_LOSS:double;\n  INSURANCE_LOSS:double;\n  THIRD_PARTY_INSURANCE_LOSS:double;\n  INJURED:int;\n  KILLED:int;\n  LIFE_LOST:double;\n  AGE_AT_EVENT:double;\n  ACHIEVED_FLIGHT_PHASE:string;\n  OCCURRENCE_FLIGHT_PHASE:string;\n  STAGE_AT_FAULT:string;\n  EQUIPMENT_AT_FAULT:string;\n  EQUIPMENT_TYPE_AT_FAULT:string;\n  EQUIPMENT_PART_AT_FAULT:string;\n  CONSEQUENTIAL_EQUIPMENT_FAILURE:string;\n  INCLINED:bool;\n  DESCRIPTION:string;\n  REMARKS:string;\n  INSURANCE_LOSS_NOTES:string;\n  CAPABILITY_LOSS_NOTES:string;\n  INSURANCE_CARRIED_NOTES:string;\n  EQUIPMENT_CAUSING_LOSS_NOTES:string;\n  EVENT_TYPE:string;\n  EVENT_RESULT:string;\n  OBJECT_STATUS:string;\n  SATELLITE_POSITION:string;\n  ON_ORBIT:string;\n}\n\nroot_type OOE;\nfile_identifier \"$OOE\";",
+            "files": [
+                "./dist/OOE/OOE.sw.tar.gz",
+                "./dist/OOE/OOE.py.tar.gz",
+                "./dist/OOE/OOE.lob.tar.gz",
+                "./dist/OOE/OOE.go.tar.gz",
+                "./dist/OOE/OOE.js.tar.gz",
+                "./dist/OOE/OOE.dart.tar.gz",
+                "./dist/OOE/OOE.cs.tar.gz",
+                "./dist/OOE/OOE.java.tar.gz",
+                "./dist/OOE/OOE.rs.tar.gz",
+                "./dist/OOE/OOE.php.tar.gz",
+                "./dist/OOE/OOE.json.tar.gz",
+                "./dist/OOE/OOE.fbjson.tar.gz",
+                "./dist/OOE/OOE.cpp.tar.gz",
+                "./dist/OOE/OOE.kt.tar.gz",
+                "./dist/OOE/OOE.ts.tar.gz"
             ]
         },
         "MET": {
@@ -319,9 +915,90 @@
                 "./dist/MET/MET.rs.tar.gz",
                 "./dist/MET/MET.php.tar.gz",
                 "./dist/MET/MET.json.tar.gz",
+                "./dist/MET/MET.fbjson.tar.gz",
                 "./dist/MET/MET.cpp.tar.gz",
                 "./dist/MET/MET.kt.tar.gz",
                 "./dist/MET/MET.ts.tar.gz"
+            ]
+        },
+        "RAF": {
+            "IDL": "// Hash: 970df6be065350907784f697bcd72d6f5d9dc84c8df7436b30e923fa90dfed05\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum rafPduType : byte {\n  BIND_INVOCATION,\n  BIND_RETURN,\n  UNBIND_INVOCATION,\n  UNBIND_RETURN,\n  START_INVOCATION,\n  START_RETURN,\n  STOP_INVOCATION,\n  STOP_RETURN,\n  TRANSFER_BUFFER,\n  STATUS_REPORT,\n  PEER_ABORT\n}\n\n/// Return All Frames Service (CCSDS 913.1-B-2)\ntable RAF {\n  /// PDU type\n  PDU_TYPE:rafPduType;\n  /// Initiator identifier\n  INITIATOR_ID:string;\n  /// Responder port identifier\n  RESPONDER_PORT_ID:string;\n  /// Service type\n  SERVICE_TYPE:ubyte;\n  /// Version number\n  VERSION:ushort;\n  /// Invoke ID\n  INVOKE_ID:uint;\n  /// Frame quality\n  FRAME_QUALITY:ubyte;\n  /// Data\n  DATA:[ubyte];\n}\n\nroot_type RAF;\nfile_identifier \"$RAF\";",
+            "files": [
+                "./dist/RAF/RAF.sw.tar.gz",
+                "./dist/RAF/RAF.py.tar.gz",
+                "./dist/RAF/RAF.lob.tar.gz",
+                "./dist/RAF/RAF.go.tar.gz",
+                "./dist/RAF/RAF.js.tar.gz",
+                "./dist/RAF/RAF.dart.tar.gz",
+                "./dist/RAF/RAF.cs.tar.gz",
+                "./dist/RAF/RAF.java.tar.gz",
+                "./dist/RAF/RAF.rs.tar.gz",
+                "./dist/RAF/RAF.php.tar.gz",
+                "./dist/RAF/RAF.json.tar.gz",
+                "./dist/RAF/RAF.fbjson.tar.gz",
+                "./dist/RAF/RAF.cpp.tar.gz",
+                "./dist/RAF/RAF.kt.tar.gz",
+                "./dist/RAF/RAF.ts.tar.gz"
+            ]
+        },
+        "AEM": {
+            "IDL": "// Hash: 274046db6e9b23adde4bd2eca7b67222f0cc2e81d804f1fbaddb6e475059d288\n// Version: 0.0.2\n// -----------------------------------END_HEADER\ntable AEMAttitudeEntry {\n  EPOCH:string;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n  QC:double;\n  RATE_X:double;\n  RATE_Y:double;\n  RATE_Z:double;\n}\n\ntable AEMSegment {\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  REF_FRAME_A:string;\n  REF_FRAME_B:string;\n  ATTITUDE_DIR:string;\n  TIME_SYSTEM:string;\n  ATTITUDE_TYPE:string;\n  START_TIME:string;\n  STOP_TIME:string;\n  DATA:[AEMAttitudeEntry];\n}\n\n/// Attitude Ephemeris Message\ntable AEM {\n  CCSDS_AEM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  SEGMENTS:[AEMSegment];\n}\n\nroot_type AEM;\nfile_identifier \"$AEM\";",
+            "files": [
+                "./dist/AEM/AEM.sw.tar.gz",
+                "./dist/AEM/AEM.py.tar.gz",
+                "./dist/AEM/AEM.lob.tar.gz",
+                "./dist/AEM/AEM.go.tar.gz",
+                "./dist/AEM/AEM.js.tar.gz",
+                "./dist/AEM/AEM.dart.tar.gz",
+                "./dist/AEM/AEM.cs.tar.gz",
+                "./dist/AEM/AEM.java.tar.gz",
+                "./dist/AEM/AEM.rs.tar.gz",
+                "./dist/AEM/AEM.php.tar.gz",
+                "./dist/AEM/AEM.json.tar.gz",
+                "./dist/AEM/AEM.fbjson.tar.gz",
+                "./dist/AEM/AEM.cpp.tar.gz",
+                "./dist/AEM/AEM.kt.tar.gz",
+                "./dist/AEM/AEM.ts.tar.gz"
+            ]
+        },
+        "OOL": {
+            "IDL": "// Hash: 873046dbd588898d75ea039c147761282ae2294a23404b2c34e06b8c44fbf7bd\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// On-Orbit Object List\ntable OOL {\n  ID:string;\n  NAME:string;\n  DESCRIPTION:string;\n  ONORBITS:[string];\n}\n\nroot_type OOL;\nfile_identifier \"$OOL\";",
+            "files": [
+                "./dist/OOL/OOL.sw.tar.gz",
+                "./dist/OOL/OOL.py.tar.gz",
+                "./dist/OOL/OOL.lob.tar.gz",
+                "./dist/OOL/OOL.go.tar.gz",
+                "./dist/OOL/OOL.js.tar.gz",
+                "./dist/OOL/OOL.dart.tar.gz",
+                "./dist/OOL/OOL.cs.tar.gz",
+                "./dist/OOL/OOL.java.tar.gz",
+                "./dist/OOL/OOL.rs.tar.gz",
+                "./dist/OOL/OOL.php.tar.gz",
+                "./dist/OOL/OOL.json.tar.gz",
+                "./dist/OOL/OOL.fbjson.tar.gz",
+                "./dist/OOL/OOL.cpp.tar.gz",
+                "./dist/OOL/OOL.kt.tar.gz",
+                "./dist/OOL/OOL.ts.tar.gz"
+            ]
+        },
+        "RDM": {
+            "IDL": "// Hash: 1c0e8f9267b920d11478fe2cf3a02aed3659c4ad65ca1dba250982489ee08edd\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Reentry Data Message\ntable RDM {\n  CCSDS_RDM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  REENTRY_EPOCH:string;\n  REENTRY_LATITUDE:double;\n  REENTRY_LONGITUDE:double;\n}\n\nroot_type RDM;\nfile_identifier \"$RDM\";",
+            "files": [
+                "./dist/RDM/RDM.sw.tar.gz",
+                "./dist/RDM/RDM.py.tar.gz",
+                "./dist/RDM/RDM.lob.tar.gz",
+                "./dist/RDM/RDM.go.tar.gz",
+                "./dist/RDM/RDM.js.tar.gz",
+                "./dist/RDM/RDM.dart.tar.gz",
+                "./dist/RDM/RDM.cs.tar.gz",
+                "./dist/RDM/RDM.java.tar.gz",
+                "./dist/RDM/RDM.rs.tar.gz",
+                "./dist/RDM/RDM.php.tar.gz",
+                "./dist/RDM/RDM.json.tar.gz",
+                "./dist/RDM/RDM.fbjson.tar.gz",
+                "./dist/RDM/RDM.cpp.tar.gz",
+                "./dist/RDM/RDM.kt.tar.gz",
+                "./dist/RDM/RDM.ts.tar.gz"
             ]
         },
         "OEM": {
@@ -338,9 +1015,30 @@
                 "./dist/OEM/OEM.rs.tar.gz",
                 "./dist/OEM/OEM.php.tar.gz",
                 "./dist/OEM/OEM.json.tar.gz",
+                "./dist/OEM/OEM.fbjson.tar.gz",
                 "./dist/OEM/OEM.cpp.tar.gz",
                 "./dist/OEM/OEM.kt.tar.gz",
                 "./dist/OEM/OEM.ts.tar.gz"
+            ]
+        },
+        "ACR": {
+            "IDL": "// Hash: bd38a7102edf4c0ad0dd878b3a4de8be7a21b17572d22ba808ff59bf9d8510ba\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum AircraftType : byte {\n  FIGHTER = 0,\n  ATTACK = 1,\n  BOMBER = 2,\n  TRANSPORT = 3,\n  TRAINER = 4,\n  RECON = 5,\n  TANKER = 6,\n  AWACS = 7,\n  UAV = 8,\n  PROP_SINGLE = 9,\n  PROP_MULTI = 10,\n  SEAPLANE = 11,\n}\n\nenum EngineType : byte {\n  TURBOJET = 0,\n  TURBOFAN_LOW = 1,       // Low bypass\n  TURBOFAN_HIGH = 2,      // High bypass\n  TURBOPROP = 3,\n  PISTON = 4,\n  RAMJET = 5,\n  SCRAMJET = 6,\n  ELECTRIC = 7,\n}\n\nenum FlightPhase : byte {\n  PARKED = 0,\n  TAXI = 1,\n  TAKEOFF = 2,\n  CLIMB = 3,\n  CRUISE = 4,\n  DESCENT = 5,\n  APPROACH = 6,\n  LANDING = 7,\n  GO_AROUND = 8,\n  EMERGENCY = 9,\n}\n\nenum GearState : byte {\n  UP = 0,\n  TRANSIT_DOWN = 1,\n  DOWN = 2,\n  TRANSIT_UP = 3,\n  DAMAGED = 4,\n}\n\n/// Aircraft Dynamics\ntable ACR {\n  POSITION_X:double;\n  POSITION_Y:double;\n  POSITION_Z:double;\n  VELOCITY_X:double;\n  VELOCITY_Y:double;\n  VELOCITY_Z:double;\n  ATTITUDE_X:double;\n  ATTITUDE_Y:double;\n  ATTITUDE_Z:double;\n  ATTITUDE_W:double;\n  OMEGA_X:double;\n  OMEGA_Y:double;\n  OMEGA_Z:double;\n  MASS:double;\n  CG_X:float;\n  CG_Z:float;\n  AERO:string;\n  CONTROLS:string;\n  ENGINE:string;\n  GEAR_STATE:ubyte;\n  GEAR_POSITION:ubyte;\n  FLAP_POSITION:ubyte;\n  SPEEDBRAKE_POS:ubyte;\n  FLIGHT_PHASE:ubyte;\n  AUTOPILOT_MODE:ubyte;\n  WEIGHT_ON_WHEELS:ubyte;\n  RESERVED:ubyte;\n}\n\nroot_type ACR;\nfile_identifier \"$ACR\";",
+            "files": [
+                "./dist/ACR/ACR.sw.tar.gz",
+                "./dist/ACR/ACR.py.tar.gz",
+                "./dist/ACR/ACR.lob.tar.gz",
+                "./dist/ACR/ACR.go.tar.gz",
+                "./dist/ACR/ACR.js.tar.gz",
+                "./dist/ACR/ACR.dart.tar.gz",
+                "./dist/ACR/ACR.cs.tar.gz",
+                "./dist/ACR/ACR.java.tar.gz",
+                "./dist/ACR/ACR.rs.tar.gz",
+                "./dist/ACR/ACR.php.tar.gz",
+                "./dist/ACR/ACR.json.tar.gz",
+                "./dist/ACR/ACR.fbjson.tar.gz",
+                "./dist/ACR/ACR.cpp.tar.gz",
+                "./dist/ACR/ACR.kt.tar.gz",
+                "./dist/ACR/ACR.ts.tar.gz"
             ]
         },
         "HYP": {
@@ -357,9 +1055,130 @@
                 "./dist/HYP/HYP.rs.tar.gz",
                 "./dist/HYP/HYP.php.tar.gz",
                 "./dist/HYP/HYP.json.tar.gz",
+                "./dist/HYP/HYP.fbjson.tar.gz",
                 "./dist/HYP/HYP.cpp.tar.gz",
                 "./dist/HYP/HYP.kt.tar.gz",
                 "./dist/HYP/HYP.ts.tar.gz"
+            ]
+        },
+        "OOD": {
+            "IDL": "// Hash: 51e26f8b4daee180117cc4b5ac62543d6b200e6c467b95892e95e1d82f76bce2\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// On-Orbit Object Details\ntable OOD {\n  ID:string;\n  LAST_OB_TIME:string;\n  VISMAG:double;\n  VISMAG_MIN:double;\n  VISMAG_MAX:double;\n  VISMAG_MEAN:double;\n  RCS:double;\n  RCS_MIN:double;\n  RCS_MAX:double;\n  RCS_MEAN:double;\n  BOL_DELTA_V:double;\n  MAX_DELTA_V:double;\n  DELTA_VUNC:double;\n  EST_DELTA_VDURATION:double;\n  NUM_MISSION:int;\n  MISSION_TYPES:[string];\n  BUS_TYPE:string;\n  GEO_SLOT:double;\n  DRIFT_RATE:double;\n  DRY_MASS:double;\n  ADDITIONAL_MASS:double;\n  LAUNCH_MASS_MIN:double;\n  LAUNCH_MASS:double;\n  LAUNCH_MASS_MAX:double;\n  BOL_FUEL_MASS:double;\n  CURRENT_MASS:double;\n  TOTAL_MASS_UNC:double;\n  SOLAR_ARRAY_AREA:double;\n  MANEUVERABLE:bool;\n  FUEL_REMAINING:double;\n  CROSS_SECTION:double;\n  BUS_CROSS_SECTION:double;\n  MAX_RADIUS:double;\n  COLA_RADIUS:double;\n  ADEPT_RADIUS:double;\n  NUM_DEPLOYABLE:int;\n  DEP_NAMES:[string];\n  DEP_EST_MASSES:[string];\n  DEP_MASS_UNCS:[string];\n  LAST_OB_SOURCE:string;\n}\n\nroot_type OOD;\nfile_identifier \"$OOD\";",
+            "files": [
+                "./dist/OOD/OOD.sw.tar.gz",
+                "./dist/OOD/OOD.py.tar.gz",
+                "./dist/OOD/OOD.lob.tar.gz",
+                "./dist/OOD/OOD.go.tar.gz",
+                "./dist/OOD/OOD.js.tar.gz",
+                "./dist/OOD/OOD.dart.tar.gz",
+                "./dist/OOD/OOD.cs.tar.gz",
+                "./dist/OOD/OOD.java.tar.gz",
+                "./dist/OOD/OOD.rs.tar.gz",
+                "./dist/OOD/OOD.php.tar.gz",
+                "./dist/OOD/OOD.json.tar.gz",
+                "./dist/OOD/OOD.fbjson.tar.gz",
+                "./dist/OOD/OOD.cpp.tar.gz",
+                "./dist/OOD/OOD.kt.tar.gz",
+                "./dist/OOD/OOD.ts.tar.gz"
+            ]
+        },
+        "PHY": {
+            "IDL": "// Hash: 02d0887fbf772707d3f1b6fb62f5692784f12bfa9afd514f90888d53c5615d40\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegrationMethod : byte {\n  EULER,\n  EULER_IMPROVED,\n  RK2,                    // Runge-Kutta 2nd order,\n  RK4,                    // Runge-Kutta 4th order,\n  RK45,                   // Adaptive RK4/5,\n  RK78,                   // Dormand-Prince 7(8),\n  VERLET,\n  LEAPFROG,\n  ADAMS_BASHFORTH,\n  GAUSS_JACKSON\n}\n\nenum CollisionShape : byte {\n  SPHERE,\n  BOX,\n  CYLINDER,\n  CAPSULE,\n  CONE,\n  CONVEX_HULL,\n  MESH,\n  COMPOUND\n}\n\nenum MaterialType : byte {\n  STEEL,\n  ALUMINUM,\n  TITANIUM,\n  CERAMIC,\n  COMPOSITE,\n  CONCRETE,\n  WOOD,\n  RUBBER,\n  WATER,\n  AIR,\n  CUSTOM\n}\n\nenum ForceType : byte {\n  GRAVITY,\n  THRUST,\n  DRAG,\n  LIFT,\n  FRICTION,\n  SPRING,\n  DAMPER,\n  CONTACT,\n  MAGNETIC,\n  ELECTRIC,\n  CUSTOM\n}\n\n/// Physics and Rigid Body Dynamics\ntable PHY {\n  COMMAND:string;\n  SIMULATION_STEP:string;\n  RIGID_BODY:string;\n  INTEGRATION_CONFIG:string;\n  COLLISION_QUERY_A:string;\n  COLLISION_QUERY_B:string;\n  TRANSFORM_A:string;\n  TRANSFORM_B:string;\n  POSITION_A:string;\n  POSITION_B:string;\n  FLUID:string;\n  AERO_QUERY:string;\n  DRAG_MODEL:string;\n  THERMAL_STATE:string;\n}\n\nroot_type PHY;\nfile_identifier \"$PHY\";",
+            "files": [
+                "./dist/PHY/PHY.sw.tar.gz",
+                "./dist/PHY/PHY.py.tar.gz",
+                "./dist/PHY/PHY.lob.tar.gz",
+                "./dist/PHY/PHY.go.tar.gz",
+                "./dist/PHY/PHY.js.tar.gz",
+                "./dist/PHY/PHY.dart.tar.gz",
+                "./dist/PHY/PHY.cs.tar.gz",
+                "./dist/PHY/PHY.java.tar.gz",
+                "./dist/PHY/PHY.rs.tar.gz",
+                "./dist/PHY/PHY.php.tar.gz",
+                "./dist/PHY/PHY.json.tar.gz",
+                "./dist/PHY/PHY.fbjson.tar.gz",
+                "./dist/PHY/PHY.cpp.tar.gz",
+                "./dist/PHY/PHY.kt.tar.gz",
+                "./dist/PHY/PHY.ts.tar.gz"
+            ]
+        },
+        "RFB": {
+            "IDL": "// Hash: 6c4311afa33e0d798fd33ecbe268e40a71544cb06cd9b188c9056239cd17d408\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// RF Band\ntable RFB {\n  ID:string;\n  ID_ENTITY:string;\n  NAME:string;\n  BAND:string;\n  MODE:string;\n  PURPOSE:string;\n  FREQ_MIN:double;\n  FREQ_MAX:double;\n  CENTER_FREQ:double;\n  PEAK_GAIN:double;\n  EDGE_GAIN:double;\n  BANDWIDTH:double;\n  BEAMWIDTH:double;\n  POLARIZATION:string;\n  ERP:double;\n  EIRP:double;\n}\n\nroot_type RFB;\nfile_identifier \"$RFB\";",
+            "files": [
+                "./dist/RFB/RFB.sw.tar.gz",
+                "./dist/RFB/RFB.py.tar.gz",
+                "./dist/RFB/RFB.lob.tar.gz",
+                "./dist/RFB/RFB.go.tar.gz",
+                "./dist/RFB/RFB.js.tar.gz",
+                "./dist/RFB/RFB.dart.tar.gz",
+                "./dist/RFB/RFB.cs.tar.gz",
+                "./dist/RFB/RFB.java.tar.gz",
+                "./dist/RFB/RFB.rs.tar.gz",
+                "./dist/RFB/RFB.php.tar.gz",
+                "./dist/RFB/RFB.json.tar.gz",
+                "./dist/RFB/RFB.fbjson.tar.gz",
+                "./dist/RFB/RFB.cpp.tar.gz",
+                "./dist/RFB/RFB.kt.tar.gz",
+                "./dist/RFB/RFB.ts.tar.gz"
+            ]
+        },
+        "RFE": {
+            "IDL": "// Hash: 2aef882b5e211b02abfc65bb3c9adbf87a4f809a0eaba5850fbe3454acec6dc9\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// RF Emitter\ntable RFE {\n  ID:string;\n  ID_ENTITY:string;\n  NAME:string;\n  TYPE:string;\n  ENTITY:string;\n  RF_EMITTER_DETAILS:[string];\n}\n\nroot_type RFE;\nfile_identifier \"$RFE\";",
+            "files": [
+                "./dist/RFE/RFE.sw.tar.gz",
+                "./dist/RFE/RFE.py.tar.gz",
+                "./dist/RFE/RFE.lob.tar.gz",
+                "./dist/RFE/RFE.go.tar.gz",
+                "./dist/RFE/RFE.js.tar.gz",
+                "./dist/RFE/RFE.dart.tar.gz",
+                "./dist/RFE/RFE.cs.tar.gz",
+                "./dist/RFE/RFE.java.tar.gz",
+                "./dist/RFE/RFE.rs.tar.gz",
+                "./dist/RFE/RFE.php.tar.gz",
+                "./dist/RFE/RFE.json.tar.gz",
+                "./dist/RFE/RFE.fbjson.tar.gz",
+                "./dist/RFE/RFE.cpp.tar.gz",
+                "./dist/RFE/RFE.kt.tar.gz",
+                "./dist/RFE/RFE.ts.tar.gz"
+            ]
+        },
+        "GDI": {
+            "IDL": "// Hash: 6bf101bb9d71a9b451270963c30cef924c63add49d8f14fe2856cf2e037d7815\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Ground Imagery\ntable GDI {\n  ID:string;\n  ID_SENSOR:string;\n  IMAGE_TIME:string;\n  FILENAME:string;\n  REGION:string;\n  REGION_TEXT:string;\n  REGION_GEO_JSON:string;\n  REGION_TYPE:string;\n  REGION_NDIMS:int;\n  REGION_SRID:int;\n  ORIG_SENSOR_ID:string;\n  SUBJECT_ID:string;\n  NAME:string;\n  TRANSACTION_ID:string;\n  TAGS:[string];\n  KEYWORDS:[string];\n  NOTES:string;\n  FORMAT:string;\n  FILESIZE:long;\n  CHECKSUM_VALUE:string;\n}\n\nroot_type GDI;\nfile_identifier \"$GDI\";",
+            "files": [
+                "./dist/GDI/GDI.sw.tar.gz",
+                "./dist/GDI/GDI.py.tar.gz",
+                "./dist/GDI/GDI.lob.tar.gz",
+                "./dist/GDI/GDI.go.tar.gz",
+                "./dist/GDI/GDI.js.tar.gz",
+                "./dist/GDI/GDI.dart.tar.gz",
+                "./dist/GDI/GDI.cs.tar.gz",
+                "./dist/GDI/GDI.java.tar.gz",
+                "./dist/GDI/GDI.rs.tar.gz",
+                "./dist/GDI/GDI.php.tar.gz",
+                "./dist/GDI/GDI.json.tar.gz",
+                "./dist/GDI/GDI.fbjson.tar.gz",
+                "./dist/GDI/GDI.cpp.tar.gz",
+                "./dist/GDI/GDI.kt.tar.gz",
+                "./dist/GDI/GDI.ts.tar.gz"
+            ]
+        },
+        "ENV": {
+            "IDL": "// Hash: 19b3af8418b0de6f7f747f8f0645bdc1040d7a5caba5686bbb4e9f24a61bb96a\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum AtmosphereModel : byte {\n  ISA = 0,                // International Standard Atmosphere\n  US_STD_1976 = 1,        // US Standard Atmosphere 1976\n  NRLMSISE_00 = 2,        // NRLMSISE-00 (includes space weather)\n  SIMPLE = 3,             // Simple exponential model\n  CUSTOM = 4,             // User-defined\n}\n\nenum WeatherCondition : byte {\n  CLEAR = 0,\n  FEW_CLOUDS = 1,\n  SCATTERED = 2,\n  BROKEN = 3,\n  OVERCAST = 4,\n  RAIN_LIGHT = 5,\n  RAIN_MODERATE = 6,\n  RAIN_HEAVY = 7,\n  SNOW_LIGHT = 8,\n  SNOW_MODERATE = 9,\n  SNOW_HEAVY = 10,\n  FOG = 11,\n  MIST = 12,\n  HAZE = 13,\n  THUNDERSTORM = 14,\n  SANDSTORM = 15,\n}\n\nenum TerrainType : byte {\n  OCEAN = 0,\n  WATER_FRESH = 1,\n  SAND = 2,\n  GRASS = 3,\n  FOREST = 4,\n  CONCRETE = 5,\n  ASPHALT = 6,\n  SNOW = 7,\n  ICE = 8,\n  ROCK = 9,\n  MARSH = 10,\n  URBAN = 11,\n}\n\n/// Atmosphere and Environment\ntable ENV {\n  ATMOSPHERE:string;\n  WEATHER:string;\n  TIME_UTC:double;\n  LATITUDE:double;\n  LONGITUDE:double;\n  SUN_AZIMUTH:float;\n  SUN_ELEVATION:float;\n  MOON_PHASE:float;\n  ILLUMINATION:float;\n  MAGNETIC_DECLINATION:float;\n  MAGNETIC_INCLINATION:float;\n  RESERVED:[uint8];\n}\n\nroot_type ENV;\nfile_identifier \"$ENV\";",
+            "files": [
+                "./dist/ENV/ENV.sw.tar.gz",
+                "./dist/ENV/ENV.py.tar.gz",
+                "./dist/ENV/ENV.lob.tar.gz",
+                "./dist/ENV/ENV.go.tar.gz",
+                "./dist/ENV/ENV.js.tar.gz",
+                "./dist/ENV/ENV.dart.tar.gz",
+                "./dist/ENV/ENV.cs.tar.gz",
+                "./dist/ENV/ENV.java.tar.gz",
+                "./dist/ENV/ENV.rs.tar.gz",
+                "./dist/ENV/ENV.php.tar.gz",
+                "./dist/ENV/ENV.json.tar.gz",
+                "./dist/ENV/ENV.fbjson.tar.gz",
+                "./dist/ENV/ENV.cpp.tar.gz",
+                "./dist/ENV/ENV.kt.tar.gz",
+                "./dist/ENV/ENV.ts.tar.gz"
             ]
         },
         "REC": {
@@ -376,9 +1195,30 @@
                 "./dist/REC/REC.rs.tar.gz",
                 "./dist/REC/REC.php.tar.gz",
                 "./dist/REC/REC.json.tar.gz",
+                "./dist/REC/REC.fbjson.tar.gz",
                 "./dist/REC/REC.cpp.tar.gz",
                 "./dist/REC/REC.kt.tar.gz",
                 "./dist/REC/REC.ts.tar.gz"
+            ]
+        },
+        "OBT": {
+            "IDL": "// Hash: fe2a089c603908ab964abd243d6e81f9ad658e6998bdf86469404a6dcc433b5c\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Orbit Track\ntable OBT {\n  ID:string;\n  SAT_NO:int;\n  ON_ORBIT:string;\n  ORIG_OBJECT_ID:string;\n  TS:string;\n  LAT:double;\n  LON:double;\n  ALT:double;\n  RDF_RF:double;\n  CALL_SIGN:string;\n  RPT_NUM:string;\n  OBJ_IDENT:string;\n  IDENT_AMP:string;\n  SAT_STATUS:string;\n  OBJECT_TYPE:string;\n  COUNTRY_CODE:string;\n  DECAY:double;\n  CHARLIE_LINE:string;\n  AOU_TYPE:string;\n  AOU_DATA:[string];\n  SPD:double;\n  ANG_ELEV:double;\n  CNTNMNT:double;\n  XREF:string;\n  CH_XREF:string;\n  AMPLIFICATION:string;\n  IFF:string;\n  REINFORCED:bool;\n  REDUCED:bool;\n  HQ:bool;\n  DUMMY:bool;\n  TASK_FORCE:bool;\n  FEINT:bool;\n  INSTALLATION:bool;\n  VEH_TYPE:string;\n  TRK_ID:string;\n  TRACK_SENSORS:[string];\n}\n\nroot_type OBT;\nfile_identifier \"$OBT\";",
+            "files": [
+                "./dist/OBT/OBT.sw.tar.gz",
+                "./dist/OBT/OBT.py.tar.gz",
+                "./dist/OBT/OBT.lob.tar.gz",
+                "./dist/OBT/OBT.go.tar.gz",
+                "./dist/OBT/OBT.js.tar.gz",
+                "./dist/OBT/OBT.dart.tar.gz",
+                "./dist/OBT/OBT.cs.tar.gz",
+                "./dist/OBT/OBT.java.tar.gz",
+                "./dist/OBT/OBT.rs.tar.gz",
+                "./dist/OBT/OBT.php.tar.gz",
+                "./dist/OBT/OBT.json.tar.gz",
+                "./dist/OBT/OBT.fbjson.tar.gz",
+                "./dist/OBT/OBT.cpp.tar.gz",
+                "./dist/OBT/OBT.kt.tar.gz",
+                "./dist/OBT/OBT.ts.tar.gz"
             ]
         },
         "REV": {
@@ -395,6 +1235,7 @@
                 "./dist/REV/REV.rs.tar.gz",
                 "./dist/REV/REV.php.tar.gz",
                 "./dist/REV/REV.json.tar.gz",
+                "./dist/REV/REV.fbjson.tar.gz",
                 "./dist/REV/REV.cpp.tar.gz",
                 "./dist/REV/REV.kt.tar.gz",
                 "./dist/REV/REV.ts.tar.gz"
@@ -414,6 +1255,7 @@
                 "./dist/TIM/TIM.rs.tar.gz",
                 "./dist/TIM/TIM.php.tar.gz",
                 "./dist/TIM/TIM.json.tar.gz",
+                "./dist/TIM/TIM.fbjson.tar.gz",
                 "./dist/TIM/TIM.cpp.tar.gz",
                 "./dist/TIM/TIM.kt.tar.gz",
                 "./dist/TIM/TIM.ts.tar.gz"
@@ -433,9 +1275,30 @@
                 "./dist/ROC/ROC.rs.tar.gz",
                 "./dist/ROC/ROC.php.tar.gz",
                 "./dist/ROC/ROC.json.tar.gz",
+                "./dist/ROC/ROC.fbjson.tar.gz",
                 "./dist/ROC/ROC.cpp.tar.gz",
                 "./dist/ROC/ROC.kt.tar.gz",
                 "./dist/ROC/ROC.ts.tar.gz"
+            ]
+        },
+        "RCF": {
+            "IDL": "// Hash: 9ba3cd56f2f7558372e096a36ec2488d506937357ba0755bd75201a394fd7ced\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum rcfPduType : byte {\n  BIND_INVOCATION,\n  BIND_RETURN,\n  UNBIND_INVOCATION,\n  UNBIND_RETURN,\n  START_INVOCATION,\n  START_RETURN,\n  STOP_INVOCATION,\n  STOP_RETURN,\n  TRANSFER_BUFFER,\n  STATUS_REPORT,\n  PEER_ABORT\n}\n\n/// Return Channel Frames Service (CCSDS 913.5-B-2)\ntable RCF {\n  /// PDU type\n  PDU_TYPE:rcfPduType;\n  /// Initiator identifier\n  INITIATOR_ID:string;\n  /// Responder port identifier\n  RESPONDER_PORT_ID:string;\n  /// Service type\n  SERVICE_TYPE:ubyte;\n  /// Version number\n  VERSION:ushort;\n  /// Invoke ID\n  INVOKE_ID:uint;\n  /// Spacecraft ID filter\n  SPACECRAFT_ID:ushort;\n  /// Virtual channel ID filter\n  VIRTUAL_CHANNEL_ID:ubyte;\n  /// Data\n  DATA:[ubyte];\n}\n\nroot_type RCF;\nfile_identifier \"$RCF\";",
+            "files": [
+                "./dist/RCF/RCF.sw.tar.gz",
+                "./dist/RCF/RCF.py.tar.gz",
+                "./dist/RCF/RCF.lob.tar.gz",
+                "./dist/RCF/RCF.go.tar.gz",
+                "./dist/RCF/RCF.js.tar.gz",
+                "./dist/RCF/RCF.dart.tar.gz",
+                "./dist/RCF/RCF.cs.tar.gz",
+                "./dist/RCF/RCF.java.tar.gz",
+                "./dist/RCF/RCF.rs.tar.gz",
+                "./dist/RCF/RCF.php.tar.gz",
+                "./dist/RCF/RCF.json.tar.gz",
+                "./dist/RCF/RCF.fbjson.tar.gz",
+                "./dist/RCF/RCF.cpp.tar.gz",
+                "./dist/RCF/RCF.kt.tar.gz",
+                "./dist/RCF/RCF.ts.tar.gz"
             ]
         },
         "EME": {
@@ -452,9 +1315,30 @@
                 "./dist/EME/EME.rs.tar.gz",
                 "./dist/EME/EME.php.tar.gz",
                 "./dist/EME/EME.json.tar.gz",
+                "./dist/EME/EME.fbjson.tar.gz",
                 "./dist/EME/EME.cpp.tar.gz",
                 "./dist/EME/EME.kt.tar.gz",
                 "./dist/EME/EME.ts.tar.gz"
+            ]
+        },
+        "WPN": {
+            "IDL": "// Hash: d861f0a93cded96b8a08e2cb2bd7052011ce60ee4674a34c71892a2963975e6f\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum WeaponType : byte {\n  MG_SMALL = 0,       // Small caliber MG (<10mm)\n  MG_HEAVY = 1,       // Heavy MG (10-15mm)\n  AUTOCANNON = 2,     // Autocannon (20-40mm)\n  CANNON = 3,         // Cannon (>40mm)\n  TANK_GUN = 4,       // Tank main gun\n  ARTILLERY = 5,      // Artillery piece\n  MORTAR = 6,         // Mortar\n  ROCKET_UNGUIDED = 7, // Unguided rocket\n  BOMB_DUMB = 8,      // Unguided bomb\n  BOMB_GUIDED = 9,    // Guided bomb (GBU)\n  TORPEDO = 10,       // Torpedo\n  DEPTH_CHARGE = 11,  // Depth charge\n  MINE = 12,          // Naval/land mine\n  GRENADE = 13,       // Grenade\n}\n\nenum FuzeType : byte {\n  CONTACT = 0,        // Contact/impact fuze\n  DELAY = 1,          // Delay fuze\n  TIMED = 2,          // Timed fuze\n  PROXIMITY = 3,      // Proximity fuze (VT)\n  AIRBURST = 4,       // Airburst\n  MAGNETIC = 5,       // Magnetic influence\n  PRESSURE = 6,       // Pressure (mine)\n  SEISMIC = 7,        // Seismic (mine)\n}\n\nenum ProjectilePhase : byte {\n  LOADED = 0,\n  IN_FLIGHT = 1,\n  DETONATED = 2,\n  DUD = 3,\n  IMPACT = 4,\n}\n\n/// Weapons and Munitions\ntable WPN {\n  CALIBER:float;\n  MUZZLE_VELOCITY:float;\n  RATE_OF_FIRE:float;\n  DISPERSION:float;\n  AMMO_CAPACITY:ushort;\n  BURST_LENGTH:ushort;\n  RELOAD_TIME:float;\n  OVERHEAT_ROUNDS:ushort;\n  COOLDOWN_RATE:float;\n  ELEVATION_MIN:float;\n  ELEVATION_MAX:float;\n  TRAVERSE_MIN:float;\n  TRAVERSE_MAX:float;\n  SLEW_RATE:float;\n  WEAPON_TYPE:ubyte;\n  FUZE_TYPE:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type WPN;\nfile_identifier \"$WPN\";",
+            "files": [
+                "./dist/WPN/WPN.sw.tar.gz",
+                "./dist/WPN/WPN.py.tar.gz",
+                "./dist/WPN/WPN.lob.tar.gz",
+                "./dist/WPN/WPN.go.tar.gz",
+                "./dist/WPN/WPN.js.tar.gz",
+                "./dist/WPN/WPN.dart.tar.gz",
+                "./dist/WPN/WPN.cs.tar.gz",
+                "./dist/WPN/WPN.java.tar.gz",
+                "./dist/WPN/WPN.rs.tar.gz",
+                "./dist/WPN/WPN.php.tar.gz",
+                "./dist/WPN/WPN.json.tar.gz",
+                "./dist/WPN/WPN.fbjson.tar.gz",
+                "./dist/WPN/WPN.cpp.tar.gz",
+                "./dist/WPN/WPN.kt.tar.gz",
+                "./dist/WPN/WPN.ts.tar.gz"
             ]
         },
         "RFM": {
@@ -471,6 +1355,7 @@
                 "./dist/RFM/RFM.rs.tar.gz",
                 "./dist/RFM/RFM.php.tar.gz",
                 "./dist/RFM/RFM.json.tar.gz",
+                "./dist/RFM/RFM.fbjson.tar.gz",
                 "./dist/RFM/RFM.cpp.tar.gz",
                 "./dist/RFM/RFM.kt.tar.gz",
                 "./dist/RFM/RFM.ts.tar.gz"
@@ -490,9 +1375,50 @@
                 "./dist/OMM/OMM.rs.tar.gz",
                 "./dist/OMM/OMM.php.tar.gz",
                 "./dist/OMM/OMM.json.tar.gz",
+                "./dist/OMM/OMM.fbjson.tar.gz",
                 "./dist/OMM/OMM.cpp.tar.gz",
                 "./dist/OMM/OMM.kt.tar.gz",
                 "./dist/OMM/OMM.ts.tar.gz"
+            ]
+        },
+        "CMS": {
+            "IDL": "// Hash: a71a6e89015e2447d281423aecad666006bd768886883cde2efebb35f16a91ee\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Communications Payload\ntable CMS {\n  ID:string;\n  ID_ENTITY:string;\n  NAME:string;\n  DESCRIPTION:string;\n  ENTITY:string;\n  TRANSPONDERS:[string];\n}\n\nroot_type CMS;\nfile_identifier \"$CMS\";",
+            "files": [
+                "./dist/CMS/CMS.sw.tar.gz",
+                "./dist/CMS/CMS.py.tar.gz",
+                "./dist/CMS/CMS.lob.tar.gz",
+                "./dist/CMS/CMS.go.tar.gz",
+                "./dist/CMS/CMS.js.tar.gz",
+                "./dist/CMS/CMS.dart.tar.gz",
+                "./dist/CMS/CMS.cs.tar.gz",
+                "./dist/CMS/CMS.java.tar.gz",
+                "./dist/CMS/CMS.rs.tar.gz",
+                "./dist/CMS/CMS.php.tar.gz",
+                "./dist/CMS/CMS.json.tar.gz",
+                "./dist/CMS/CMS.fbjson.tar.gz",
+                "./dist/CMS/CMS.cpp.tar.gz",
+                "./dist/CMS/CMS.kt.tar.gz",
+                "./dist/CMS/CMS.ts.tar.gz"
+            ]
+        },
+        "MNF": {
+            "IDL": "// Hash: 5e3e2cd7d0caed1e43e76d25713c45ab2c40b596d8dffb6261979b2a3c6c88f1\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Orbit Manifold\ntable MNF {\n  ID:string;\n  STATUS:string;\n  WEIGHT:double;\n  DELTA_V:double;\n  DELTA_T:double;\n}\n\nroot_type MNF;\nfile_identifier \"$MNF\";",
+            "files": [
+                "./dist/MNF/MNF.sw.tar.gz",
+                "./dist/MNF/MNF.py.tar.gz",
+                "./dist/MNF/MNF.lob.tar.gz",
+                "./dist/MNF/MNF.go.tar.gz",
+                "./dist/MNF/MNF.js.tar.gz",
+                "./dist/MNF/MNF.dart.tar.gz",
+                "./dist/MNF/MNF.cs.tar.gz",
+                "./dist/MNF/MNF.java.tar.gz",
+                "./dist/MNF/MNF.rs.tar.gz",
+                "./dist/MNF/MNF.php.tar.gz",
+                "./dist/MNF/MNF.json.tar.gz",
+                "./dist/MNF/MNF.fbjson.tar.gz",
+                "./dist/MNF/MNF.cpp.tar.gz",
+                "./dist/MNF/MNF.kt.tar.gz",
+                "./dist/MNF/MNF.ts.tar.gz"
             ]
         },
         "PLG": {
@@ -509,9 +1435,90 @@
                 "./dist/PLG/PLG.rs.tar.gz",
                 "./dist/PLG/PLG.php.tar.gz",
                 "./dist/PLG/PLG.json.tar.gz",
+                "./dist/PLG/PLG.fbjson.tar.gz",
                 "./dist/PLG/PLG.cpp.tar.gz",
                 "./dist/PLG/PLG.kt.tar.gz",
                 "./dist/PLG/PLG.ts.tar.gz"
+            ]
+        },
+        "GNO": {
+            "IDL": "// Hash: cae70d4e3cd9b57de80181ae0d7eaae3fcc30d9db79cb9e2ec1b66cb78351c28\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// GNSS Observation\ntable GNO {\n  GNSS_SAT_ID:string;\n  TRACKING_STATUS:int;\n  AGC_STATE:int;\n  OBS_CODE_SET:[string];\n  OB:[string];\n}\n\nroot_type GNO;\nfile_identifier \"$GNO\";",
+            "files": [
+                "./dist/GNO/GNO.sw.tar.gz",
+                "./dist/GNO/GNO.py.tar.gz",
+                "./dist/GNO/GNO.lob.tar.gz",
+                "./dist/GNO/GNO.go.tar.gz",
+                "./dist/GNO/GNO.js.tar.gz",
+                "./dist/GNO/GNO.dart.tar.gz",
+                "./dist/GNO/GNO.cs.tar.gz",
+                "./dist/GNO/GNO.java.tar.gz",
+                "./dist/GNO/GNO.rs.tar.gz",
+                "./dist/GNO/GNO.php.tar.gz",
+                "./dist/GNO/GNO.json.tar.gz",
+                "./dist/GNO/GNO.fbjson.tar.gz",
+                "./dist/GNO/GNO.cpp.tar.gz",
+                "./dist/GNO/GNO.kt.tar.gz",
+                "./dist/GNO/GNO.ts.tar.gz"
+            ]
+        },
+        "SDL": {
+            "IDL": "// Hash: a59dbc2bb7436c3a1d8cf58012f66c0a877a29f3ebab6bcba96d20c23200254f\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Space Data Link Security (CCSDS 355.0-B-1)\ntable SDL {\n  /// Security Parameter Index\n  SPI:ushort;\n  /// Initialization vector length in bytes\n  IV_LENGTH:ubyte;\n  /// Initialization vector\n  IV:[ubyte];\n  /// MAC length in bytes\n  MAC_LENGTH:ubyte;\n  /// Message authentication code\n  MAC:[ubyte];\n  /// Pad length\n  PAD_LENGTH:ubyte;\n  /// Security payload\n  PAYLOAD:[ubyte];\n}\n\nroot_type SDL;\nfile_identifier \"$SDL\";",
+            "files": [
+                "./dist/SDL/SDL.sw.tar.gz",
+                "./dist/SDL/SDL.py.tar.gz",
+                "./dist/SDL/SDL.lob.tar.gz",
+                "./dist/SDL/SDL.go.tar.gz",
+                "./dist/SDL/SDL.js.tar.gz",
+                "./dist/SDL/SDL.dart.tar.gz",
+                "./dist/SDL/SDL.cs.tar.gz",
+                "./dist/SDL/SDL.java.tar.gz",
+                "./dist/SDL/SDL.rs.tar.gz",
+                "./dist/SDL/SDL.php.tar.gz",
+                "./dist/SDL/SDL.json.tar.gz",
+                "./dist/SDL/SDL.fbjson.tar.gz",
+                "./dist/SDL/SDL.cpp.tar.gz",
+                "./dist/SDL/SDL.kt.tar.gz",
+                "./dist/SDL/SDL.ts.tar.gz"
+            ]
+        },
+        "MSL": {
+            "IDL": "// Hash: 8ce941f915fbd11b2725bce6c972072b288f7f4945c8e4c7117e9d584ac1a84c\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum MissileType : byte {\n  AAM_IR = 0,         // Air-to-air infrared\n  AAM_SARH = 1,       // Air-to-air semi-active radar\n  AAM_ARH = 2,        // Air-to-air active radar\n  SAM_IR = 3,         // Surface-to-air IR\n  SAM_SARH = 4,       // Surface-to-air SARH\n  SAM_COMMAND = 5,    // Surface-to-air command guided\n  ASM_AR = 6,         // Air-to-surface anti-radiation\n  ASM_TV = 7,         // Air-to-surface TV guided\n  ASM_LASER = 8,      // Air-to-surface laser guided\n  ATGM_SACLOS = 9,    // Anti-tank SACLOS\n  ATGM_BEAM = 10,     // Anti-tank beam riding\n  ATGM_TOP = 11,      // Anti-tank top attack\n  CRUISE = 12,        // Cruise missile\n  BALLISTIC = 13,     // Ballistic missile\n  TORPEDO = 14,       // Torpedo\n}\n\nenum SeekerType : byte {\n  NONE = 0,\n  IR_UNCOOLED = 1,    // Uncooled IR (early gen)\n  IR_COOLED = 2,      // Cooled IR (all-aspect)\n  IR_IMAGING = 3,     // Imaging IR\n  IR_2COLOR = 4,      // Two-color IR (IRCCM)\n  RADAR_SARH = 5,     // Semi-active radar homing\n  RADAR_ARH = 6,      // Active radar homing\n  RADAR_PASSIVE = 7,  // Anti-radiation (passive)\n  TV_OPTICAL = 8,     // TV/optical\n  LASER_SH = 9,       // Laser semi-active\n  GPS_INS = 10,       // GPS/INS (no terminal)\n  ACOUSTIC = 11,      // Acoustic (torpedo)\n  WIRE = 12,          // Wire guided\n}\n\nenum GuidanceLaw : byte {\n  NONE = 0,\n  PURE_PURSUIT = 1,       // Direct pursuit\n  LEAD_PURSUIT = 2,       // Lead angle pursuit\n  PROPORTIONAL_NAV = 3,   // Proportional navigation\n  AUGMENTED_PN = 4,       // Augmented proportional nav\n  OPTIMAL_GUIDANCE = 5,   // Optimal guidance law\n  COMMAND_LOS = 6,        // Command to line of sight\n  BEAM_RIDING = 7,        // Beam riding\n  TVM = 8,                // Track via missile\n  LOFT = 9,               // Lofted trajectory\n  TERRAIN_FOLLOW = 10,    // Terrain following\n}\n\nenum MissilePhase : byte {\n  CAPTIVE = 0,        // On rail/launcher\n  LAUNCH = 1,         // Just launched\n  BOOST = 2,          // Boost phase\n  SUSTAIN = 3,        // Sustain phase\n  COAST = 4,          // Coasting (motor burnout)\n  TERMINAL = 5,       // Terminal guidance\n  INTERCEPT = 6,      // Intercept/impact\n  MISS = 7,           // Missed target\n  SELF_DESTRUCT = 8,  // Self-destructed\n}\n\nenum SeekerStatus : byte {\n  OFF = 0,\n  CAGED = 1,          // Slaved to boresight\n  UNCAGED = 2,        // Free to track\n  ACQUIRING = 3,      // Searching for target\n  TRACKING = 4,       // Locked on target\n  MEMORY = 5,         // Lost lock, using memory\n  JAMMED = 6,         // Jammed by countermeasures\n}\n\n/// Guided Missiles\ntable MSL {\n  POSITION_X:double;\n  POSITION_Y:double;\n  POSITION_Z:double;\n  VELOCITY_X:double;\n  VELOCITY_Y:double;\n  VELOCITY_Z:double;\n  ATTITUDE_X:double;\n  ATTITUDE_Y:double;\n  ATTITUDE_Z:double;\n  ATTITUDE_W:double;\n  OMEGA_X:double;\n  OMEGA_Y:double;\n  OMEGA_Z:double;\n  MASS:double;\n  MASS_INITIAL:double;\n  TARGET_POSITION_X:double;\n  TARGET_POSITION_Y:double;\n  TARGET_POSITION_Z:double;\n  TARGET_VELOCITY_X:double;\n  TARGET_VELOCITY_Y:double;\n  TARGET_VELOCITY_Z:double;\n  MISS_DISTANCE:double;\n  SEEKER:string;\n  MOTOR:string;\n  GUIDANCE_CMD:string;\n  PHASE:ubyte;\n  GUIDANCE_LAW:ubyte;\n  TYPE:ubyte;\n  ARMED:ubyte;\n  TIME_OF_FLIGHT:float;\n  MAX_G:float;\n  RESERVED:[uint8];\n}\n\nroot_type MSL;\nfile_identifier \"$MSL\";",
+            "files": [
+                "./dist/MSL/MSL.sw.tar.gz",
+                "./dist/MSL/MSL.py.tar.gz",
+                "./dist/MSL/MSL.lob.tar.gz",
+                "./dist/MSL/MSL.go.tar.gz",
+                "./dist/MSL/MSL.js.tar.gz",
+                "./dist/MSL/MSL.dart.tar.gz",
+                "./dist/MSL/MSL.cs.tar.gz",
+                "./dist/MSL/MSL.java.tar.gz",
+                "./dist/MSL/MSL.rs.tar.gz",
+                "./dist/MSL/MSL.php.tar.gz",
+                "./dist/MSL/MSL.json.tar.gz",
+                "./dist/MSL/MSL.fbjson.tar.gz",
+                "./dist/MSL/MSL.cpp.tar.gz",
+                "./dist/MSL/MSL.kt.tar.gz",
+                "./dist/MSL/MSL.ts.tar.gz"
+            ]
+        },
+        "GVH": {
+            "IDL": "// Hash: 4ef04db9e5a6af9d0fb49bf13674e160bfe1ae5c37bf70f9fcafeb089fb36234\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum VehicleType : byte {\n  MBT = 0,                // Main Battle Tank\n  LIGHT_TANK = 1,         // Light tank\n  IFV = 2,                // Infantry Fighting Vehicle\n  APC = 3,                // Armored Personnel Carrier\n  SPAA = 4,               // Self-propelled anti-aircraft\n  SPG = 5,                // Self-propelled gun\n  MLRS = 6,               // Multiple launch rocket system\n  RECON = 7,              // Reconnaissance vehicle\n  TRUCK = 8,              // Cargo truck\n  JEEP = 9,               // Light utility vehicle\n  MRAP = 10,              // Mine-resistant vehicle\n  ENGINEERING = 11,       // Engineering vehicle\n  RECOVERY = 12,          // Recovery vehicle\n  AAA = 13,               // Anti-aircraft artillery\n  SAM = 14,               // Surface-to-air missile\n  RADAR = 15,             // Radar vehicle\n}\n\nenum DriveType : byte {\n  TRACKED = 0,\n  WHEELED_4X4 = 1,\n  WHEELED_6X6 = 2,\n  WHEELED_8X8 = 3,\n  HALF_TRACK = 4,\n}\n\nenum GVHEngineType : byte {\n  DIESEL = 0,\n  GASOLINE = 1,\n  GAS_TURBINE = 2,\n  MULTIFUEL = 3,\n  HYBRID = 4,\n  ELECTRIC = 5,\n}\n\n/// Ground Vehicles\ntable GVH {\n  POSITION_X:double;\n  POSITION_Y:double;\n  POSITION_Z:double;\n  VELOCITY_X:double;\n  VELOCITY_Y:double;\n  VELOCITY_Z:double;\n  ATTITUDE_X:double;\n  ATTITUDE_Y:double;\n  ATTITUDE_Z:double;\n  ATTITUDE_W:double;\n  OMEGA_X:double;\n  OMEGA_Y:double;\n  OMEGA_Z:double;\n  SPEED:float;\n  HEADING:float;\n  LATERAL_G:float;\n  LONGITUDINAL_G:float;\n  TURRET:string;\n  DRIVETRAIN:string;\n  SUSPENSION_LF:string;\n  SUSPENSION_RF:string;\n  SUSPENSION_LR:string;\n  SUSPENSION_RR:string;\n  VEHICLE_TYPE:ubyte;\n  DRIVE_TYPE:ubyte;\n  ENGINE_RUNNING:ubyte;\n  LIGHTS:ubyte;\n  FUEL_LEVEL:float;\n}\n\nroot_type GVH;\nfile_identifier \"$GVH\";",
+            "files": [
+                "./dist/GVH/GVH.sw.tar.gz",
+                "./dist/GVH/GVH.py.tar.gz",
+                "./dist/GVH/GVH.lob.tar.gz",
+                "./dist/GVH/GVH.go.tar.gz",
+                "./dist/GVH/GVH.js.tar.gz",
+                "./dist/GVH/GVH.dart.tar.gz",
+                "./dist/GVH/GVH.cs.tar.gz",
+                "./dist/GVH/GVH.java.tar.gz",
+                "./dist/GVH/GVH.rs.tar.gz",
+                "./dist/GVH/GVH.php.tar.gz",
+                "./dist/GVH/GVH.json.tar.gz",
+                "./dist/GVH/GVH.fbjson.tar.gz",
+                "./dist/GVH/GVH.cpp.tar.gz",
+                "./dist/GVH/GVH.kt.tar.gz",
+                "./dist/GVH/GVH.ts.tar.gz"
             ]
         },
         "XTC": {
@@ -528,6 +1535,7 @@
                 "./dist/XTC/XTC.rs.tar.gz",
                 "./dist/XTC/XTC.php.tar.gz",
                 "./dist/XTC/XTC.json.tar.gz",
+                "./dist/XTC/XTC.fbjson.tar.gz",
                 "./dist/XTC/XTC.cpp.tar.gz",
                 "./dist/XTC/XTC.kt.tar.gz",
                 "./dist/XTC/XTC.ts.tar.gz"
@@ -547,6 +1555,7 @@
                 "./dist/CSM/CSM.rs.tar.gz",
                 "./dist/CSM/CSM.php.tar.gz",
                 "./dist/CSM/CSM.json.tar.gz",
+                "./dist/CSM/CSM.fbjson.tar.gz",
                 "./dist/CSM/CSM.cpp.tar.gz",
                 "./dist/CSM/CSM.kt.tar.gz",
                 "./dist/CSM/CSM.ts.tar.gz"
@@ -566,9 +1575,70 @@
                 "./dist/LCC/LCC.rs.tar.gz",
                 "./dist/LCC/LCC.php.tar.gz",
                 "./dist/LCC/LCC.json.tar.gz",
+                "./dist/LCC/LCC.fbjson.tar.gz",
                 "./dist/LCC/LCC.cpp.tar.gz",
                 "./dist/LCC/LCC.kt.tar.gz",
                 "./dist/LCC/LCC.ts.tar.gz"
+            ]
+        },
+        "SAR": {
+            "IDL": "// Hash: e86ecf4ac051f9fa266c644f3d8ef9216679a329e1879161baffc4c18019ad3f\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// SAR Observation\ntable SAR {\n  ID:string;\n  SAT_NO:int;\n  ORIG_OBJECT_ID:string;\n  ID_SENSOR:string;\n  ORIG_SENSOR_ID:string;\n  EXTERNAL_ID:string;\n  COLLECTION_ID:string;\n  DETECTION_ID:string;\n  COLLECTION_START:string;\n  COLLECTION_END:string;\n  CENTER_TIME:string;\n  DETECTION_START:string;\n  DETECTION_END:string;\n  DWELL_TIME:double;\n  ORBIT_STATE:string;\n  SAR_MODE:string;\n  OPERATING_BAND:string;\n  OPERATING_FREQ:double;\n  SNR:double;\n  TX_POLARIZATION:string;\n  RX_POLARIZATION:string;\n  GRAZE_ANGLE:double;\n  INCIDENCE_ANGLE:double;\n  SQUINT_ANGLE:double;\n  PULSE_BANDWIDTH:double;\n  PULSE_DURATION:double;\n  CONTINUOUS_SPOT_ANGLE:double;\n  SLANT_RANGE:double;\n  NEAR_RANGE:double;\n  FAR_RANGE:double;\n  SWATH_LENGTH:double;\n  AREA:string;\n  ATEXT:string;\n  AGJSON:string;\n  ATYPE:string;\n  ANDIMS:int;\n  ASRID:int;\n  SPACING_RANGE:double;\n  SPACING_AZIMUTH:double;\n  LOOKS_AZIMUTH:int;\n  LOOKS_RANGE:int;\n  RESOLUTION_RANGE:double;\n  RESOLUTION_AZIMUTH:double;\n  OB_DIRECTION:string;\n  COORD_SYS:string;\n  TARGETPOSX:double;\n  TARGETPOSY:double;\n  TARGETPOSZ:double;\n  SENALT:double;\n  SENVELX:double;\n  SENVELY:double;\n  SENVELZ:double;\n  SENLAT_START:double;\n  SENLON_START:double;\n  SENLAT_END:double;\n  SENLON_END:double;\n  TRANSACTION_ID:string;\n  TAGS:[string];\n  SRC_TYPS:[string];\n  SRC_IDS:[string];\n  ON_ORBIT:string;\n}\n\nroot_type SAR;\nfile_identifier \"$SAR\";",
+            "files": [
+                "./dist/SAR/SAR.sw.tar.gz",
+                "./dist/SAR/SAR.py.tar.gz",
+                "./dist/SAR/SAR.lob.tar.gz",
+                "./dist/SAR/SAR.go.tar.gz",
+                "./dist/SAR/SAR.js.tar.gz",
+                "./dist/SAR/SAR.dart.tar.gz",
+                "./dist/SAR/SAR.cs.tar.gz",
+                "./dist/SAR/SAR.java.tar.gz",
+                "./dist/SAR/SAR.rs.tar.gz",
+                "./dist/SAR/SAR.php.tar.gz",
+                "./dist/SAR/SAR.json.tar.gz",
+                "./dist/SAR/SAR.fbjson.tar.gz",
+                "./dist/SAR/SAR.cpp.tar.gz",
+                "./dist/SAR/SAR.kt.tar.gz",
+                "./dist/SAR/SAR.ts.tar.gz"
+            ]
+        },
+        "SKI": {
+            "IDL": "// Hash: 87803001607ea5a19c4256f05c20081a34554bd20102fc61cc11ec25ea01ca02\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Sky Imagery\ntable SKI {\n  ID:string;\n  ON_ORBIT:string;\n  ORIG_OBJECT_ID:string;\n  ID_SENSOR:string;\n  SAT_NO:int;\n  ORIG_SENSOR_ID:string;\n  SENLAT:double;\n  SENLON:double;\n  SENALT:double;\n  SENX:double;\n  SENY:double;\n  SENZ:double;\n  SEN_QUAT:[string];\n  SEN_QUAT_DOT:[string];\n  IMAGE_TYPE:string;\n  EXP_START_TIME:string;\n  EXP_END_TIME:string;\n  IMAGE_SOURCE_INFO:string;\n  TOP_LEFT_START_AZ:double;\n  TOP_LEFT_START_EL:double;\n  TOP_LEFT_STOP_AZ:double;\n  TOP_LEFT_STOP_EL:double;\n  IMAGE_SET_ID:string;\n  IMAGE_SET_LENGTH:int;\n  SEQUENCE_ID:int;\n  FRAME_FOVWIDTH:double;\n  FRAME_FOVHEIGHT:double;\n  PIXEL_FOVWIDTH:double;\n  PIXEL_FOVHEIGHT:double;\n  FRAME_WIDTH_PIXELS:int;\n  FRAME_HEIGHT_PIXELS:int;\n  PIXEL_BIT_DEPTH:int;\n  ANNOTATION_KEY:string;\n  CALIBRATION_KEY:string;\n  FILENAME:string;\n  FILESIZE:long;\n  CHECKSUM_VALUE:string;\n  TRANSACTION_ID:string;\n  TAGS:[string];\n  DESCRIPTION:string;\n  EO_OBSERVATIONS:[string];\n}\n\nroot_type SKI;\nfile_identifier \"$SKI\";",
+            "files": [
+                "./dist/SKI/SKI.sw.tar.gz",
+                "./dist/SKI/SKI.py.tar.gz",
+                "./dist/SKI/SKI.lob.tar.gz",
+                "./dist/SKI/SKI.go.tar.gz",
+                "./dist/SKI/SKI.js.tar.gz",
+                "./dist/SKI/SKI.dart.tar.gz",
+                "./dist/SKI/SKI.cs.tar.gz",
+                "./dist/SKI/SKI.java.tar.gz",
+                "./dist/SKI/SKI.rs.tar.gz",
+                "./dist/SKI/SKI.php.tar.gz",
+                "./dist/SKI/SKI.json.tar.gz",
+                "./dist/SKI/SKI.fbjson.tar.gz",
+                "./dist/SKI/SKI.cpp.tar.gz",
+                "./dist/SKI/SKI.kt.tar.gz",
+                "./dist/SKI/SKI.ts.tar.gz"
+            ]
+        },
+        "AST": {
+            "IDL": "// Hash: 2125a61ebcca10e579dc248972b604f185de4a68cc50be3355d3aa180c976c8e\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum PropagatorType : byte {\n  KEPLER,                 // Two-body analytical\n  SGP4,                   // Simplified General Perturbations\n  SDP4,                   // Simplified Deep-space Perturbations\n  HPOP,                   // High-Precision Orbit Propagator\n  COWELL,                 // Cowell's method (numerical)\n  ENCKE,                  // Encke's method\n  GAUSS_JACKSON,          // Gauss-Jackson 8th order\n  RK78,                   // Dormand-Prince RK7(8)\n  BROUWER,                // Brouwer-Lyddane mean elements\n  KOZAI,                  // Kozai mean elements\n  DSST                    // Draper Semi-analytical Satellite Theory\n}\n\nenum ForceModel : byte {\n  POINT_MASS,\n  J2,\n  J2_J4,\n  SPHERICAL_HARMONICS,\n  THIRD_BODY_SUN,\n  THIRD_BODY_MOON,\n  ATMOSPHERIC_DRAG,\n  SOLAR_RADIATION_PRESSURE,\n  RELATIVISTIC,\n  SOLID_TIDES,\n  OCEAN_TIDES,\n  MANEUVER\n}\n\nenum OrbitType : byte {\n  LEO,                    // Low Earth Orbit\n  MEO,                    // Medium Earth Orbit\n  GEO,                    // Geostationary\n  HEO,                    // Highly Elliptical\n  SSO,                    // Sun-Synchronous\n  MOLNIYA,\n  TUNDRA,\n  POLAR,\n  EQUATORIAL,\n  HYPERBOLIC,\n  PARABOLIC\n}\n\nenum TimeSystem : byte {\n  UTC,\n  TAI,\n  TT,                     // Terrestrial Time\n  TDB,                    // Barycentric Dynamical Time\n  GPS_TIME,\n  JULIAN_DATE,\n  MODIFIED_JULIAN_DATE\n}\n\nenum ReferenceFrame : byte {\n  ECI_J2000,              // Earth-Centered Inertial J2000\n  ECEF,                   // Earth-Centered Earth-Fixed\n  TEME,                   // True Equator Mean Equinox\n  GCRF,                   // Geocentric Celestial Reference Frame\n  ITRF,                   // International Terrestrial Reference Frame\n  RIC,                    // Radial-Intrack-Crosstrack\n  VNC,                    // Velocity-Normal-Conormal\n  NTW,                    // Normal-Tangential-W\n  SEZ,                    // South-East-Zenith (topocentric)\n  LVLH                    // Local Vertical Local Horizontal\n}\n\n/// Astrodynamics\ntable AST {\n  COMMAND:string;\n  PROPAGATION_REQUEST:string;\n  TLE:string;\n  INITIAL_ELEMENTS:string;\n  INITIAL_STATE:string;\n  EPOCH_MS:long;\n  MANEUVER_PLAN:string;\n  CONJUNCTION_PRIMARY:string;\n  CONJUNCTION_SECONDARY:string;\n  OBSERVATIONS:[string];\n  OD_CONFIG:string;\n  GROUND_STATION:string;\n  FORMATION_CONFIG:string;\n  TARGET_ELEMENTS:string;\n}\n\nroot_type AST;\nfile_identifier \"$AST\";",
+            "files": [
+                "./dist/AST/AST.sw.tar.gz",
+                "./dist/AST/AST.py.tar.gz",
+                "./dist/AST/AST.lob.tar.gz",
+                "./dist/AST/AST.go.tar.gz",
+                "./dist/AST/AST.js.tar.gz",
+                "./dist/AST/AST.dart.tar.gz",
+                "./dist/AST/AST.cs.tar.gz",
+                "./dist/AST/AST.java.tar.gz",
+                "./dist/AST/AST.rs.tar.gz",
+                "./dist/AST/AST.php.tar.gz",
+                "./dist/AST/AST.json.tar.gz",
+                "./dist/AST/AST.fbjson.tar.gz",
+                "./dist/AST/AST.cpp.tar.gz",
+                "./dist/AST/AST.kt.tar.gz",
+                "./dist/AST/AST.ts.tar.gz"
             ]
         },
         "MPE": {
@@ -585,9 +1655,150 @@
                 "./dist/MPE/MPE.rs.tar.gz",
                 "./dist/MPE/MPE.php.tar.gz",
                 "./dist/MPE/MPE.json.tar.gz",
+                "./dist/MPE/MPE.fbjson.tar.gz",
                 "./dist/MPE/MPE.cpp.tar.gz",
                 "./dist/MPE/MPE.kt.tar.gz",
                 "./dist/MPE/MPE.ts.tar.gz"
+            ]
+        },
+        "TRK": {
+            "IDL": "// Hash: 939aeb971b2f8607b47715329571e5b944b29aec40e473a3d16d5d4cffdcf6cf\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Track\ntable TRK {\n  ID:string;\n  CNTCT:string;\n  MSG_TS:string;\n  MSN_ID:string;\n  ASSET_NAT:string;\n  ASSET:string;\n  SEN:string;\n  SEN_QUAL:string;\n  TRK_ID:string;\n  TRK_NUM:string;\n  TRK_STAT:string;\n  OBJ_NAT:string;\n  OBJ_ID:string;\n  OBJ_TYPE:string;\n  OBJ_SPEC:string;\n  OBJ_PLAT:string;\n  OBJ_ACT:string;\n  MOD_TYPE:string;\n  TRK_ITM_ID:string;\n  TS:string;\n  TRK_QUAL:int;\n  TRK_PT_TYPE:string;\n  OBJ_IDENT:string;\n  IDENT_CRED:int;\n  IDENT_REL:int;\n  IDENT_AMP:string;\n  ENVIRONMENT:string;\n  ENVIRONMENT_CONF:double;\n  TRK_CONF:double;\n  ECEF_POS:[string];\n  ECEF_VEL:[string];\n  ECEF_ACC:[string];\n  LAT:double;\n  LON:double;\n  ALT:double;\n  SPD:double;\n  HDNG:double;\n  COURSE:double;\n  LCO:[string];\n  LCS:[string];\n  LC_POS:[string];\n  LC_VEL:[string];\n  LC_ACC:[string];\n  E_NUVEL:[string];\n  E_NUPOS:[string];\n  COV:[string];\n  ERR_ELLP:[string];\n  SRC_TYPS:[string];\n  SRC_IDS:[string];\n  CALL_SIGN:string;\n  MULTI_SOURCE:bool;\n  J_SERIES:string;\n  STRENGTH:int;\n  M1:int;\n  M1V:int;\n  M2:int;\n  M2V:int;\n  M3A:int;\n  M3AV:int;\n  TAGS:[string];\n}\n\nroot_type TRK;\nfile_identifier \"$TRK\";",
+            "files": [
+                "./dist/TRK/TRK.sw.tar.gz",
+                "./dist/TRK/TRK.py.tar.gz",
+                "./dist/TRK/TRK.lob.tar.gz",
+                "./dist/TRK/TRK.go.tar.gz",
+                "./dist/TRK/TRK.js.tar.gz",
+                "./dist/TRK/TRK.dart.tar.gz",
+                "./dist/TRK/TRK.cs.tar.gz",
+                "./dist/TRK/TRK.java.tar.gz",
+                "./dist/TRK/TRK.rs.tar.gz",
+                "./dist/TRK/TRK.php.tar.gz",
+                "./dist/TRK/TRK.json.tar.gz",
+                "./dist/TRK/TRK.fbjson.tar.gz",
+                "./dist/TRK/TRK.cpp.tar.gz",
+                "./dist/TRK/TRK.kt.tar.gz",
+                "./dist/TRK/TRK.ts.tar.gz"
+            ]
+        },
+        "SOI": {
+            "IDL": "// Hash: 1ff65c3f9e3eef7b4d27134943a292ec7efcad667e04567ec731f25fb1ff2449\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Space Object Identification Observation Set\ntable SOI {\n  ID:string;\n  MSG_CREATE_DATE:string;\n  ID_SENSOR:string;\n  ORIG_SENSOR_ID:string;\n  SENSOR_AS_ID:string;\n  SAT_NO:int;\n  ORIG_OBJECT_ID:string;\n  SENLAT:double;\n  SENLON:double;\n  SENALT:double;\n  SENX:double;\n  SENY:double;\n  SENZ:double;\n  SENVELX:double;\n  SENVELY:double;\n  SENVELZ:double;\n  START_TIME:string;\n  END_TIME:string;\n  NUM_OBS:int;\n  TYPE:string;\n  POLAR_ANGLE_START:double;\n  POLAR_ANGLE_END:double;\n  REFERENCE_FRAME:string;\n  SEN_REFERENCE_FRAME:string;\n  LOS_DECLINATION_START:double;\n  LOS_DECLINATION_END:double;\n  POINTING_ANGLE_AZ_START:double;\n  POINTING_ANGLE_AZ_END:double;\n  POINTING_ANGLE_EL_START:double;\n  POINTING_ANGLE_EL_END:double;\n  PIXEL_ARRAY_WIDTH:int;\n  PIXEL_ARRAY_HEIGHT:int;\n  NUM_SPECTRAL_FILTERS:int;\n  SPECTRAL_FILTERS:[string];\n  COLLECTION_MODE:string;\n  GAIN:double;\n  BINNING_HORIZ:int;\n  BINNING_VERT:int;\n  SOLAR_MAG:double;\n  PIXEL_MIN:int;\n  PIXEL_MAX:int;\n  SOFTWARE_VERSION:string;\n  SATELLITE_NAME:string;\n  STAR_CAT_NAME:string;\n  CORR_QUALITY:double;\n  UCT:bool;\n  VALID_CALIBRATIONS:string;\n  CALIBRATION_TYPE:string;\n  PERCENT_SAT_THRESHOLD:double;\n  CHANGE_DETECTED:bool;\n  PERIODICITY_CHANGE_DETECTED:bool;\n  BRIGHTNESS_VARIANCE_CHANGE_DETECTED:bool;\n  SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED:bool;\n  CHANGE_CONF:string;\n  COLLECTION_DENSITY_CONF:string;\n  PERIODICITY_SAMPLING_CONF:string;\n  PERIODICITY_DETECTION_CONF:string;\n  COLLECTION_ID:string;\n  CALIBRATIONS:[string];\n  TAGS:[string];\n  TRANSACTION_ID:string;\n  OPTICAL_SOIOBSERVATION_LIST:[string];\n  RADAR_SOIOBSERVATION_LIST:[string];\n}\n\nroot_type SOI;\nfile_identifier \"$SOI\";",
+            "files": [
+                "./dist/SOI/SOI.sw.tar.gz",
+                "./dist/SOI/SOI.py.tar.gz",
+                "./dist/SOI/SOI.lob.tar.gz",
+                "./dist/SOI/SOI.go.tar.gz",
+                "./dist/SOI/SOI.js.tar.gz",
+                "./dist/SOI/SOI.dart.tar.gz",
+                "./dist/SOI/SOI.cs.tar.gz",
+                "./dist/SOI/SOI.java.tar.gz",
+                "./dist/SOI/SOI.rs.tar.gz",
+                "./dist/SOI/SOI.php.tar.gz",
+                "./dist/SOI/SOI.json.tar.gz",
+                "./dist/SOI/SOI.fbjson.tar.gz",
+                "./dist/SOI/SOI.cpp.tar.gz",
+                "./dist/SOI/SOI.kt.tar.gz",
+                "./dist/SOI/SOI.ts.tar.gz"
+            ]
+        },
+        "SON": {
+            "IDL": "// Hash: 25136bd01cc11034e549ad56d2b8cfe65a6d05d073b1639d87f785705d3cb4e4\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum SonarType : byte {\n  ACTIVE_HULL,            // Hull-mounted active,\n  ACTIVE_VDS,             // Variable depth sonar,\n  ACTIVE_DIPPING,         // Helicopter dipping sonar,\n  PASSIVE_HULL,           // Hull-mounted passive,\n  PASSIVE_TOWED,          // Towed array,\n  PASSIVE_SONOBUOY,       // Sonobuoy,\n  MINE_HUNTING,           // Mine detection,\n  SIDESCAN,               // Side-scan sonar,\n  BOTTOM_PROFILER,        // Sub-bottom profiler,\n  INTERCEPT,              // Acoustic intercept,\n  TORPEDO                 // Torpedo seeker\n}\n\nenum SONPropagationModel : byte {\n  RAY_TRACING,            // Bellhop-style ray trace,\n  PARABOLIC_EQUATION,     // RAM PE model,\n  NORMAL_MODES,           // KRAKEN modes,\n  ISOVELOCITY,            // Simple constant velocity,\n  RANGE_DEPENDENT,        // Range-dependent environment,\n  FAST_FIELD              // FFP method\n}\n\nenum BottomType : byte {\n  HARD_ROCK,\n  SOFT_ROCK,\n  SAND,\n  SILT,\n  CLAY,\n  MUD,\n  GRAVEL,\n  CORAL,\n  MIXED\n}\n\nenum SeaState : byte {\n  SS0,                    // Calm (glassy),\n  SS1,                    // Calm (rippled),\n  SS2,                    // Smooth,\n  SS3,                    // Slight,\n  SS4,                    // Moderate,\n  SS5,                    // Rough,\n  SS6,                    // Very rough,\n  SS7,                    // High,\n  SS8,                    // Very high,\n  SS9                     // Phenomenal\n}\n\nenum NoiseSource : byte {\n  AMBIENT,\n  SHIPPING,\n  BIOLOGICAL,\n  WIND,\n  RAIN,\n  ICE,\n  SEISMIC,\n  MACHINERY,\n  FLOW,\n  SELF_NOISE\n}\n\nenum TargetType : byte {\n  SUBMARINE,\n  SURFACE_SHIP,\n  TORPEDO,\n  MINE,\n  BIOLOGICAL,\n  WRECK,\n  UNKNOWN\n}\n\nenum TorpedoGuidanceMode : byte {\n  WIRE_GUIDED,\n  ACTIVE_HOMING,\n  PASSIVE_HOMING,\n  WAKE_HOMING,\n  PATTERN_SEARCH,\n  SNAKE_SEARCH,\n  CEILING_BOUNCE\n}\n\n/// Sonar and Underwater Acoustics\ntable SON {\n  COMMAND:string;\n  ACTIVE_CONFIG:string;\n  PASSIVE_CONFIG:string;\n  TL_REQUEST:string;\n  ENVIRONMENT:string;\n  TARGET_SIGNATURE:string;\n  TMA_INPUT:string;\n  TORPEDO_SEEKER:string;\n}\n\nroot_type SON;\nfile_identifier \"$SON\";",
+            "files": [
+                "./dist/SON/SON.sw.tar.gz",
+                "./dist/SON/SON.py.tar.gz",
+                "./dist/SON/SON.lob.tar.gz",
+                "./dist/SON/SON.go.tar.gz",
+                "./dist/SON/SON.js.tar.gz",
+                "./dist/SON/SON.dart.tar.gz",
+                "./dist/SON/SON.cs.tar.gz",
+                "./dist/SON/SON.java.tar.gz",
+                "./dist/SON/SON.rs.tar.gz",
+                "./dist/SON/SON.php.tar.gz",
+                "./dist/SON/SON.json.tar.gz",
+                "./dist/SON/SON.fbjson.tar.gz",
+                "./dist/SON/SON.cpp.tar.gz",
+                "./dist/SON/SON.kt.tar.gz",
+                "./dist/SON/SON.ts.tar.gz"
+            ]
+        },
+        "IRO": {
+            "IDL": "// Hash: e7ac746df05078a5108a269c02719c9427dbfeed44de644800caf81917684d78\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Infrared Observation\ntable IRO {\n  ID:string;\n  ID_ENTITY:string;\n  NAME:string;\n  DESCRIPTION:string;\n  ENTITY:string;\n}\n\nroot_type IRO;\nfile_identifier \"$IRO\";",
+            "files": [
+                "./dist/IRO/IRO.sw.tar.gz",
+                "./dist/IRO/IRO.py.tar.gz",
+                "./dist/IRO/IRO.lob.tar.gz",
+                "./dist/IRO/IRO.go.tar.gz",
+                "./dist/IRO/IRO.js.tar.gz",
+                "./dist/IRO/IRO.dart.tar.gz",
+                "./dist/IRO/IRO.cs.tar.gz",
+                "./dist/IRO/IRO.java.tar.gz",
+                "./dist/IRO/IRO.rs.tar.gz",
+                "./dist/IRO/IRO.php.tar.gz",
+                "./dist/IRO/IRO.json.tar.gz",
+                "./dist/IRO/IRO.fbjson.tar.gz",
+                "./dist/IRO/IRO.cpp.tar.gz",
+                "./dist/IRO/IRO.kt.tar.gz",
+                "./dist/IRO/IRO.ts.tar.gz"
+            ]
+        },
+        "TPN": {
+            "IDL": "// Hash: 7facecfb97106de834394af1c85db30bc657fb1a9bc3bc6149a6ca136adf29a2\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Transponder\ntable TPN {\n  ID:string;\n  NAME:string;\n  NID:string;\n  TID:string;\n  TTF:double;\n  SYMBOL_RATE:double;\n  FEC:int;\n  MODULATION:string;\n  FORMAT:string;\n  SYSTEM:string;\n  CHANNELS:[string];\n}\n\nroot_type TPN;\nfile_identifier \"$TPN\";",
+            "files": [
+                "./dist/TPN/TPN.sw.tar.gz",
+                "./dist/TPN/TPN.py.tar.gz",
+                "./dist/TPN/TPN.lob.tar.gz",
+                "./dist/TPN/TPN.go.tar.gz",
+                "./dist/TPN/TPN.js.tar.gz",
+                "./dist/TPN/TPN.dart.tar.gz",
+                "./dist/TPN/TPN.cs.tar.gz",
+                "./dist/TPN/TPN.java.tar.gz",
+                "./dist/TPN/TPN.rs.tar.gz",
+                "./dist/TPN/TPN.php.tar.gz",
+                "./dist/TPN/TPN.json.tar.gz",
+                "./dist/TPN/TPN.fbjson.tar.gz",
+                "./dist/TPN/TPN.cpp.tar.gz",
+                "./dist/TPN/TPN.kt.tar.gz",
+                "./dist/TPN/TPN.ts.tar.gz"
+            ]
+        },
+        "LND": {
+            "IDL": "// Hash: 8e2bfebf2b6064dfad8e80e89671220644a603bd7c7cc5b501918169154165f6\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Launch Detection\ntable LND {\n  ID:string;\n  LAUNCH_TIME:string;\n  MESSAGE_TYPE:string;\n  LAUNCH_LATITUDE:double;\n  LAUNCH_LONGITUDE:double;\n  LAUNCH_AZIMUTH:double;\n  RAAN:double;\n  INCLINATION:double;\n  OBSERVATION_TIME:string;\n  OBSERVATION_LATITUDE:double;\n  OBSERVATION_LONGITUDE:double;\n  OBSERVATION_ALTITUDE:double;\n  STEREO_FLAG:bool;\n  HIGH_ZENITH_AZIMUTH:bool;\n  SEQUENCE_NUMBER:int;\n  EVENT_ID:string;\n  DESCRIPTOR:string;\n  TAGS:[string];\n}\n\nroot_type LND;\nfile_identifier \"$LND\";",
+            "files": [
+                "./dist/LND/LND.sw.tar.gz",
+                "./dist/LND/LND.py.tar.gz",
+                "./dist/LND/LND.lob.tar.gz",
+                "./dist/LND/LND.go.tar.gz",
+                "./dist/LND/LND.js.tar.gz",
+                "./dist/LND/LND.dart.tar.gz",
+                "./dist/LND/LND.cs.tar.gz",
+                "./dist/LND/LND.java.tar.gz",
+                "./dist/LND/LND.rs.tar.gz",
+                "./dist/LND/LND.php.tar.gz",
+                "./dist/LND/LND.json.tar.gz",
+                "./dist/LND/LND.fbjson.tar.gz",
+                "./dist/LND/LND.cpp.tar.gz",
+                "./dist/LND/LND.kt.tar.gz",
+                "./dist/LND/LND.ts.tar.gz"
+            ]
+        },
+        "EWR": {
+            "IDL": "// Hash: 2610ac0c860cab3fcffd82fcc85a7c1b685ca3a600fce5ebd0a9cbb909413b2e\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum JammingType : byte {\n  NOISE_BARRAGE,          // Broadband noise\n  NOISE_SPOT,             // Narrowband noise\n  NOISE_SWEPT,            // Swept frequency\n  DECEPTION_RANGE_GATE,   // Range gate pull-off\n  DECEPTION_VELOCITY_GATE,// Velocity gate pull-off\n  DECEPTION_ANGLE,        // Angle deception\n  DECEPTION_FALSE_TARGET, // False target generation\n  DRFM,                   // Digital RF memory\n  REPEATER,               // Repeater jammer\n  CROSS_EYE,              // Cross-eye jamming\n  CROSS_POLARIZATION,     // Cross-pol jamming\n  CHAFF,                  // Chaff dispenser\n  FLARE,                  // IR flare\n  TOWED_DECOY             // Towed decoy\n}\n\nenum ThreatCategory : byte {\n  UNKNOWN,\n  EARLY_WARNING,          // EW radar\n  ACQUISITION,            // Target acquisition\n  TRACKING,               // Fire control\n  GUIDANCE,               // Missile guidance\n  HEIGHT_FINDER,          // Height finding\n  GCI,                    // Ground controlled intercept\n  AIRBORNE_INTERCEPT,     // AI radar\n  SURFACE_SEARCH,         // Ship radar\n  AIR_SEARCH,             // Air search\n  NAVIGATION,             // Nav radar\n  WEATHER,                // Weather radar\n  CIVIL,                  // Civil radar\n  FRIENDLY,               // Friendly emitter\n  IFF                     // IFF interrogator\n}\n\nenum ESMFunction : byte {\n  SEARCH,                 // Wideband search\n  CLASSIFICATION,         // Emitter classification\n  IDENTIFICATION,         // Specific emitter ID\n  DIRECTION_FINDING,      // AOA measurement\n  LOCATION,               // Geolocation\n  RECORDING,              // Signal recording\n  SITUATIONAL_AWARENESS   // Threat warning\n}\n\nenum CountermeasureStatus : byte {\n  READY,\n  DEPLOYING,\n  ACTIVE,\n  EXPENDED,\n  RELOADING,\n  FAILED\n}\n\nenum WaveformType : byte {\n  CW,                     // Continuous wave\n  PULSED,                 // Simple pulsed\n  PULSE_DOPPLER,          // Pulse Doppler\n  FM_CW,                  // Frequency modulated CW\n  CHIRP,                  // Linear FM\n  PHASE_CODED,            // Phase coded\n  FREQUENCY_AGILE,        // Frequency agile\n  PRI_AGILE,              // PRI agile\n  COMPLEX,                // Complex waveform\n  LPI                     // Low probability of intercept\n}\n\n/// Electronic Warfare\ntable EWR {\n  SYSTEM_ID:uint;\n  ENTITY_ID:uint;\n  ESM_ACTIVE:bool;\n  ECM_ACTIVE:bool;\n  RWR_ACTIVE:bool;\n  ESM_CONTACTS:[string];\n  ACTIVE_JAMMING:[string];\n  COUNTERMEASURES:string;\n  THREAT_WARNINGS:[string];\n  EMCON_LEVEL:ubyte;\n  LAST_UPDATE_MS:long;\n}\n\nroot_type EWR;\nfile_identifier \"$EWR\";",
+            "files": [
+                "./dist/EWR/EWR.sw.tar.gz",
+                "./dist/EWR/EWR.py.tar.gz",
+                "./dist/EWR/EWR.lob.tar.gz",
+                "./dist/EWR/EWR.go.tar.gz",
+                "./dist/EWR/EWR.js.tar.gz",
+                "./dist/EWR/EWR.dart.tar.gz",
+                "./dist/EWR/EWR.cs.tar.gz",
+                "./dist/EWR/EWR.java.tar.gz",
+                "./dist/EWR/EWR.rs.tar.gz",
+                "./dist/EWR/EWR.php.tar.gz",
+                "./dist/EWR/EWR.json.tar.gz",
+                "./dist/EWR/EWR.fbjson.tar.gz",
+                "./dist/EWR/EWR.cpp.tar.gz",
+                "./dist/EWR/EWR.kt.tar.gz",
+                "./dist/EWR/EWR.ts.tar.gz"
             ]
         },
         "LDM": {
@@ -604,9 +1815,110 @@
                 "./dist/LDM/LDM.rs.tar.gz",
                 "./dist/LDM/LDM.php.tar.gz",
                 "./dist/LDM/LDM.json.tar.gz",
+                "./dist/LDM/LDM.fbjson.tar.gz",
                 "./dist/LDM/LDM.cpp.tar.gz",
                 "./dist/LDM/LDM.kt.tar.gz",
                 "./dist/LDM/LDM.ts.tar.gz"
+            ]
+        },
+        "NAV": {
+            "IDL": "// Hash: 4ebddb14b29484c938cfcdfd7c91465b4a03b6ef1cab74dea6bacd8433c7f044\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum VesselType : byte {\n  CARRIER = 0,\n  BATTLESHIP = 1,\n  CRUISER = 2,\n  DESTROYER = 3,\n  FRIGATE = 4,\n  CORVETTE = 5,\n  PATROL = 6,\n  SUBMARINE_SSN = 7,      // Nuclear attack sub\n  SUBMARINE_SSBN = 8,     // Nuclear ballistic sub\n  SUBMARINE_SSK = 9,      // Diesel-electric sub\n  AMPHIBIOUS = 10,\n  CARGO = 11,\n  TANKER = 12,\n  AUXILIARY = 13,\n  FAST_ATTACK = 14,\n  TORPEDO_BOAT = 15,\n}\n\nenum PropulsionType : byte {\n  STEAM = 0,\n  GAS_TURBINE = 1,\n  DIESEL = 2,\n  DIESEL_ELECTRIC = 3,\n  NUCLEAR = 4,\n  CODAG = 5,              // Combined Diesel and Gas\n  COGAG = 6,              // Combined Gas and Gas\n  CODLAG = 7,             // Combined Diesel-Electric and Gas\n  AIP = 8,                // Air-Independent Propulsion\n}\n\nenum DCState : byte {\n  NORMAL = 0,\n  MINOR_DAMAGE = 1,\n  MODERATE_DAMAGE = 2,\n  SEVERE_DAMAGE = 3,\n  CRITICAL = 4,\n  SINKING = 5,\n  ABANDONED = 6,\n}\n\n/// Naval Vessels\ntable NAV {\n  POSITION_X:double;\n  POSITION_Y:double;\n  POSITION_Z:double;\n  VELOCITY_X:double;\n  VELOCITY_Y:double;\n  VELOCITY_Z:double;\n  ATTITUDE_X:double;\n  ATTITUDE_Y:double;\n  ATTITUDE_Z:double;\n  ATTITUDE_W:double;\n  OMEGA_X:double;\n  OMEGA_Y:double;\n  OMEGA_Z:double;\n  SPEED_KNOTS:float;\n  HEADING:float;\n  COURSE:float;\n  RUDDER_ANGLE:float;\n  HULL:string;\n  PROPULSION:string;\n  DC_STATE:ubyte;\n  FIRES_ACTIVE:ubyte;\n  FLOODING_ACTIVE:ubyte;\n  CREW_CASUALTIES:ubyte;\n  HULL_INTEGRITY:float;\n  POWER_AVAILABLE:float;\n  WEAPONS_ONLINE:ubyte;\n  SENSORS_ONLINE:ubyte;\n  RESERVED1:ushort;\n  FUEL_REMAINING:float;\n  AMMO_MAIN:ushort;\n  MISSILES_REMAINING:ubyte;\n  TORPEDOES_REMAINING:ubyte;\n  VESSEL_TYPE:ubyte;\n  PROPULSION_TYPE:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type NAV;\nfile_identifier \"$NAV\";",
+            "files": [
+                "./dist/NAV/NAV.sw.tar.gz",
+                "./dist/NAV/NAV.py.tar.gz",
+                "./dist/NAV/NAV.lob.tar.gz",
+                "./dist/NAV/NAV.go.tar.gz",
+                "./dist/NAV/NAV.js.tar.gz",
+                "./dist/NAV/NAV.dart.tar.gz",
+                "./dist/NAV/NAV.cs.tar.gz",
+                "./dist/NAV/NAV.java.tar.gz",
+                "./dist/NAV/NAV.rs.tar.gz",
+                "./dist/NAV/NAV.php.tar.gz",
+                "./dist/NAV/NAV.json.tar.gz",
+                "./dist/NAV/NAV.fbjson.tar.gz",
+                "./dist/NAV/NAV.cpp.tar.gz",
+                "./dist/NAV/NAV.kt.tar.gz",
+                "./dist/NAV/NAV.ts.tar.gz"
+            ]
+        },
+        "BMC": {
+            "IDL": "// Hash: 7fad9f966e4cd258c4b77313a3991252c12fc252c4e4cb7c3c029e03782550b8\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Beam Contour\ntable BMC {\n  ID:string;\n  TYPE:string;\n  CONTOUR_IDX:int;\n  GAIN:double;\n  REGION_NAME:string;\n  GEOGRAPHY:string;\n  GEOGRAPHY_TEXT:string;\n  GEOGRAPHY_JSON:string;\n  GEOGRAPHY_TYPE:string;\n  GEOGRAPHY_NDIMS:int;\n  GEOGRAPHY_SRID:int;\n}\n\nroot_type BMC;\nfile_identifier \"$BMC\";",
+            "files": [
+                "./dist/BMC/BMC.sw.tar.gz",
+                "./dist/BMC/BMC.py.tar.gz",
+                "./dist/BMC/BMC.lob.tar.gz",
+                "./dist/BMC/BMC.go.tar.gz",
+                "./dist/BMC/BMC.js.tar.gz",
+                "./dist/BMC/BMC.dart.tar.gz",
+                "./dist/BMC/BMC.cs.tar.gz",
+                "./dist/BMC/BMC.java.tar.gz",
+                "./dist/BMC/BMC.rs.tar.gz",
+                "./dist/BMC/BMC.php.tar.gz",
+                "./dist/BMC/BMC.json.tar.gz",
+                "./dist/BMC/BMC.fbjson.tar.gz",
+                "./dist/BMC/BMC.cpp.tar.gz",
+                "./dist/BMC/BMC.kt.tar.gz",
+                "./dist/BMC/BMC.ts.tar.gz"
+            ]
+        },
+        "LNE": {
+            "IDL": "// Hash: 0809f8a08fdb75405a5ddab885758b455241caab8bcfbd0a1ec64771b3a07db2\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Launch Event\ntable LNE {\n  ID:string;\n  ORIG_OBJECT_ID:string;\n  DERIVED_FROM:string;\n  DECLASSIFICATION_DATE:string;\n  DECLASSIFICATION_STRING:string;\n  MSG_CREATE_DATE:string;\n  LAUNCH_FAILURE_CODE:string;\n  LAUNCH_DATE:string;\n  BE_NUMBER:string;\n  O_SUFFIX:string;\n  LAUNCH_FACILITY_NAME:string;\n  ON_ORBIT:string;\n  SAT_NO:int;\n}\n\nroot_type LNE;\nfile_identifier \"$LNE\";",
+            "files": [
+                "./dist/LNE/LNE.sw.tar.gz",
+                "./dist/LNE/LNE.py.tar.gz",
+                "./dist/LNE/LNE.lob.tar.gz",
+                "./dist/LNE/LNE.go.tar.gz",
+                "./dist/LNE/LNE.js.tar.gz",
+                "./dist/LNE/LNE.dart.tar.gz",
+                "./dist/LNE/LNE.cs.tar.gz",
+                "./dist/LNE/LNE.java.tar.gz",
+                "./dist/LNE/LNE.rs.tar.gz",
+                "./dist/LNE/LNE.php.tar.gz",
+                "./dist/LNE/LNE.json.tar.gz",
+                "./dist/LNE/LNE.fbjson.tar.gz",
+                "./dist/LNE/LNE.cpp.tar.gz",
+                "./dist/LNE/LNE.kt.tar.gz",
+                "./dist/LNE/LNE.ts.tar.gz"
+            ]
+        },
+        "LKS": {
+            "IDL": "// Hash: 75c22f66916430c212d016fd5300b64b9cf2f5451c61831120cbb81968a559d2\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Link Status\ntable LKS {\n  ID:string;\n  ID_ON_ORBIT1:string;\n  ID_ON_ORBIT2:string;\n  LINK_START_TIME:string;\n  LINK_STOP_TIME:string;\n  CONSTELLATION:string;\n  LINK_NAME:string;\n  LINK_TYPE:string;\n  BAND:string;\n  ID_BEAM1:string;\n  END_POINT1_NAME:string;\n  END_POINT1_LAT:double;\n  END_POINT1_LON:double;\n  ID_BEAM2:string;\n  END_POINT2_NAME:string;\n  END_POINT2_LAT:double;\n  END_POINT2_LON:double;\n  DATA_RATE1_TO2:double;\n  DATA_RATE2_TO1:double;\n  LINK_STATE:string;\n  SYS_CAP:string;\n  OPS_CAP:string;\n  SAT_NO1:int;\n  SAT_NO2:int;\n}\n\nroot_type LKS;\nfile_identifier \"$LKS\";",
+            "files": [
+                "./dist/LKS/LKS.sw.tar.gz",
+                "./dist/LKS/LKS.py.tar.gz",
+                "./dist/LKS/LKS.lob.tar.gz",
+                "./dist/LKS/LKS.go.tar.gz",
+                "./dist/LKS/LKS.js.tar.gz",
+                "./dist/LKS/LKS.dart.tar.gz",
+                "./dist/LKS/LKS.cs.tar.gz",
+                "./dist/LKS/LKS.java.tar.gz",
+                "./dist/LKS/LKS.rs.tar.gz",
+                "./dist/LKS/LKS.php.tar.gz",
+                "./dist/LKS/LKS.json.tar.gz",
+                "./dist/LKS/LKS.fbjson.tar.gz",
+                "./dist/LKS/LKS.cpp.tar.gz",
+                "./dist/LKS/LKS.kt.tar.gz",
+                "./dist/LKS/LKS.ts.tar.gz"
+            ]
+        },
+        "ARM": {
+            "IDL": "// Hash: a31e1fbb0e55c39a916cdc1c56b67e10cfd7ce560340efc49b9895e4bcad085d\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum ArmorMaterial : byte {\n  RHA = 0,            // Rolled Homogeneous Armor\n  CHA = 1,            // Cast Homogeneous Armor\n  FHA = 2,            // Face-Hardened Armor\n  HHA = 3,            // High-Hardness Armor\n  ALUMINUM = 4,       // Aluminum alloy\n  COMPOSITE = 5,      // Composite (steel/ceramic/steel)\n  CERAMIC = 6,        // Ceramic plate\n  ERA = 7,            // Explosive Reactive Armor\n  NERA = 8,           // Non-Explosive Reactive Armor\n  SPACED = 9,         // Spaced armor\n  RUBBER = 10,        // Rubber sideskirts\n  STRUCTURAL = 11,    // Structural steel\n  TITANIUM = 12,      // Titanium alloy\n  KEVLAR = 13,        // Kevlar/aramid\n  GLASS = 14,         // Bullet-resistant glass\n}\n\nenum AmmoType : byte {\n  AP = 0,             // Armor-Piercing (uncapped)\n  APC = 1,            // Armor-Piercing Capped\n  APCBC = 2,          // AP Capped Ballistic Cap\n  APCR = 3,           // AP Composite Rigid (HVAP)\n  APDS = 4,           // AP Discarding Sabot\n  APFSDS = 5,         // AP Fin-Stabilized Discarding Sabot\n  HEAT = 6,           // High-Explosive Anti-Tank\n  HEAT_FS = 7,        // HEAT Fin-Stabilized\n  HESH = 8,           // High-Explosive Squash Head\n  HE = 9,             // High-Explosive\n  HE_FRAG = 10,       // High-Explosive Fragmentation\n  HEDP = 11,          // High-Explosive Dual-Purpose\n  APHE = 12,          // Armor-Piercing High-Explosive\n  SAP = 13,           // Semi-Armor-Piercing\n  ATGM = 14,          // Anti-Tank Guided Missile\n  TANDEM_HEAT = 15,   // Tandem HEAT (ERA defeat)\n  TOP_ATTACK = 16,    // Top-attack munition\n  EFP = 17,           // Explosively Formed Penetrator\n}\n\nenum PenResult : byte {\n  NO_PENETRATION = 0, // Complete stop\n  PARTIAL_PEN = 1,    // Partial penetration\n  FULL_PEN = 2,       // Full penetration\n  RICOCHET = 3,       // Deflected\n  SHATTERED = 4,      // Projectile shattered\n  OVER_MATCH = 5,     // Armor overmatched\n}\n\n/// Armor and Protection\ntable ARM {\n  THICKNESS:double;\n  ANGLE:double;\n  MATERIAL:ubyte;\n  HARDNESS:ubyte;\n  QUALITY:ubyte;\n  ERA_TYPE:ubyte;\n  ERA_EFFECTIVENESS:float;\n  ERA_VS_KE:float;\n  RHA_EQUIVALENT:float;\n  NORMAL_X:double;\n  NORMAL_Y:double;\n  NORMAL_Z:double;\n  RESERVED:[uint8];\n}\n\nroot_type ARM;\nfile_identifier \"$ARM\";",
+            "files": [
+                "./dist/ARM/ARM.sw.tar.gz",
+                "./dist/ARM/ARM.py.tar.gz",
+                "./dist/ARM/ARM.lob.tar.gz",
+                "./dist/ARM/ARM.go.tar.gz",
+                "./dist/ARM/ARM.js.tar.gz",
+                "./dist/ARM/ARM.dart.tar.gz",
+                "./dist/ARM/ARM.cs.tar.gz",
+                "./dist/ARM/ARM.java.tar.gz",
+                "./dist/ARM/ARM.rs.tar.gz",
+                "./dist/ARM/ARM.php.tar.gz",
+                "./dist/ARM/ARM.json.tar.gz",
+                "./dist/ARM/ARM.fbjson.tar.gz",
+                "./dist/ARM/ARM.cpp.tar.gz",
+                "./dist/ARM/ARM.kt.tar.gz",
+                "./dist/ARM/ARM.ts.tar.gz"
             ]
         },
         "SCM": {
@@ -623,9 +1935,50 @@
                 "./dist/SCM/SCM.rs.tar.gz",
                 "./dist/SCM/SCM.php.tar.gz",
                 "./dist/SCM/SCM.json.tar.gz",
+                "./dist/SCM/SCM.fbjson.tar.gz",
                 "./dist/SCM/SCM.cpp.tar.gz",
                 "./dist/SCM/SCM.kt.tar.gz",
                 "./dist/SCM/SCM.ts.tar.gz"
+            ]
+        },
+        "DMG": {
+            "IDL": "// Hash: b728257ff462f9b29d8860a88b20bd80731bdf3c04708c07f8a96c3677bb17fb\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum ModuleType : byte {\n  ENGINE = 0,\n  TRANSMISSION = 1,\n  FUEL_TANK = 2,\n  AMMO_RACK = 3,\n  AMMO_FIRST_STAGE = 4,\n  GUN_BREECH = 5,\n  GUN_BARREL = 6,\n  TURRET_RING = 7,\n  TURRET_DRIVE = 8,\n  TRACKS = 9,\n  WHEELS = 10,\n  SUSPENSION = 11,\n  DRIVER_PORT = 12,\n  OPTICS_GUNNER = 13,\n  OPTICS_COMMANDER = 14,\n  FCS = 15,\n  RADIO = 16,\n  HYDRAULICS = 17,\n  AUTOLOADER = 18,\n  ERA_BLOCK = 19,\n  RADAR = 20,\n  WING_LEFT = 21,\n  WING_RIGHT = 22,\n  TAIL = 23,\n  AILERON_LEFT = 24,\n  AILERON_RIGHT = 25,\n  ELEVATOR = 26,\n  RUDDER = 27,\n  LANDING_GEAR = 28,\n  MAIN_ROTOR = 29,\n  TAIL_ROTOR = 30,\n  PROPELLER = 31,\n  BRIDGE = 32,\n  MAGAZINE = 33,\n}\n\nenum ModuleState : byte {\n  OPERATIONAL = 0,\n  DAMAGED = 1,\n  CRITICAL = 2,\n  DESTROYED = 3,\n  REPAIRING = 4,\n}\n\nenum CrewRole : byte {\n  COMMANDER = 0,\n  GUNNER = 1,\n  DRIVER = 2,\n  LOADER = 3,\n  RADIO_OP = 4,\n  PILOT = 5,\n  COPILOT = 6,\n  ENGINEER = 7,\n  HELMSMAN = 8,\n}\n\nenum CrewState : byte {\n  ALIVE = 0,\n  WOUNDED = 1,\n  UNCONSCIOUS = 2,\n  DEAD = 3,\n  BAILED = 4,\n}\n\nenum DestructionCause : byte {\n  NONE = 0,\n  AMMO_DETONATION = 1,\n  FUEL_FIRE = 2,\n  CREW_LOST = 3,\n  STRUCTURAL_FAILURE = 4,\n  FLOODING = 5,\n}\n\n/// Damage Models\ntable DMG {\n  OVERALL_HEALTH:float;\n  MOBILITY:float;\n  FIREPOWER:float;\n  MODULE_COUNT:ubyte;\n  CREW_COUNT:ubyte;\n  FIRE_COUNT:ubyte;\n  FLOOD_COUNT:ubyte;\n  IS_DESTROYED:ubyte;\n  DESTRUCTION_CAUSE:ubyte;\n  EXTINGUISHERS:ubyte;\n  REPAIR_ACTIVE:ubyte;\n  RELOAD_MULTIPLIER:float;\n  ACCURACY_MULTIPLIER:float;\n  CREW_ALIVE:ubyte;\n  CREW_WOUNDED:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type DMG;\nfile_identifier \"$DMG\";",
+            "files": [
+                "./dist/DMG/DMG.sw.tar.gz",
+                "./dist/DMG/DMG.py.tar.gz",
+                "./dist/DMG/DMG.lob.tar.gz",
+                "./dist/DMG/DMG.go.tar.gz",
+                "./dist/DMG/DMG.js.tar.gz",
+                "./dist/DMG/DMG.dart.tar.gz",
+                "./dist/DMG/DMG.cs.tar.gz",
+                "./dist/DMG/DMG.java.tar.gz",
+                "./dist/DMG/DMG.rs.tar.gz",
+                "./dist/DMG/DMG.php.tar.gz",
+                "./dist/DMG/DMG.json.tar.gz",
+                "./dist/DMG/DMG.fbjson.tar.gz",
+                "./dist/DMG/DMG.cpp.tar.gz",
+                "./dist/DMG/DMG.kt.tar.gz",
+                "./dist/DMG/DMG.ts.tar.gz"
+            ]
+        },
+        "SEO": {
+            "IDL": "// Hash: edae4555bd8ea84b32c76254dab992138490031d153a17afcc6b8f05ef20c5a9\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Space Environment Observation\ntable SEO {\n  ID:string;\n  MSG_TYPE:string;\n  GEN_SYSTEM:string;\n  EXTERNAL_ID:string;\n  DATA_TYPE:string;\n  GEN_TIME:string;\n  FORECAST:bool;\n  DERIVED:bool;\n  SAT_NO:int;\n  ORIG_OBJECT_ID:string;\n  ID_SENSOR:string;\n  ORIG_SENSOR_ID:string;\n  OBSERVATORY_TYPE:string;\n  OBSERVATORY_NAME:string;\n  OBSERVATORY_NOTES:string;\n  INSTRUMENT_TYPE:string;\n  LAT:double;\n  LON:double;\n  ALT:double;\n  SEN_REFERENCE_FRAME:string;\n  SEN_POS:[string];\n  SEN_VEL:[string];\n  MEAS_TYPE:string;\n  SEN_ENERGY_LEVEL:string;\n  OB_SET_ID:string;\n  PARTICLE_TYPE:string;\n  OB_TIME:string;\n  SEO_LIST:[string];\n  QUALITY:string;\n  DESCRIPTION:string;\n  DESCRIPTOR:string;\n  SRC_TYPS:[string];\n  SRC_IDS:[string];\n}\n\nroot_type SEO;\nfile_identifier \"$SEO\";",
+            "files": [
+                "./dist/SEO/SEO.sw.tar.gz",
+                "./dist/SEO/SEO.py.tar.gz",
+                "./dist/SEO/SEO.lob.tar.gz",
+                "./dist/SEO/SEO.go.tar.gz",
+                "./dist/SEO/SEO.js.tar.gz",
+                "./dist/SEO/SEO.dart.tar.gz",
+                "./dist/SEO/SEO.cs.tar.gz",
+                "./dist/SEO/SEO.java.tar.gz",
+                "./dist/SEO/SEO.rs.tar.gz",
+                "./dist/SEO/SEO.php.tar.gz",
+                "./dist/SEO/SEO.json.tar.gz",
+                "./dist/SEO/SEO.fbjson.tar.gz",
+                "./dist/SEO/SEO.cpp.tar.gz",
+                "./dist/SEO/SEO.kt.tar.gz",
+                "./dist/SEO/SEO.ts.tar.gz"
             ]
         },
         "EOO": {
@@ -642,6 +1995,7 @@
                 "./dist/EOO/EOO.rs.tar.gz",
                 "./dist/EOO/EOO.php.tar.gz",
                 "./dist/EOO/EOO.json.tar.gz",
+                "./dist/EOO/EOO.fbjson.tar.gz",
                 "./dist/EOO/EOO.cpp.tar.gz",
                 "./dist/EOO/EOO.kt.tar.gz",
                 "./dist/EOO/EOO.ts.tar.gz"
@@ -661,6 +2015,7 @@
                 "./dist/TDM/TDM.rs.tar.gz",
                 "./dist/TDM/TDM.php.tar.gz",
                 "./dist/TDM/TDM.json.tar.gz",
+                "./dist/TDM/TDM.fbjson.tar.gz",
                 "./dist/TDM/TDM.cpp.tar.gz",
                 "./dist/TDM/TDM.kt.tar.gz",
                 "./dist/TDM/TDM.ts.tar.gz"
@@ -680,9 +2035,70 @@
                 "./dist/OCM/OCM.rs.tar.gz",
                 "./dist/OCM/OCM.php.tar.gz",
                 "./dist/OCM/OCM.json.tar.gz",
+                "./dist/OCM/OCM.fbjson.tar.gz",
                 "./dist/OCM/OCM.cpp.tar.gz",
                 "./dist/OCM/OCM.kt.tar.gz",
                 "./dist/OCM/OCM.ts.tar.gz"
+            ]
+        },
+        "TKG": {
+            "IDL": "// Hash: d481dbc51d12c393c05051a54b18f9bcd06205d429902dd0889f5db96193201f\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum FilterType : byte {\n  ALPHA_BETA,\n  ALPHA_BETA_GAMMA,\n  KALMAN,\n  EXTENDED_KALMAN,\n  UNSCENTED_KALMAN,\n  PARTICLE,\n  IMM,                    // Interacting Multiple Model,\n  JPDA,                   // Joint Probabilistic Data Association,\n  MHT,                    // Multiple Hypothesis Tracking,\n  GNN,                    // Global Nearest Neighbor,\n  NNKF                    // Nearest Neighbor Kalman Filter\n}\n\nenum MotionModel : byte {\n  CONSTANT_VELOCITY,\n  CONSTANT_ACCELERATION,\n  COORDINATED_TURN,\n  SINGER_ACCELERATION,    // Singer maneuver model,\n  JUMP_MARKOV,           // Jump Markov acceleration,\n  BALLISTIC,\n  ORBITAL,\n  SURFACE_VEHICLE,\n  CURVILINEAR\n}\n\nenum MeasurementType : byte {\n  POSITION_3D,            // [x, y, z],\n  POSITION_2D,            // [x, y],\n  RANGE_BEARING,          // [r, az],\n  RANGE_BEARING_ELEVATION,// [r, az, el],\n  RANGE_ONLY,\n  BEARING_ONLY,\n  RANGE_RATE,             // Doppler,\n  ANGLES_ONLY,            // [az, el],\n  TLE,                    // Two-line elements,\n  GPS,                    // GPS measurement,\n  RADAR,                  // Combined radar measurement,\n  ADSB,                   // ADS-B position,\n  SONAR                   // Sonar bearing/range\n}\n\nenum TrackStatus : byte {\n  TENTATIVE,              // Initial detections,\n  CONFIRMED,              // Confirmed track,\n  COASTING,               // No recent update,\n  LOST,                   // Track lost,\n  DELETED                 // Track deleted\n}\n\nenum AssociationMethod : byte {\n  NEAREST_NEIGHBOR,\n  GLOBAL_NEAREST_NEIGHBOR,\n  PROBABILISTIC_DATA,     // PDA,\n  JOINT_PROBABILISTIC,    // JPDA,\n  AUCTION,\n  HUNGARIAN,\n  MUNKRES\n}\n\nenum FusionMethod : byte {\n  SIMPLE_AVERAGE,\n  WEIGHTED_AVERAGE,\n  COVARIANCE_INTERSECTION,\n  BAR_SHALOM_CAMPO,\n  FEDERATED,\n  SEQUENTIAL\n}\n\n/// Tracking and Data Fusion\ntable TKG {\n  COMMAND:string;\n  FILTER_CONFIG:string;\n  IMM_CONFIG:string;\n  MHT_CONFIG:string;\n  JPDA_CONFIG:string;\n  FUSION_CONFIG:string;\n  MEASUREMENTS:string;\n  INITIAL_STATE:string;\n  TRACK_TO_UPDATE:string;\n  TRACKS_TO_CORRELATE:[string];\n}\n\nroot_type TKG;\nfile_identifier \"$TKG\";",
+            "files": [
+                "./dist/TKG/TKG.sw.tar.gz",
+                "./dist/TKG/TKG.py.tar.gz",
+                "./dist/TKG/TKG.lob.tar.gz",
+                "./dist/TKG/TKG.go.tar.gz",
+                "./dist/TKG/TKG.js.tar.gz",
+                "./dist/TKG/TKG.dart.tar.gz",
+                "./dist/TKG/TKG.cs.tar.gz",
+                "./dist/TKG/TKG.java.tar.gz",
+                "./dist/TKG/TKG.rs.tar.gz",
+                "./dist/TKG/TKG.php.tar.gz",
+                "./dist/TKG/TKG.json.tar.gz",
+                "./dist/TKG/TKG.fbjson.tar.gz",
+                "./dist/TKG/TKG.cpp.tar.gz",
+                "./dist/TKG/TKG.kt.tar.gz",
+                "./dist/TKG/TKG.ts.tar.gz"
+            ]
+        },
+        "RDO": {
+            "IDL": "// Hash: 260b64900b461cf4a3fa8fc6127603aa2bdd4aac11b245bf3ac44246804e4d07\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Radar Observation\ntable RDO {\n  ID:string;\n  OB_TIME:string;\n  ID_SENSOR:string;\n  SAT_NO:int;\n  TASK_ID:string;\n  TRANSACTION_ID:string;\n  TRACK_ID:string;\n  OB_POSITION:string;\n  ORIG_OBJECT_ID:string;\n  ORIG_SENSOR_ID:string;\n  UCT:bool;\n  AZIMUTH:double;\n  AZIMUTH_UNC:double;\n  AZIMUTH_BIAS:double;\n  AZIMUTH_RATE:double;\n  ELEVATION:double;\n  ELEVATION_UNC:double;\n  ELEVATION_BIAS:double;\n  ELEVATION_RATE:double;\n  RANGE:double;\n  RANGE_ACCEL:double;\n  RANGE_ACCEL_UNC:double;\n  RANGE_UNC:double;\n  RANGE_BIAS:double;\n  RANGE_RATE:double;\n  RANGE_RATE_UNC:double;\n  DOPPLER:double;\n  DOPPLER_UNC:double;\n  RA:double;\n  DECLINATION:double;\n  X:double;\n  Y:double;\n  Z:double;\n  XVEL:double;\n  YVEL:double;\n  ZVEL:double;\n  SENX:double;\n  SENY:double;\n  SENZ:double;\n  RCS:double;\n  RCS_UNC:double;\n  ORTHOGONAL_RCS:double;\n  ORTHOGONAL_RCS_UNC:double;\n  SNR:double;\n  BEAM:double;\n  TIMING_BIAS:double;\n  RAW_FILE_URI:string;\n  TAGS:[string];\n  ON_ORBIT:string;\n  SEN_REFERENCE_FRAME:string;\n  DESCRIPTOR:string;\n  TYPE:string;\n}\n\nroot_type RDO;\nfile_identifier \"$RDO\";",
+            "files": [
+                "./dist/RDO/RDO.sw.tar.gz",
+                "./dist/RDO/RDO.py.tar.gz",
+                "./dist/RDO/RDO.lob.tar.gz",
+                "./dist/RDO/RDO.go.tar.gz",
+                "./dist/RDO/RDO.js.tar.gz",
+                "./dist/RDO/RDO.dart.tar.gz",
+                "./dist/RDO/RDO.cs.tar.gz",
+                "./dist/RDO/RDO.java.tar.gz",
+                "./dist/RDO/RDO.rs.tar.gz",
+                "./dist/RDO/RDO.php.tar.gz",
+                "./dist/RDO/RDO.json.tar.gz",
+                "./dist/RDO/RDO.fbjson.tar.gz",
+                "./dist/RDO/RDO.cpp.tar.gz",
+                "./dist/RDO/RDO.kt.tar.gz",
+                "./dist/RDO/RDO.ts.tar.gz"
+            ]
+        },
+        "WTH": {
+            "IDL": "// Hash: 92e90241381df55eae26326177a8cd8c2f9e944340ae8462043f61c8979b8f0e\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Weather Data\ntable WTH {\n  ID:string;\n  ID_SENSOR:string;\n  ORIG_SENSOR_ID:string;\n  OB_TIME:string;\n  SIG_PWRS:[string];\n  NOISE_LVLS:[string];\n  SPEC_WIDTHS:[string];\n  FIRST_GUESS_AVGS:[string];\n  QC_VALUE:int;\n  FILE_CREATION:string;\n  TERM_ALT:double;\n  AVG_TX_PWR:double;\n  AVG_REF_PWR:double;\n  SECTOR_NUM:int;\n  NUM_ELEMENTS:int;\n  TD_AVG_SAMPLE_NUMS:[string];\n  CHECKSUM:int;\n  CO_INTEGS:[string];\n  SPEC_AVGS:[string];\n  INTERPULSE_PERIODS:[string];\n  DOPP_VELS:[string];\n  CONS_RECS:[string];\n  SNRS:[string];\n  SIG_STRENGTH:double;\n  SEMI_MAJOR_AXIS:double;\n  SEMI_MINOR_AXIS:double;\n  ANGLE_ORIENTATION:double;\n  LIGHT_EVENT_NUM:int;\n  LIGHT_DET_SENSORS:[string];\n  POS_CONFIDENCE:double;\n  SRC_TYPS:[string];\n  SRC_IDS:[string];\n}\n\nroot_type WTH;\nfile_identifier \"$WTH\";",
+            "files": [
+                "./dist/WTH/WTH.sw.tar.gz",
+                "./dist/WTH/WTH.py.tar.gz",
+                "./dist/WTH/WTH.lob.tar.gz",
+                "./dist/WTH/WTH.go.tar.gz",
+                "./dist/WTH/WTH.js.tar.gz",
+                "./dist/WTH/WTH.dart.tar.gz",
+                "./dist/WTH/WTH.cs.tar.gz",
+                "./dist/WTH/WTH.java.tar.gz",
+                "./dist/WTH/WTH.rs.tar.gz",
+                "./dist/WTH/WTH.php.tar.gz",
+                "./dist/WTH/WTH.json.tar.gz",
+                "./dist/WTH/WTH.fbjson.tar.gz",
+                "./dist/WTH/WTH.cpp.tar.gz",
+                "./dist/WTH/WTH.kt.tar.gz",
+                "./dist/WTH/WTH.ts.tar.gz"
             ]
         },
         "ACL": {
@@ -699,9 +2115,90 @@
                 "./dist/ACL/ACL.rs.tar.gz",
                 "./dist/ACL/ACL.php.tar.gz",
                 "./dist/ACL/ACL.json.tar.gz",
+                "./dist/ACL/ACL.fbjson.tar.gz",
                 "./dist/ACL/ACL.cpp.tar.gz",
                 "./dist/ACL/ACL.kt.tar.gz",
                 "./dist/ACL/ACL.ts.tar.gz"
+            ]
+        },
+        "TME": {
+            "IDL": "// Hash: 5ba0fa058c36d237c12980fee6e0f5f9e21d28db3e346cdb51b9c3b7dc5177cc\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum TimeScale : byte {\n  UTC,                    // Coordinated Universal Time,\n  TAI,                    // International Atomic Time,\n  TT,                     // Terrestrial Time,\n  TDB,                    // Barycentric Dynamical Time,\n  TCG,                    // Geocentric Coordinate Time,\n  TCB,                    // Barycentric Coordinate Time,\n  GPS,                    // GPS Time,\n  GLONASS,                // GLONASS Time,\n  GALILEO,                // Galileo System Time,\n  BEIDOU,                 // BeiDou Time,\n  UT1,                    // Universal Time 1,\n  LOCAL_MEAN_SOLAR,\n  LOCAL_APPARENT_SOLAR,\n  SIDEREAL\n}\n\nenum DateFormat : byte {\n  ISO8601,                // YYYY-MM-DDTHH:MM:SS.sssZ,\n  JULIAN_DATE,            // Days since 4713 BC Jan 1,\n  MODIFIED_JULIAN_DATE,   // JD - 2400000.5,\n  GPS_WEEK_SOW,           // GPS week and seconds of week,\n  YEAR_DOY,               // Year and day of year,\n  UNIX_EPOCH,             // Seconds since 1970-01-01,\n  MISSION_ELAPSED         // Seconds since mission start\n}\n\nenum ClockType : byte {\n  CESIUM,\n  RUBIDIUM,\n  QUARTZ_TCXO,\n  QUARTZ_OCXO,\n  HYDROGEN_MASER,\n  GPS_DISCIPLINED\n}\n\n/// Time Systems\ntable TME {\n  COMMAND:string;\n  CONVERSION_REQUEST:string;\n  LEAP_SECOND_QUERY:string;\n  EOP_QUERY:string;\n  SIDEREAL_QUERY:string;\n  INTERVAL_REQUEST:string;\n  SOLAR_POSITION_QUERY:string;\n  LUNAR_POSITION_QUERY:string;\n  SUNRISE_SUNSET_QUERY:[double];\n  CLOCK_PROPAGATION:string;\n}\n\nroot_type TME;\nfile_identifier \"$TME\";",
+            "files": [
+                "./dist/TME/TME.sw.tar.gz",
+                "./dist/TME/TME.py.tar.gz",
+                "./dist/TME/TME.lob.tar.gz",
+                "./dist/TME/TME.go.tar.gz",
+                "./dist/TME/TME.js.tar.gz",
+                "./dist/TME/TME.dart.tar.gz",
+                "./dist/TME/TME.cs.tar.gz",
+                "./dist/TME/TME.java.tar.gz",
+                "./dist/TME/TME.rs.tar.gz",
+                "./dist/TME/TME.php.tar.gz",
+                "./dist/TME/TME.json.tar.gz",
+                "./dist/TME/TME.fbjson.tar.gz",
+                "./dist/TME/TME.cpp.tar.gz",
+                "./dist/TME/TME.kt.tar.gz",
+                "./dist/TME/TME.ts.tar.gz"
+            ]
+        },
+        "STR": {
+            "IDL": "// Hash: 455561a82fa328ade311f09e3fc1c4b0f97cd1c0c5f089c9959a1040418ea92b\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Star Catalog Entry\ntable STR {\n  ID:string;\n  CS_ID:long;\n  GNC_CAT_ID:int;\n  GAIADR3_CAT_ID:long;\n  HIP_CAT_ID:int;\n  CAT_VERSION:string;\n  RA:double;\n  RA_UNC:double;\n  DEC:double;\n  DEC_UNC:double;\n  POS_UNC_FLAG:bool;\n  PARALLAX:double;\n  PARALLAX_UNC:double;\n  PMRA:double;\n  PMRA_UNC:double;\n  PMDEC:double;\n  PMDEC_UNC:double;\n  PM_UNC_FLAG:bool;\n  ASTROMETRY_ORIGIN:string;\n  STAR_EPOCH:double;\n  GMAG:double;\n  GMAG_UNC:double;\n  BPMAG:double;\n  BPMAG_UNC:double;\n  RPMAG:double;\n  RPMAG_UNC:double;\n  JMAG:double;\n  JMAG_UNC:double;\n  KMAG:double;\n  KMAG_UNC:double;\n  HMAG:double;\n  HMAG_UNC:double;\n  VAR_FLAG:bool;\n  MULT_FLAG:bool;\n  NEIGHBOR_ID:int;\n  NEIGHBOR_FLAG:bool;\n  NEIGHBOR_DISTANCE:double;\n  SHIFT_FLAG:bool;\n  SHIFT:double;\n}\n\nroot_type STR;\nfile_identifier \"$STR\";",
+            "files": [
+                "./dist/STR/STR.sw.tar.gz",
+                "./dist/STR/STR.py.tar.gz",
+                "./dist/STR/STR.lob.tar.gz",
+                "./dist/STR/STR.go.tar.gz",
+                "./dist/STR/STR.js.tar.gz",
+                "./dist/STR/STR.dart.tar.gz",
+                "./dist/STR/STR.cs.tar.gz",
+                "./dist/STR/STR.java.tar.gz",
+                "./dist/STR/STR.rs.tar.gz",
+                "./dist/STR/STR.php.tar.gz",
+                "./dist/STR/STR.json.tar.gz",
+                "./dist/STR/STR.fbjson.tar.gz",
+                "./dist/STR/STR.cpp.tar.gz",
+                "./dist/STR/STR.kt.tar.gz",
+                "./dist/STR/STR.ts.tar.gz"
+            ]
+        },
+        "CFP": {
+            "IDL": "// Hash: 5bae876830108ca1bbc7b2496865c81b86cd1687717a5151b88c9ce3af8f7f39\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum pduType : byte {\n  FILE_DIRECTIVE,\n  FILE_DATA\n}\n\nenum transmissionMode : byte {\n  ACKNOWLEDGED,\n  UNACKNOWLEDGED\n}\n\n/// CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)\ntable CFP {\n  /// PDU version\n  VERSION:ubyte;\n  /// PDU type\n  PDU_TYPE:pduType;\n  /// Direction (toward receiver or sender)\n  DIRECTION:ubyte;\n  /// Transmission mode\n  TRANSMISSION_MODE:transmissionMode;\n  /// CRC present flag\n  CRC_FLAG:bool;\n  /// Large file flag\n  LARGE_FILE_FLAG:bool;\n  /// Data field length\n  DATA_FIELD_LENGTH:ushort;\n  /// Source entity ID\n  SOURCE_ENTITY_ID:ulong;\n  /// Transaction sequence number\n  TRANSACTION_SEQ_NUM:ulong;\n  /// Destination entity ID\n  DESTINATION_ENTITY_ID:ulong;\n  /// File checksum type\n  CHECKSUM_TYPE:ubyte;\n  /// File size\n  FILE_SIZE:ulong;\n  /// Source filename\n  SOURCE_FILENAME:string;\n  /// Destination filename\n  DESTINATION_FILENAME:string;\n  /// PDU data\n  DATA:[ubyte];\n}\n\nroot_type CFP;\nfile_identifier \"$CFP\";",
+            "files": [
+                "./dist/CFP/CFP.sw.tar.gz",
+                "./dist/CFP/CFP.py.tar.gz",
+                "./dist/CFP/CFP.lob.tar.gz",
+                "./dist/CFP/CFP.go.tar.gz",
+                "./dist/CFP/CFP.js.tar.gz",
+                "./dist/CFP/CFP.dart.tar.gz",
+                "./dist/CFP/CFP.cs.tar.gz",
+                "./dist/CFP/CFP.java.tar.gz",
+                "./dist/CFP/CFP.rs.tar.gz",
+                "./dist/CFP/CFP.php.tar.gz",
+                "./dist/CFP/CFP.json.tar.gz",
+                "./dist/CFP/CFP.fbjson.tar.gz",
+                "./dist/CFP/CFP.cpp.tar.gz",
+                "./dist/CFP/CFP.kt.tar.gz",
+                "./dist/CFP/CFP.ts.tar.gz"
+            ]
+        },
+        "COM": {
+            "IDL": "// Hash: 840b925abcbd036bfd81925cda410cac5477ad81f7b440d27067292ef64d8fd1\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum ModulationType : byte {\n  AM,\n  FM,\n  PM,\n  BPSK,\n  QPSK,\n  PSK8,\n  QAM16,\n  QAM64,\n  QAM256,\n  FSK,\n  MSK,\n  OFDM,\n  SPREAD_SPECTRUM,\n  FHSS,\n  DSSS\n}\n\nenum BandType : byte {\n  HF,         // 3-30 MHz\n  VHF,        // 30-300 MHz\n  UHF,        // 300-3000 MHz\n  L_BAND,     // 1-2 GHz\n  S_BAND,     // 2-4 GHz\n  C_BAND,     // 4-8 GHz\n  X_BAND,     // 8-12 GHz\n  KU_BAND,    // 12-18 GHz\n  K_BAND,     // 18-27 GHz\n  KA_BAND,    // 27-40 GHz\n  V_BAND,     // 40-75 GHz\n  W_BAND,     // 75-110 GHz\n  MM_WAVE     // >110 GHz\n}\n\nenum PropagationModel : byte {\n  FREE_SPACE,\n  TWO_RAY_GROUND,\n  HATA_URBAN,\n  HATA_SUBURBAN,\n  COST231,\n  ITU_R_P525,\n  ITU_R_P676,     // Atmospheric gases\n  ITU_R_P838,     // Rain attenuation\n  ITU_R_P840,     // Clouds and fog\n  LONGLEY_RICE,\n  OKUMURA,\n  LOG_DISTANCE,\n  TERRAIN_INTEGRATED\n}\n\nenum DataLinkType : byte {\n  LINK_16,        // TADIL-J\n  LINK_11,        // TADIL-A\n  LINK_22,        // NATO Improved Link Eleven\n  CDL,            // Common Data Link\n  TCDL,           // Tactical CDL\n  SADL,           // Situational Awareness Data Link\n  IFDL,           // Intra-Flight Data Link\n  VMF,            // Variable Message Format\n  JREAP,          // Joint Range Extension Applications Protocol\n  SATCOM,         // Satellite Communications\n  ADS_B,          // Automatic Dependent Surveillance-Broadcast\n  AIS,            // Automatic Identification System\n  HAVEQUICK,      // Frequency-hopping radio\n  SINCGARS,       // Single Channel Ground and Airborne Radio System\n  CUSTOM\n}\n\nenum AntennaPattern : byte {\n  ISOTROPIC,\n  DIPOLE,\n  YAGI,\n  PARABOLIC,\n  PHASED_ARRAY,\n  HORN,\n  PATCH,\n  HELICAL,\n  LOG_PERIODIC,\n  OMNIDIRECTIONAL,\n  SECTOR,\n  CUSTOM_PATTERN\n}\n\n/// Communications Systems\ntable COM {\n  SYSTEM_ID:uint;\n  ENTITY_ID:uint;\n  IS_TRANSMITTING:bool;\n  IS_RECEIVING:bool;\n  CURRENT_FREQUENCY_HZ:double;\n  CURRENT_POWER_WATTS:double;\n  CURRENT_DATA_RATE_BPS:double;\n  MESSAGES_SENT:ulong;\n  MESSAGES_RECEIVED:ulong;\n  BYTES_SENT:ulong;\n  BYTES_RECEIVED:ulong;\n  CONNECTED_NODES:[uint];\n  ACTIVE_LINKS:[DataLinkType];\n  LAST_UPDATE_MS:long;\n}\n\nroot_type COM;\nfile_identifier \"$COM\";",
+            "files": [
+                "./dist/COM/COM.sw.tar.gz",
+                "./dist/COM/COM.py.tar.gz",
+                "./dist/COM/COM.lob.tar.gz",
+                "./dist/COM/COM.go.tar.gz",
+                "./dist/COM/COM.js.tar.gz",
+                "./dist/COM/COM.dart.tar.gz",
+                "./dist/COM/COM.cs.tar.gz",
+                "./dist/COM/COM.java.tar.gz",
+                "./dist/COM/COM.rs.tar.gz",
+                "./dist/COM/COM.php.tar.gz",
+                "./dist/COM/COM.json.tar.gz",
+                "./dist/COM/COM.fbjson.tar.gz",
+                "./dist/COM/COM.cpp.tar.gz",
+                "./dist/COM/COM.kt.tar.gz",
+                "./dist/COM/COM.ts.tar.gz"
             ]
         },
         "PNM": {
@@ -718,9 +2215,50 @@
                 "./dist/PNM/PNM.rs.tar.gz",
                 "./dist/PNM/PNM.php.tar.gz",
                 "./dist/PNM/PNM.json.tar.gz",
+                "./dist/PNM/PNM.fbjson.tar.gz",
                 "./dist/PNM/PNM.cpp.tar.gz",
                 "./dist/PNM/PNM.kt.tar.gz",
                 "./dist/PNM/PNM.ts.tar.gz"
+            ]
+        },
+        "OOI": {
+            "IDL": "// Hash: b6d3e2d5303693c2cd382f8d921b3f232829d7e4fd60228d0659185bd39b100c\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Object of Interest\ntable OOI {\n  ID:string;\n  SAT_NO:int;\n  NAME:string;\n  SENSOR_TASKING_START_TIME:string;\n  SENSOR_TASKING_STOP_TIME:string;\n  PRIORITY:int;\n  STATUS:string;\n  STATUS_DATE:string;\n  DESCRIPTION:string;\n  LAST_OB_TIME:string;\n  MISSED_OB_TIME:string;\n  DELTA_VS:[string];\n  DELTA_TS:[string];\n  SV_EPOCH:string;\n  X:double;\n  Y:double;\n  Z:double;\n  XVEL:double;\n  YVEL:double;\n  ZVEL:double;\n  ELSET_EPOCH:string;\n  MEAN_MOTION:double;\n  ECCENTRICITY:double;\n  INCLINATION:double;\n  RAAN:double;\n  ARG_OF_PERIGEE:double;\n  MEAN_ANOMALY:double;\n  REV_NO:int;\n  B_STAR:double;\n  MEAN_MOTION_DOT:double;\n  MEAN_MOTION_DDOT:double;\n  SEMI_MAJOR_AXIS:double;\n  PERIOD:double;\n  APOGEE:double;\n  PERIGEE:double;\n  AFFECTED_OBJECTS:[string];\n  ON_ORBIT:string;\n  MANIFOLDS:[string];\n}\n\nroot_type OOI;\nfile_identifier \"$OOI\";",
+            "files": [
+                "./dist/OOI/OOI.sw.tar.gz",
+                "./dist/OOI/OOI.py.tar.gz",
+                "./dist/OOI/OOI.lob.tar.gz",
+                "./dist/OOI/OOI.go.tar.gz",
+                "./dist/OOI/OOI.js.tar.gz",
+                "./dist/OOI/OOI.dart.tar.gz",
+                "./dist/OOI/OOI.cs.tar.gz",
+                "./dist/OOI/OOI.java.tar.gz",
+                "./dist/OOI/OOI.rs.tar.gz",
+                "./dist/OOI/OOI.php.tar.gz",
+                "./dist/OOI/OOI.json.tar.gz",
+                "./dist/OOI/OOI.fbjson.tar.gz",
+                "./dist/OOI/OOI.cpp.tar.gz",
+                "./dist/OOI/OOI.kt.tar.gz",
+                "./dist/OOI/OOI.ts.tar.gz"
+            ]
+        },
+        "OON": {
+            "IDL": "// Hash: 52795ecd4a739b92e0b7a5e6802c20f5b796315f005d99f833aa7c8c62f6b17b\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// On-Orbit Object\ntable OON {\n  SAT_NO:int;\n  COMMON_NAME:string;\n  CONSTELLATION:string;\n  INTL_DES:string;\n  LAUNCH_DATE:string;\n  DECAY_DATE:string;\n  OBJECT_TYPE:string;\n  MISSION_NUMBER:string;\n  CATEGORY:string;\n  LIFETIME_YEARS:int;\n  ALT_NAME:string;\n  LAUNCH_SITE_ID:string;\n  ANTENNAS:[string];\n  BATTERIES:[string];\n  SOLAR_ARRAYS:[string];\n  THRUSTERS:[string];\n  ONORBIT_DETAILS:[string];\n  COUNTRY_CODE:string;\n  ENTITY_COLLECTION:[string];\n}\n\nroot_type OON;\nfile_identifier \"$OON\";",
+            "files": [
+                "./dist/OON/OON.sw.tar.gz",
+                "./dist/OON/OON.py.tar.gz",
+                "./dist/OON/OON.lob.tar.gz",
+                "./dist/OON/OON.go.tar.gz",
+                "./dist/OON/OON.js.tar.gz",
+                "./dist/OON/OON.dart.tar.gz",
+                "./dist/OON/OON.cs.tar.gz",
+                "./dist/OON/OON.java.tar.gz",
+                "./dist/OON/OON.rs.tar.gz",
+                "./dist/OON/OON.php.tar.gz",
+                "./dist/OON/OON.json.tar.gz",
+                "./dist/OON/OON.fbjson.tar.gz",
+                "./dist/OON/OON.cpp.tar.gz",
+                "./dist/OON/OON.kt.tar.gz",
+                "./dist/OON/OON.ts.tar.gz"
             ]
         },
         "STF": {
@@ -737,9 +2275,90 @@
                 "./dist/STF/STF.rs.tar.gz",
                 "./dist/STF/STF.php.tar.gz",
                 "./dist/STF/STF.json.tar.gz",
+                "./dist/STF/STF.fbjson.tar.gz",
                 "./dist/STF/STF.cpp.tar.gz",
                 "./dist/STF/STF.kt.tar.gz",
                 "./dist/STF/STF.ts.tar.gz"
+            ]
+        },
+        "AOF": {
+            "IDL": "// Hash: a8512f572fdef60989150f54fdd85da6bd8bd11e1edef0070b10ed13aaba2a27\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// AOS Transfer Frame (CCSDS 732.0-B-3)\ntable AOF {\n  /// Transfer frame version\n  VERSION:ubyte;\n  /// Spacecraft identifier\n  SPACECRAFT_ID:ushort;\n  /// Virtual channel identifier\n  VIRTUAL_CHANNEL_ID:ubyte;\n  /// Virtual channel frame count\n  VIRTUAL_FRAME_COUNT:uint;\n  /// Replay flag\n  REPLAY_FLAG:bool;\n  /// VC frame count usage flag\n  VC_FRAME_COUNT_USAGE:bool;\n  /// VC frame count cycle\n  VC_FRAME_COUNT_CYCLE:ubyte;\n  /// Insert zone\n  INSERT_ZONE:[ubyte];\n  /// Data field\n  DATA:[ubyte];\n  /// Operational control field\n  OCF:[ubyte];\n  /// Frame error control field\n  FECF:ushort;\n}\n\nroot_type AOF;\nfile_identifier \"$AOF\";",
+            "files": [
+                "./dist/AOF/AOF.sw.tar.gz",
+                "./dist/AOF/AOF.py.tar.gz",
+                "./dist/AOF/AOF.lob.tar.gz",
+                "./dist/AOF/AOF.go.tar.gz",
+                "./dist/AOF/AOF.js.tar.gz",
+                "./dist/AOF/AOF.dart.tar.gz",
+                "./dist/AOF/AOF.cs.tar.gz",
+                "./dist/AOF/AOF.java.tar.gz",
+                "./dist/AOF/AOF.rs.tar.gz",
+                "./dist/AOF/AOF.php.tar.gz",
+                "./dist/AOF/AOF.json.tar.gz",
+                "./dist/AOF/AOF.fbjson.tar.gz",
+                "./dist/AOF/AOF.cpp.tar.gz",
+                "./dist/AOF/AOF.kt.tar.gz",
+                "./dist/AOF/AOF.ts.tar.gz"
+            ]
+        },
+        "MFE": {
+            "IDL": "// Hash: a39f92e18f641f9170006cf91fa8da65f33c4bbba55c96926d49b2cd555350dc\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Manifold Element Set\ntable MFE {\n  ID:string;\n  TMP_SAT_NO:int;\n  EPOCH:string;\n  MEAN_MOTION:double;\n  ECCENTRICITY:double;\n  INCLINATION:double;\n  RAAN:double;\n  ARG_OF_PERIGEE:double;\n  MEAN_ANOMALY:double;\n  REV_NO:int;\n  B_STAR:double;\n  MEAN_MOTION_DOT:double;\n  MEAN_MOTION_DDOT:double;\n  SEMI_MAJOR_AXIS:double;\n  PERIOD:double;\n  APOGEE:double;\n  PERIGEE:double;\n  LINE1:string;\n  LINE2:string;\n}\n\nroot_type MFE;\nfile_identifier \"$MFE\";",
+            "files": [
+                "./dist/MFE/MFE.sw.tar.gz",
+                "./dist/MFE/MFE.py.tar.gz",
+                "./dist/MFE/MFE.lob.tar.gz",
+                "./dist/MFE/MFE.go.tar.gz",
+                "./dist/MFE/MFE.js.tar.gz",
+                "./dist/MFE/MFE.dart.tar.gz",
+                "./dist/MFE/MFE.cs.tar.gz",
+                "./dist/MFE/MFE.java.tar.gz",
+                "./dist/MFE/MFE.rs.tar.gz",
+                "./dist/MFE/MFE.php.tar.gz",
+                "./dist/MFE/MFE.json.tar.gz",
+                "./dist/MFE/MFE.fbjson.tar.gz",
+                "./dist/MFE/MFE.cpp.tar.gz",
+                "./dist/MFE/MFE.kt.tar.gz",
+                "./dist/MFE/MFE.ts.tar.gz"
+            ]
+        },
+        "ACM": {
+            "IDL": "// Hash: 151bbcc588f72d915ffe525dcd65a85539a9da2baa4e1982d70848e8ed0f6099\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Attitude Comprehensive Message\ntable ACM {\n  CCSDS_ACM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n}\n\nroot_type ACM;\nfile_identifier \"$ACM\";",
+            "files": [
+                "./dist/ACM/ACM.sw.tar.gz",
+                "./dist/ACM/ACM.py.tar.gz",
+                "./dist/ACM/ACM.lob.tar.gz",
+                "./dist/ACM/ACM.go.tar.gz",
+                "./dist/ACM/ACM.js.tar.gz",
+                "./dist/ACM/ACM.dart.tar.gz",
+                "./dist/ACM/ACM.cs.tar.gz",
+                "./dist/ACM/ACM.java.tar.gz",
+                "./dist/ACM/ACM.rs.tar.gz",
+                "./dist/ACM/ACM.php.tar.gz",
+                "./dist/ACM/ACM.json.tar.gz",
+                "./dist/ACM/ACM.fbjson.tar.gz",
+                "./dist/ACM/ACM.cpp.tar.gz",
+                "./dist/ACM/ACM.kt.tar.gz",
+                "./dist/ACM/ACM.ts.tar.gz"
+            ]
+        },
+        "SWR": {
+            "IDL": "// Hash: cf0bfcbe16efd1bf3fbb4f802cffa174a8e08bd835192737f44e474e2d0e1937\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Short-Wave Infrared\ntable SWR {\n  ID:string;\n  ON_ORBIT:string;\n  TS:string;\n  SOLAR_PHASE_ANGLE:double;\n  LAT:double;\n  LON:double;\n  LOCATION_NAME:string;\n  BAD_WAVE:string;\n  WAVELENGTHS:[string];\n  ABS_FLUXES:[string];\n  RATIO_WAVELENGTHS:[string];\n  FLUX_RATIOS:[string];\n  ORIG_OBJECT_ID:string;\n  SAT_NO:int;\n}\n\nroot_type SWR;\nfile_identifier \"$SWR\";",
+            "files": [
+                "./dist/SWR/SWR.sw.tar.gz",
+                "./dist/SWR/SWR.py.tar.gz",
+                "./dist/SWR/SWR.lob.tar.gz",
+                "./dist/SWR/SWR.go.tar.gz",
+                "./dist/SWR/SWR.js.tar.gz",
+                "./dist/SWR/SWR.dart.tar.gz",
+                "./dist/SWR/SWR.cs.tar.gz",
+                "./dist/SWR/SWR.java.tar.gz",
+                "./dist/SWR/SWR.rs.tar.gz",
+                "./dist/SWR/SWR.php.tar.gz",
+                "./dist/SWR/SWR.json.tar.gz",
+                "./dist/SWR/SWR.fbjson.tar.gz",
+                "./dist/SWR/SWR.cpp.tar.gz",
+                "./dist/SWR/SWR.kt.tar.gz",
+                "./dist/SWR/SWR.ts.tar.gz"
             ]
         }
     }

@@ -1,0 +1,39 @@
+// Hash: 970df6be065350907784f697bcd72d6f5d9dc84c8df7436b30e923fa90dfed05
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum rafPduType : byte {
+  BIND_INVOCATION,
+  BIND_RETURN,
+  UNBIND_INVOCATION,
+  UNBIND_RETURN,
+  START_INVOCATION,
+  START_RETURN,
+  STOP_INVOCATION,
+  STOP_RETURN,
+  TRANSFER_BUFFER,
+  STATUS_REPORT,
+  PEER_ABORT
+}
+
+/// Return All Frames Service (CCSDS 913.1-B-2)
+table RAF {
+  /// PDU type
+  PDU_TYPE:rafPduType;
+  /// Initiator identifier
+  INITIATOR_ID:string;
+  /// Responder port identifier
+  RESPONDER_PORT_ID:string;
+  /// Service type
+  SERVICE_TYPE:ubyte;
+  /// Version number
+  VERSION:ushort;
+  /// Invoke ID
+  INVOKE_ID:uint;
+  /// Frame quality
+  FRAME_QUALITY:ubyte;
+  /// Data
+  DATA:[ubyte];
+}
+
+root_type RAF;
+file_identifier "$RAF";

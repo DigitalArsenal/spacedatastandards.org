@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "PropagatorType" : {
+      "type" : "string",
+      "enum": ["KEPLER", "SGP4", "SDP4", "HPOP", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST"]
+    },
+    "ForceModel" : {
+      "type" : "string",
+      "enum": ["POINT_MASS", "J2", "J2_J4", "SPHERICAL_HARMONICS", "THIRD_BODY_SUN", "THIRD_BODY_MOON", "ATMOSPHERIC_DRAG", "SOLAR_RADIATION_PRESSURE", "RELATIVISTIC", "SOLID_TIDES", "OCEAN_TIDES", "MANEUVER"]
+    },
+    "OrbitType" : {
+      "type" : "string",
+      "enum": ["LEO", "MEO", "GEO", "HEO", "SSO", "MOLNIYA", "TUNDRA", "POLAR", "EQUATORIAL", "HYPERBOLIC", "PARABOLIC"]
+    },
+    "TimeSystem" : {
+      "type" : "string",
+      "enum": ["UTC", "TAI", "TT", "TDB", "GPS_TIME", "JULIAN_DATE", "MODIFIED_JULIAN_DATE"]
+    },
+    "ReferenceFrame" : {
+      "type" : "string",
+      "enum": ["ECI_J2000", "ECEF", "TEME", "GCRF", "ITRF", "RIC", "VNC", "NTW", "SEZ", "LVLH"]
+    },
+    "AST" : {
+      "type" : "object",
+      "description" : "Astrodynamics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "PROPAGATION_REQUEST" : {
+                "type" : "string"
+              },
+        "TLE" : {
+                "type" : "string"
+              },
+        "INITIAL_ELEMENTS" : {
+                "type" : "string"
+              },
+        "INITIAL_STATE" : {
+                "type" : "string"
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MANEUVER_PLAN" : {
+                "type" : "string"
+              },
+        "CONJUNCTION_PRIMARY" : {
+                "type" : "string"
+              },
+        "CONJUNCTION_SECONDARY" : {
+                "type" : "string"
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OD_CONFIG" : {
+                "type" : "string"
+              },
+        "GROUND_STATION" : {
+                "type" : "string"
+              },
+        "FORMATION_CONFIG" : {
+                "type" : "string"
+              },
+        "TARGET_ELEMENTS" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/AST"
+}

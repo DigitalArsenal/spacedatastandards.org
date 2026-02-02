@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OON": {
+      "type": "object",
+      "description": "On-Orbit Object",
+      "properties": {
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "COMMON_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INTL_DES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECAY_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSION_NUMBER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CATEGORY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LIFETIME_YEARS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ALT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_SITE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "BATTERIES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOLAR_ARRAYS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "THRUSTERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ONORBIT_DETAILS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_COLLECTION": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OON",
+  "x-flatbuffer-root-type": "OON",
+  "x-flatbuffer-file-identifier": "$OON"
+}

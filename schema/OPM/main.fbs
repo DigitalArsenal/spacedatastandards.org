@@ -1,0 +1,37 @@
+// Hash: 69c179e20f32f2326222df05a60d3c6f89af21308075b7fc6b6a66a2cd949efa
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Orbit Parameter Message
+table OPM {
+  CCSDS_OPM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  CENTER_NAME:string;
+  REF_FRAME:string;
+  TIME_SYSTEM:string;
+  EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+  SEMI_MAJOR_AXIS:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  TRUE_ANOMALY:double;
+  MEAN_ANOMALY:double;
+  GM:double;
+  MASS:double;
+  SOLAR_RAD_AREA:double;
+  SOLAR_RAD_COEFF:double;
+  DRAG_AREA:double;
+  DRAG_COEFF:double;
+}
+
+root_type OPM;
+file_identifier "$OPM";

@@ -1,0 +1,87 @@
+// Hash: 2610ac0c860cab3fcffd82fcc85a7c1b685ca3a600fce5ebd0a9cbb909413b2e
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum JammingType : byte {
+  NOISE_BARRAGE,          // Broadband noise
+  NOISE_SPOT,             // Narrowband noise
+  NOISE_SWEPT,            // Swept frequency
+  DECEPTION_RANGE_GATE,   // Range gate pull-off
+  DECEPTION_VELOCITY_GATE,// Velocity gate pull-off
+  DECEPTION_ANGLE,        // Angle deception
+  DECEPTION_FALSE_TARGET, // False target generation
+  DRFM,                   // Digital RF memory
+  REPEATER,               // Repeater jammer
+  CROSS_EYE,              // Cross-eye jamming
+  CROSS_POLARIZATION,     // Cross-pol jamming
+  CHAFF,                  // Chaff dispenser
+  FLARE,                  // IR flare
+  TOWED_DECOY             // Towed decoy
+}
+
+enum ThreatCategory : byte {
+  UNKNOWN,
+  EARLY_WARNING,          // EW radar
+  ACQUISITION,            // Target acquisition
+  TRACKING,               // Fire control
+  GUIDANCE,               // Missile guidance
+  HEIGHT_FINDER,          // Height finding
+  GCI,                    // Ground controlled intercept
+  AIRBORNE_INTERCEPT,     // AI radar
+  SURFACE_SEARCH,         // Ship radar
+  AIR_SEARCH,             // Air search
+  NAVIGATION,             // Nav radar
+  WEATHER,                // Weather radar
+  CIVIL,                  // Civil radar
+  FRIENDLY,               // Friendly emitter
+  IFF                     // IFF interrogator
+}
+
+enum ESMFunction : byte {
+  SEARCH,                 // Wideband search
+  CLASSIFICATION,         // Emitter classification
+  IDENTIFICATION,         // Specific emitter ID
+  DIRECTION_FINDING,      // AOA measurement
+  LOCATION,               // Geolocation
+  RECORDING,              // Signal recording
+  SITUATIONAL_AWARENESS   // Threat warning
+}
+
+enum CountermeasureStatus : byte {
+  READY,
+  DEPLOYING,
+  ACTIVE,
+  EXPENDED,
+  RELOADING,
+  FAILED
+}
+
+enum WaveformType : byte {
+  CW,                     // Continuous wave
+  PULSED,                 // Simple pulsed
+  PULSE_DOPPLER,          // Pulse Doppler
+  FM_CW,                  // Frequency modulated CW
+  CHIRP,                  // Linear FM
+  PHASE_CODED,            // Phase coded
+  FREQUENCY_AGILE,        // Frequency agile
+  PRI_AGILE,              // PRI agile
+  COMPLEX,                // Complex waveform
+  LPI                     // Low probability of intercept
+}
+
+/// Electronic Warfare
+table EWR {
+  SYSTEM_ID:uint;
+  ENTITY_ID:uint;
+  ESM_ACTIVE:bool;
+  ECM_ACTIVE:bool;
+  RWR_ACTIVE:bool;
+  ESM_CONTACTS:[string];
+  ACTIVE_JAMMING:[string];
+  COUNTERMEASURES:string;
+  THREAT_WARNINGS:[string];
+  EMCON_LEVEL:ubyte;
+  LAST_UPDATE_MS:long;
+}
+
+root_type EWR;
+file_identifier "$EWR";

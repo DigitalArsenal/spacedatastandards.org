@@ -1,0 +1,28 @@
+// Hash: 52795ecd4a739b92e0b7a5e6802c20f5b796315f005d99f833aa7c8c62f6b17b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Object
+table OON {
+  SAT_NO:int;
+  COMMON_NAME:string;
+  CONSTELLATION:string;
+  INTL_DES:string;
+  LAUNCH_DATE:string;
+  DECAY_DATE:string;
+  OBJECT_TYPE:string;
+  MISSION_NUMBER:string;
+  CATEGORY:string;
+  LIFETIME_YEARS:int;
+  ALT_NAME:string;
+  LAUNCH_SITE_ID:string;
+  ANTENNAS:[string];
+  BATTERIES:[string];
+  SOLAR_ARRAYS:[string];
+  THRUSTERS:[string];
+  ONORBIT_DETAILS:[string];
+  COUNTRY_CODE:string;
+  ENTITY_COLLECTION:[string];
+}
+
+root_type OON;
+file_identifier "$OON";

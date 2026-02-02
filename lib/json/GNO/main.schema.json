@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GNO" : {
+      "type" : "object",
+      "description" : "GNSS Observation",
+      "properties" : {
+        "GNSS_SAT_ID" : {
+                "type" : "string"
+              },
+        "TRACKING_STATUS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "AGC_STATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "OBS_CODE_SET" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OB" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GNO"
+}

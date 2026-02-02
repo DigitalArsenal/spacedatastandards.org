@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RFB" : {
+      "type" : "object",
+      "description" : "RF Band",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "BAND" : {
+                "type" : "string"
+              },
+        "MODE" : {
+                "type" : "string"
+              },
+        "PURPOSE" : {
+                "type" : "string"
+              },
+        "FREQ_MIN" : {
+                "type" : "number"
+              },
+        "FREQ_MAX" : {
+                "type" : "number"
+              },
+        "CENTER_FREQ" : {
+                "type" : "number"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number"
+              },
+        "POLARIZATION" : {
+                "type" : "string"
+              },
+        "ERP" : {
+                "type" : "number"
+              },
+        "EIRP" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RFB"
+}

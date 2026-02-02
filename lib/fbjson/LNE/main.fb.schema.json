@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LNE": {
+      "type": "object",
+      "description": "Launch Event",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DERIVED_FROM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_STRING": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_CREATE_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_FAILURE_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BE_NUMBER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "O_SUFFIX": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_FACILITY_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LNE",
+  "x-flatbuffer-root-type": "LNE",
+  "x-flatbuffer-file-identifier": "$LNE"
+}

@@ -1,0 +1,37 @@
+// Hash: 274046db6e9b23adde4bd2eca7b67222f0cc2e81d804f1fbaddb6e475059d288
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+table AEMAttitudeEntry {
+  EPOCH:string;
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+  RATE_X:double;
+  RATE_Y:double;
+  RATE_Z:double;
+}
+
+table AEMSegment {
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  REF_FRAME_A:string;
+  REF_FRAME_B:string;
+  ATTITUDE_DIR:string;
+  TIME_SYSTEM:string;
+  ATTITUDE_TYPE:string;
+  START_TIME:string;
+  STOP_TIME:string;
+  DATA:[AEMAttitudeEntry];
+}
+
+/// Attitude Ephemeris Message
+table AEM {
+  CCSDS_AEM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  SEGMENTS:[AEMSegment];
+}
+
+root_type AEM;
+file_identifier "$AEM";

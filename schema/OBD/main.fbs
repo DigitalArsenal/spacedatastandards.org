@@ -1,0 +1,45 @@
+// Hash: 39965ec1bd915c0147503b1dbf6ad7a90dbfa6d5417496145c467cb1257bbada
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Orbit Determination Results
+table OBD {
+  ID:string;
+  START_TIME:string;
+  END_TIME:string;
+  ORIG_OBJECT_ID:string;
+  SAT_NO:int;
+  APRIORI_ID_ELSET:string;
+  APRIORI_ELSET:string;
+  APRIORI_ID_STATE_VECTOR:string;
+  APRIORI_STATE_VECTOR:string;
+  INITIAL_OD:bool;
+  LAST_OB_START:string;
+  LAST_OB_END:string;
+  TIME_SPAN:double;
+  EFFECTIVE_FROM:string;
+  EFFECTIVE_UNTIL:string;
+  WRMS:double;
+  PREVIOUS_WRMS:double;
+  FIRST_PASS_WRMS:double;
+  BEST_PASS_WRMS:double;
+  ERROR_GROWTH_RATE:double;
+  EDR:double;
+  METHOD:string;
+  METHOD_SOURCE:string;
+  FIT_SPAN:double;
+  BALLISTIC_COEFF_EST:bool;
+  BALLISTIC_COEFF_MODEL:string;
+  AGOM_EST:bool;
+  AGOM_MODEL:string;
+  RMS_CONVERGENCE_CRITERIA:double;
+  NUM_ITERATIONS:int;
+  ACCEPTED_OB_TYPS:[string];
+  ACCEPTED_OB_IDS:[string];
+  REJECTED_OB_TYPS:[string];
+  REJECTED_OB_IDS:[string];
+  SENSOR_IDS:[string];
+  ON_ORBIT:string;
+}
+
+root_type OBD;
+file_identifier "$OBD";

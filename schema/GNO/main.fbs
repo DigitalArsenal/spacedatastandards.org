@@ -1,0 +1,14 @@
+// Hash: cae70d4e3cd9b57de80181ae0d7eaae3fcc30d9db79cb9e2ec1b66cb78351c28
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// GNSS Observation
+table GNO {
+  GNSS_SAT_ID:string;
+  TRACKING_STATUS:int;
+  AGC_STATE:int;
+  OBS_CODE_SET:[string];
+  OB:[string];
+}
+
+root_type GNO;
+file_identifier "$GNO";

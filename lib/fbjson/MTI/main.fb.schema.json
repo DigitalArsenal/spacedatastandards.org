@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MTI": {
+      "type": "object",
+      "description": "Moving Target Indicator",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "P3": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "P6": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "P7": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "P8": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "P9": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "P10": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "MISSIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DWELLS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "HRRS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "JOB_DEFS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "FREE_TEXTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "PLATFORM_LOCS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "JOB_REQUESTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MTI",
+  "x-flatbuffer-root-type": "MTI",
+  "x-flatbuffer-file-identifier": "$MTI"
+}

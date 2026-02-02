@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "STR" : {
+      "type" : "object",
+      "description" : "Star Catalog Entry",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "CS_ID" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "GNC_CAT_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GAIADR3_CAT_ID" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "HIP_CAT_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "CAT_VERSION" : {
+                "type" : "string"
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "RA_UNC" : {
+                "type" : "number"
+              },
+        "DEC" : {
+                "type" : "number"
+              },
+        "DEC_UNC" : {
+                "type" : "number"
+              },
+        "POS_UNC_FLAG" : {
+                "type" : "boolean"
+              },
+        "PARALLAX" : {
+                "type" : "number"
+              },
+        "PARALLAX_UNC" : {
+                "type" : "number"
+              },
+        "PMRA" : {
+                "type" : "number"
+              },
+        "PMRA_UNC" : {
+                "type" : "number"
+              },
+        "PMDEC" : {
+                "type" : "number"
+              },
+        "PMDEC_UNC" : {
+                "type" : "number"
+              },
+        "PM_UNC_FLAG" : {
+                "type" : "boolean"
+              },
+        "ASTROMETRY_ORIGIN" : {
+                "type" : "string"
+              },
+        "STAR_EPOCH" : {
+                "type" : "number"
+              },
+        "GMAG" : {
+                "type" : "number"
+              },
+        "GMAG_UNC" : {
+                "type" : "number"
+              },
+        "BPMAG" : {
+                "type" : "number"
+              },
+        "BPMAG_UNC" : {
+                "type" : "number"
+              },
+        "RPMAG" : {
+                "type" : "number"
+              },
+        "RPMAG_UNC" : {
+                "type" : "number"
+              },
+        "JMAG" : {
+                "type" : "number"
+              },
+        "JMAG_UNC" : {
+                "type" : "number"
+              },
+        "KMAG" : {
+                "type" : "number"
+              },
+        "KMAG_UNC" : {
+                "type" : "number"
+              },
+        "HMAG" : {
+                "type" : "number"
+              },
+        "HMAG_UNC" : {
+                "type" : "number"
+              },
+        "VAR_FLAG" : {
+                "type" : "boolean"
+              },
+        "MULT_FLAG" : {
+                "type" : "boolean"
+              },
+        "NEIGHBOR_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NEIGHBOR_FLAG" : {
+                "type" : "boolean"
+              },
+        "NEIGHBOR_DISTANCE" : {
+                "type" : "number"
+              },
+        "SHIFT_FLAG" : {
+                "type" : "boolean"
+              },
+        "SHIFT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/STR"
+}

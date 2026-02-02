@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "BEM" : {
+      "type" : "object",
+      "description" : "Antenna Beam",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "BEAM_NAME" : {
+                "type" : "string"
+              },
+        "NOTES" : {
+                "type" : "string"
+              },
+        "BEAM_CONTOURS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/BEM"
+}

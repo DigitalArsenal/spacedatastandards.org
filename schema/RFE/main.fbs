@@ -1,0 +1,15 @@
+// Hash: 2aef882b5e211b02abfc65bb3c9adbf87a4f809a0eaba5850fbe3454acec6dc9
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// RF Emitter
+table RFE {
+  ID:string;
+  ID_ENTITY:string;
+  NAME:string;
+  TYPE:string;
+  ENTITY:string;
+  RF_EMITTER_DETAILS:[string];
+}
+
+root_type RFE;
+file_identifier "$RFE";

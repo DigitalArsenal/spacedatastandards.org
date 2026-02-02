@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "LND": {
+      "type": "object",
+      "description": "Launch Detection",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_LATITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OBSERVATION_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATION_LATITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OBSERVATION_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OBSERVATION_ALTITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "STEREO_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "HIGH_ZENITH_AZIMUTH": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEQUENCE_NUMBER": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LND",
+  "x-flatbuffer-root-type": "LND",
+  "x-flatbuffer-file-identifier": "$LND"
+}

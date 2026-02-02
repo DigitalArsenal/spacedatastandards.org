@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MNV" : {
+      "type" : "object",
+      "description" : "Spacecraft Maneuver",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "REPORT_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_START_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_END_TIME" : {
+                "type" : "string"
+              },
+        "TOTAL_BURN_TIME" : {
+                "type" : "number"
+              },
+        "OD_FIT_END_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "MANEUVER_UNC" : {
+                "type" : "number"
+              },
+        "CHARACTERIZATION" : {
+                "type" : "string"
+              },
+        "CHARACTERIZATION_UNC" : {
+                "type" : "number"
+              },
+        "EVENT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string"
+              },
+        "DELTA_POS" : {
+                "type" : "number"
+              },
+        "DELTA_POS_U" : {
+                "type" : "number"
+              },
+        "DELTA_POS_V" : {
+                "type" : "number"
+              },
+        "DELTA_POS_W" : {
+                "type" : "number"
+              },
+        "DELTA_VEL" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_U" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_V" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_W" : {
+                "type" : "number"
+              },
+        "DELTA_MASS" : {
+                "type" : "number"
+              },
+        "PRE_EVENT_ID_ELSET" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_ELSET" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "PRE_POS_X" : {
+                "type" : "number"
+              },
+        "PRE_POS_Y" : {
+                "type" : "number"
+              },
+        "PRE_POS_Z" : {
+                "type" : "number"
+              },
+        "PRE_VEL_X" : {
+                "type" : "number"
+              },
+        "PRE_VEL_Y" : {
+                "type" : "number"
+              },
+        "PRE_VEL_Z" : {
+                "type" : "number"
+              },
+        "PRE_RADIATION_PRESS_COEFF" : {
+                "type" : "number"
+              },
+        "PRE_BALLISTIC_COEFF" : {
+                "type" : "number"
+              },
+        "PRE_APOGEE" : {
+                "type" : "number"
+              },
+        "PRE_PERIGEE" : {
+                "type" : "number"
+              },
+        "PRE_INCLINATION" : {
+                "type" : "number"
+              },
+        "PRE_ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "PRE_PERIOD" : {
+                "type" : "number"
+              },
+        "PRE_RAAN" : {
+                "type" : "number"
+              },
+        "PRE_SMA" : {
+                "type" : "number"
+              },
+        "PRE_GEO_LONGITUDE" : {
+                "type" : "number"
+              },
+        "PRE_DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_U" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_V" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_W" : {
+                "type" : "number"
+              },
+        "POST_EVENT_ID_ELSET" : {
+                "type" : "string"
+              },
+        "POST_EVENT_ELSET" : {
+                "type" : "string"
+              },
+        "POST_EVENT_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "POST_EVENT_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "POST_POS_X" : {
+                "type" : "number"
+              },
+        "POST_POS_Y" : {
+                "type" : "number"
+              },
+        "POST_POS_Z" : {
+                "type" : "number"
+              },
+        "POST_VEL_X" : {
+                "type" : "number"
+              },
+        "POST_VEL_Y" : {
+                "type" : "number"
+              },
+        "POST_VEL_Z" : {
+                "type" : "number"
+              },
+        "POST_RADIATION_PRESS_COEFF" : {
+                "type" : "number"
+              },
+        "POST_BALLISTIC_COEFF" : {
+                "type" : "number"
+              },
+        "POST_APOGEE" : {
+                "type" : "number"
+              },
+        "POST_PERIGEE" : {
+                "type" : "number"
+              },
+        "POST_INCLINATION" : {
+                "type" : "number"
+              },
+        "POST_ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "POST_PERIOD" : {
+                "type" : "number"
+              },
+        "POST_RAAN" : {
+                "type" : "number"
+              },
+        "POST_SMA" : {
+                "type" : "number"
+              },
+        "POST_GEO_LONGITUDE" : {
+                "type" : "number"
+              },
+        "POST_DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_U" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_V" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_W" : {
+                "type" : "number"
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "POST_MASS" : {
+                "type" : "number"
+              },
+        "POST_AREA" : {
+                "type" : "number"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "STATE_MODEL" : {
+                "type" : "string"
+              },
+        "STATE_MODEL_VERSION" : {
+                "type" : "number"
+              },
+        "NUM_ACCEL_POINTS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MNVR_ACCEL_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MNVR_ACCELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MNVR_ACCEL_UNCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ALGORITHM" : {
+                "type" : "string"
+              },
+        "SOURCED_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SOURCED_DATA_TYPES" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MNV"
+}

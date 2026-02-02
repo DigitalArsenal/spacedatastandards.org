@@ -1,0 +1,89 @@
+// Hash: 2125a61ebcca10e579dc248972b604f185de4a68cc50be3355d3aa180c976c8e
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum PropagatorType : byte {
+  KEPLER,                 // Two-body analytical
+  SGP4,                   // Simplified General Perturbations
+  SDP4,                   // Simplified Deep-space Perturbations
+  HPOP,                   // High-Precision Orbit Propagator
+  COWELL,                 // Cowell's method (numerical)
+  ENCKE,                  // Encke's method
+  GAUSS_JACKSON,          // Gauss-Jackson 8th order
+  RK78,                   // Dormand-Prince RK7(8)
+  BROUWER,                // Brouwer-Lyddane mean elements
+  KOZAI,                  // Kozai mean elements
+  DSST                    // Draper Semi-analytical Satellite Theory
+}
+
+enum ForceModel : byte {
+  POINT_MASS,
+  J2,
+  J2_J4,
+  SPHERICAL_HARMONICS,
+  THIRD_BODY_SUN,
+  THIRD_BODY_MOON,
+  ATMOSPHERIC_DRAG,
+  SOLAR_RADIATION_PRESSURE,
+  RELATIVISTIC,
+  SOLID_TIDES,
+  OCEAN_TIDES,
+  MANEUVER
+}
+
+enum OrbitType : byte {
+  LEO,                    // Low Earth Orbit
+  MEO,                    // Medium Earth Orbit
+  GEO,                    // Geostationary
+  HEO,                    // Highly Elliptical
+  SSO,                    // Sun-Synchronous
+  MOLNIYA,
+  TUNDRA,
+  POLAR,
+  EQUATORIAL,
+  HYPERBOLIC,
+  PARABOLIC
+}
+
+enum TimeSystem : byte {
+  UTC,
+  TAI,
+  TT,                     // Terrestrial Time
+  TDB,                    // Barycentric Dynamical Time
+  GPS_TIME,
+  JULIAN_DATE,
+  MODIFIED_JULIAN_DATE
+}
+
+enum ReferenceFrame : byte {
+  ECI_J2000,              // Earth-Centered Inertial J2000
+  ECEF,                   // Earth-Centered Earth-Fixed
+  TEME,                   // True Equator Mean Equinox
+  GCRF,                   // Geocentric Celestial Reference Frame
+  ITRF,                   // International Terrestrial Reference Frame
+  RIC,                    // Radial-Intrack-Crosstrack
+  VNC,                    // Velocity-Normal-Conormal
+  NTW,                    // Normal-Tangential-W
+  SEZ,                    // South-East-Zenith (topocentric)
+  LVLH                    // Local Vertical Local Horizontal
+}
+
+/// Astrodynamics
+table AST {
+  COMMAND:string;
+  PROPAGATION_REQUEST:string;
+  TLE:string;
+  INITIAL_ELEMENTS:string;
+  INITIAL_STATE:string;
+  EPOCH_MS:long;
+  MANEUVER_PLAN:string;
+  CONJUNCTION_PRIMARY:string;
+  CONJUNCTION_SECONDARY:string;
+  OBSERVATIONS:[string];
+  OD_CONFIG:string;
+  GROUND_STATION:string;
+  FORMATION_CONFIG:string;
+  TARGET_ELEMENTS:string;
+}
+
+root_type AST;
+file_identifier "$AST";

@@ -1,0 +1,59 @@
+// Hash: 15370c3702ae49a726b51dc843d2aef12ecac61a6ad0faa1d86ab087e2a0c053
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Missile Track
+table MST {
+  ID:string;
+  MSG_TYPE:string;
+  MSG_SUB_TYPE:string;
+  MSG_CREATE_DATE:string;
+  ENVIRONMENT:string;
+  OBJ_TYPE:string;
+  OBJ_TYPE_CONF:int;
+  OBJ_PLAT:string;
+  OBJ_IDENT:string;
+  SPACE_AMP:string;
+  OBJ_ACT:string;
+  SPACE_SPEC_TYPE:string;
+  ACFT_SUB_TYPE:string;
+  NAME:string;
+  CALL_SIGN:string;
+  LOST_TRK_IND:bool;
+  TRACK_ID:string;
+  PARENT_TRACK_ID:string;
+  MUID_SRC_TRK:string;
+  MUID_SRC:string;
+  ALERT:string;
+  MSL_STATUS:string;
+  TS:string;
+  AOU_RPT_TYPE:string;
+  AOU_RPT_DATA:[string];
+  CONTAINMENT:double;
+  TRK_CONF:double;
+  TRK_QUAL:int;
+  ANG_ELEV:double;
+  SEN_MODE:string;
+  INFO_SOURCE:string;
+  BOOSTING:bool;
+  POLAR_SING_LOC_LAT:double;
+  POLAR_SING_LOC_LON:double;
+  EMG_IND:bool;
+  DROP_PT_IND:bool;
+  SPACE_AMP_CONF:int;
+  LAUNCH_TIME:string;
+  LAUNCH_LAT:double;
+  LAUNCH_LON:double;
+  AZ_CORR:double;
+  BURNOUT_ALT:double;
+  LAUNCH_AOU_TYPE:string;
+  LAUNCH_AOU_DATA:[string];
+  IMPACT_TIME:string;
+  IMPACT_LAT:double;
+  IMPACT_LON:double;
+  IMPACT_AOU_TYPE:string;
+  IMPACT_AOU_DATA:[string];
+  VECTORS:[string];
+}
+
+root_type MST;
+file_identifier "$MST";

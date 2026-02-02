@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IntegrationMethod": {
+      "type": "string",
+      "enum": [
+        "EULER",
+        "EULER_IMPROVED",
+        "RK2",
+        "RK4",
+        "RK45",
+        "RK78",
+        "VERLET",
+        "LEAPFROG",
+        "ADAMS_BASHFORTH",
+        "GAUSS_JACKSON"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EULER": {
+          "value": 0
+        },
+        "EULER_IMPROVED": {
+          "value": 1
+        },
+        "RK2": {
+          "value": 2
+        },
+        "RK4": {
+          "value": 3
+        },
+        "RK45": {
+          "value": 4
+        },
+        "RK78": {
+          "value": 5
+        },
+        "VERLET": {
+          "value": 6
+        },
+        "LEAPFROG": {
+          "value": 7
+        },
+        "ADAMS_BASHFORTH": {
+          "value": 8
+        },
+        "GAUSS_JACKSON": {
+          "value": 9
+        }
+      }
+    },
+    "CollisionShape": {
+      "type": "string",
+      "enum": [
+        "SPHERE",
+        "BOX",
+        "CYLINDER",
+        "CAPSULE",
+        "CONE",
+        "CONVEX_HULL",
+        "MESH",
+        "COMPOUND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPHERE": {
+          "value": 0
+        },
+        "BOX": {
+          "value": 1
+        },
+        "CYLINDER": {
+          "value": 2
+        },
+        "CAPSULE": {
+          "value": 3
+        },
+        "CONE": {
+          "value": 4
+        },
+        "CONVEX_HULL": {
+          "value": 5
+        },
+        "MESH": {
+          "value": 6
+        },
+        "COMPOUND": {
+          "value": 7
+        }
+      }
+    },
+    "MaterialType": {
+      "type": "string",
+      "enum": [
+        "STEEL",
+        "ALUMINUM",
+        "TITANIUM",
+        "CERAMIC",
+        "COMPOSITE",
+        "CONCRETE",
+        "WOOD",
+        "RUBBER",
+        "WATER",
+        "AIR",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STEEL": {
+          "value": 0
+        },
+        "ALUMINUM": {
+          "value": 1
+        },
+        "TITANIUM": {
+          "value": 2
+        },
+        "CERAMIC": {
+          "value": 3
+        },
+        "COMPOSITE": {
+          "value": 4
+        },
+        "CONCRETE": {
+          "value": 5
+        },
+        "WOOD": {
+          "value": 6
+        },
+        "RUBBER": {
+          "value": 7
+        },
+        "WATER": {
+          "value": 8
+        },
+        "AIR": {
+          "value": 9
+        },
+        "CUSTOM": {
+          "value": 10
+        }
+      }
+    },
+    "ForceType": {
+      "type": "string",
+      "enum": [
+        "GRAVITY",
+        "THRUST",
+        "DRAG",
+        "LIFT",
+        "FRICTION",
+        "SPRING",
+        "DAMPER",
+        "CONTACT",
+        "MAGNETIC",
+        "ELECTRIC",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GRAVITY": {
+          "value": 0
+        },
+        "THRUST": {
+          "value": 1
+        },
+        "DRAG": {
+          "value": 2
+        },
+        "LIFT": {
+          "value": 3
+        },
+        "FRICTION": {
+          "value": 4
+        },
+        "SPRING": {
+          "value": 5
+        },
+        "DAMPER": {
+          "value": 6
+        },
+        "CONTACT": {
+          "value": 7
+        },
+        "MAGNETIC": {
+          "value": 8
+        },
+        "ELECTRIC": {
+          "value": 9
+        },
+        "CUSTOM": {
+          "value": 10
+        }
+      }
+    },
+    "PHY": {
+      "type": "object",
+      "description": "Physics and Rigid Body Dynamics",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIMULATION_STEP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RIGID_BODY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INTEGRATION_CONFIG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLISION_QUERY_A": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLISION_QUERY_B": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSFORM_A": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSFORM_B": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_A": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_B": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FLUID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AERO_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DRAG_MODEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "THERMAL_STATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PHY",
+  "x-flatbuffer-root-type": "PHY",
+  "x-flatbuffer-file-identifier": "$PHY"
+}

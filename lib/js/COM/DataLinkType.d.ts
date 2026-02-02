@@ -1,0 +1,18 @@
+export declare enum DataLinkType {
+    LINK_16 = 0,
+    LINK_11 = 1,
+    LINK_22 = 2,
+    CDL = 3,
+    TCDL = 4,
+    SADL = 5,
+    IFDL = 6,
+    VMF = 7,
+    JREAP = 8,
+    SATCOM = 9,
+    ADS_B = 10,
+    AIS = 11,
+    HAVEQUICK = 12,
+    SINCGARS = 13,
+    CUSTOM = 14
+}
+//# sourceMappingURL=DataLinkType.d.ts.map

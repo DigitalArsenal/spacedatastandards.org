@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AtmosphereModel" : {
+      "type" : "string",
+      "enum": ["ISA", "US_STD_1976", "NRLMSISE_00", "SIMPLE", "CUSTOM"]
+    },
+    "WeatherCondition" : {
+      "type" : "string",
+      "enum": ["CLEAR", "FEW_CLOUDS", "SCATTERED", "BROKEN", "OVERCAST", "RAIN_LIGHT", "RAIN_MODERATE", "RAIN_HEAVY", "SNOW_LIGHT", "SNOW_MODERATE", "SNOW_HEAVY", "FOG", "MIST", "HAZE", "THUNDERSTORM", "SANDSTORM"]
+    },
+    "TerrainType" : {
+      "type" : "string",
+      "enum": ["OCEAN", "WATER_FRESH", "SAND", "GRASS", "FOREST", "CONCRETE", "ASPHALT", "SNOW", "ICE", "ROCK", "MARSH", "URBAN"]
+    },
+    "ENV" : {
+      "type" : "object",
+      "description" : "Atmosphere and Environment",
+      "properties" : {
+        "ATMOSPHERE" : {
+                "type" : "string"
+              },
+        "WEATHER" : {
+                "type" : "string"
+              },
+        "TIME_UTC" : {
+                "type" : "number"
+              },
+        "LATITUDE" : {
+                "type" : "number"
+              },
+        "LONGITUDE" : {
+                "type" : "number"
+              },
+        "SUN_AZIMUTH" : {
+                "type" : "number"
+              },
+        "SUN_ELEVATION" : {
+                "type" : "number"
+              },
+        "MOON_PHASE" : {
+                "type" : "number"
+              },
+        "ILLUMINATION" : {
+                "type" : "number"
+              },
+        "MAGNETIC_DECLINATION" : {
+                "type" : "number"
+              },
+        "MAGNETIC_INCLINATION" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ENV"
+}

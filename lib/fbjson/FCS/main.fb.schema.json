@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FCSMode": {
+      "type": "string",
+      "enum": [
+        "OFF",
+        "STANDBY",
+        "RANGING",
+        "TRACKING",
+        "SOLUTION",
+        "CCIP",
+        "CCRP",
+        "MANUAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OFF": {
+          "value": 0
+        },
+        "STANDBY": {
+          "value": 1
+        },
+        "RANGING": {
+          "value": 2
+        },
+        "TRACKING": {
+          "value": 3
+        },
+        "SOLUTION": {
+          "value": 4
+        },
+        "CCIP": {
+          "value": 5
+        },
+        "CCRP": {
+          "value": 6
+        },
+        "MANUAL": {
+          "value": 7
+        }
+      }
+    },
+    "LeadMethod": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "PREDICTIVE",
+        "COLLISION",
+        "CONSTANT_BEARING",
+        "PURSUIT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "PREDICTIVE": {
+          "value": 1
+        },
+        "COLLISION": {
+          "value": 2
+        },
+        "CONSTANT_BEARING": {
+          "value": 3
+        },
+        "PURSUIT": {
+          "value": 4
+        }
+      }
+    },
+    "RangefinderType": {
+      "type": "string",
+      "enum": [
+        "STADIAMETRIC",
+        "STEREOSCOPIC",
+        "COINCIDENCE",
+        "LASER",
+        "RADAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STADIAMETRIC": {
+          "value": 0
+        },
+        "STEREOSCOPIC": {
+          "value": 1
+        },
+        "COINCIDENCE": {
+          "value": 2
+        },
+        "LASER": {
+          "value": 3
+        },
+        "RADAR": {
+          "value": 4
+        }
+      }
+    },
+    "FCS": {
+      "type": "object",
+      "description": "Fire Control Systems",
+      "properties": {
+        "MODE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "LEAD_METHOD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RANGEFINDER_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "AMMO_SELECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TARGET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLUTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ROUNDS_REMAINING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "TEMPERATURE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FCS",
+  "x-flatbuffer-root-type": "FCS",
+  "x-flatbuffer-file-identifier": "$FCS"
+}

@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SEO" : {
+      "type" : "object",
+      "description" : "Space Environment Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "MSG_TYPE" : {
+                "type" : "string"
+              },
+        "GEN_SYSTEM" : {
+                "type" : "string"
+              },
+        "EXTERNAL_ID" : {
+                "type" : "string"
+              },
+        "DATA_TYPE" : {
+                "type" : "string"
+              },
+        "GEN_TIME" : {
+                "type" : "string"
+              },
+        "FORECAST" : {
+                "type" : "boolean"
+              },
+        "DERIVED" : {
+                "type" : "boolean"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_TYPE" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_NAME" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_NOTES" : {
+                "type" : "string"
+              },
+        "INSTRUMENT_TYPE" : {
+                "type" : "string"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "SEN_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SEN_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MEAS_TYPE" : {
+                "type" : "string"
+              },
+        "SEN_ENERGY_LEVEL" : {
+                "type" : "string"
+              },
+        "OB_SET_ID" : {
+                "type" : "string"
+              },
+        "PARTICLE_TYPE" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "SEO_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "QUALITY" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SEO"
+}

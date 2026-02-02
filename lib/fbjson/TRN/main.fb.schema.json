@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TerrainDataSource": {
+      "type": "string",
+      "enum": [
+        "SRTM",
+        "ASTER",
+        "DTED_0",
+        "DTED_1",
+        "DTED_2",
+        "NED",
+        "LIDAR",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SRTM": {
+          "value": 0
+        },
+        "ASTER": {
+          "value": 1
+        },
+        "DTED_0": {
+          "value": 2
+        },
+        "DTED_1": {
+          "value": 3
+        },
+        "DTED_2": {
+          "value": 4
+        },
+        "NED": {
+          "value": 5
+        },
+        "LIDAR": {
+          "value": 6
+        },
+        "CUSTOM": {
+          "value": 7
+        }
+      }
+    },
+    "LandCoverType": {
+      "type": "string",
+      "enum": [
+        "WATER",
+        "URBAN",
+        "SUBURBAN",
+        "FOREST_DECIDUOUS",
+        "FOREST_CONIFEROUS",
+        "FOREST_MIXED",
+        "GRASSLAND",
+        "SHRUBLAND",
+        "CROPLAND",
+        "BARREN",
+        "WETLAND",
+        "SNOW_ICE",
+        "DESERT",
+        "ROCK",
+        "ROAD",
+        "RUNWAY",
+        "BUILDING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "WATER": {
+          "value": 0
+        },
+        "URBAN": {
+          "value": 1
+        },
+        "SUBURBAN": {
+          "value": 2
+        },
+        "FOREST_DECIDUOUS": {
+          "value": 3
+        },
+        "FOREST_CONIFEROUS": {
+          "value": 4
+        },
+        "FOREST_MIXED": {
+          "value": 5
+        },
+        "GRASSLAND": {
+          "value": 6
+        },
+        "SHRUBLAND": {
+          "value": 7
+        },
+        "CROPLAND": {
+          "value": 8
+        },
+        "BARREN": {
+          "value": 9
+        },
+        "WETLAND": {
+          "value": 10
+        },
+        "SNOW_ICE": {
+          "value": 11
+        },
+        "DESERT": {
+          "value": 12
+        },
+        "ROCK": {
+          "value": 13
+        },
+        "ROAD": {
+          "value": 14
+        },
+        "RUNWAY": {
+          "value": 15
+        },
+        "BUILDING": {
+          "value": 16
+        }
+      }
+    },
+    "TerrainInterpolation": {
+      "type": "string",
+      "enum": [
+        "NEAREST",
+        "BILINEAR",
+        "BICUBIC",
+        "KRIGING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NEAREST": {
+          "value": 0
+        },
+        "BILINEAR": {
+          "value": 1
+        },
+        "BICUBIC": {
+          "value": 2
+        },
+        "KRIGING": {
+          "value": 3
+        }
+      }
+    },
+    "TRN": {
+      "type": "object",
+      "description": "Terrain Models",
+      "properties": {
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TerrainDataSource"
+          },
+          "x-flatbuffer-type": "[TerrainDataSource]"
+        },
+        "INTERPOLATION": {
+          "$ref": "#/definitions/TerrainInterpolation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NEAREST": {
+              "value": 0
+            },
+            "BILINEAR": {
+              "value": 1
+            },
+            "BICUBIC": {
+              "value": 2
+            },
+            "KRIGING": {
+              "value": 3
+            }
+          }
+        },
+        "CACHE_ENABLED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "MAX_CACHE_TILES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "VERTICAL_EXAGGERATION": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TRN",
+  "x-flatbuffer-root-type": "TRN",
+  "x-flatbuffer-file-identifier": "$TRN"
+}

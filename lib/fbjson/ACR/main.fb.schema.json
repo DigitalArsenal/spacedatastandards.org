@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AircraftType": {
+      "type": "string",
+      "enum": [
+        "FIGHTER",
+        "ATTACK",
+        "BOMBER",
+        "TRANSPORT",
+        "TRAINER",
+        "RECON",
+        "TANKER",
+        "AWACS",
+        "UAV",
+        "PROP_SINGLE",
+        "PROP_MULTI",
+        "SEAPLANE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FIGHTER": {
+          "value": 0
+        },
+        "ATTACK": {
+          "value": 1
+        },
+        "BOMBER": {
+          "value": 2
+        },
+        "TRANSPORT": {
+          "value": 3
+        },
+        "TRAINER": {
+          "value": 4
+        },
+        "RECON": {
+          "value": 5
+        },
+        "TANKER": {
+          "value": 6
+        },
+        "AWACS": {
+          "value": 7
+        },
+        "UAV": {
+          "value": 8
+        },
+        "PROP_SINGLE": {
+          "value": 9
+        },
+        "PROP_MULTI": {
+          "value": 10
+        },
+        "SEAPLANE": {
+          "value": 11
+        }
+      }
+    },
+    "EngineType": {
+      "type": "string",
+      "enum": [
+        "TURBOJET",
+        "TURBOFAN_LOW",
+        "TURBOFAN_HIGH",
+        "TURBOPROP",
+        "PISTON",
+        "RAMJET",
+        "SCRAMJET",
+        "ELECTRIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TURBOJET": {
+          "value": 0
+        },
+        "TURBOFAN_LOW": {
+          "value": 1
+        },
+        "TURBOFAN_HIGH": {
+          "value": 2
+        },
+        "TURBOPROP": {
+          "value": 3
+        },
+        "PISTON": {
+          "value": 4
+        },
+        "RAMJET": {
+          "value": 5
+        },
+        "SCRAMJET": {
+          "value": 6
+        },
+        "ELECTRIC": {
+          "value": 7
+        }
+      }
+    },
+    "FlightPhase": {
+      "type": "string",
+      "enum": [
+        "PARKED",
+        "TAXI",
+        "TAKEOFF",
+        "CLIMB",
+        "CRUISE",
+        "DESCENT",
+        "APPROACH",
+        "LANDING",
+        "GO_AROUND",
+        "EMERGENCY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PARKED": {
+          "value": 0
+        },
+        "TAXI": {
+          "value": 1
+        },
+        "TAKEOFF": {
+          "value": 2
+        },
+        "CLIMB": {
+          "value": 3
+        },
+        "CRUISE": {
+          "value": 4
+        },
+        "DESCENT": {
+          "value": 5
+        },
+        "APPROACH": {
+          "value": 6
+        },
+        "LANDING": {
+          "value": 7
+        },
+        "GO_AROUND": {
+          "value": 8
+        },
+        "EMERGENCY": {
+          "value": 9
+        }
+      }
+    },
+    "GearState": {
+      "type": "string",
+      "enum": [
+        "UP",
+        "TRANSIT_DOWN",
+        "DOWN",
+        "TRANSIT_UP",
+        "DAMAGED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UP": {
+          "value": 0
+        },
+        "TRANSIT_DOWN": {
+          "value": 1
+        },
+        "DOWN": {
+          "value": 2
+        },
+        "TRANSIT_UP": {
+          "value": 3
+        },
+        "DAMAGED": {
+          "value": 4
+        }
+      }
+    },
+    "ACR": {
+      "type": "object",
+      "description": "Aircraft Dynamics",
+      "properties": {
+        "POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CG_X": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "CG_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "AERO": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTROLS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENGINE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEAR_STATE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "GEAR_POSITION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLAP_POSITION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SPEEDBRAKE_POS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLIGHT_PHASE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "AUTOPILOT_MODE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "WEIGHT_ON_WHEELS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ACR",
+  "x-flatbuffer-root-type": "ACR",
+  "x-flatbuffer-file-identifier": "$ACR"
+}

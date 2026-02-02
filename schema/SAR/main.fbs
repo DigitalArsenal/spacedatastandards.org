@@ -1,0 +1,70 @@
+// Hash: e86ecf4ac051f9fa266c644f3d8ef9216679a329e1879161baffc4c18019ad3f
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// SAR Observation
+table SAR {
+  ID:string;
+  SAT_NO:int;
+  ORIG_OBJECT_ID:string;
+  ID_SENSOR:string;
+  ORIG_SENSOR_ID:string;
+  EXTERNAL_ID:string;
+  COLLECTION_ID:string;
+  DETECTION_ID:string;
+  COLLECTION_START:string;
+  COLLECTION_END:string;
+  CENTER_TIME:string;
+  DETECTION_START:string;
+  DETECTION_END:string;
+  DWELL_TIME:double;
+  ORBIT_STATE:string;
+  SAR_MODE:string;
+  OPERATING_BAND:string;
+  OPERATING_FREQ:double;
+  SNR:double;
+  TX_POLARIZATION:string;
+  RX_POLARIZATION:string;
+  GRAZE_ANGLE:double;
+  INCIDENCE_ANGLE:double;
+  SQUINT_ANGLE:double;
+  PULSE_BANDWIDTH:double;
+  PULSE_DURATION:double;
+  CONTINUOUS_SPOT_ANGLE:double;
+  SLANT_RANGE:double;
+  NEAR_RANGE:double;
+  FAR_RANGE:double;
+  SWATH_LENGTH:double;
+  AREA:string;
+  ATEXT:string;
+  AGJSON:string;
+  ATYPE:string;
+  ANDIMS:int;
+  ASRID:int;
+  SPACING_RANGE:double;
+  SPACING_AZIMUTH:double;
+  LOOKS_AZIMUTH:int;
+  LOOKS_RANGE:int;
+  RESOLUTION_RANGE:double;
+  RESOLUTION_AZIMUTH:double;
+  OB_DIRECTION:string;
+  COORD_SYS:string;
+  TARGETPOSX:double;
+  TARGETPOSY:double;
+  TARGETPOSZ:double;
+  SENALT:double;
+  SENVELX:double;
+  SENVELY:double;
+  SENVELZ:double;
+  SENLAT_START:double;
+  SENLON_START:double;
+  SENLAT_END:double;
+  SENLON_END:double;
+  TRANSACTION_ID:string;
+  TAGS:[string];
+  SRC_TYPS:[string];
+  SRC_IDS:[string];
+  ON_ORBIT:string;
+}
+
+root_type SAR;
+file_identifier "$SAR";

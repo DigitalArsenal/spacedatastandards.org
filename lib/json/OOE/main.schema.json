@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOE" : {
+      "type" : "object",
+      "description" : "On-Orbit Event",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "DERIVED_FROM" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_DATE" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_STRING" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "EVENT_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_TIME_NOTES" : {
+                "type" : "string"
+              },
+        "OPERATOR_ORG_ID" : {
+                "type" : "string"
+              },
+        "OWNER_ORG_ID" : {
+                "type" : "string"
+              },
+        "LESSEE_ORG_ID" : {
+                "type" : "string"
+              },
+        "OPERATED_ON_BEHALF_OF_ORG_ID" : {
+                "type" : "string"
+              },
+        "GEO_POSITION" : {
+                "type" : "number"
+              },
+        "PLANE_SLOT" : {
+                "type" : "string"
+              },
+        "PLANE_NUMBER" : {
+                "type" : "string"
+              },
+        "POSITION_STATUS" : {
+                "type" : "string"
+              },
+        "UNTIL_TIME" : {
+                "type" : "string"
+              },
+        "OFFICIAL_LOSS_DATE" : {
+                "type" : "string"
+              },
+        "NET_AMOUNT" : {
+                "type" : "number"
+              },
+        "UNDERLYING_CAUSE" : {
+                "type" : "string"
+              },
+        "CAPABILITY_LOSS" : {
+                "type" : "number"
+              },
+        "CAPACITY_LOSS" : {
+                "type" : "number"
+              },
+        "INSURANCE_LOSS" : {
+                "type" : "number"
+              },
+        "THIRD_PARTY_INSURANCE_LOSS" : {
+                "type" : "number"
+              },
+        "INJURED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "KILLED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LIFE_LOST" : {
+                "type" : "number"
+              },
+        "AGE_AT_EVENT" : {
+                "type" : "number"
+              },
+        "ACHIEVED_FLIGHT_PHASE" : {
+                "type" : "string"
+              },
+        "OCCURRENCE_FLIGHT_PHASE" : {
+                "type" : "string"
+              },
+        "STAGE_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_TYPE_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_PART_AT_FAULT" : {
+                "type" : "string"
+              },
+        "CONSEQUENTIAL_EQUIPMENT_FAILURE" : {
+                "type" : "string"
+              },
+        "INCLINED" : {
+                "type" : "boolean"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "REMARKS" : {
+                "type" : "string"
+              },
+        "INSURANCE_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "CAPABILITY_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "INSURANCE_CARRIED_NOTES" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_CAUSING_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "EVENT_TYPE" : {
+                "type" : "string"
+              },
+        "EVENT_RESULT" : {
+                "type" : "string"
+              },
+        "OBJECT_STATUS" : {
+                "type" : "string"
+              },
+        "SATELLITE_POSITION" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOE"
+}

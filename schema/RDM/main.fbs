@@ -1,0 +1,17 @@
+// Hash: 1c0e8f9267b920d11478fe2cf3a02aed3659c4ad65ca1dba250982489ee08edd
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Reentry Data Message
+table RDM {
+  CCSDS_RDM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  REENTRY_EPOCH:string;
+  REENTRY_LATITUDE:double;
+  REENTRY_LONGITUDE:double;
+}
+
+root_type RDM;
+file_identifier "$RDM";

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TimeScale" : {
+      "type" : "string",
+      "enum": ["UTC", "TAI", "TT", "TDB", "TCG", "TCB", "GPS", "GLONASS", "GALILEO", "BEIDOU", "UT1", "LOCAL_MEAN_SOLAR", "LOCAL_APPARENT_SOLAR", "SIDEREAL"]
+    },
+    "DateFormat" : {
+      "type" : "string",
+      "enum": ["ISO8601", "JULIAN_DATE", "MODIFIED_JULIAN_DATE", "GPS_WEEK_SOW", "YEAR_DOY", "UNIX_EPOCH", "MISSION_ELAPSED"]
+    },
+    "ClockType" : {
+      "type" : "string",
+      "enum": ["CESIUM", "RUBIDIUM", "QUARTZ_TCXO", "QUARTZ_OCXO", "HYDROGEN_MASER", "GPS_DISCIPLINED"]
+    },
+    "TME" : {
+      "type" : "object",
+      "description" : "Time Systems",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "CONVERSION_REQUEST" : {
+                "type" : "string"
+              },
+        "LEAP_SECOND_QUERY" : {
+                "type" : "string"
+              },
+        "EOP_QUERY" : {
+                "type" : "string"
+              },
+        "SIDEREAL_QUERY" : {
+                "type" : "string"
+              },
+        "INTERVAL_REQUEST" : {
+                "type" : "string"
+              },
+        "SOLAR_POSITION_QUERY" : {
+                "type" : "string"
+              },
+        "LUNAR_POSITION_QUERY" : {
+                "type" : "string"
+              },
+        "SUNRISE_SUNSET_QUERY" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CLOCK_PROPAGATION" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TME"
+}

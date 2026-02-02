@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DragModel": {
+      "type": "string",
+      "enum": [
+        "G1",
+        "G2",
+        "G5",
+        "G6",
+        "G7",
+        "G8",
+        "GI",
+        "GL",
+        "GS",
+        "RA4",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "G1": {
+          "value": 0
+        },
+        "G2": {
+          "value": 1
+        },
+        "G5": {
+          "value": 2
+        },
+        "G6": {
+          "value": 3
+        },
+        "G7": {
+          "value": 4
+        },
+        "G8": {
+          "value": 5
+        },
+        "GI": {
+          "value": 6
+        },
+        "GL": {
+          "value": 7
+        },
+        "GS": {
+          "value": 8
+        },
+        "RA4": {
+          "value": 9
+        },
+        "CUSTOM": {
+          "value": 10
+        }
+      }
+    },
+    "BallisticModel": {
+      "type": "string",
+      "enum": [
+        "POINT_MASS_2D",
+        "POINT_MASS_3D",
+        "MODIFIED_POINT_MASS",
+        "SIX_DOF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POINT_MASS_2D": {
+          "value": 0
+        },
+        "POINT_MASS_3D": {
+          "value": 1
+        },
+        "MODIFIED_POINT_MASS": {
+          "value": 2
+        },
+        "SIX_DOF": {
+          "value": 3
+        }
+      }
+    },
+    "ProjectileType": {
+      "type": "string",
+      "enum": [
+        "BALL",
+        "HOLLOW_POINT",
+        "BOAT_TAIL",
+        "ARMOR_PIERCING",
+        "ARMOR_PIERCING_INCENDIARY",
+        "TRACER",
+        "SABOT",
+        "SUBCALIBER",
+        "HEAT",
+        "HESH",
+        "HE",
+        "APFSDS",
+        "ARTILLERY_HE",
+        "MORTAR",
+        "GRENADE",
+        "ROCKET"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BALL": {
+          "value": 0
+        },
+        "HOLLOW_POINT": {
+          "value": 1
+        },
+        "BOAT_TAIL": {
+          "value": 2
+        },
+        "ARMOR_PIERCING": {
+          "value": 3
+        },
+        "ARMOR_PIERCING_INCENDIARY": {
+          "value": 4
+        },
+        "TRACER": {
+          "value": 5
+        },
+        "SABOT": {
+          "value": 6
+        },
+        "SUBCALIBER": {
+          "value": 7
+        },
+        "HEAT": {
+          "value": 8
+        },
+        "HESH": {
+          "value": 9
+        },
+        "HE": {
+          "value": 10
+        },
+        "APFSDS": {
+          "value": 11
+        },
+        "ARTILLERY_HE": {
+          "value": 12
+        },
+        "MORTAR": {
+          "value": 13
+        },
+        "GRENADE": {
+          "value": 14
+        },
+        "ROCKET": {
+          "value": 15
+        }
+      }
+    },
+    "StabilizationType": {
+      "type": "string",
+      "enum": [
+        "SPIN",
+        "FIN",
+        "DUAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPIN": {
+          "value": 0
+        },
+        "FIN": {
+          "value": 1
+        },
+        "DUAL": {
+          "value": 2
+        }
+      }
+    },
+    "PenetrationModel": {
+      "type": "string",
+      "enum": [
+        "DE_MARRE",
+        "THOR",
+        "ODERMATT",
+        "ANDERSON",
+        "BRL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DE_MARRE": {
+          "value": 0
+        },
+        "THOR": {
+          "value": 1
+        },
+        "ODERMATT": {
+          "value": 2
+        },
+        "ANDERSON": {
+          "value": 3
+        },
+        "BRL": {
+          "value": 4
+        }
+      }
+    },
+    "BAL": {
+      "type": "object",
+      "description": "Ballistics",
+      "properties": {
+        "COMMAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRAJECTORY_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TABLE_REQUEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRE_CONTROL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PENETRATION_PROJECTILE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PENETRATION_ARMOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMPACT_VELOCITY_MPS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACT_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/BAL",
+  "x-flatbuffer-root-type": "BAL",
+  "x-flatbuffer-file-identifier": "$BAL"
+}

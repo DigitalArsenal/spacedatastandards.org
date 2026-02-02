@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DragModel" : {
+      "type" : "string",
+      "enum": ["G1", "G2", "G5", "G6", "G7", "G8", "GI", "GL", "GS", "RA4", "CUSTOM"]
+    },
+    "BallisticModel" : {
+      "type" : "string",
+      "enum": ["POINT_MASS_2D", "POINT_MASS_3D", "MODIFIED_POINT_MASS", "SIX_DOF"]
+    },
+    "ProjectileType" : {
+      "type" : "string",
+      "enum": ["BALL", "HOLLOW_POINT", "BOAT_TAIL", "ARMOR_PIERCING", "ARMOR_PIERCING_INCENDIARY", "TRACER", "SABOT", "SUBCALIBER", "HEAT", "HESH", "HE", "APFSDS", "ARTILLERY_HE", "MORTAR", "GRENADE", "ROCKET"]
+    },
+    "StabilizationType" : {
+      "type" : "string",
+      "enum": ["SPIN", "FIN", "DUAL"]
+    },
+    "PenetrationModel" : {
+      "type" : "string",
+      "enum": ["DE_MARRE", "THOR", "ODERMATT", "ANDERSON", "BRL"]
+    },
+    "BAL" : {
+      "type" : "object",
+      "description" : "Ballistics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "TRAJECTORY_REQUEST" : {
+                "type" : "string"
+              },
+        "TABLE_REQUEST" : {
+                "type" : "string"
+              },
+        "FIRE_CONTROL" : {
+                "type" : "string"
+              },
+        "PENETRATION_PROJECTILE" : {
+                "type" : "string"
+              },
+        "PENETRATION_ARMOR" : {
+                "type" : "string"
+              },
+        "IMPACT_VELOCITY_MPS" : {
+                "type" : "number"
+              },
+        "IMPACT_ANGLE_DEG" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/BAL"
+}

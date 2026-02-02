@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SEV" : {
+      "type" : "object",
+      "description" : "Space Environment Observation Detail",
+      "properties" : {
+        "OB_TYPE" : {
+                "type" : "string"
+              },
+        "OB_UO_M" : {
+                "type" : "string"
+              },
+        "OB_VALUE" : {
+                "type" : "number"
+              },
+        "OB_STRING" : {
+                "type" : "string"
+              },
+        "OB_ARRAY" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OB_BOOL" : {
+                "type" : "boolean"
+              },
+        "OB_QUALITY" : {
+                "type" : "string"
+              },
+        "OB_DESCRIPTION" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SEV"
+}

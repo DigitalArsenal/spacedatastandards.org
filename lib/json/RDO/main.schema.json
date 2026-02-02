@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RDO" : {
+      "type" : "object",
+      "description" : "Radar Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TRACK_ID" : {
+                "type" : "string"
+              },
+        "OB_POSITION" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "AZIMUTH" : {
+                "type" : "number"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number"
+              },
+        "AZIMUTH_BIAS" : {
+                "type" : "number"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION" : {
+                "type" : "number"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number"
+              },
+        "ELEVATION_BIAS" : {
+                "type" : "number"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number"
+              },
+        "RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_ACCEL" : {
+                "type" : "number"
+              },
+        "RANGE_ACCEL_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_BIAS" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "DOPPLER" : {
+                "type" : "number"
+              },
+        "DOPPLER_UNC" : {
+                "type" : "number"
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "DECLINATION" : {
+                "type" : "number"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "XVEL" : {
+                "type" : "number"
+              },
+        "YVEL" : {
+                "type" : "number"
+              },
+        "ZVEL" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "RCS" : {
+                "type" : "number"
+              },
+        "RCS_UNC" : {
+                "type" : "number"
+              },
+        "ORTHOGONAL_RCS" : {
+                "type" : "number"
+              },
+        "ORTHOGONAL_RCS_UNC" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "BEAM" : {
+                "type" : "number"
+              },
+        "TIMING_BIAS" : {
+                "type" : "number"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RDO"
+}

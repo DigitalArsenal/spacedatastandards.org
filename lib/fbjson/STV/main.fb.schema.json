@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "STVReferenceFrame": {
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ITRF",
+        "EME2000",
+        "TEME",
+        "ICRF",
+        "MOON_CI",
+        "MARS_CI"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0
+        },
+        "ITRF": {
+          "value": 1
+        },
+        "EME2000": {
+          "value": 2
+        },
+        "TEME": {
+          "value": 3
+        },
+        "ICRF": {
+          "value": 4
+        },
+        "MOON_CI": {
+          "value": 5
+        },
+        "MARS_CI": {
+          "value": 6
+        }
+      }
+    },
+    "STV": {
+      "type": "object",
+      "description": "State Vector",
+      "properties": {
+        "EPOCH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REF_FRAME": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLAGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/STV",
+  "x-flatbuffer-root-type": "STV",
+  "x-flatbuffer-file-identifier": "$STV"
+}

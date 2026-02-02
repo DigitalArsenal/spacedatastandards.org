@@ -1,0 +1,15 @@
+// Hash: a71a6e89015e2447d281423aecad666006bd768886883cde2efebb35f16a91ee
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Communications Payload
+table CMS {
+  ID:string;
+  ID_ENTITY:string;
+  NAME:string;
+  DESCRIPTION:string;
+  ENTITY:string;
+  TRANSPONDERS:[string];
+}
+
+root_type CMS;
+file_identifier "$CMS";

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "IRO" : {
+      "type" : "object",
+      "description" : "Infrared Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ENTITY" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/IRO"
+}

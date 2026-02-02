@@ -1,0 +1,83 @@
+// Hash: bd38a7102edf4c0ad0dd878b3a4de8be7a21b17572d22ba808ff59bf9d8510ba
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum AircraftType : byte {
+  FIGHTER = 0,
+  ATTACK = 1,
+  BOMBER = 2,
+  TRANSPORT = 3,
+  TRAINER = 4,
+  RECON = 5,
+  TANKER = 6,
+  AWACS = 7,
+  UAV = 8,
+  PROP_SINGLE = 9,
+  PROP_MULTI = 10,
+  SEAPLANE = 11,
+}
+
+enum EngineType : byte {
+  TURBOJET = 0,
+  TURBOFAN_LOW = 1,       // Low bypass
+  TURBOFAN_HIGH = 2,      // High bypass
+  TURBOPROP = 3,
+  PISTON = 4,
+  RAMJET = 5,
+  SCRAMJET = 6,
+  ELECTRIC = 7,
+}
+
+enum FlightPhase : byte {
+  PARKED = 0,
+  TAXI = 1,
+  TAKEOFF = 2,
+  CLIMB = 3,
+  CRUISE = 4,
+  DESCENT = 5,
+  APPROACH = 6,
+  LANDING = 7,
+  GO_AROUND = 8,
+  EMERGENCY = 9,
+}
+
+enum GearState : byte {
+  UP = 0,
+  TRANSIT_DOWN = 1,
+  DOWN = 2,
+  TRANSIT_UP = 3,
+  DAMAGED = 4,
+}
+
+/// Aircraft Dynamics
+table ACR {
+  POSITION_X:double;
+  POSITION_Y:double;
+  POSITION_Z:double;
+  VELOCITY_X:double;
+  VELOCITY_Y:double;
+  VELOCITY_Z:double;
+  ATTITUDE_X:double;
+  ATTITUDE_Y:double;
+  ATTITUDE_Z:double;
+  ATTITUDE_W:double;
+  OMEGA_X:double;
+  OMEGA_Y:double;
+  OMEGA_Z:double;
+  MASS:double;
+  CG_X:float;
+  CG_Z:float;
+  AERO:string;
+  CONTROLS:string;
+  ENGINE:string;
+  GEAR_STATE:ubyte;
+  GEAR_POSITION:ubyte;
+  FLAP_POSITION:ubyte;
+  SPEEDBRAKE_POS:ubyte;
+  FLIGHT_PHASE:ubyte;
+  AUTOPILOT_MODE:ubyte;
+  WEIGHT_ON_WHEELS:ubyte;
+  RESERVED:ubyte;
+}
+
+root_type ACR;
+file_identifier "$ACR";

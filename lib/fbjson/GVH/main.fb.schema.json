@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "VehicleType": {
+      "type": "string",
+      "enum": [
+        "MBT",
+        "LIGHT_TANK",
+        "IFV",
+        "APC",
+        "SPAA",
+        "SPG",
+        "MLRS",
+        "RECON",
+        "TRUCK",
+        "JEEP",
+        "MRAP",
+        "ENGINEERING",
+        "RECOVERY",
+        "AAA",
+        "SAM",
+        "RADAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MBT": {
+          "value": 0
+        },
+        "LIGHT_TANK": {
+          "value": 1
+        },
+        "IFV": {
+          "value": 2
+        },
+        "APC": {
+          "value": 3
+        },
+        "SPAA": {
+          "value": 4
+        },
+        "SPG": {
+          "value": 5
+        },
+        "MLRS": {
+          "value": 6
+        },
+        "RECON": {
+          "value": 7
+        },
+        "TRUCK": {
+          "value": 8
+        },
+        "JEEP": {
+          "value": 9
+        },
+        "MRAP": {
+          "value": 10
+        },
+        "ENGINEERING": {
+          "value": 11
+        },
+        "RECOVERY": {
+          "value": 12
+        },
+        "AAA": {
+          "value": 13
+        },
+        "SAM": {
+          "value": 14
+        },
+        "RADAR": {
+          "value": 15
+        }
+      }
+    },
+    "DriveType": {
+      "type": "string",
+      "enum": [
+        "TRACKED",
+        "WHEELED_4X4",
+        "WHEELED_6X6",
+        "WHEELED_8X8",
+        "HALF_TRACK"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TRACKED": {
+          "value": 0
+        },
+        "WHEELED_4X4": {
+          "value": 1
+        },
+        "WHEELED_6X6": {
+          "value": 2
+        },
+        "WHEELED_8X8": {
+          "value": 3
+        },
+        "HALF_TRACK": {
+          "value": 4
+        }
+      }
+    },
+    "GVHEngineType": {
+      "type": "string",
+      "enum": [
+        "DIESEL",
+        "GASOLINE",
+        "GAS_TURBINE",
+        "MULTIFUEL",
+        "HYBRID",
+        "ELECTRIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DIESEL": {
+          "value": 0
+        },
+        "GASOLINE": {
+          "value": 1
+        },
+        "GAS_TURBINE": {
+          "value": 2
+        },
+        "MULTIFUEL": {
+          "value": 3
+        },
+        "HYBRID": {
+          "value": 4
+        },
+        "ELECTRIC": {
+          "value": 5
+        }
+      }
+    },
+    "GVH": {
+      "type": "object",
+      "description": "Ground Vehicles",
+      "properties": {
+        "POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SPEED": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "HEADING": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "LATERAL_G": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "LONGITUDINAL_G": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "TURRET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DRIVETRAIN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUSPENSION_LF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUSPENSION_RF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUSPENSION_LR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUSPENSION_RR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VEHICLE_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "DRIVE_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ENGINE_RUNNING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "LIGHTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FUEL_LEVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GVH",
+  "x-flatbuffer-root-type": "GVH",
+  "x-flatbuffer-file-identifier": "$GVH"
+}

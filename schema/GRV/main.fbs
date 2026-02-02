@@ -1,0 +1,55 @@
+// Hash: 69456166cb20cbc46856e74928b8f13f15df2b133a918b55b9220abe854e08f3
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum GravityModelType : byte {
+  POINT_MASS,
+  J2_ONLY,
+  J2_J4,
+  J2_J6,
+  SPHERICAL_HARMONICS,
+  CUSTOM
+}
+
+enum GravityModelName : byte {
+  WGS84,
+  EGM96,
+  EGM2008,
+  GGM05C,
+  JGM3,
+  EIGEN_6C4,
+  GOCO06S,
+  XGM2019E,
+  CUSTOM_MODEL
+}
+
+enum CentralBody : byte {
+  EARTH,
+  MOON,
+  SUN,
+  MARS,
+  JUPITER,
+  SATURN,
+  VENUS,
+  MERCURY,
+  CUSTOM_BODY
+}
+
+/// Gravity Models
+table GRV {
+  MODEL_TYPE:GravityModelType = J2_J4;
+  MODEL_NAME:GravityModelName = EGM2008;
+  CENTRAL_BODY:CentralBody = EARTH;
+  MAX_DEGREE:uint16 = 70;
+  MAX_ORDER:uint16 = 70;
+  // Third body perturbations
+  INCLUDE_SUN:bool = true;
+  INCLUDE_MOON:bool = true;
+  INCLUDE_PLANETS:bool = false;
+  // Tidal effects
+  SOLID_TIDES:bool = false;
+  OCEAN_TIDES:bool = false;
+  POLE_TIDES:bool = false;
+}
+
+root_type GRV;
+file_identifier "$GRV";

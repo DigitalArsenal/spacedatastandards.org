@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MFE" : {
+      "type" : "object",
+      "description" : "Manifold Element Set",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "TMP_SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RAAN" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERIGEE" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "REV_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "B_STAR" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "PERIOD" : {
+                "type" : "number"
+              },
+        "APOGEE" : {
+                "type" : "number"
+              },
+        "PERIGEE" : {
+                "type" : "number"
+              },
+        "LINE1" : {
+                "type" : "string"
+              },
+        "LINE2" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MFE"
+}

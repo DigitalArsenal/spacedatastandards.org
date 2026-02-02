@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MissileType": {
+      "type": "string",
+      "enum": [
+        "AAM_IR",
+        "AAM_SARH",
+        "AAM_ARH",
+        "SAM_IR",
+        "SAM_SARH",
+        "SAM_COMMAND",
+        "ASM_AR",
+        "ASM_TV",
+        "ASM_LASER",
+        "ATGM_SACLOS",
+        "ATGM_BEAM",
+        "ATGM_TOP",
+        "CRUISE",
+        "BALLISTIC",
+        "TORPEDO"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AAM_IR": {
+          "value": 0
+        },
+        "AAM_SARH": {
+          "value": 1
+        },
+        "AAM_ARH": {
+          "value": 2
+        },
+        "SAM_IR": {
+          "value": 3
+        },
+        "SAM_SARH": {
+          "value": 4
+        },
+        "SAM_COMMAND": {
+          "value": 5
+        },
+        "ASM_AR": {
+          "value": 6
+        },
+        "ASM_TV": {
+          "value": 7
+        },
+        "ASM_LASER": {
+          "value": 8
+        },
+        "ATGM_SACLOS": {
+          "value": 9
+        },
+        "ATGM_BEAM": {
+          "value": 10
+        },
+        "ATGM_TOP": {
+          "value": 11
+        },
+        "CRUISE": {
+          "value": 12
+        },
+        "BALLISTIC": {
+          "value": 13
+        },
+        "TORPEDO": {
+          "value": 14
+        }
+      }
+    },
+    "SeekerType": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "IR_UNCOOLED",
+        "IR_COOLED",
+        "IR_IMAGING",
+        "IR_2COLOR",
+        "RADAR_SARH",
+        "RADAR_ARH",
+        "RADAR_PASSIVE",
+        "TV_OPTICAL",
+        "LASER_SH",
+        "GPS_INS",
+        "ACOUSTIC",
+        "WIRE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "IR_UNCOOLED": {
+          "value": 1
+        },
+        "IR_COOLED": {
+          "value": 2
+        },
+        "IR_IMAGING": {
+          "value": 3
+        },
+        "IR_2COLOR": {
+          "value": 4
+        },
+        "RADAR_SARH": {
+          "value": 5
+        },
+        "RADAR_ARH": {
+          "value": 6
+        },
+        "RADAR_PASSIVE": {
+          "value": 7
+        },
+        "TV_OPTICAL": {
+          "value": 8
+        },
+        "LASER_SH": {
+          "value": 9
+        },
+        "GPS_INS": {
+          "value": 10
+        },
+        "ACOUSTIC": {
+          "value": 11
+        },
+        "WIRE": {
+          "value": 12
+        }
+      }
+    },
+    "GuidanceLaw": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "PURE_PURSUIT",
+        "LEAD_PURSUIT",
+        "PROPORTIONAL_NAV",
+        "AUGMENTED_PN",
+        "OPTIMAL_GUIDANCE",
+        "COMMAND_LOS",
+        "BEAM_RIDING",
+        "TVM",
+        "LOFT",
+        "TERRAIN_FOLLOW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "PURE_PURSUIT": {
+          "value": 1
+        },
+        "LEAD_PURSUIT": {
+          "value": 2
+        },
+        "PROPORTIONAL_NAV": {
+          "value": 3
+        },
+        "AUGMENTED_PN": {
+          "value": 4
+        },
+        "OPTIMAL_GUIDANCE": {
+          "value": 5
+        },
+        "COMMAND_LOS": {
+          "value": 6
+        },
+        "BEAM_RIDING": {
+          "value": 7
+        },
+        "TVM": {
+          "value": 8
+        },
+        "LOFT": {
+          "value": 9
+        },
+        "TERRAIN_FOLLOW": {
+          "value": 10
+        }
+      }
+    },
+    "MissilePhase": {
+      "type": "string",
+      "enum": [
+        "CAPTIVE",
+        "LAUNCH",
+        "BOOST",
+        "SUSTAIN",
+        "COAST",
+        "TERMINAL",
+        "INTERCEPT",
+        "MISS",
+        "SELF_DESTRUCT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CAPTIVE": {
+          "value": 0
+        },
+        "LAUNCH": {
+          "value": 1
+        },
+        "BOOST": {
+          "value": 2
+        },
+        "SUSTAIN": {
+          "value": 3
+        },
+        "COAST": {
+          "value": 4
+        },
+        "TERMINAL": {
+          "value": 5
+        },
+        "INTERCEPT": {
+          "value": 6
+        },
+        "MISS": {
+          "value": 7
+        },
+        "SELF_DESTRUCT": {
+          "value": 8
+        }
+      }
+    },
+    "SeekerStatus": {
+      "type": "string",
+      "enum": [
+        "OFF",
+        "CAGED",
+        "UNCAGED",
+        "ACQUIRING",
+        "TRACKING",
+        "MEMORY",
+        "JAMMED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OFF": {
+          "value": 0
+        },
+        "CAGED": {
+          "value": 1
+        },
+        "UNCAGED": {
+          "value": 2
+        },
+        "ACQUIRING": {
+          "value": 3
+        },
+        "TRACKING": {
+          "value": 4
+        },
+        "MEMORY": {
+          "value": 5
+        },
+        "JAMMED": {
+          "value": 6
+        }
+      }
+    },
+    "MSL": {
+      "type": "object",
+      "description": "Guided Missiles",
+      "properties": {
+        "POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS_INITIAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_POSITION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_POSITION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_POSITION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_VELOCITY_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_VELOCITY_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_VELOCITY_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MISS_DISTANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEEKER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MOTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GUIDANCE_CMD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PHASE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "GUIDANCE_LAW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ARMED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TIME_OF_FLIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MAX_G": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MSL",
+  "x-flatbuffer-root-type": "MSL",
+  "x-flatbuffer-file-identifier": "$MSL"
+}

@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "WTH": {
+      "type": "object",
+      "description": "Weather Data",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIG_PWRS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOISE_LVLS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SPEC_WIDTHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "FIRST_GUESS_AVGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "QC_VALUE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "FILE_CREATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TERM_ALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AVG_TX_PWR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AVG_REF_PWR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SECTOR_NUM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NUM_ELEMENTS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TD_AVG_SAMPLE_NUMS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "CHECKSUM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "CO_INTEGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SPEC_AVGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "INTERPULSE_PERIODS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DOPP_VELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "CONS_RECS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SNRS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SIG_STRENGTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MINOR_AXIS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_ORIENTATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LIGHT_EVENT_NUM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "LIGHT_DET_SENSORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "POS_CONFIDENCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SRC_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/WTH",
+  "x-flatbuffer-root-type": "WTH",
+  "x-flatbuffer-file-identifier": "$WTH"
+}

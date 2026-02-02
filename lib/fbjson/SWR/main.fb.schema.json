@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SWR": {
+      "type": "object",
+      "description": "Short-Wave Infrared",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOLAR_PHASE_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LOCATION_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BAD_WAVE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WAVELENGTHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ABS_FLUXES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "RATIO_WAVELENGTHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "FLUX_RATIOS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SWR",
+  "x-flatbuffer-root-type": "SWR",
+  "x-flatbuffer-file-identifier": "$SWR"
+}

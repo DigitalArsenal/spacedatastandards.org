@@ -1,0 +1,16 @@
+export declare enum PropagationModel {
+    FREE_SPACE = 0,
+    TWO_RAY_GROUND = 1,
+    HATA_URBAN = 2,
+    HATA_SUBURBAN = 3,
+    COST231 = 4,
+    ITU_R_P525 = 5,
+    ITU_R_P676 = 6,
+    ITU_R_P838 = 7,
+    ITU_R_P840 = 8,
+    LONGLEY_RICE = 9,
+    OKUMURA = 10,
+    LOG_DISTANCE = 11,
+    TERRAIN_INTEGRATED = 12
+}
+//# sourceMappingURL=PropagationModel.d.ts.map

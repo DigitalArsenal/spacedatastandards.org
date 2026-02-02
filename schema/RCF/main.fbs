@@ -1,0 +1,41 @@
+// Hash: 9ba3cd56f2f7558372e096a36ec2488d506937357ba0755bd75201a394fd7ced
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum rcfPduType : byte {
+  BIND_INVOCATION,
+  BIND_RETURN,
+  UNBIND_INVOCATION,
+  UNBIND_RETURN,
+  START_INVOCATION,
+  START_RETURN,
+  STOP_INVOCATION,
+  STOP_RETURN,
+  TRANSFER_BUFFER,
+  STATUS_REPORT,
+  PEER_ABORT
+}
+
+/// Return Channel Frames Service (CCSDS 913.5-B-2)
+table RCF {
+  /// PDU type
+  PDU_TYPE:rcfPduType;
+  /// Initiator identifier
+  INITIATOR_ID:string;
+  /// Responder port identifier
+  RESPONDER_PORT_ID:string;
+  /// Service type
+  SERVICE_TYPE:ubyte;
+  /// Version number
+  VERSION:ushort;
+  /// Invoke ID
+  INVOKE_ID:uint;
+  /// Spacecraft ID filter
+  SPACECRAFT_ID:ushort;
+  /// Virtual channel ID filter
+  VIRTUAL_CHANNEL_ID:ubyte;
+  /// Data
+  DATA:[ubyte];
+}
+
+root_type RCF;
+file_identifier "$RCF";

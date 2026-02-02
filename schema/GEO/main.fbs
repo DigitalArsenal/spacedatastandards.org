@@ -1,0 +1,26 @@
+// Hash: 9f794b516d1fd59c04e8d7c2f5303ff639599da2b0f930d08919136693c5632a
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// GEO Spacecraft Status
+table GEO {
+  ID:string;
+  ORIG_OBJECT_ID:string;
+  SS:double;
+  SC:double;
+  RELATIVE_ENERGY:double;
+  LONGITUDE_RATE:double;
+  LONGITUDE_MIN:double;
+  LONGITUDE_MAX:double;
+  CONFIDENCE_LEVEL:string;
+  PLANE_CHANGE_STATUS:string;
+  TROUGH_TYPE:string;
+  LOST_FLAG:bool;
+  SEMI_ANNUAL_CORR_FLAG:bool;
+  OBJECT_STATUS:string;
+  RAW_FILE_URI:string;
+  ON_ORBIT:string;
+  SAT_NO:int;
+}
+
+root_type GEO;
+file_identifier "$GEO";

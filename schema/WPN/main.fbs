@@ -1,0 +1,62 @@
+// Hash: d861f0a93cded96b8a08e2cb2bd7052011ce60ee4674a34c71892a2963975e6f
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum WeaponType : byte {
+  MG_SMALL = 0,       // Small caliber MG (<10mm)
+  MG_HEAVY = 1,       // Heavy MG (10-15mm)
+  AUTOCANNON = 2,     // Autocannon (20-40mm)
+  CANNON = 3,         // Cannon (>40mm)
+  TANK_GUN = 4,       // Tank main gun
+  ARTILLERY = 5,      // Artillery piece
+  MORTAR = 6,         // Mortar
+  ROCKET_UNGUIDED = 7, // Unguided rocket
+  BOMB_DUMB = 8,      // Unguided bomb
+  BOMB_GUIDED = 9,    // Guided bomb (GBU)
+  TORPEDO = 10,       // Torpedo
+  DEPTH_CHARGE = 11,  // Depth charge
+  MINE = 12,          // Naval/land mine
+  GRENADE = 13,       // Grenade
+}
+
+enum FuzeType : byte {
+  CONTACT = 0,        // Contact/impact fuze
+  DELAY = 1,          // Delay fuze
+  TIMED = 2,          // Timed fuze
+  PROXIMITY = 3,      // Proximity fuze (VT)
+  AIRBURST = 4,       // Airburst
+  MAGNETIC = 5,       // Magnetic influence
+  PRESSURE = 6,       // Pressure (mine)
+  SEISMIC = 7,        // Seismic (mine)
+}
+
+enum ProjectilePhase : byte {
+  LOADED = 0,
+  IN_FLIGHT = 1,
+  DETONATED = 2,
+  DUD = 3,
+  IMPACT = 4,
+}
+
+/// Weapons and Munitions
+table WPN {
+  CALIBER:float;
+  MUZZLE_VELOCITY:float;
+  RATE_OF_FIRE:float;
+  DISPERSION:float;
+  AMMO_CAPACITY:ushort;
+  BURST_LENGTH:ushort;
+  RELOAD_TIME:float;
+  OVERHEAT_ROUNDS:ushort;
+  COOLDOWN_RATE:float;
+  ELEVATION_MIN:float;
+  ELEVATION_MAX:float;
+  TRAVERSE_MIN:float;
+  TRAVERSE_MAX:float;
+  SLEW_RATE:float;
+  WEAPON_TYPE:ubyte;
+  FUZE_TYPE:ubyte;
+  RESERVED:[uint8];
+}
+
+root_type WPN;
+file_identifier "$WPN";

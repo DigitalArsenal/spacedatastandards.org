@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ArmorMaterial" : {
+      "type" : "string",
+      "enum": ["RHA", "CHA", "FHA", "HHA", "ALUMINUM", "COMPOSITE", "CERAMIC", "ERA", "NERA", "SPACED", "RUBBER", "STRUCTURAL", "TITANIUM", "KEVLAR", "GLASS"]
+    },
+    "AmmoType" : {
+      "type" : "string",
+      "enum": ["AP", "APC", "APCBC", "APCR", "APDS", "APFSDS", "HEAT", "HEAT_FS", "HESH", "HE", "HE_FRAG", "HEDP", "APHE", "SAP", "ATGM", "TANDEM_HEAT", "TOP_ATTACK", "EFP"]
+    },
+    "PenResult" : {
+      "type" : "string",
+      "enum": ["NO_PENETRATION", "PARTIAL_PEN", "FULL_PEN", "RICOCHET", "SHATTERED", "OVER_MATCH"]
+    },
+    "ARM" : {
+      "type" : "object",
+      "description" : "Armor and Protection",
+      "properties" : {
+        "THICKNESS" : {
+                "type" : "number"
+              },
+        "ANGLE" : {
+                "type" : "number"
+              },
+        "MATERIAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "HARDNESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ERA_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ERA_EFFECTIVENESS" : {
+                "type" : "number"
+              },
+        "ERA_VS_KE" : {
+                "type" : "number"
+              },
+        "RHA_EQUIVALENT" : {
+                "type" : "number"
+              },
+        "NORMAL_X" : {
+                "type" : "number"
+              },
+        "NORMAL_Y" : {
+                "type" : "number"
+              },
+        "NORMAL_Z" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ARM"
+}

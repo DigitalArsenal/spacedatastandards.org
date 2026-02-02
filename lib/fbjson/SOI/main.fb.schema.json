@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SOI": {
+      "type": "object",
+      "description": "Space Object Identification Observation Set",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_CREATE_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_AS_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENLAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENLON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENVELZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NUM_OBS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POLAR_ANGLE_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLAR_ANGLE_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LOS_DECLINATION_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LOS_DECLINATION_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTING_ANGLE_AZ_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTING_ANGLE_AZ_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTING_ANGLE_EL_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTING_ANGLE_EL_END": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_ARRAY_WIDTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "PIXEL_ARRAY_HEIGHT": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NUM_SPECTRAL_FILTERS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SPECTRAL_FILTERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COLLECTION_MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GAIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BINNING_HORIZ": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "BINNING_VERT": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SOLAR_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_MIN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "PIXEL_MAX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "SOFTWARE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SATELLITE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STAR_CAT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CORR_QUALITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "UCT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "VALID_CALIBRATIONS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CALIBRATION_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PERCENT_SAT_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CHANGE_DETECTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "PERIODICITY_CHANGE_DETECTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "BRIGHTNESS_VARIANCE_CHANGE_DETECTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "CHANGE_CONF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_DENSITY_CONF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIODICITY_SAMPLING_CONF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIODICITY_DETECTION_CONF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CALIBRATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPTICAL_SOIOBSERVATION_LIST": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "RADAR_SOIOBSERVATION_LIST": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SOI",
+  "x-flatbuffer-root-type": "SOI",
+  "x-flatbuffer-file-identifier": "$SOI"
+}

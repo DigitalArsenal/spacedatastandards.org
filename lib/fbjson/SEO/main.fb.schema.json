@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SEO": {
+      "type": "object",
+      "description": "Space Environment Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEN_SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEN_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FORECAST": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "DERIVED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATORY_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATORY_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATORY_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTRUMENT_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_POS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SEN_VEL": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "MEAS_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_ENERGY_LEVEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_SET_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARTICLE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEO_LIST": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "QUALITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SRC_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SEO",
+  "x-flatbuffer-root-type": "SEO",
+  "x-flatbuffer-file-identifier": "$SEO"
+}

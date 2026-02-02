@@ -1,0 +1,29 @@
+// Hash: 5685ddaa732fdb6703aa0c0e862b2af1f11fbd7933bca131181b30ce678d1c16
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum STVReferenceFrame : byte {
+  GCRF = 0,       // Geocentric Celestial Reference Frame
+  ITRF = 1,       // International Terrestrial Reference Frame
+  EME2000 = 2,    // Earth Mean Equator J2000
+  TEME = 3,       // True Equator Mean Equinox
+  ICRF = 4,       // International Celestial Reference Frame
+  MOON_CI = 5,    // Moon-centered inertial
+  MARS_CI = 6,    // Mars-centered inertial
+}
+
+/// State Vector
+table STV {
+  EPOCH:double;
+  POS_X:double;
+  POS_Y:double;
+  POS_Z:double;
+  VEL_X:double;
+  VEL_Y:double;
+  VEL_Z:double;
+  REF_FRAME:ubyte;
+  FLAGS:ubyte;
+  RESERVED:[uint8];
+}
+
+root_type STV;
+file_identifier "$STV";

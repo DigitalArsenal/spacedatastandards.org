@@ -1,0 +1,385 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ModuleType": {
+      "type": "string",
+      "enum": [
+        "ENGINE",
+        "TRANSMISSION",
+        "FUEL_TANK",
+        "AMMO_RACK",
+        "AMMO_FIRST_STAGE",
+        "GUN_BREECH",
+        "GUN_BARREL",
+        "TURRET_RING",
+        "TURRET_DRIVE",
+        "TRACKS",
+        "WHEELS",
+        "SUSPENSION",
+        "DRIVER_PORT",
+        "OPTICS_GUNNER",
+        "OPTICS_COMMANDER",
+        "FCS",
+        "RADIO",
+        "HYDRAULICS",
+        "AUTOLOADER",
+        "ERA_BLOCK",
+        "RADAR",
+        "WING_LEFT",
+        "WING_RIGHT",
+        "TAIL",
+        "AILERON_LEFT",
+        "AILERON_RIGHT",
+        "ELEVATOR",
+        "RUDDER",
+        "LANDING_GEAR",
+        "MAIN_ROTOR",
+        "TAIL_ROTOR",
+        "PROPELLER",
+        "BRIDGE",
+        "MAGAZINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ENGINE": {
+          "value": 0
+        },
+        "TRANSMISSION": {
+          "value": 1
+        },
+        "FUEL_TANK": {
+          "value": 2
+        },
+        "AMMO_RACK": {
+          "value": 3
+        },
+        "AMMO_FIRST_STAGE": {
+          "value": 4
+        },
+        "GUN_BREECH": {
+          "value": 5
+        },
+        "GUN_BARREL": {
+          "value": 6
+        },
+        "TURRET_RING": {
+          "value": 7
+        },
+        "TURRET_DRIVE": {
+          "value": 8
+        },
+        "TRACKS": {
+          "value": 9
+        },
+        "WHEELS": {
+          "value": 10
+        },
+        "SUSPENSION": {
+          "value": 11
+        },
+        "DRIVER_PORT": {
+          "value": 12
+        },
+        "OPTICS_GUNNER": {
+          "value": 13
+        },
+        "OPTICS_COMMANDER": {
+          "value": 14
+        },
+        "FCS": {
+          "value": 15
+        },
+        "RADIO": {
+          "value": 16
+        },
+        "HYDRAULICS": {
+          "value": 17
+        },
+        "AUTOLOADER": {
+          "value": 18
+        },
+        "ERA_BLOCK": {
+          "value": 19
+        },
+        "RADAR": {
+          "value": 20
+        },
+        "WING_LEFT": {
+          "value": 21
+        },
+        "WING_RIGHT": {
+          "value": 22
+        },
+        "TAIL": {
+          "value": 23
+        },
+        "AILERON_LEFT": {
+          "value": 24
+        },
+        "AILERON_RIGHT": {
+          "value": 25
+        },
+        "ELEVATOR": {
+          "value": 26
+        },
+        "RUDDER": {
+          "value": 27
+        },
+        "LANDING_GEAR": {
+          "value": 28
+        },
+        "MAIN_ROTOR": {
+          "value": 29
+        },
+        "TAIL_ROTOR": {
+          "value": 30
+        },
+        "PROPELLER": {
+          "value": 31
+        },
+        "BRIDGE": {
+          "value": 32
+        },
+        "MAGAZINE": {
+          "value": 33
+        }
+      }
+    },
+    "ModuleState": {
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "DAMAGED",
+        "CRITICAL",
+        "DESTROYED",
+        "REPAIRING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPERATIONAL": {
+          "value": 0
+        },
+        "DAMAGED": {
+          "value": 1
+        },
+        "CRITICAL": {
+          "value": 2
+        },
+        "DESTROYED": {
+          "value": 3
+        },
+        "REPAIRING": {
+          "value": 4
+        }
+      }
+    },
+    "CrewRole": {
+      "type": "string",
+      "enum": [
+        "COMMANDER",
+        "GUNNER",
+        "DRIVER",
+        "LOADER",
+        "RADIO_OP",
+        "PILOT",
+        "COPILOT",
+        "ENGINEER",
+        "HELMSMAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "COMMANDER": {
+          "value": 0
+        },
+        "GUNNER": {
+          "value": 1
+        },
+        "DRIVER": {
+          "value": 2
+        },
+        "LOADER": {
+          "value": 3
+        },
+        "RADIO_OP": {
+          "value": 4
+        },
+        "PILOT": {
+          "value": 5
+        },
+        "COPILOT": {
+          "value": 6
+        },
+        "ENGINEER": {
+          "value": 7
+        },
+        "HELMSMAN": {
+          "value": 8
+        }
+      }
+    },
+    "CrewState": {
+      "type": "string",
+      "enum": [
+        "ALIVE",
+        "WOUNDED",
+        "UNCONSCIOUS",
+        "DEAD",
+        "BAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ALIVE": {
+          "value": 0
+        },
+        "WOUNDED": {
+          "value": 1
+        },
+        "UNCONSCIOUS": {
+          "value": 2
+        },
+        "DEAD": {
+          "value": 3
+        },
+        "BAILED": {
+          "value": 4
+        }
+      }
+    },
+    "DestructionCause": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "AMMO_DETONATION",
+        "FUEL_FIRE",
+        "CREW_LOST",
+        "STRUCTURAL_FAILURE",
+        "FLOODING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "AMMO_DETONATION": {
+          "value": 1
+        },
+        "FUEL_FIRE": {
+          "value": 2
+        },
+        "CREW_LOST": {
+          "value": 3
+        },
+        "STRUCTURAL_FAILURE": {
+          "value": 4
+        },
+        "FLOODING": {
+          "value": 5
+        }
+      }
+    },
+    "DMG": {
+      "type": "object",
+      "description": "Damage Models",
+      "properties": {
+        "OVERALL_HEALTH": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MOBILITY": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "FIREPOWER": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MODULE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "CREW_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FIRE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLOOD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "IS_DESTROYED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "DESTRUCTION_CAUSE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "EXTINGUISHERS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "REPAIR_ACTIVE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RELOAD_MULTIPLIER": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ACCURACY_MULTIPLIER": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "CREW_ALIVE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "CREW_WOUNDED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/DMG",
+  "x-flatbuffer-root-type": "DMG",
+  "x-flatbuffer-file-identifier": "$DMG"
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ATD": {
+      "type": "object",
+      "description": "Attitude Data Point",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AS_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MOTION_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "Q1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q1_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QC_DOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "X_ANGLE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "Y_ANGLE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "Z_ANGLE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "X_RATE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "Y_RATE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "Z_RATE": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "RA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DECLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CONING_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PREC_PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ATD",
+  "x-flatbuffer-root-type": "ATD",
+  "x-flatbuffer-file-identifier": "$ATD"
+}

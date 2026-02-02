@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SOI" : {
+      "type" : "object",
+      "description" : "Space Object Identification Observation Set",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SENSOR_AS_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "SENVELX" : {
+                "type" : "number"
+              },
+        "SENVELY" : {
+                "type" : "number"
+              },
+        "SENVELZ" : {
+                "type" : "number"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "POLAR_ANGLE_START" : {
+                "type" : "number"
+              },
+        "POLAR_ANGLE_END" : {
+                "type" : "number"
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "LOS_DECLINATION_START" : {
+                "type" : "number"
+              },
+        "LOS_DECLINATION_END" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_AZ_START" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_AZ_END" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_EL_START" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_EL_END" : {
+                "type" : "number"
+              },
+        "PIXEL_ARRAY_WIDTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_ARRAY_HEIGHT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NUM_SPECTRAL_FILTERS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SPECTRAL_FILTERS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "GAIN" : {
+                "type" : "number"
+              },
+        "BINNING_HORIZ" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "BINNING_VERT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SOLAR_MAG" : {
+                "type" : "number"
+              },
+        "PIXEL_MIN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_MAX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SOFTWARE_VERSION" : {
+                "type" : "string"
+              },
+        "SATELLITE_NAME" : {
+                "type" : "string"
+              },
+        "STAR_CAT_NAME" : {
+                "type" : "string"
+              },
+        "CORR_QUALITY" : {
+                "type" : "number"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "VALID_CALIBRATIONS" : {
+                "type" : "string"
+              },
+        "CALIBRATION_TYPE" : {
+                "type" : "string"
+              },
+        "PERCENT_SAT_THRESHOLD" : {
+                "type" : "number"
+              },
+        "CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "PERIODICITY_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "BRIGHTNESS_VARIANCE_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "CHANGE_CONF" : {
+                "type" : "string"
+              },
+        "COLLECTION_DENSITY_CONF" : {
+                "type" : "string"
+              },
+        "PERIODICITY_SAMPLING_CONF" : {
+                "type" : "string"
+              },
+        "PERIODICITY_DETECTION_CONF" : {
+                "type" : "string"
+              },
+        "COLLECTION_ID" : {
+                "type" : "string"
+              },
+        "CALIBRATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "OPTICAL_SOIOBSERVATION_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RADAR_SOIOBSERVATION_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SOI"
+}

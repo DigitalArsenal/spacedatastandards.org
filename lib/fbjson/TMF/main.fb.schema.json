@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TMF": {
+      "type": "object",
+      "description": "Telemetry Transfer Frame (CCSDS 132.0-B-2)",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Transfer frame version",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SPACECRAFT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Spacecraft identifier",
+          "x-flatbuffer-type": "ushort"
+        },
+        "VIRTUAL_CHANNEL_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Virtual channel identifier",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "OCF_FLAG": {
+          "type": "boolean",
+          "description": "Operational control field flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "MASTER_FRAME_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Master channel frame count",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "VIRTUAL_FRAME_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Virtual channel frame count",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SEC_HDR_FLAG": {
+          "type": "boolean",
+          "description": "Secondary header flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "SYNCH_FLAG": {
+          "type": "boolean",
+          "description": "Synchronization flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "PACKET_ORDER_FLAG": {
+          "type": "boolean",
+          "description": "Packet order flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEGMENT_LENGTH_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Segment length identifier",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FIRST_HDR_POINTER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "First header pointer",
+          "x-flatbuffer-type": "ushort"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Data field",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "OCF": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Operational control field",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "FECF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame error control field",
+          "x-flatbuffer-type": "ushort"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TMF",
+  "x-flatbuffer-root-type": "TMF",
+  "x-flatbuffer-file-identifier": "$TMF"
+}

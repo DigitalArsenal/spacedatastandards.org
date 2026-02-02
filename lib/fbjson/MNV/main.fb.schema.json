@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MNV": {
+      "type": "object",
+      "description": "Spacecraft Maneuver",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "REPORT_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TOTAL_BURN_TIME": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OD_FIT_END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "MANEUVER_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CHARACTERIZATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHARACTERIZATION_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DELTA_POS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_U": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_U": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_EVENT_ID_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRE_EVENT_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRE_EVENT_ID_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRE_EVENT_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRE_POS_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_VEL_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_VEL_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_VEL_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_RADIATION_PRESS_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_BALLISTIC_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_APOGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_RAAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_SMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_GEO_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_DRIFT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_SIGMA_U": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_SIGMA_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_SIGMA_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_EVENT_ID_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_EVENT_ELSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_EVENT_ID_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_EVENT_STATE_VECTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POST_POS_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_VEL_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_VEL_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_VEL_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_RADIATION_PRESS_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_BALLISTIC_COEFF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_APOGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_PERIGEE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_RAAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_SMA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_GEO_LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_DRIFT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_SIGMA_U": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_SIGMA_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_SIGMA_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "POST_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_OBS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE_MODEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE_MODEL_VERSION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_ACCEL_POINTS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "MNVR_ACCEL_TIMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "MNVR_ACCELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "MNVR_ACCEL_UNCS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCED_DATA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOURCED_DATA_TYPES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MNV",
+  "x-flatbuffer-root-type": "MNV",
+  "x-flatbuffer-file-identifier": "$MNV"
+}

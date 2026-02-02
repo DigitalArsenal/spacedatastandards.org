@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "APM": {
+      "type": "object",
+      "description": "Attitude Parameter Message",
+      "properties": {
+        "CCSDS_APM_VERS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "Q1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/APM",
+  "x-flatbuffer-root-type": "APM",
+  "x-flatbuffer-file-identifier": "$APM"
+}

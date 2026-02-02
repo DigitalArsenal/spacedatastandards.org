@@ -1,0 +1,22 @@
+// Hash: a50e812191cea637902c13f54a04270c9eeaa4780dbadc7fc701b194328a9c3b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Communications Channel
+table CHN {
+  ID:string;
+  NAME:string;
+  TYPE:string;
+  BEAM_NAME:string;
+  ID_RFBAND:string;
+  ENCRYPTION:string;
+  PKG:string;
+  RES:string;
+  COMPRESSION:string;
+  VPID:string;
+  APID:string;
+  SID:string;
+  OWNER:string;
+}
+
+root_type CHN;
+file_identifier "$CHN";

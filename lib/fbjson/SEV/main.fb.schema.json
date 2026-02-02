@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SEV": {
+      "type": "object",
+      "description": "Space Environment Observation Detail",
+      "properties": {
+        "OB_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_UO_M": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OB_STRING": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_ARRAY": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "OB_BOOL": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "OB_QUALITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SEV",
+  "x-flatbuffer-root-type": "SEV",
+  "x-flatbuffer-file-identifier": "$SEV"
+}

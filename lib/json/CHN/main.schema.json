@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CHN" : {
+      "type" : "object",
+      "description" : "Communications Channel",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "BEAM_NAME" : {
+                "type" : "string"
+              },
+        "ID_RFBAND" : {
+                "type" : "string"
+              },
+        "ENCRYPTION" : {
+                "type" : "string"
+              },
+        "PKG" : {
+                "type" : "string"
+              },
+        "RES" : {
+                "type" : "string"
+              },
+        "COMPRESSION" : {
+                "type" : "string"
+              },
+        "VPID" : {
+                "type" : "string"
+              },
+        "APID" : {
+                "type" : "string"
+              },
+        "SID" : {
+                "type" : "string"
+              },
+        "OWNER" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CHN"
+}

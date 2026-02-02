@@ -1,0 +1,99 @@
+// Hash: b728257ff462f9b29d8860a88b20bd80731bdf3c04708c07f8a96c3677bb17fb
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum ModuleType : byte {
+  ENGINE = 0,
+  TRANSMISSION = 1,
+  FUEL_TANK = 2,
+  AMMO_RACK = 3,
+  AMMO_FIRST_STAGE = 4,
+  GUN_BREECH = 5,
+  GUN_BARREL = 6,
+  TURRET_RING = 7,
+  TURRET_DRIVE = 8,
+  TRACKS = 9,
+  WHEELS = 10,
+  SUSPENSION = 11,
+  DRIVER_PORT = 12,
+  OPTICS_GUNNER = 13,
+  OPTICS_COMMANDER = 14,
+  FCS = 15,
+  RADIO = 16,
+  HYDRAULICS = 17,
+  AUTOLOADER = 18,
+  ERA_BLOCK = 19,
+  RADAR = 20,
+  WING_LEFT = 21,
+  WING_RIGHT = 22,
+  TAIL = 23,
+  AILERON_LEFT = 24,
+  AILERON_RIGHT = 25,
+  ELEVATOR = 26,
+  RUDDER = 27,
+  LANDING_GEAR = 28,
+  MAIN_ROTOR = 29,
+  TAIL_ROTOR = 30,
+  PROPELLER = 31,
+  BRIDGE = 32,
+  MAGAZINE = 33,
+}
+
+enum ModuleState : byte {
+  OPERATIONAL = 0,
+  DAMAGED = 1,
+  CRITICAL = 2,
+  DESTROYED = 3,
+  REPAIRING = 4,
+}
+
+enum CrewRole : byte {
+  COMMANDER = 0,
+  GUNNER = 1,
+  DRIVER = 2,
+  LOADER = 3,
+  RADIO_OP = 4,
+  PILOT = 5,
+  COPILOT = 6,
+  ENGINEER = 7,
+  HELMSMAN = 8,
+}
+
+enum CrewState : byte {
+  ALIVE = 0,
+  WOUNDED = 1,
+  UNCONSCIOUS = 2,
+  DEAD = 3,
+  BAILED = 4,
+}
+
+enum DestructionCause : byte {
+  NONE = 0,
+  AMMO_DETONATION = 1,
+  FUEL_FIRE = 2,
+  CREW_LOST = 3,
+  STRUCTURAL_FAILURE = 4,
+  FLOODING = 5,
+}
+
+/// Damage Models
+table DMG {
+  OVERALL_HEALTH:float;
+  MOBILITY:float;
+  FIREPOWER:float;
+  MODULE_COUNT:ubyte;
+  CREW_COUNT:ubyte;
+  FIRE_COUNT:ubyte;
+  FLOOD_COUNT:ubyte;
+  IS_DESTROYED:ubyte;
+  DESTRUCTION_CAUSE:ubyte;
+  EXTINGUISHERS:ubyte;
+  REPAIR_ACTIVE:ubyte;
+  RELOAD_MULTIPLIER:float;
+  ACCURACY_MULTIPLIER:float;
+  CREW_ALIVE:ubyte;
+  CREW_WOUNDED:ubyte;
+  RESERVED:[uint8];
+}
+
+root_type DMG;
+file_identifier "$DMG";

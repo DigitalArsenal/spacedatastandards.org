@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "DOA" : {
+      "type" : "object",
+      "description" : "Difference of Arrival",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR1" : {
+                "type" : "string"
+              },
+        "ID_SENSOR2" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID1" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID2" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "SENSOR1_DELAY" : {
+                "type" : "number"
+              },
+        "SENSOR2_DELAY" : {
+                "type" : "number"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SEN2LAT" : {
+                "type" : "number"
+              },
+        "SEN2LON" : {
+                "type" : "number"
+              },
+        "SEN2ALT" : {
+                "type" : "number"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_UNC" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_RATE" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "TDOA" : {
+                "type" : "number"
+              },
+        "TDOA_UNC" : {
+                "type" : "number"
+              },
+        "FDOA" : {
+                "type" : "number"
+              },
+        "FDOA_UNC" : {
+                "type" : "number"
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DOA"
+}

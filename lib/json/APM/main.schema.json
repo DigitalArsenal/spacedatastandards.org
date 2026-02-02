@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "APM" : {
+      "type" : "object",
+      "description" : "Attitude Parameter Message",
+      "properties" : {
+        "CCSDS_APM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/APM"
+}

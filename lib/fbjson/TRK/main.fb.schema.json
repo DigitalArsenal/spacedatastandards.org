@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TRK": {
+      "type": "object",
+      "description": "Track",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CNTCT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_TS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSN_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_NAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_QUAL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_NUM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_STAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_NAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_SPEC": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_PLAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_ACT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MOD_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_ITM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_QUAL": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TRK_PT_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_IDENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IDENT_CRED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "IDENT_REL": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "IDENT_AMP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT_CONF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRK_CONF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECEF_POS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ECEF_VEL": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ECEF_ACC": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SPD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HDNG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COURSE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LCO": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LCS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LC_POS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LC_VEL": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LC_ACC": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "E_NUVEL": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "E_NUPOS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ERR_ELLP": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "CALL_SIGN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTI_SOURCE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "J_SERIES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STRENGTH": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M1V": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M2V": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M3A": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "M3AV": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TRK",
+  "x-flatbuffer-root-type": "TRK",
+  "x-flatbuffer-file-identifier": "$TRK"
+}

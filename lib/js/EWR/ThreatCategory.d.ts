@@ -1,0 +1,18 @@
+export declare enum ThreatCategory {
+    UNKNOWN = 0,
+    EARLY_WARNING = 1,
+    ACQUISITION = 2,
+    TRACKING = 3,
+    GUIDANCE = 4,
+    HEIGHT_FINDER = 5,
+    GCI = 6,
+    AIRBORNE_INTERCEPT = 7,
+    SURFACE_SEARCH = 8,
+    AIR_SEARCH = 9,
+    NAVIGATION = 10,
+    WEATHER = 11,
+    CIVIL = 12,
+    FRIENDLY = 13,
+    IFF = 14
+}
+//# sourceMappingURL=ThreatCategory.d.ts.map

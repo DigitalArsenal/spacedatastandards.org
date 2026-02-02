@@ -1,6 +1,6 @@
 import { fTCheck, refRootName, resolver } from "../../src/js/resolver.js";
 import { writeFileSync } from 'fs';
-import standardsJSON from '../../lib/json/index.json' assert { type: 'json' };
+import standardsJSON from '../../lib/json/index.json' with { type: 'json' };
 import * as standards from '../../lib/js/index.js';
 import { faker } from '@faker-js/faker';
 import { execSync } from 'child_process';
@@ -18,6 +18,8 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
 
         if (enumValues) {
             fakerValue = faker.number.int({ min: 0, max: enumValues.length - 1 });
+        } else if (type === "integer" && (max > Number.MAX_SAFE_INTEGER || min < Number.MIN_SAFE_INTEGER)) {
+            fakerValue = BigInt(faker.number.int({ min: 0, max: Number.MAX_SAFE_INTEGER }));
         } else if (type === "integer") {
             fakerValue = faker.number.int({ min, max });
         } else if (type === "number") {
@@ -43,7 +45,8 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
         return fakerValue;
     }
 
-    const buildObject = (classProperties, parentClass, tableName, jsonSchema) => {
+    const buildObject = (classProperties, parentClass, tableName, jsonSchema, depth = 0) => {
+        if (depth > 5) return new parentClass[`${tableName}T`];
         let newObject = new parentClass[`${tableName}T`];
 
         for (let x in classProperties) {
@@ -51,7 +54,7 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
             if (!fTCheck(resolvedProp?.type)) {
                 newObject[x] = buildProp(resolvedProp, x);
             } else if (resolvedProp?.type === "object" && classProperties[x]?.type !== "array") {
-                newObject[x] = buildObject(resolvedProp.properties, parentClass, refRootName(resolvedProp.$$ref), jsonSchema);
+                newObject[x] = buildObject(resolvedProp.properties, parentClass, refRootName(resolvedProp.$$ref), jsonSchema, depth + 1);
             } else if (classProperties[x]?.type === "array") {
                 newObject[x] = [];
                 for (let i = 0; i < 2; i++) {
@@ -61,7 +64,8 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
                             resolvedProp?.items || resolvedProp.properties,
                             parentClass,
                             refRootName(resolvedProp.$$ref),
-                            jsonSchema);
+                            jsonSchema,
+                            depth + 1);
                     newObject[x].push(aObject);
                 }
             }

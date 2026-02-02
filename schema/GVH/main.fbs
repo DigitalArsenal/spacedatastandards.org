@@ -1,0 +1,73 @@
+// Hash: 4ef04db9e5a6af9d0fb49bf13674e160bfe1ae5c37bf70f9fcafeb089fb36234
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum VehicleType : byte {
+  MBT = 0,                // Main Battle Tank
+  LIGHT_TANK = 1,         // Light tank
+  IFV = 2,                // Infantry Fighting Vehicle
+  APC = 3,                // Armored Personnel Carrier
+  SPAA = 4,               // Self-propelled anti-aircraft
+  SPG = 5,                // Self-propelled gun
+  MLRS = 6,               // Multiple launch rocket system
+  RECON = 7,              // Reconnaissance vehicle
+  TRUCK = 8,              // Cargo truck
+  JEEP = 9,               // Light utility vehicle
+  MRAP = 10,              // Mine-resistant vehicle
+  ENGINEERING = 11,       // Engineering vehicle
+  RECOVERY = 12,          // Recovery vehicle
+  AAA = 13,               // Anti-aircraft artillery
+  SAM = 14,               // Surface-to-air missile
+  RADAR = 15,             // Radar vehicle
+}
+
+enum DriveType : byte {
+  TRACKED = 0,
+  WHEELED_4X4 = 1,
+  WHEELED_6X6 = 2,
+  WHEELED_8X8 = 3,
+  HALF_TRACK = 4,
+}
+
+enum GVHEngineType : byte {
+  DIESEL = 0,
+  GASOLINE = 1,
+  GAS_TURBINE = 2,
+  MULTIFUEL = 3,
+  HYBRID = 4,
+  ELECTRIC = 5,
+}
+
+/// Ground Vehicles
+table GVH {
+  POSITION_X:double;
+  POSITION_Y:double;
+  POSITION_Z:double;
+  VELOCITY_X:double;
+  VELOCITY_Y:double;
+  VELOCITY_Z:double;
+  ATTITUDE_X:double;
+  ATTITUDE_Y:double;
+  ATTITUDE_Z:double;
+  ATTITUDE_W:double;
+  OMEGA_X:double;
+  OMEGA_Y:double;
+  OMEGA_Z:double;
+  SPEED:float;
+  HEADING:float;
+  LATERAL_G:float;
+  LONGITUDINAL_G:float;
+  TURRET:string;
+  DRIVETRAIN:string;
+  SUSPENSION_LF:string;
+  SUSPENSION_RF:string;
+  SUSPENSION_LR:string;
+  SUSPENSION_RR:string;
+  VEHICLE_TYPE:ubyte;
+  DRIVE_TYPE:ubyte;
+  ENGINE_RUNNING:ubyte;
+  LIGHTS:ubyte;
+  FUEL_LEVEL:float;
+}
+
+root_type GVH;
+file_identifier "$GVH";

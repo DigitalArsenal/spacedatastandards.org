@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MST": {
+      "type": "object",
+      "description": "Missile Track",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_SUB_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_CREATE_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_TYPE_CONF": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "OBJ_PLAT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_IDENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SPACE_AMP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_ACT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SPACE_SPEC_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACFT_SUB_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CALL_SIGN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LOST_TRK_IND": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PARENT_TRACK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MUID_SRC_TRK": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MUID_SRC": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALERT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MSL_STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AOU_RPT_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AOU_RPT_DATA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "CONTAINMENT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRK_CONF": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TRK_QUAL": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ANG_ELEV": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SEN_MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INFO_SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BOOSTING": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "POLAR_SING_LOC_LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLAR_SING_LOC_LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EMG_IND": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "DROP_PT_IND": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SPACE_AMP_CONF": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "LAUNCH_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AZ_CORR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BURNOUT_ALT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_AOU_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_AOU_DATA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "IMPACT_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMPACT_LAT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACT_LON": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACT_AOU_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IMPACT_AOU_DATA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "VECTORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MST",
+  "x-flatbuffer-root-type": "MST",
+  "x-flatbuffer-file-identifier": "$MST"
+}

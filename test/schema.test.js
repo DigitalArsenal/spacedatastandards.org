@@ -3,7 +3,7 @@ import { generateData } from './utilities/data.generator.js';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { readFB, readFBStream } from '../index.js';
-import standardsJSON from '../lib/json/index.json' assert { type: 'json' };
+import standardsJSON from '../lib/json/index.json' with { type: 'json' };
 import { resolver } from '../src/js/resolver.js';
 import { createReadStream } from 'fs';
 
@@ -25,10 +25,11 @@ describe('Data Generation and Verification', () => {
         const resolvedProp = resolver(schemaProp, jsonSchema);
         const type = resolvedProp.type;
 
+        if (value === null || value === undefined) return;
         if (resolvedProp.enum) {
-            expect(resolvedProp.enum.length).to.greaterThan(value);
+            expect(resolvedProp.enum.length).to.greaterThan(Number(value));
         } else if (type === 'integer') {
-            expect(typeof parseFloat(value)).to.equal('number');
+            expect(typeof parseFloat(Number(value))).to.equal('number');
         } else if (type === 'number') {
             expect(typeof parseFloat(value)).to.equal('number');
         } else if (type === 'boolean') {

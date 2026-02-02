@@ -1,0 +1,20 @@
+// Hash: 7facecfb97106de834394af1c85db30bc657fb1a9bc3bc6149a6ca136adf29a2
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Transponder
+table TPN {
+  ID:string;
+  NAME:string;
+  NID:string;
+  TID:string;
+  TTF:double;
+  SYMBOL_RATE:double;
+  FEC:int;
+  MODULATION:string;
+  FORMAT:string;
+  SYSTEM:string;
+  CHANNELS:[string];
+}
+
+root_type TPN;
+file_identifier "$TPN";

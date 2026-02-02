@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOD" : {
+      "type" : "object",
+      "description" : "On-Orbit Object Details",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string"
+              },
+        "VISMAG" : {
+                "type" : "number"
+              },
+        "VISMAG_MIN" : {
+                "type" : "number"
+              },
+        "VISMAG_MAX" : {
+                "type" : "number"
+              },
+        "VISMAG_MEAN" : {
+                "type" : "number"
+              },
+        "RCS" : {
+                "type" : "number"
+              },
+        "RCS_MIN" : {
+                "type" : "number"
+              },
+        "RCS_MAX" : {
+                "type" : "number"
+              },
+        "RCS_MEAN" : {
+                "type" : "number"
+              },
+        "BOL_DELTA_V" : {
+                "type" : "number"
+              },
+        "MAX_DELTA_V" : {
+                "type" : "number"
+              },
+        "DELTA_VUNC" : {
+                "type" : "number"
+              },
+        "EST_DELTA_VDURATION" : {
+                "type" : "number"
+              },
+        "NUM_MISSION" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MISSION_TYPES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "BUS_TYPE" : {
+                "type" : "string"
+              },
+        "GEO_SLOT" : {
+                "type" : "number"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "DRY_MASS" : {
+                "type" : "number"
+              },
+        "ADDITIONAL_MASS" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS_MIN" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS_MAX" : {
+                "type" : "number"
+              },
+        "BOL_FUEL_MASS" : {
+                "type" : "number"
+              },
+        "CURRENT_MASS" : {
+                "type" : "number"
+              },
+        "TOTAL_MASS_UNC" : {
+                "type" : "number"
+              },
+        "SOLAR_ARRAY_AREA" : {
+                "type" : "number"
+              },
+        "MANEUVERABLE" : {
+                "type" : "boolean"
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              },
+        "CROSS_SECTION" : {
+                "type" : "number"
+              },
+        "BUS_CROSS_SECTION" : {
+                "type" : "number"
+              },
+        "MAX_RADIUS" : {
+                "type" : "number"
+              },
+        "COLA_RADIUS" : {
+                "type" : "number"
+              },
+        "ADEPT_RADIUS" : {
+                "type" : "number"
+              },
+        "NUM_DEPLOYABLE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "DEP_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DEP_EST_MASSES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DEP_MASS_UNCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LAST_OB_SOURCE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOD"
+}

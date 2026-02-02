@@ -1,0 +1,88 @@
+// Hash: d481dbc51d12c393c05051a54b18f9bcd06205d429902dd0889f5db96193201f
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum FilterType : byte {
+  ALPHA_BETA,
+  ALPHA_BETA_GAMMA,
+  KALMAN,
+  EXTENDED_KALMAN,
+  UNSCENTED_KALMAN,
+  PARTICLE,
+  IMM,                    // Interacting Multiple Model,
+  JPDA,                   // Joint Probabilistic Data Association,
+  MHT,                    // Multiple Hypothesis Tracking,
+  GNN,                    // Global Nearest Neighbor,
+  NNKF                    // Nearest Neighbor Kalman Filter
+}
+
+enum MotionModel : byte {
+  CONSTANT_VELOCITY,
+  CONSTANT_ACCELERATION,
+  COORDINATED_TURN,
+  SINGER_ACCELERATION,    // Singer maneuver model,
+  JUMP_MARKOV,           // Jump Markov acceleration,
+  BALLISTIC,
+  ORBITAL,
+  SURFACE_VEHICLE,
+  CURVILINEAR
+}
+
+enum MeasurementType : byte {
+  POSITION_3D,            // [x, y, z],
+  POSITION_2D,            // [x, y],
+  RANGE_BEARING,          // [r, az],
+  RANGE_BEARING_ELEVATION,// [r, az, el],
+  RANGE_ONLY,
+  BEARING_ONLY,
+  RANGE_RATE,             // Doppler,
+  ANGLES_ONLY,            // [az, el],
+  TLE,                    // Two-line elements,
+  GPS,                    // GPS measurement,
+  RADAR,                  // Combined radar measurement,
+  ADSB,                   // ADS-B position,
+  SONAR                   // Sonar bearing/range
+}
+
+enum TrackStatus : byte {
+  TENTATIVE,              // Initial detections,
+  CONFIRMED,              // Confirmed track,
+  COASTING,               // No recent update,
+  LOST,                   // Track lost,
+  DELETED                 // Track deleted
+}
+
+enum AssociationMethod : byte {
+  NEAREST_NEIGHBOR,
+  GLOBAL_NEAREST_NEIGHBOR,
+  PROBABILISTIC_DATA,     // PDA,
+  JOINT_PROBABILISTIC,    // JPDA,
+  AUCTION,
+  HUNGARIAN,
+  MUNKRES
+}
+
+enum FusionMethod : byte {
+  SIMPLE_AVERAGE,
+  WEIGHTED_AVERAGE,
+  COVARIANCE_INTERSECTION,
+  BAR_SHALOM_CAMPO,
+  FEDERATED,
+  SEQUENTIAL
+}
+
+/// Tracking and Data Fusion
+table TKG {
+  COMMAND:string;
+  FILTER_CONFIG:string;
+  IMM_CONFIG:string;
+  MHT_CONFIG:string;
+  JPDA_CONFIG:string;
+  FUSION_CONFIG:string;
+  MEASUREMENTS:string;
+  INITIAL_STATE:string;
+  TRACK_TO_UPDATE:string;
+  TRACKS_TO_CORRELATE:[string];
+}
+
+root_type TKG;
+file_identifier "$TKG";

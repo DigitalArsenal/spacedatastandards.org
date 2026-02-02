@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TRK" : {
+      "type" : "object",
+      "description" : "Track",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "CNTCT" : {
+                "type" : "string"
+              },
+        "MSG_TS" : {
+                "type" : "string"
+              },
+        "MSN_ID" : {
+                "type" : "string"
+              },
+        "ASSET_NAT" : {
+                "type" : "string"
+              },
+        "ASSET" : {
+                "type" : "string"
+              },
+        "SEN" : {
+                "type" : "string"
+              },
+        "SEN_QUAL" : {
+                "type" : "string"
+              },
+        "TRK_ID" : {
+                "type" : "string"
+              },
+        "TRK_NUM" : {
+                "type" : "string"
+              },
+        "TRK_STAT" : {
+                "type" : "string"
+              },
+        "OBJ_NAT" : {
+                "type" : "string"
+              },
+        "OBJ_ID" : {
+                "type" : "string"
+              },
+        "OBJ_TYPE" : {
+                "type" : "string"
+              },
+        "OBJ_SPEC" : {
+                "type" : "string"
+              },
+        "OBJ_PLAT" : {
+                "type" : "string"
+              },
+        "OBJ_ACT" : {
+                "type" : "string"
+              },
+        "MOD_TYPE" : {
+                "type" : "string"
+              },
+        "TRK_ITM_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "TRK_QUAL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TRK_PT_TYPE" : {
+                "type" : "string"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string"
+              },
+        "IDENT_CRED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "IDENT_REL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "IDENT_AMP" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT_CONF" : {
+                "type" : "number"
+              },
+        "TRK_CONF" : {
+                "type" : "number"
+              },
+        "ECEF_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ECEF_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ECEF_ACC" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "SPD" : {
+                "type" : "number"
+              },
+        "HDNG" : {
+                "type" : "number"
+              },
+        "COURSE" : {
+                "type" : "number"
+              },
+        "LCO" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_ACC" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "E_NUVEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "E_NUPOS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ERR_ELLP" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CALL_SIGN" : {
+                "type" : "string"
+              },
+        "MULTI_SOURCE" : {
+                "type" : "boolean"
+              },
+        "J_SERIES" : {
+                "type" : "string"
+              },
+        "STRENGTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M1V" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M2V" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M3A" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M3AV" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TRK"
+}

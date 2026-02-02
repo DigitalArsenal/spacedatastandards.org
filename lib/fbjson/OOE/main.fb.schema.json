@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOE": {
+      "type": "object",
+      "description": "On-Orbit Event",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DERIVED_FROM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_STRING": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_TIME_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR_ORG_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OWNER_ORG_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LESSEE_ORG_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATED_ON_BEHALF_OF_ORG_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEO_POSITION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PLANE_SLOT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PLANE_NUMBER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UNTIL_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OFFICIAL_LOSS_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NET_AMOUNT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "UNDERLYING_CAUSE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CAPABILITY_LOSS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CAPACITY_LOSS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INSURANCE_LOSS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "THIRD_PARTY_INSURANCE_LOSS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INJURED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "KILLED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "LIFE_LOST": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_AT_EVENT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ACHIEVED_FLIGHT_PHASE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OCCURRENCE_FLIGHT_PHASE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STAGE_AT_FAULT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EQUIPMENT_AT_FAULT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EQUIPMENT_TYPE_AT_FAULT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EQUIPMENT_PART_AT_FAULT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSEQUENTIAL_EQUIPMENT_FAILURE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INCLINED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INSURANCE_LOSS_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CAPABILITY_LOSS_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INSURANCE_CARRIED_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EQUIPMENT_CAUSING_LOSS_NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_RESULT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SATELLITE_POSITION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOE",
+  "x-flatbuffer-root-type": "OOE",
+  "x-flatbuffer-file-identifier": "$OOE"
+}

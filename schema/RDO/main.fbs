@@ -1,0 +1,61 @@
+// Hash: 260b64900b461cf4a3fa8fc6127603aa2bdd4aac11b245bf3ac44246804e4d07
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Radar Observation
+table RDO {
+  ID:string;
+  OB_TIME:string;
+  ID_SENSOR:string;
+  SAT_NO:int;
+  TASK_ID:string;
+  TRANSACTION_ID:string;
+  TRACK_ID:string;
+  OB_POSITION:string;
+  ORIG_OBJECT_ID:string;
+  ORIG_SENSOR_ID:string;
+  UCT:bool;
+  AZIMUTH:double;
+  AZIMUTH_UNC:double;
+  AZIMUTH_BIAS:double;
+  AZIMUTH_RATE:double;
+  ELEVATION:double;
+  ELEVATION_UNC:double;
+  ELEVATION_BIAS:double;
+  ELEVATION_RATE:double;
+  RANGE:double;
+  RANGE_ACCEL:double;
+  RANGE_ACCEL_UNC:double;
+  RANGE_UNC:double;
+  RANGE_BIAS:double;
+  RANGE_RATE:double;
+  RANGE_RATE_UNC:double;
+  DOPPLER:double;
+  DOPPLER_UNC:double;
+  RA:double;
+  DECLINATION:double;
+  X:double;
+  Y:double;
+  Z:double;
+  XVEL:double;
+  YVEL:double;
+  ZVEL:double;
+  SENX:double;
+  SENY:double;
+  SENZ:double;
+  RCS:double;
+  RCS_UNC:double;
+  ORTHOGONAL_RCS:double;
+  ORTHOGONAL_RCS_UNC:double;
+  SNR:double;
+  BEAM:double;
+  TIMING_BIAS:double;
+  RAW_FILE_URI:string;
+  TAGS:[string];
+  ON_ORBIT:string;
+  SEN_REFERENCE_FRAME:string;
+  DESCRIPTOR:string;
+  TYPE:string;
+}
+
+root_type RDO;
+file_identifier "$RDO";

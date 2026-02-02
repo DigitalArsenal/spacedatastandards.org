@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TPN" : {
+      "type" : "object",
+      "description" : "Transponder",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "NID" : {
+                "type" : "string"
+              },
+        "TID" : {
+                "type" : "string"
+              },
+        "TTF" : {
+                "type" : "number"
+              },
+        "SYMBOL_RATE" : {
+                "type" : "number"
+              },
+        "FEC" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "FORMAT" : {
+                "type" : "string"
+              },
+        "SYSTEM" : {
+                "type" : "string"
+              },
+        "CHANNELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TPN"
+}

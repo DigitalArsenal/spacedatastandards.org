@@ -1,0 +1,19 @@
+// Hash: 8786facdc073384acf17eebb6f7f28c49a88140fe1b5dfdbd645f5b525311716
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Attitude Parameter Message
+table APM {
+  CCSDS_APM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  EPOCH:string;
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+}
+
+root_type APM;
+file_identifier "$APM";

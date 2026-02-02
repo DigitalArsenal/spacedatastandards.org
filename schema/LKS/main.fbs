@@ -1,0 +1,33 @@
+// Hash: 75c22f66916430c212d016fd5300b64b9cf2f5451c61831120cbb81968a559d2
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Link Status
+table LKS {
+  ID:string;
+  ID_ON_ORBIT1:string;
+  ID_ON_ORBIT2:string;
+  LINK_START_TIME:string;
+  LINK_STOP_TIME:string;
+  CONSTELLATION:string;
+  LINK_NAME:string;
+  LINK_TYPE:string;
+  BAND:string;
+  ID_BEAM1:string;
+  END_POINT1_NAME:string;
+  END_POINT1_LAT:double;
+  END_POINT1_LON:double;
+  ID_BEAM2:string;
+  END_POINT2_NAME:string;
+  END_POINT2_LAT:double;
+  END_POINT2_LON:double;
+  DATA_RATE1_TO2:double;
+  DATA_RATE2_TO1:double;
+  LINK_STATE:string;
+  SYS_CAP:string;
+  OPS_CAP:string;
+  SAT_NO1:int;
+  SAT_NO2:int;
+}
+
+root_type LKS;
+file_identifier "$LKS";

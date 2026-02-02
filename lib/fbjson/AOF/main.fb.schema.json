@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AOF": {
+      "type": "object",
+      "description": "AOS Transfer Frame (CCSDS 732.0-B-3)",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Transfer frame version",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "SPACECRAFT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Spacecraft identifier",
+          "x-flatbuffer-type": "ushort"
+        },
+        "VIRTUAL_CHANNEL_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Virtual channel identifier",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "VIRTUAL_FRAME_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Virtual channel frame count",
+          "x-flatbuffer-type": "uint"
+        },
+        "REPLAY_FLAG": {
+          "type": "boolean",
+          "description": "Replay flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "VC_FRAME_COUNT_USAGE": {
+          "type": "boolean",
+          "description": "VC frame count usage flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "VC_FRAME_COUNT_CYCLE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "VC frame count cycle",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "INSERT_ZONE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Insert zone",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Data field",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "OCF": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Operational control field",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "FECF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame error control field",
+          "x-flatbuffer-type": "ushort"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AOF",
+  "x-flatbuffer-root-type": "AOF",
+  "x-flatbuffer-file-identifier": "$AOF"
+}

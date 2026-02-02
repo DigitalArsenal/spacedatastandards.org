@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AtmosphereModel": {
+      "type": "string",
+      "enum": [
+        "ISA",
+        "US_STD_1976",
+        "NRLMSISE_00",
+        "SIMPLE",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ISA": {
+          "value": 0
+        },
+        "US_STD_1976": {
+          "value": 1
+        },
+        "NRLMSISE_00": {
+          "value": 2
+        },
+        "SIMPLE": {
+          "value": 3
+        },
+        "CUSTOM": {
+          "value": 4
+        }
+      }
+    },
+    "WeatherCondition": {
+      "type": "string",
+      "enum": [
+        "CLEAR",
+        "FEW_CLOUDS",
+        "SCATTERED",
+        "BROKEN",
+        "OVERCAST",
+        "RAIN_LIGHT",
+        "RAIN_MODERATE",
+        "RAIN_HEAVY",
+        "SNOW_LIGHT",
+        "SNOW_MODERATE",
+        "SNOW_HEAVY",
+        "FOG",
+        "MIST",
+        "HAZE",
+        "THUNDERSTORM",
+        "SANDSTORM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CLEAR": {
+          "value": 0
+        },
+        "FEW_CLOUDS": {
+          "value": 1
+        },
+        "SCATTERED": {
+          "value": 2
+        },
+        "BROKEN": {
+          "value": 3
+        },
+        "OVERCAST": {
+          "value": 4
+        },
+        "RAIN_LIGHT": {
+          "value": 5
+        },
+        "RAIN_MODERATE": {
+          "value": 6
+        },
+        "RAIN_HEAVY": {
+          "value": 7
+        },
+        "SNOW_LIGHT": {
+          "value": 8
+        },
+        "SNOW_MODERATE": {
+          "value": 9
+        },
+        "SNOW_HEAVY": {
+          "value": 10
+        },
+        "FOG": {
+          "value": 11
+        },
+        "MIST": {
+          "value": 12
+        },
+        "HAZE": {
+          "value": 13
+        },
+        "THUNDERSTORM": {
+          "value": 14
+        },
+        "SANDSTORM": {
+          "value": 15
+        }
+      }
+    },
+    "TerrainType": {
+      "type": "string",
+      "enum": [
+        "OCEAN",
+        "WATER_FRESH",
+        "SAND",
+        "GRASS",
+        "FOREST",
+        "CONCRETE",
+        "ASPHALT",
+        "SNOW",
+        "ICE",
+        "ROCK",
+        "MARSH",
+        "URBAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OCEAN": {
+          "value": 0
+        },
+        "WATER_FRESH": {
+          "value": 1
+        },
+        "SAND": {
+          "value": 2
+        },
+        "GRASS": {
+          "value": 3
+        },
+        "FOREST": {
+          "value": 4
+        },
+        "CONCRETE": {
+          "value": 5
+        },
+        "ASPHALT": {
+          "value": 6
+        },
+        "SNOW": {
+          "value": 7
+        },
+        "ICE": {
+          "value": 8
+        },
+        "ROCK": {
+          "value": 9
+        },
+        "MARSH": {
+          "value": 10
+        },
+        "URBAN": {
+          "value": 11
+        }
+      }
+    },
+    "ENV": {
+      "type": "object",
+      "description": "Atmosphere and Environment",
+      "properties": {
+        "ATMOSPHERE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WEATHER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_UTC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SUN_AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "SUN_ELEVATION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MOON_PHASE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ILLUMINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MAGNETIC_DECLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "MAGNETIC_INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ENV",
+  "x-flatbuffer-root-type": "ENV",
+  "x-flatbuffer-file-identifier": "$ENV"
+}

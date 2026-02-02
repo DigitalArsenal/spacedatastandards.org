@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cltuPduType": {
+      "type": "string",
+      "enum": [
+        "BIND_INVOCATION",
+        "BIND_RETURN",
+        "UNBIND_INVOCATION",
+        "UNBIND_RETURN",
+        "START_INVOCATION",
+        "START_RETURN",
+        "STOP_INVOCATION",
+        "STOP_RETURN",
+        "TRANSFER_DATA_INVOCATION",
+        "TRANSFER_DATA_RETURN",
+        "PEER_ABORT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BIND_INVOCATION": {
+          "value": 0
+        },
+        "BIND_RETURN": {
+          "value": 1
+        },
+        "UNBIND_INVOCATION": {
+          "value": 2
+        },
+        "UNBIND_RETURN": {
+          "value": 3
+        },
+        "START_INVOCATION": {
+          "value": 4
+        },
+        "START_RETURN": {
+          "value": 5
+        },
+        "STOP_INVOCATION": {
+          "value": 6
+        },
+        "STOP_RETURN": {
+          "value": 7
+        },
+        "TRANSFER_DATA_INVOCATION": {
+          "value": 8
+        },
+        "TRANSFER_DATA_RETURN": {
+          "value": 9
+        },
+        "PEER_ABORT": {
+          "value": 10
+        }
+      }
+    },
+    "CLT": {
+      "type": "object",
+      "description": "Command Link Transmission Unit Service (CCSDS 912.3-B-2)",
+      "properties": {
+        "PDU_TYPE": {
+          "$ref": "#/definitions/cltuPduType",
+          "description": "PDU type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BIND_INVOCATION": {
+              "value": 0
+            },
+            "BIND_RETURN": {
+              "value": 1
+            },
+            "UNBIND_INVOCATION": {
+              "value": 2
+            },
+            "UNBIND_RETURN": {
+              "value": 3
+            },
+            "START_INVOCATION": {
+              "value": 4
+            },
+            "START_RETURN": {
+              "value": 5
+            },
+            "STOP_INVOCATION": {
+              "value": 6
+            },
+            "STOP_RETURN": {
+              "value": 7
+            },
+            "TRANSFER_DATA_INVOCATION": {
+              "value": 8
+            },
+            "TRANSFER_DATA_RETURN": {
+              "value": 9
+            },
+            "PEER_ABORT": {
+              "value": 10
+            }
+          }
+        },
+        "INITIATOR_ID": {
+          "type": "string",
+          "description": "Initiator identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "RESPONDER_PORT_ID": {
+          "type": "string",
+          "description": "Responder port identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SERVICE_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Service type",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Version number",
+          "x-flatbuffer-type": "ushort"
+        },
+        "INVOKE_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Invoke ID",
+          "x-flatbuffer-type": "uint"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "CLTU data",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CLT",
+  "x-flatbuffer-root-type": "CLT",
+  "x-flatbuffer-file-identifier": "$CLT"
+}

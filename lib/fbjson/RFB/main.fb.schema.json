@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RFB": {
+      "type": "object",
+      "description": "RF Band",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ENTITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PURPOSE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQ_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTER_FREQ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK_GAIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EDGE_GAIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BEAMWIDTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARIZATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ERP": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RFB",
+  "x-flatbuffer-root-type": "RFB",
+  "x-flatbuffer-file-identifier": "$RFB"
+}

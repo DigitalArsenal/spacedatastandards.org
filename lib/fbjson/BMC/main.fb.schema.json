@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "BMC": {
+      "type": "object",
+      "description": "Beam Contour",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTOUR_IDX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "GAIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REGION_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOGRAPHY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOGRAPHY_TEXT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOGRAPHY_JSON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOGRAPHY_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOGRAPHY_NDIMS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "GEOGRAPHY_SRID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/BMC",
+  "x-flatbuffer-root-type": "BMC",
+  "x-flatbuffer-file-identifier": "$BMC"
+}

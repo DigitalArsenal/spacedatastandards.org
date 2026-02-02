@@ -1,0 +1,47 @@
+// Hash: b6d3e2d5303693c2cd382f8d921b3f232829d7e4fd60228d0659185bd39b100c
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Object of Interest
+table OOI {
+  ID:string;
+  SAT_NO:int;
+  NAME:string;
+  SENSOR_TASKING_START_TIME:string;
+  SENSOR_TASKING_STOP_TIME:string;
+  PRIORITY:int;
+  STATUS:string;
+  STATUS_DATE:string;
+  DESCRIPTION:string;
+  LAST_OB_TIME:string;
+  MISSED_OB_TIME:string;
+  DELTA_VS:[string];
+  DELTA_TS:[string];
+  SV_EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  XVEL:double;
+  YVEL:double;
+  ZVEL:double;
+  ELSET_EPOCH:string;
+  MEAN_MOTION:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RAAN:double;
+  ARG_OF_PERIGEE:double;
+  MEAN_ANOMALY:double;
+  REV_NO:int;
+  B_STAR:double;
+  MEAN_MOTION_DOT:double;
+  MEAN_MOTION_DDOT:double;
+  SEMI_MAJOR_AXIS:double;
+  PERIOD:double;
+  APOGEE:double;
+  PERIGEE:double;
+  AFFECTED_OBJECTS:[string];
+  ON_ORBIT:string;
+  MANIFOLDS:[string];
+}
+
+root_type OOI;
+file_identifier "$OOI";

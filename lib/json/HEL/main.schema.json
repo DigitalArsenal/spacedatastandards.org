@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RotorType" : {
+      "type" : "string",
+      "enum": ["MAIN", "TAIL", "TANDEM_FRONT", "TANDEM_REAR", "COAXIAL_UPPER", "COAXIAL_LOWER"]
+    },
+    "RotorFlags" : {
+      "type" : "string",
+      "enum": ["NORMAL", "VRS_WARNING", "VRS_ACTIVE", "RBS_WARNING", "RBS_ACTIVE", "OVERSPEED", "UNDERSPEED"]
+    },
+    "HEL" : {
+      "type" : "object",
+      "description" : "Helicopter Dynamics",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "QUAT_W" : {
+                "type" : "number"
+              },
+        "QUAT_X" : {
+                "type" : "number"
+              },
+        "QUAT_Y" : {
+                "type" : "number"
+              },
+        "QUAT_Z" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_X" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_Z" : {
+                "type" : "number"
+              },
+        "MAIN_ROTOR" : {
+                "type" : "string"
+              },
+        "TAIL_ROTOR" : {
+                "type" : "string"
+              },
+        "ENGINE_N1" : {
+                "type" : "number"
+              },
+        "ENGINE_TORQUE" : {
+                "type" : "number"
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/HEL"
+}

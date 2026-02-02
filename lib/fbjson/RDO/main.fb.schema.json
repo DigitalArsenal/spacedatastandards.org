@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RDO": {
+      "type": "object",
+      "description": "Radar Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "TASK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_POSITION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH_BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_ACCEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_ACCEL_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_RATE_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DOPPLER_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DECLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "XVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "YVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ZVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ORTHOGONAL_RCS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ORTHOGONAL_RCS_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SNR": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BEAM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TIMING_BIAS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RAW_FILE_URI": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RDO",
+  "x-flatbuffer-root-type": "RDO",
+  "x-flatbuffer-file-identifier": "$RDO"
+}

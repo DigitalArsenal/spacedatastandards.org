@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RFO" : {
+      "type" : "object",
+      "description" : "RF Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TRACK_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "TRANSPONDER" : {
+                "type" : "string"
+              },
+        "AZIMUTH" : {
+                "type" : "number"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION" : {
+                "type" : "number"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number"
+              },
+        "RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "TRACK_RANGE" : {
+                "type" : "number"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "ELNOT" : {
+                "type" : "string"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "NOMINAL_FREQUENCY" : {
+                "type" : "number"
+              },
+        "START_FREQUENCY" : {
+                "type" : "number"
+              },
+        "END_FREQUENCY" : {
+                "type" : "number"
+              },
+        "RELATIVE_CARRIER_POWER" : {
+                "type" : "number"
+              },
+        "SPECTRUM_ANALYZER_POWER" : {
+                "type" : "number"
+              },
+        "RELATIVE_NOISE_FLOOR" : {
+                "type" : "number"
+              },
+        "REFERENCE_LEVEL" : {
+                "type" : "number"
+              },
+        "PGRI" : {
+                "type" : "number"
+              },
+        "CONFIDENCE" : {
+                "type" : "number"
+              },
+        "INCOMING" : {
+                "type" : "boolean"
+              },
+        "SWITCH_POINT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "BAUD_RATE" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "NOMINAL_SNR" : {
+                "type" : "number"
+              },
+        "POLARITY" : {
+                "type" : "number"
+              },
+        "POLARITY_TYPE" : {
+                "type" : "string"
+              },
+        "CHANNEL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "POWER_OVER_NOISE" : {
+                "type" : "number"
+              },
+        "NOMINAL_POWER_OVER_NOISE" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "NOMINAL_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "RESOLUTION_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "VIDEO_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "EIRP" : {
+                "type" : "number"
+              },
+        "NOMINAL_EIRP" : {
+                "type" : "number"
+              },
+        "MIN_PSD" : {
+                "type" : "number"
+              },
+        "MAX_PSD" : {
+                "type" : "number"
+              },
+        "FREQUENCY_SHIFT" : {
+                "type" : "number"
+              },
+        "PEAK" : {
+                "type" : "boolean"
+              },
+        "ANTENNA_NAME" : {
+                "type" : "string"
+              },
+        "DETECTION_STATUS" : {
+                "type" : "string"
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOISE_PWR_DENSITY" : {
+                "type" : "number"
+              },
+        "CARRIER_STANDARD" : {
+                "type" : "string"
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "INNER_CODING_RATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "OUTER_CODING_RATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TRANSMIT_FILTER_TYPE" : {
+                "type" : "string"
+              },
+        "TRANSMIT_FILTER_ROLL_OFF" : {
+                "type" : "number"
+              },
+        "SYMBOL_TO_NOISE_RATIO" : {
+                "type" : "number"
+              },
+        "BIT_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "URL" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RFO"
+}

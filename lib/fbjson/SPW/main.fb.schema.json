@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "FluxQualifier": {
+      "type": "string",
+      "enum": [
+        "OBSERVED",
+        "BURST_ADJUSTED",
+        "INTERPOLATED_EXTRAPOLATED",
+        "NO_OBSERVATION",
+        "CELESTRAK_INTERPOLATED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OBSERVED": {
+          "value": 0
+        },
+        "BURST_ADJUSTED": {
+          "value": 1
+        },
+        "INTERPOLATED_EXTRAPOLATED": {
+          "value": 2
+        },
+        "NO_OBSERVATION": {
+          "value": 3
+        },
+        "CELESTRAK_INTERPOLATED": {
+          "value": 4
+        }
+      }
+    },
+    "F107DataType": {
+      "type": "string",
+      "enum": [
+        "OBS",
+        "INT",
+        "PRD",
+        "PRM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OBS": {
+          "value": 0
+        },
+        "INT": {
+          "value": 1
+        },
+        "PRD": {
+          "value": 2
+        },
+        "PRM": {
+          "value": 3
+        }
+      }
+    },
+    "SPW": {
+      "type": "object",
+      "description": "Space Weather Data Record",
+      "properties": {
+        "DATE": {
+          "type": "string",
+          "description": "Date in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "BSRN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Bartels Solar Rotation Number",
+          "x-flatbuffer-type": "int"
+        },
+        "ND": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Day within Bartels cycle (1-27)",
+          "x-flatbuffer-type": "int"
+        },
+        "KP1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP3": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP4": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP5": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP6": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP7": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP8": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP_SUM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Sum of the 8 Kp indices for the day",
+          "x-flatbuffer-type": "int"
+        },
+        "AP1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP3": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP4": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP5": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP6": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP7": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP8": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP_AVG": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Arithmetic average of the 8 Ap indices for the day",
+          "x-flatbuffer-type": "int"
+        },
+        "CP": {
+          "type": "number",
+          "description": "Planetary Daily Character Figure (0.0 to 2.5)",
+          "x-flatbuffer-type": "float"
+        },
+        "C9": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "C9 index (0-9)",
+          "x-flatbuffer-type": "int"
+        },
+        "ISN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "International Sunspot Number",
+          "x-flatbuffer-type": "int"
+        },
+        "F107_OBS": {
+          "type": "number",
+          "description": "Observed 10.7cm Solar Radio Flux",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ": {
+          "type": "number",
+          "description": "Adjusted 10.7cm Solar Radio Flux (to 1 AU)",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_DATA_TYPE": {
+          "$ref": "#/definitions/F107DataType",
+          "description": "F10.7 Data Type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OBS": {
+              "value": 0
+            },
+            "INT": {
+              "value": 1
+            },
+            "PRD": {
+              "value": 2
+            },
+            "PRM": {
+              "value": 3
+            }
+          }
+        },
+        "F107_OBS_CENTER81": {
+          "type": "number",
+          "description": "81-day centered average of observed F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_OBS_LAST81": {
+          "type": "number",
+          "description": "81-day trailing average of observed F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ_CENTER81": {
+          "type": "number",
+          "description": "81-day centered average of adjusted F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ_LAST81": {
+          "type": "number",
+          "description": "81-day trailing average of adjusted F10.7",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SPWCOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SPW"
+          },
+          "x-flatbuffer-type": "[SPW]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SPW",
+  "x-flatbuffer-root-type": "SPW",
+  "x-flatbuffer-file-identifier": "$SPW"
+}

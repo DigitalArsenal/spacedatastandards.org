@@ -1,0 +1,50 @@
+// Hash: c0d3d10c04dcf003379de19531769eb137639e9e1084c737833eccb121a7e5f0
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum CoordFrame : byte {
+  // Earth-centered frames
+  ECEF = 0,               // Earth-Centered Earth-Fixed
+  ECI_J2000 = 1,          // Earth-Centered Inertial (J2000)
+  ECI_MOD = 2,            // Mean of Date
+  ECI_TOD = 3,            // True of Date
+  TEME = 4,               // True Equator Mean Equinox
+
+  // Local frames
+  NED = 5,                // North-East-Down (local)
+  ENU = 6,                // East-North-Up (local)
+  BODY = 7,               // Body-fixed
+
+  // Other bodies
+  MOON_CI = 8,            // Moon-centered inertial
+  MOON_CF = 9,            // Moon-centered fixed
+  MARS_CI = 10,           // Mars-centered inertial
+
+  // Specialized
+  GEOCENTRIC = 11,        // Geocentric spherical
+  GEODETIC = 12,          // Geodetic (lat/lon/alt)
+}
+
+enum Ellipsoid : byte {
+  WGS84 = 0,              // World Geodetic System 1984
+  GRS80 = 1,              // Geodetic Reference System 1980
+  WGS72 = 2,              // World Geodetic System 1972
+  SPHERE = 3,             // Perfect sphere
+  MOON = 4,               // Lunar reference ellipsoid
+  MARS = 5,               // Mars reference ellipsoid
+}
+
+/// Coordinate Systems
+table CRD {
+  X:double;
+  Y:double;
+  Z:double;
+  VX:double;
+  VY:double;
+  VZ:double;
+  FRAME:ubyte;
+  ELLIPSOID:ubyte;
+  RESERVED:[uint8];
+}
+
+root_type CRD;
+file_identifier "$CRD";

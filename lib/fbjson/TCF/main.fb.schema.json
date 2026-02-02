@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TCF": {
+      "type": "object",
+      "description": "Telecommand Transfer Frame (CCSDS 232.0-B-3)",
+      "properties": {
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Transfer frame version",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "BYPASS_FLAG": {
+          "type": "boolean",
+          "description": "Bypass flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "CONTROL_CMD_FLAG": {
+          "type": "boolean",
+          "description": "Control command flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "SPACECRAFT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Spacecraft identifier",
+          "x-flatbuffer-type": "ushort"
+        },
+        "VIRTUAL_CHANNEL_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Virtual channel identifier",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FRAME_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame length",
+          "x-flatbuffer-type": "ushort"
+        },
+        "FRAME_SEQUENCE_NUM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Frame sequence number",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Data field",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "FECF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame error control field",
+          "x-flatbuffer-type": "ushort"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TCF",
+  "x-flatbuffer-root-type": "TCF",
+  "x-flatbuffer-file-identifier": "$TCF"
+}

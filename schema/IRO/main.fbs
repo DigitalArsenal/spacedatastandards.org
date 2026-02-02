@@ -1,0 +1,14 @@
+// Hash: e7ac746df05078a5108a269c02719c9427dbfeed44de644800caf81917684d78
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Infrared Observation
+table IRO {
+  ID:string;
+  ID_ENTITY:string;
+  NAME:string;
+  DESCRIPTION:string;
+  ENTITY:string;
+}
+
+root_type IRO;
+file_identifier "$IRO";

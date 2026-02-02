@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SDL" : {
+      "type" : "object",
+      "description" : "Space Data Link Security (CCSDS 355.0-B-1)",
+      "properties" : {
+        "SPI" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Security Parameter Index"
+              },
+        "IV_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Initialization vector length in bytes"
+              },
+        "IV" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Initialization vector"
+              },
+        "MAC_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "MAC length in bytes"
+              },
+        "MAC" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Message authentication code"
+              },
+        "PAD_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Pad length"
+              },
+        "PAYLOAD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Security payload"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SDL"
+}

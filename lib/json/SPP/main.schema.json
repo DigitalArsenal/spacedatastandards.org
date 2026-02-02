@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "packetType" : {
+      "type" : "string",
+      "enum": ["TM", "TC"]
+    },
+    "SPP" : {
+      "type" : "object",
+      "description" : "Space Packet Protocol (CCSDS 133.0-B-1)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Packet version number"
+              },
+        "PACKET_TYPE" : {
+                "$ref" : "#/definitions/packetType",
+                "description" : "Packet type (TM or TC)"
+              },
+        "SEC_HDR_FLAG" : {
+                "type" : "boolean",
+                "description" : "Secondary header flag"
+              },
+        "APID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Application Process Identifier"
+              },
+        "SEQUENCE_FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)"
+              },
+        "SEQUENCE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Sequence count"
+              },
+        "DATA_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Data length minus 1"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Packet data zone"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SPP"
+}

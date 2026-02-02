@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AEMAttitudeEntry": {
+      "type": "object",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "Q1": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RATE_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RATE_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RATE_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AEMSegment": {
+      "type": "object",
+      "properties": {
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME_A": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME_B": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTITUDE_DIR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTITUDE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AEMAttitudeEntry"
+          },
+          "x-flatbuffer-type": "[AEMAttitudeEntry]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AEM": {
+      "type": "object",
+      "description": "Attitude Ephemeris Message",
+      "properties": {
+        "CCSDS_AEM_VERS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AEMSegment"
+          },
+          "x-flatbuffer-type": "[AEMSegment]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AEM",
+  "x-flatbuffer-root-type": "AEM",
+  "x-flatbuffer-file-identifier": "$AEM"
+}

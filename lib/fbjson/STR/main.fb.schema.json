@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "STR": {
+      "type": "object",
+      "description": "Star Catalog Entry",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CS_ID": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        },
+        "GNC_CAT_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "GAIADR3_CAT_ID": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
+        },
+        "HIP_CAT_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "CAT_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DEC_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_UNC_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "PARALLAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PARALLAX_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PMRA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PMRA_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PMDEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PMDEC_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PM_UNC_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "ASTROMETRY_ORIGIN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STAR_EPOCH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "GMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BPMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BPMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RPMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RPMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "JMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "JMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "KMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "KMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HMAG_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VAR_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "MULT_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "NEIGHBOR_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NEIGHBOR_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "NEIGHBOR_DISTANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SHIFT_FLAG": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHIFT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/STR",
+  "x-flatbuffer-root-type": "STR",
+  "x-flatbuffer-file-identifier": "$STR"
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TCF" : {
+      "type" : "object",
+      "description" : "Telecommand Transfer Frame (CCSDS 232.0-B-3)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Transfer frame version"
+              },
+        "BYPASS_FLAG" : {
+                "type" : "boolean",
+                "description" : "Bypass flag"
+              },
+        "CONTROL_CMD_FLAG" : {
+                "type" : "boolean",
+                "description" : "Control command flag"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft identifier"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel identifier"
+              },
+        "FRAME_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame length"
+              },
+        "FRAME_SEQUENCE_NUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Frame sequence number"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data field"
+              },
+        "FECF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame error control field"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TCF"
+}

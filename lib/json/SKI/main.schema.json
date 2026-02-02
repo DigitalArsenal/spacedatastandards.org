@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "SKI" : {
+      "type" : "object",
+      "description" : "Sky Imagery",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "SEN_QUAT" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SEN_QUAT_DOT" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "IMAGE_TYPE" : {
+                "type" : "string"
+              },
+        "EXP_START_TIME" : {
+                "type" : "string"
+              },
+        "EXP_END_TIME" : {
+                "type" : "string"
+              },
+        "IMAGE_SOURCE_INFO" : {
+                "type" : "string"
+              },
+        "TOP_LEFT_START_AZ" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_START_EL" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_STOP_AZ" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_STOP_EL" : {
+                "type" : "number"
+              },
+        "IMAGE_SET_ID" : {
+                "type" : "string"
+              },
+        "IMAGE_SET_LENGTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SEQUENCE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FRAME_FOVWIDTH" : {
+                "type" : "number"
+              },
+        "FRAME_FOVHEIGHT" : {
+                "type" : "number"
+              },
+        "PIXEL_FOVWIDTH" : {
+                "type" : "number"
+              },
+        "PIXEL_FOVHEIGHT" : {
+                "type" : "number"
+              },
+        "FRAME_WIDTH_PIXELS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FRAME_HEIGHT_PIXELS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_BIT_DEPTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ANNOTATION_KEY" : {
+                "type" : "string"
+              },
+        "CALIBRATION_KEY" : {
+                "type" : "string"
+              },
+        "FILENAME" : {
+                "type" : "string"
+              },
+        "FILESIZE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "CHECKSUM_VALUE" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "EO_OBSERVATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SKI"
+}

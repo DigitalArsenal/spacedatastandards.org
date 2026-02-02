@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GNO": {
+      "type": "object",
+      "description": "GNSS Observation",
+      "properties": {
+        "GNSS_SAT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACKING_STATUS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "AGC_STATE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "OBS_CODE_SET": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "OB": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GNO",
+  "x-flatbuffer-root-type": "GNO",
+  "x-flatbuffer-file-identifier": "$GNO"
+}

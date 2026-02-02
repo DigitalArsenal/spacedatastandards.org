@@ -1,0 +1,49 @@
+// Hash: 51e26f8b4daee180117cc4b5ac62543d6b200e6c467b95892e95e1d82f76bce2
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Object Details
+table OOD {
+  ID:string;
+  LAST_OB_TIME:string;
+  VISMAG:double;
+  VISMAG_MIN:double;
+  VISMAG_MAX:double;
+  VISMAG_MEAN:double;
+  RCS:double;
+  RCS_MIN:double;
+  RCS_MAX:double;
+  RCS_MEAN:double;
+  BOL_DELTA_V:double;
+  MAX_DELTA_V:double;
+  DELTA_VUNC:double;
+  EST_DELTA_VDURATION:double;
+  NUM_MISSION:int;
+  MISSION_TYPES:[string];
+  BUS_TYPE:string;
+  GEO_SLOT:double;
+  DRIFT_RATE:double;
+  DRY_MASS:double;
+  ADDITIONAL_MASS:double;
+  LAUNCH_MASS_MIN:double;
+  LAUNCH_MASS:double;
+  LAUNCH_MASS_MAX:double;
+  BOL_FUEL_MASS:double;
+  CURRENT_MASS:double;
+  TOTAL_MASS_UNC:double;
+  SOLAR_ARRAY_AREA:double;
+  MANEUVERABLE:bool;
+  FUEL_REMAINING:double;
+  CROSS_SECTION:double;
+  BUS_CROSS_SECTION:double;
+  MAX_RADIUS:double;
+  COLA_RADIUS:double;
+  ADEPT_RADIUS:double;
+  NUM_DEPLOYABLE:int;
+  DEP_NAMES:[string];
+  DEP_EST_MASSES:[string];
+  DEP_MASS_UNCS:[string];
+  LAST_OB_SOURCE:string;
+}
+
+root_type OOD;
+file_identifier "$OOD";

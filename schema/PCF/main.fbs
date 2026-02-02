@@ -1,0 +1,34 @@
+// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum IntegratorType : ubyte {
+  RK4 = 0,            // Classical Runge-Kutta 4th order
+  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)
+  RK78 = 2,           // Runge-Kutta 7(8)
+  DOPRI5 = 3,         // Dormand-Prince 5(4)
+  DOPRI853 = 4,       // Dormand-Prince 8(5,3)
+  ABM = 5,            // Adams-Bashforth-Moulton
+  BS = 6,             // Bulirsch-Stoer
+  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)
+}
+
+/// Propagator Configuration
+table PCF {
+  STEP_SIZE:double;
+  TOLERANCE:double;
+  MIN_STEP:double;
+  MAX_STEP:double;
+  MAX_ITERATIONS:uint;
+  GRAVITY_DEGREE:ushort;
+  GRAVITY_ORDER:ushort;
+  INTEGRATOR:ubyte;
+  OUTPUT_FRAME:ubyte;
+  FORCE_FLAGS:ushort;
+  DRAG_COEFFICIENT:float;
+  SRP_COEFFICIENT:float;
+  AREA_MASS_RATIO:float;
+  RESERVED:[uint8];
+}
+
+root_type PCF;
+file_identifier "$PCF";

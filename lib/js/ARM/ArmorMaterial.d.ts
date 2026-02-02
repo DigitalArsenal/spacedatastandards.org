@@ -1,0 +1,18 @@
+export declare enum ArmorMaterial {
+    RHA = 0,
+    CHA = 1,
+    FHA = 2,
+    HHA = 3,
+    ALUMINUM = 4,
+    COMPOSITE = 5,
+    CERAMIC = 6,
+    ERA = 7,
+    NERA = 8,
+    SPACED = 9,
+    RUBBER = 10,
+    STRUCTURAL = 11,
+    TITANIUM = 12,
+    KEVLAR = 13,
+    GLASS = 14
+}
+//# sourceMappingURL=ArmorMaterial.d.ts.map

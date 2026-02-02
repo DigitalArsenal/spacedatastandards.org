@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "WTH" : {
+      "type" : "object",
+      "description" : "Weather Data",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "SIG_PWRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOISE_LVLS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPEC_WIDTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FIRST_GUESS_AVGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "QC_VALUE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FILE_CREATION" : {
+                "type" : "string"
+              },
+        "TERM_ALT" : {
+                "type" : "number"
+              },
+        "AVG_TX_PWR" : {
+                "type" : "number"
+              },
+        "AVG_REF_PWR" : {
+                "type" : "number"
+              },
+        "SECTOR_NUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NUM_ELEMENTS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TD_AVG_SAMPLE_NUMS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CHECKSUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "CO_INTEGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPEC_AVGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "INTERPULSE_PERIODS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DOPP_VELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CONS_RECS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SNRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SIG_STRENGTH" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "SEMI_MINOR_AXIS" : {
+                "type" : "number"
+              },
+        "ANGLE_ORIENTATION" : {
+                "type" : "number"
+              },
+        "LIGHT_EVENT_NUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LIGHT_DET_SENSORS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "POS_CONFIDENCE" : {
+                "type" : "number"
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/WTH"
+}

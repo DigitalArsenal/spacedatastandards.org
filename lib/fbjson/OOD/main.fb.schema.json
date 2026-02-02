@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOD": {
+      "type": "object",
+      "description": "On-Orbit Object Details",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_OB_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VISMAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VISMAG_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VISMAG_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VISMAG_MEAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RCS_MEAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BOL_DELTA_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_DELTA_V": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VUNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EST_DELTA_VDURATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_MISSION": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "MISSION_TYPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "BUS_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GEO_SLOT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DRIFT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DRY_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ADDITIONAL_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_MASS_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LAUNCH_MASS_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BOL_FUEL_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CURRENT_MASS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_MASS_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_ARRAY_AREA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MANEUVERABLE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "FUEL_REMAINING": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_SECTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BUS_CROSS_SECTION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COLA_RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ADEPT_RADIUS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_DEPLOYABLE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "DEP_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DEP_EST_MASSES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DEP_MASS_UNCS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LAST_OB_SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOD",
+  "x-flatbuffer-root-type": "OOD",
+  "x-flatbuffer-file-identifier": "$OOD"
+}

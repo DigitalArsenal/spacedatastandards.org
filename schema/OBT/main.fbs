@@ -1,0 +1,46 @@
+// Hash: fe2a089c603908ab964abd243d6e81f9ad658e6998bdf86469404a6dcc433b5c
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Orbit Track
+table OBT {
+  ID:string;
+  SAT_NO:int;
+  ON_ORBIT:string;
+  ORIG_OBJECT_ID:string;
+  TS:string;
+  LAT:double;
+  LON:double;
+  ALT:double;
+  RDF_RF:double;
+  CALL_SIGN:string;
+  RPT_NUM:string;
+  OBJ_IDENT:string;
+  IDENT_AMP:string;
+  SAT_STATUS:string;
+  OBJECT_TYPE:string;
+  COUNTRY_CODE:string;
+  DECAY:double;
+  CHARLIE_LINE:string;
+  AOU_TYPE:string;
+  AOU_DATA:[string];
+  SPD:double;
+  ANG_ELEV:double;
+  CNTNMNT:double;
+  XREF:string;
+  CH_XREF:string;
+  AMPLIFICATION:string;
+  IFF:string;
+  REINFORCED:bool;
+  REDUCED:bool;
+  HQ:bool;
+  DUMMY:bool;
+  TASK_FORCE:bool;
+  FEINT:bool;
+  INSTALLATION:bool;
+  VEH_TYPE:string;
+  TRK_ID:string;
+  TRACK_SENSORS:[string];
+}
+
+root_type OBT;
+file_identifier "$OBT";

@@ -1,0 +1,19 @@
+export declare enum VehicleType {
+    MBT = 0,
+    LIGHT_TANK = 1,
+    IFV = 2,
+    APC = 3,
+    SPAA = 4,
+    SPG = 5,
+    MLRS = 6,
+    RECON = 7,
+    TRUCK = 8,
+    JEEP = 9,
+    MRAP = 10,
+    ENGINEERING = 11,
+    RECOVERY = 12,
+    AAA = 13,
+    SAM = 14,
+    RADAR = 15
+}
+//# sourceMappingURL=VehicleType.d.ts.map

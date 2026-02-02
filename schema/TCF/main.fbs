@@ -1,0 +1,27 @@
+// Hash: cc3f8afe805f9c4ca5f66b4966935d0b09e9ee8b1661457e0daa2cf45794e623
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Telecommand Transfer Frame (CCSDS 232.0-B-3)
+table TCF {
+  /// Transfer frame version
+  VERSION:ubyte;
+  /// Bypass flag
+  BYPASS_FLAG:bool;
+  /// Control command flag
+  CONTROL_CMD_FLAG:bool;
+  /// Spacecraft identifier
+  SPACECRAFT_ID:ushort;
+  /// Virtual channel identifier
+  VIRTUAL_CHANNEL_ID:ubyte;
+  /// Frame length
+  FRAME_LENGTH:ushort;
+  /// Frame sequence number
+  FRAME_SEQUENCE_NUM:ubyte;
+  /// Data field
+  DATA:[ubyte];
+  /// Frame error control field
+  FECF:ushort;
+}
+
+root_type TCF;
+file_identifier "$TCF";

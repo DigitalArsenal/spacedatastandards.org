@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ArmorMaterial": {
+      "type": "string",
+      "enum": [
+        "RHA",
+        "CHA",
+        "FHA",
+        "HHA",
+        "ALUMINUM",
+        "COMPOSITE",
+        "CERAMIC",
+        "ERA",
+        "NERA",
+        "SPACED",
+        "RUBBER",
+        "STRUCTURAL",
+        "TITANIUM",
+        "KEVLAR",
+        "GLASS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RHA": {
+          "value": 0
+        },
+        "CHA": {
+          "value": 1
+        },
+        "FHA": {
+          "value": 2
+        },
+        "HHA": {
+          "value": 3
+        },
+        "ALUMINUM": {
+          "value": 4
+        },
+        "COMPOSITE": {
+          "value": 5
+        },
+        "CERAMIC": {
+          "value": 6
+        },
+        "ERA": {
+          "value": 7
+        },
+        "NERA": {
+          "value": 8
+        },
+        "SPACED": {
+          "value": 9
+        },
+        "RUBBER": {
+          "value": 10
+        },
+        "STRUCTURAL": {
+          "value": 11
+        },
+        "TITANIUM": {
+          "value": 12
+        },
+        "KEVLAR": {
+          "value": 13
+        },
+        "GLASS": {
+          "value": 14
+        }
+      }
+    },
+    "AmmoType": {
+      "type": "string",
+      "enum": [
+        "AP",
+        "APC",
+        "APCBC",
+        "APCR",
+        "APDS",
+        "APFSDS",
+        "HEAT",
+        "HEAT_FS",
+        "HESH",
+        "HE",
+        "HE_FRAG",
+        "HEDP",
+        "APHE",
+        "SAP",
+        "ATGM",
+        "TANDEM_HEAT",
+        "TOP_ATTACK",
+        "EFP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AP": {
+          "value": 0
+        },
+        "APC": {
+          "value": 1
+        },
+        "APCBC": {
+          "value": 2
+        },
+        "APCR": {
+          "value": 3
+        },
+        "APDS": {
+          "value": 4
+        },
+        "APFSDS": {
+          "value": 5
+        },
+        "HEAT": {
+          "value": 6
+        },
+        "HEAT_FS": {
+          "value": 7
+        },
+        "HESH": {
+          "value": 8
+        },
+        "HE": {
+          "value": 9
+        },
+        "HE_FRAG": {
+          "value": 10
+        },
+        "HEDP": {
+          "value": 11
+        },
+        "APHE": {
+          "value": 12
+        },
+        "SAP": {
+          "value": 13
+        },
+        "ATGM": {
+          "value": 14
+        },
+        "TANDEM_HEAT": {
+          "value": 15
+        },
+        "TOP_ATTACK": {
+          "value": 16
+        },
+        "EFP": {
+          "value": 17
+        }
+      }
+    },
+    "PenResult": {
+      "type": "string",
+      "enum": [
+        "NO_PENETRATION",
+        "PARTIAL_PEN",
+        "FULL_PEN",
+        "RICOCHET",
+        "SHATTERED",
+        "OVER_MATCH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NO_PENETRATION": {
+          "value": 0
+        },
+        "PARTIAL_PEN": {
+          "value": 1
+        },
+        "FULL_PEN": {
+          "value": 2
+        },
+        "RICOCHET": {
+          "value": 3
+        },
+        "SHATTERED": {
+          "value": 4
+        },
+        "OVER_MATCH": {
+          "value": 5
+        }
+      }
+    },
+    "ARM": {
+      "type": "object",
+      "description": "Armor and Protection",
+      "properties": {
+        "THICKNESS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MATERIAL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "HARDNESS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "QUALITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ERA_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ERA_EFFECTIVENESS": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "ERA_VS_KE": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "RHA_EQUIVALENT": {
+          "type": "number",
+          "x-flatbuffer-type": "float"
+        },
+        "NORMAL_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMAL_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NORMAL_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ARM",
+  "x-flatbuffer-root-type": "ARM",
+  "x-flatbuffer-file-identifier": "$ARM"
+}

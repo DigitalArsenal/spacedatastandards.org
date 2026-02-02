@@ -1,0 +1,12 @@
+// Hash: d881c2bab930e87aff99f452efd36ed672340a7c88a95c2af31c8393604ed399
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// GEO Drift History
+table DFH {
+  ID:string;
+  EFFECTIVE_UNTIL:string;
+  DRIFT_RATE:double;
+}
+
+root_type DFH;
+file_identifier "$DFH";

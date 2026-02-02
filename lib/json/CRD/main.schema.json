@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CoordFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "ECI_J2000", "ECI_MOD", "ECI_TOD", "TEME", "NED", "ENU", "BODY", "MOON_CI", "MOON_CF", "MARS_CI", "GEOCENTRIC", "GEODETIC"]
+    },
+    "Ellipsoid" : {
+      "type" : "string",
+      "enum": ["WGS84", "GRS80", "WGS72", "SPHERE", "MOON", "MARS"]
+    },
+    "CRD" : {
+      "type" : "object",
+      "description" : "Coordinate Systems",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "VX" : {
+                "type" : "number"
+              },
+        "VY" : {
+                "type" : "number"
+              },
+        "VZ" : {
+                "type" : "number"
+              },
+        "FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ELLIPSOID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CRD"
+}
