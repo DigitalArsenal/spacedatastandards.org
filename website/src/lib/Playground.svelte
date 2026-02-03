@@ -477,7 +477,7 @@
       polyline: {
         positions: positions,
         width: 3,
-        material: Cesium.Color.WHITE
+        material: Cesium.Color.DARKGRAY
       }
     });
 
