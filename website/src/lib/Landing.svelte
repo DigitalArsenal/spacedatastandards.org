@@ -546,6 +546,17 @@ void main() {
 <canvas bind:this={canvas} class="starfield"></canvas>
 
 <section class="hero">
+  <div class="ci-badges">
+    <a href="https://github.com/DigitalArsenal/spacedatastandards.org/actions" target="_blank" rel="noopener">
+      <img src="https://github.com/DigitalArsenal/spacedatastandards.org/actions/workflows/pages/pages-build-deployment/badge.svg" alt="Pages Build" />
+    </a>
+    <a href="https://www.npmjs.com/package/spacedatastandards.org" target="_blank" rel="noopener">
+      <img src="https://img.shields.io/npm/v/spacedatastandards.org.svg?style=flat&colorB=667eea" alt="npm version" />
+    </a>
+    <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/LICENSE" target="_blank" rel="noopener">
+      <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat&colorB=667eea" alt="License" />
+    </a>
+  </div>
   <div class="hero-badge">
     <span class="badge-count">{schemaCount}</span>
     <span>Open Schemas</span>
@@ -767,43 +778,35 @@ void main() {
     <div class="section-header">
       <h2 class="section-title">Quick Start</h2>
       <p class="section-subtitle">
-        Install via npm and start using Space Data Standards in minutes
+        Get started with Space Data Standards in your favorite language
       </p>
     </div>
-    <div class="code-grid">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">bash</span>
-          <span class="code-title">Installation</span>
-        </div>
-        <pre><code>npm install spacedatastandards.org</code></pre>
+    <div class="quickstart-container">
+      <div class="lang-tabs">
+        {#each languages as lang}
+          <button
+            class="lang-tab"
+            class:active={selectedLang === lang.id}
+            on:click={() => selectedLang = lang.id}
+          >
+            {lang.name}
+          </button>
+        {/each}
       </div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">typescript</span>
-          <span class="code-title">Usage Example</span>
+      <div class="quickstart-content">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Installation</span>
+          </div>
+          <pre><code>{quickStartExamples[selectedLang]?.install || ''}</code></pre>
         </div>
-        <pre><code>{`import { writeFB, readFB, standards } from 'spacedatastandards.org';
-
-const { OMMT } = standards.OMM;
-
-// Create an Orbit Mean-Elements Message
-const omm = new OMMT({
-  OBJECT_NAME: "STARLINK-1234",
-  OBJECT_ID: "2024-001A",
-  EPOCH: "2024-06-22T16:56:20.014080",
-  MEAN_MOTION: 15.09,
-  ECCENTRICITY: 0.0001,
-  INCLINATION: 53.0,
-  // ... other orbital elements
-});
-
-// Serialize to FlatBuffer (binary)
-const buffer = writeFB([omm]);
-
-// Read back (zero-copy!)
-const messages = readFB(buffer);
-console.log(messages[0].OBJECT_NAME); // "STARLINK-1234"`}</code></pre>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">{languages.find(l => l.id === selectedLang)?.name || ''}</span>
+            <span class="code-title">OMM Example</span>
+          </div>
+          <pre><code>{quickStartExamples[selectedLang]?.code || ''}</code></pre>
+        </div>
       </div>
     </div>
   </div>
@@ -1117,6 +1120,29 @@ console.log(messages[0].OBJECT_NAME); // "STARLINK-1234"`}</code></pre>
     height: 100%;
     z-index: -1;
     background: #030308;
+  }
+
+  .ci-badges {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ci-badges a {
+    display: inline-flex;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .ci-badges a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .ci-badges img {
+    height: 22px;
+    border-radius: 4px;
   }
 
   .hero {
@@ -1474,6 +1500,50 @@ console.log(messages[0].OBJECT_NAME); // "STARLINK-1234"`}</code></pre>
     background: linear-gradient(180deg, transparent 0%, rgba(102, 126, 234, 0.03) 50%, transparent 100%);
   }
 
+  .quickstart-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .lang-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .lang-tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+
+  .lang-tab:hover {
+    background: var(--ui-hover);
+    border-color: var(--ui-border-hover);
+    color: var(--text-primary);
+  }
+
+  .lang-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .quickstart-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .code-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -1512,6 +1582,7 @@ console.log(messages[0].OBJECT_NAME); // "STARLINK-1234"`}</code></pre>
     margin: 0;
     padding: 16px;
     overflow-x: auto;
+    max-height: 500px;
   }
 
   .code-block code {
