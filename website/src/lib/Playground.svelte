@@ -363,30 +363,43 @@
       return;
     }
 
-    // Create orbit path from state vectors
-    const positions = stateVectors.map(sv =>
-      new Cesium.Cartesian3(sv.x, sv.y, sv.z)
-    );
+    // Interpolate between state vectors to create smooth orbit path
+    const interpolatedPositions: any[] = [];
+    for (let i = 0; i < stateVectors.length - 1; i++) {
+      const sv1 = stateVectors[i];
+      const sv2 = stateVectors[i + 1];
+      // Add 10 interpolated points between each state vector
+      for (let t = 0; t <= 1; t += 0.1) {
+        interpolatedPositions.push(new Cesium.Cartesian3(
+          sv1.x + (sv2.x - sv1.x) * t,
+          sv1.y + (sv2.y - sv1.y) * t,
+          sv1.z + (sv2.z - sv1.z) * t
+        ));
+      }
+    }
+    // Add last point
+    const lastSv = stateVectors[stateVectors.length - 1];
+    interpolatedPositions.push(new Cesium.Cartesian3(lastSv.x, lastSv.y, lastSv.z));
 
-    // Create orbit path
+    // Create orbit path with interpolated positions
     viewer.entities.add({
       name: data.OBJECT_NAME || "Spacecraft",
       polyline: {
-        positions: positions,
+        positions: interpolatedPositions,
         width: 3,
-        material: Cesium.Color.WHITE
+        material: Cesium.Color.CYAN
       }
     });
 
-    // Add markers at each ephemeris point
+    // Add markers at each original ephemeris point
     stateVectors.forEach((sv, idx: number) => {
       viewer.entities.add({
         position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
         point: {
-          pixelSize: idx === 0 ? 12 : 6,
-          color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.fromCssColorString("#17ead9"),
+          pixelSize: idx === 0 ? 12 : 8,
+          color: idx === 0 ? Cesium.Color.LIME : Cesium.Color.YELLOW,
           outlineColor: Cesium.Color.WHITE,
-          outlineWidth: 1
+          outlineWidth: 2
         },
         label: idx === 0 ? {
           text: data.OBJECT_NAME || "Spacecraft",
@@ -401,7 +414,7 @@
       });
     });
 
-    viewer.zoomTo(viewer.entities);
+    // Don't zoom - let user see from home view
   }
 
   // Visualize CDM (conjunction)
