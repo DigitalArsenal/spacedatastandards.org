@@ -48,48 +48,37 @@
       MEAN_MOTION_DOT: 0.00019817,
       MEAN_MOTION_DDOT: 0
     },
-    // =========================================================================
     // OEM - Orbit Ephemeris Message (Compact Row-Major Format)
-    // =========================================================================
-    // This example uses the COMPACT FORMAT with uniform time steps:
-    //   - STEP_SIZE > 0 indicates uniform spacing
-    //   - EPHEMERIS_DATA is a flat row-major array of state vectors
-    //   - STATE_VECTOR_SIZE = 6 means: [X, Y, Z, X_DOT, Y_DOT, Z_DOT] per state
-    //   - Time for state i = START_TIME + (i * STEP_SIZE)
-    //
-    // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
-    // Units: position in km, velocity in km/s
-    // =========================================================================
+    // ISS-like orbit: ~408km altitude, 51.6° inclination
+    // Uses compact format: STEP_SIZE > 0 with flat EPHEMERIS_DATA array
     OEM: {
-      OBJECT_NAME: "STARLINK-1234",
-      OBJECT_ID: "2020-001A",
+      OBJECT_NAME: "ISS (ZARYA)",
+      OBJECT_ID: "1998-067A",
       CENTER_NAME: "EARTH",
       REF_FRAME: "EME2000",
       TIME_SYSTEM: "UTC",
       START_TIME: "2024-06-22T00:00:00.000Z",
-      STOP_TIME: "2024-06-22T06:00:00.000Z",
-
-      // Compact format fields:
-      STEP_SIZE: 3600,           // 1 hour = 3600 seconds between states
-      STATE_VECTOR_SIZE: 6,      // 6 components: X, Y, Z, X_DOT, Y_DOT, Z_DOT
-
-      // Row-major ephemeris array: 7 states × 6 components = 42 values
-      // Each row: [X, Y, Z, X_DOT, Y_DOT, Z_DOT] in km and km/s
+      STOP_TIME: "2024-06-22T01:32:00.000Z",
+      STEP_SIZE: 552,
+      STATE_VECTOR_SIZE: 6,
       EPHEMERIS_DATA: [
-        // State 0: T+0h (2024-06-22T00:00:00Z)
-         6678.137,     0.0,     0.0,     0.0,   7.725,     0.0,
-        // State 1: T+1h (2024-06-22T01:00:00Z)
-         4721.937,  4721.937,   0.0,  -5.462,   5.462,     0.0,
-        // State 2: T+2h (2024-06-22T02:00:00Z)
-            0.0,   6678.137,   0.0,  -7.725,     0.0,     0.0,
-        // State 3: T+3h (2024-06-22T03:00:00Z)
-        -4721.937,  4721.937,   0.0,  -5.462,  -5.462,     0.0,
-        // State 4: T+4h (2024-06-22T04:00:00Z)
-        -6678.137,     0.0,     0.0,     0.0,  -7.725,     0.0,
-        // State 5: T+5h (2024-06-22T05:00:00Z)
-        -4721.937, -4721.937,   0.0,   5.462,  -5.462,     0.0,
-        // State 6: T+6h (2024-06-22T06:00:00Z)
-            0.0,  -6678.137,   0.0,   7.725,     0.0,     0.0
+        6778.0, 0.0, 0.0, 0.0, 4.824, 6.059,
+        4792.2, 4792.2, 1709.0, -3.412, 3.412, 5.350,
+        0.0, 6778.0, 2964.0, -4.824, 0.0, 4.284,
+        -4792.2, 4792.2, 3417.0, -3.412, -3.412, 2.150,
+        -6778.0, 0.0, 2964.0, 0.0, -4.824, 0.0,
+        -4792.2, -4792.2, 1709.0, 3.412, -3.412, -2.150,
+        0.0, -6778.0, 0.0, 4.824, 0.0, -4.284,
+        4792.2, -4792.2, -1709.0, 3.412, 3.412, -5.350,
+        6778.0, 0.0, -2964.0, 0.0, 4.824, -6.059,
+        4792.2, 4792.2, -3417.0, -3.412, 3.412, -2.150,
+        0.0, 6778.0, -2964.0, -4.824, 0.0, 0.0,
+        -4792.2, 4792.2, -1709.0, -3.412, -3.412, 2.150,
+        -6778.0, 0.0, 0.0, 0.0, -4.824, 4.284,
+        -4792.2, -4792.2, 1709.0, 3.412, -3.412, 5.350,
+        0.0, -6778.0, 2964.0, 4.824, 0.0, 4.284,
+        4792.2, -4792.2, 3417.0, 3.412, 3.412, 2.150,
+        6778.0, 0.0, 2964.0, 0.0, 4.824, 0.0
       ]
     },
     CDM: {
