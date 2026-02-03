@@ -553,9 +553,6 @@ void main() {
     serialization with JSON Schema compatibility, replacing legacy formats like TLE, VCM, and XML-based CCSDS messages.
   </p>
   <div class="ci-badges">
-    <a href="/schemas" use:link class="schema-count-badge">
-      <img src="https://img.shields.io/badge/schemas-{schemaCount}+-667eea?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0xNCAySDb2IDIgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOHoiPjwvcGF0aD48cG9seWxpbmUgcG9pbnRzPSIxNCAyIDE0IDggMjAgOCI+PC9wb2x5bGluZT48L3N2Zz4=&labelColor=1a1a2e" alt="Schemas" />
-    </a>
     <a href="https://github.com/DigitalArsenal/spacedatastandards.org/actions" target="_blank" rel="noopener">
       <img src="https://github.com/DigitalArsenal/spacedatastandards.org/actions/workflows/pages/pages-build-deployment/badge.svg" alt="Pages Build" />
     </a>
@@ -564,6 +561,11 @@ void main() {
     </a>
     <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/LICENSE" target="_blank" rel="noopener">
       <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat&colorB=667eea" alt="License" />
+    </a>
+  </div>
+  <div class="schema-badge-row">
+    <a href="/schemas" use:link>
+      <img src="https://img.shields.io/badge/schemas-{schemaCount}+-667eea?style=for-the-badge&labelColor=1a1a2e" alt="Schemas" />
     </a>
   </div>
   <div class="hero-actions">
@@ -1142,6 +1144,27 @@ void main() {
   .ci-badges img {
     height: 22px;
     border-radius: 4px;
+  }
+
+  .schema-badge-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .schema-badge-row a {
+    display: inline-flex;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .schema-badge-row a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .schema-badge-row img {
+    height: 32px;
+    border-radius: 6px;
   }
 
   .hero {

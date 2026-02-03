@@ -48,6 +48,18 @@
       MEAN_MOTION_DOT: 0.00019817,
       MEAN_MOTION_DDOT: 0
     },
+    // =========================================================================
+    // OEM - Orbit Ephemeris Message (Compact Row-Major Format)
+    // =========================================================================
+    // This example uses the COMPACT FORMAT with uniform time steps:
+    //   - STEP_SIZE > 0 indicates uniform spacing
+    //   - EPHEMERIS_DATA is a flat row-major array of state vectors
+    //   - STATE_VECTOR_SIZE = 6 means: [X, Y, Z, X_DOT, Y_DOT, Z_DOT] per state
+    //   - Time for state i = START_TIME + (i * STEP_SIZE)
+    //
+    // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+    // Units: position in km, velocity in km/s
+    // =========================================================================
     OEM: {
       OBJECT_NAME: "STARLINK-1234",
       OBJECT_ID: "2020-001A",
@@ -56,70 +68,28 @@
       TIME_SYSTEM: "UTC",
       START_TIME: "2024-06-22T00:00:00.000Z",
       STOP_TIME: "2024-06-22T06:00:00.000Z",
-      EPHEMERIS: [
-        {
-          EPOCH: "2024-06-22T00:00:00.000Z",
-          X: 6678.137,
-          Y: 0.0,
-          Z: 0.0,
-          X_DOT: 0.0,
-          Y_DOT: 7.725,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T01:00:00.000Z",
-          X: 4721.937,
-          Y: 4721.937,
-          Z: 0.0,
-          X_DOT: -5.462,
-          Y_DOT: 5.462,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T02:00:00.000Z",
-          X: 0.0,
-          Y: 6678.137,
-          Z: 0.0,
-          X_DOT: -7.725,
-          Y_DOT: 0.0,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T03:00:00.000Z",
-          X: -4721.937,
-          Y: 4721.937,
-          Z: 0.0,
-          X_DOT: -5.462,
-          Y_DOT: -5.462,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T04:00:00.000Z",
-          X: -6678.137,
-          Y: 0.0,
-          Z: 0.0,
-          X_DOT: 0.0,
-          Y_DOT: -7.725,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T05:00:00.000Z",
-          X: -4721.937,
-          Y: -4721.937,
-          Z: 0.0,
-          X_DOT: 5.462,
-          Y_DOT: -5.462,
-          Z_DOT: 0.0
-        },
-        {
-          EPOCH: "2024-06-22T06:00:00.000Z",
-          X: 0.0,
-          Y: -6678.137,
-          Z: 0.0,
-          X_DOT: 7.725,
-          Y_DOT: 0.0,
-          Z_DOT: 0.0
-        }
+
+      // Compact format fields:
+      STEP_SIZE: 3600,           // 1 hour = 3600 seconds between states
+      STATE_VECTOR_SIZE: 6,      // 6 components: X, Y, Z, X_DOT, Y_DOT, Z_DOT
+
+      // Row-major ephemeris array: 7 states × 6 components = 42 values
+      // Each row: [X, Y, Z, X_DOT, Y_DOT, Z_DOT] in km and km/s
+      EPHEMERIS_DATA: [
+        // State 0: T+0h (2024-06-22T00:00:00Z)
+         6678.137,     0.0,     0.0,     0.0,   7.725,     0.0,
+        // State 1: T+1h (2024-06-22T01:00:00Z)
+         4721.937,  4721.937,   0.0,  -5.462,   5.462,     0.0,
+        // State 2: T+2h (2024-06-22T02:00:00Z)
+            0.0,   6678.137,   0.0,  -7.725,     0.0,     0.0,
+        // State 3: T+3h (2024-06-22T03:00:00Z)
+        -4721.937,  4721.937,   0.0,  -5.462,  -5.462,     0.0,
+        // State 4: T+4h (2024-06-22T04:00:00Z)
+        -6678.137,     0.0,     0.0,     0.0,  -7.725,     0.0,
+        // State 5: T+5h (2024-06-22T05:00:00Z)
+        -4721.937, -4721.937,   0.0,   5.462,  -5.462,     0.0,
+        // State 6: T+6h (2024-06-22T06:00:00Z)
+            0.0,  -6678.137,   0.0,   7.725,     0.0,     0.0
       ]
     },
     CDM: {
@@ -333,13 +303,58 @@
 
   }
 
-  // Visualize OEM (ephemeris)
+  // Visualize OEM (ephemeris) - supports both compact and verbose formats
   async function visualizeOEM(data: any) {
     const Cesium = getCesium();
-    if (!data.EPHEMERIS || data.EPHEMERIS.length === 0) return;
 
-    const positions = data.EPHEMERIS.map((ep: any) =>
-      new Cesium.Cartesian3(ep.X * 1000, ep.Y * 1000, ep.Z * 1000)
+    // Extract state vectors based on format
+    let stateVectors: Array<{x: number, y: number, z: number}> = [];
+
+    // Check which format is being used:
+    // COMPACT FORMAT: STEP_SIZE > 0 with EPHEMERIS_DATA array
+    // VERBOSE FORMAT: EPHEMERIS_DATA_LINES or EPHEMERIS with per-entry epochs
+
+    if (data.STEP_SIZE && data.STEP_SIZE > 0 && data.EPHEMERIS_DATA) {
+      // ─────────────────────────────────────────────────────────────────────
+      // COMPACT FORMAT (Row-Major Array)
+      // ─────────────────────────────────────────────────────────────────────
+      // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+      // STATE_VECTOR_SIZE determines components per state (6 or 9)
+      const stateSize = data.STATE_VECTOR_SIZE || 6;
+      const numStates = Math.floor(data.EPHEMERIS_DATA.length / stateSize);
+
+      for (let i = 0; i < numStates; i++) {
+        const offset = i * stateSize;
+        stateVectors.push({
+          x: data.EPHEMERIS_DATA[offset] * 1000,     // X in km -> m
+          y: data.EPHEMERIS_DATA[offset + 1] * 1000, // Y in km -> m
+          z: data.EPHEMERIS_DATA[offset + 2] * 1000  // Z in km -> m
+          // Velocity (indices 3-5) and acceleration (indices 6-8) not used for viz
+        });
+      }
+    } else if (data.EPHEMERIS_DATA_LINES && data.EPHEMERIS_DATA_LINES.length > 0) {
+      // ─────────────────────────────────────────────────────────────────────
+      // VERBOSE FORMAT (Structured Lines with explicit epochs)
+      // ─────────────────────────────────────────────────────────────────────
+      stateVectors = data.EPHEMERIS_DATA_LINES.map((ep: any) => ({
+        x: ep.X * 1000,
+        y: ep.Y * 1000,
+        z: ep.Z * 1000
+      }));
+    } else if (data.EPHEMERIS && data.EPHEMERIS.length > 0) {
+      // Legacy format (EPHEMERIS array)
+      stateVectors = data.EPHEMERIS.map((ep: any) => ({
+        x: ep.X * 1000,
+        y: ep.Y * 1000,
+        z: ep.Z * 1000
+      }));
+    }
+
+    if (stateVectors.length === 0) return;
+
+    // Create orbit path from state vectors
+    const positions = stateVectors.map(sv =>
+      new Cesium.Cartesian3(sv.x, sv.y, sv.z)
     );
 
     // Create orbit path
@@ -353,9 +368,9 @@
     });
 
     // Add markers at each ephemeris point
-    data.EPHEMERIS.forEach((ep: any, idx: number) => {
+    stateVectors.forEach((sv, idx: number) => {
       viewer.entities.add({
-        position: new Cesium.Cartesian3(ep.X * 1000, ep.Y * 1000, ep.Z * 1000),
+        position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
         point: {
           pixelSize: idx === 0 ? 12 : 6,
           color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.fromCssColorString("#17ead9"),
