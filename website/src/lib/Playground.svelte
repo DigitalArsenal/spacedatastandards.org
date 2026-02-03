@@ -481,27 +481,27 @@
       }
     });
 
-    // Add marker at first ephemeris point only
-    const firstSv = stateVectors[0];
-    viewer.entities.add({
-      name: data.OBJECT_NAME || "Spacecraft",
-      position: new Cesium.Cartesian3(firstSv.x, firstSv.y, firstSv.z),
-      point: {
-        pixelSize: 12,
-        color: Cesium.Color.fromCssColorString("#38ef7d"),
-        outlineColor: Cesium.Color.WHITE,
-        outlineWidth: 2
-      },
-      label: {
-        text: data.OBJECT_NAME || "Spacecraft",
-        font: "14px JetBrains Mono, monospace",
-        fillColor: Cesium.Color.WHITE,
-        outlineColor: Cesium.Color.BLACK,
-        outlineWidth: 2,
-        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-        pixelOffset: new Cesium.Cartesian2(0, -15)
-      }
+    // Add markers at each ephemeris point
+    stateVectors.forEach((sv, idx: number) => {
+      viewer.entities.add({
+        position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
+        point: {
+          pixelSize: idx === 0 ? 10 : 4,
+          color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.fromCssColorString("#17ead9"),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: idx === 0 ? 2 : 1
+        },
+        label: idx === 0 ? {
+          text: data.OBJECT_NAME || "Spacecraft",
+          font: "14px JetBrains Mono, monospace",
+          fillColor: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -15)
+        } : undefined
+      });
     });
 
     // Don't zoom - orbit is visible from home view
