@@ -17,6 +17,9 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Individual record wrapper for any standard type
+ */
 @SuppressWarnings("unused")
 public final class Record extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
@@ -26,7 +29,13 @@ public final class Record extends Table {
   public Record __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte valueType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * The record data (union of all supported standards)
+   */
   public Table value(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
+  /**
+   * Standard identifier (e.g., "OMM", "CDM", "CAT")
+   */
   public String standard() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer standardAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer standardInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }

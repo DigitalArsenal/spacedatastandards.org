@@ -6,6 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// Individual record wrapper for any standard type
 type Record struct {
 	_tab flatbuffers.Table
 }
@@ -53,6 +54,7 @@ func (rcv *Record) MutateValueType(n RecordType) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
+/// The record data (union of all supported standards)
 func (rcv *Record) Value(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -62,6 +64,8 @@ func (rcv *Record) Value(obj *flatbuffers.Table) bool {
 	return false
 }
 
+/// The record data (union of all supported standards)
+/// Standard identifier (e.g., "OMM", "CDM", "CAT")
 func (rcv *Record) Standard() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -70,6 +74,7 @@ func (rcv *Record) Standard() []byte {
 	return nil
 }
 
+/// Standard identifier (e.g., "OMM", "CDM", "CAT")
 func RecordStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }

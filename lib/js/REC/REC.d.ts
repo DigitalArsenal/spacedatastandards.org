@@ -10,8 +10,14 @@ export declare class REC implements flatbuffers.IUnpackableObject<RECT> {
     static getRootAsREC(bb: flatbuffers.ByteBuffer, obj?: REC): REC;
     static getSizePrefixedRootAsREC(bb: flatbuffers.ByteBuffer, obj?: REC): REC;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * Schema version identifier
+     */
     version(): string | null;
     version(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Array of heterogeneous records from any supported standard
+     */
     RECORDS(index: number, obj?: Record): Record | null;
     recordsLength(): number;
     static startREC(builder: flatbuffers.Builder): void;

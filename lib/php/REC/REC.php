@@ -41,12 +41,14 @@ class REC extends Table
         return $this;
     }
 
+    /// Schema version identifier
     public function getVersion()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Array of heterogeneous records from any supported standard
     /**
      * @returnVectorOffset
      */

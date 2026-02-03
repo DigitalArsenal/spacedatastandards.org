@@ -19,6 +19,7 @@ public struct REC : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public REC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Schema version identifier
   public string Version { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVersionBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct REC : IFlatbufferObject
   public ArraySegment<byte>? GetVersionBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetVersionArray() { return __p.__vector_as_array<byte>(4); }
+  /// Array of heterogeneous records from any supported standard
   public Record? RECORDS(int j) { int o = __p.__offset(6); return o != 0 ? (Record?)(new Record()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RECORDSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 

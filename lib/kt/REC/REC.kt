@@ -29,6 +29,9 @@ class REC : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Schema version identifier
+     */
     val version : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class REC : Table() {
         }
     val versionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Array of heterogeneous records from any supported standard
+     */
     fun RECORDS(j: Int) : Record? = RECORDS(Record(), j)
     fun RECORDS(obj: Record, j: Int) : Record? {
         val o = __offset(6)

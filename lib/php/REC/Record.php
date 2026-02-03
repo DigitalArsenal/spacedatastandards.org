@@ -6,6 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// Individual record wrapper for any standard type
 class Record extends Table
 {
     /**
@@ -49,6 +50,7 @@ class Record extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \RecordType::NONE;
     }
 
+    /// The record data (union of all supported standards)
     /**
      * @returnint
      */
@@ -58,6 +60,7 @@ class Record extends Table
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
+    /// Standard identifier (e.g., "OMM", "CDM", "CAT")
     public function getStandard()
     {
         $o = $this->__offset(8);

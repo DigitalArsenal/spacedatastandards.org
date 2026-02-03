@@ -30,6 +30,9 @@ export default defineConfig(({ mode }) => {
         'root': path.resolve(__dirname, '../'),
       },
     },
+    server: {
+      port: 8601,
+    },
     build: {
       emptyOutDir: false,
       rollupOptions: {

@@ -6,7 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A single ephemeris data line
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 type ephemerisDataLine struct {
 	_tab flatbuffers.Table
 }
@@ -42,7 +44,7 @@ func (rcv *ephemerisDataLine) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Epoch time, in ISO 8601 UTC format
+/// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
 func (rcv *ephemerisDataLine) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -51,7 +53,7 @@ func (rcv *ephemerisDataLine) EPOCH() []byte {
 	return nil
 }
 
-/// Epoch time, in ISO 8601 UTC format
+/// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
 /// Position vector X-component km
 func (rcv *ephemerisDataLine) X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -136,7 +138,7 @@ func (rcv *ephemerisDataLine) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
-/// Optional: Acceleration vector X-component km/s/s
+/// Optional: Acceleration vector X-component km/s²
 func (rcv *ephemerisDataLine) X_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -145,12 +147,12 @@ func (rcv *ephemerisDataLine) X_DDOT() float64 {
 	return 0.0
 }
 
-/// Optional: Acceleration vector X-component km/s/s
+/// Optional: Acceleration vector X-component km/s²
 func (rcv *ephemerisDataLine) MutateX_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
-/// Optional: Acceleration vector Y-component km/s/s
+/// Optional: Acceleration vector Y-component km/s²
 func (rcv *ephemerisDataLine) Y_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -159,12 +161,12 @@ func (rcv *ephemerisDataLine) Y_DDOT() float64 {
 	return 0.0
 }
 
-/// Optional: Acceleration vector Y-component km/s/s
+/// Optional: Acceleration vector Y-component km/s²
 func (rcv *ephemerisDataLine) MutateY_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
-/// Optional: Acceleration vector Z-component km/s/s
+/// Optional: Acceleration vector Z-component km/s²
 func (rcv *ephemerisDataLine) Z_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -173,7 +175,7 @@ func (rcv *ephemerisDataLine) Z_DDOT() float64 {
 	return 0.0
 }
 
-/// Optional: Acceleration vector Z-component km/s/s
+/// Optional: Acceleration vector Z-component km/s²
 func (rcv *ephemerisDataLine) MutateZ_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }

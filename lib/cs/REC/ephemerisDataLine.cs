@@ -6,7 +6,9 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// A single ephemeris data line
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 public struct ephemerisDataLine : IFlatbufferObject
 {
   private Table __p;
@@ -17,7 +19,7 @@ public struct ephemerisDataLine : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ephemerisDataLine __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Epoch time, in ISO 8601 UTC format
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   public string EPOCH { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -37,11 +39,11 @@ public struct ephemerisDataLine : IFlatbufferObject
   public double Y_DOT { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Velocity vector Z-component km/s
   public double Z_DOT { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Optional: Acceleration vector X-component km/s/s
+  /// Optional: Acceleration vector X-component km/s²
   public double X_DDOT { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Optional: Acceleration vector Y-component km/s/s
+  /// Optional: Acceleration vector Y-component km/s²
   public double Y_DDOT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Optional: Acceleration vector Z-component km/s/s
+  /// Optional: Acceleration vector Z-component km/s²
   public double Z_DDOT { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<ephemerisDataLine> CreateephemerisDataLine(FlatBufferBuilder builder,

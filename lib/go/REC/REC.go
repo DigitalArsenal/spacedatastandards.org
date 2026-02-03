@@ -54,6 +54,7 @@ func (rcv *REC) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Schema version identifier
 func (rcv *REC) Version() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *REC) Version() []byte {
 	return nil
 }
 
+/// Schema version identifier
+/// Array of heterogeneous records from any supported standard
 func (rcv *REC) RECORDS(obj *Record, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -82,6 +85,7 @@ func (rcv *REC) RECORDSLength() int {
 	return 0
 }
 
+/// Array of heterogeneous records from any supported standard
 func RECStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }

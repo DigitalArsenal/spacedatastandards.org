@@ -16,6 +16,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * Individual record wrapper for any standard type
+ */
 @Suppress("unused")
 class Record : Table() {
 
@@ -31,9 +34,15 @@ class Record : Table() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * The record data (union of all supported standards)
+     */
     fun value(obj: Table) : Table? {
         val o = __offset(6); return if (o != 0) __union(obj, o + bb_pos) else null
     }
+    /**
+     * Standard identifier (e.g., "OMM", "CDM", "CAT")
+     */
     val standard : String?
         get() {
             val o = __offset(8)

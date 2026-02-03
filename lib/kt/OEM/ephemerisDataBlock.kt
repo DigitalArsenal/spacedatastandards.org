@@ -172,41 +172,78 @@ class ephemerisDataBlock : Table() {
     val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Step size in seconds separating the epochs of each ephemeris data row
-     */
-    val STEP_SIZE : Double
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
      * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
      */
     val INTERPOLATION : String?
         get() {
-            val o = __offset(28)
+            val o = __offset(26)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val INTERPOLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun INTERPOLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val INTERPOLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun INTERPOLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Recommended interpolation degree for ephemeris data
      */
     val INTERPOLATION_DEGREE : UInt
         get() {
-            val o = __offset(30)
+            val o = __offset(28)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Array of ephemeris data lines
+     * Time interval between ephemeris states in seconds.
+     * If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+     * If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+     */
+    val STEP_SIZE : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of components per state vector in EPHEMERIS_DATA array.
+     * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+     * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+     * Only used when STEP_SIZE > 0. Default is 6.
+     */
+    val STATE_VECTOR_SIZE : UByte
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
+        }
+    /**
+     * Compact ephemeris data as row-major array of doubles.
+     * Only used when STEP_SIZE > 0.
+     * Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+     * Units: position in km, velocity in km/s, acceleration in km/s²
+     * Length must be divisible by STATE_VECTOR_SIZE.
+     * Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+     */
+    fun EPHEMERIS_DATA(j: Int) : Double {
+        val o = __offset(34)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val EPHEMERIS_DATALength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    val EPHEMERIS_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 8)
+    fun EPHEMERIS_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 8)
+    /**
+     * Array of ephemeris data lines with explicit epochs.
+     * Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+     * Each line contains its own EPOCH timestamp.
      */
     fun EPHEMERIS_DATA_LINES(j: Int) : ephemerisDataLine? = EPHEMERIS_DATA_LINES(ephemerisDataLine(), j)
     fun EPHEMERIS_DATA_LINES(obj: ephemerisDataLine, j: Int) : ephemerisDataLine? {
-        val o = __offset(32)
+        val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -215,14 +252,14 @@ class ephemerisDataBlock : Table() {
     }
     val EPHEMERIS_DATA_LINESLength : Int
         get() {
-            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Array of covariance matrix lines
+     * Array of covariance matrix lines (optional)
      */
     fun COVARIANCE_MATRIX_LINES(j: Int) : covarianceMatrixLine? = COVARIANCE_MATRIX_LINES(covarianceMatrixLine(), j)
     fun COVARIANCE_MATRIX_LINES(obj: covarianceMatrixLine, j: Int) : covarianceMatrixLine? {
-        val o = __offset(34)
+        val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -231,7 +268,7 @@ class ephemerisDataBlock : Table() {
     }
     val COVARIANCE_MATRIX_LINESLength : Int
         get() {
-            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -240,11 +277,12 @@ class ephemerisDataBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataBlock(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, COV_REFERENCE_FRAMEOffset: Int, TIME_SYSTEM: Byte, START_TIMEOffset: Int, USEABLE_START_TIMEOffset: Int, USEABLE_STOP_TIMEOffset: Int, STOP_TIMEOffset: Int, STEP_SIZE: Double, INTERPOLATIONOffset: Int, INTERPOLATION_DEGREE: UInt, EPHEMERIS_DATA_LINESOffset: Int, COVARIANCE_MATRIX_LINESOffset: Int) : Int {
-            builder.startTable(16)
+        fun createephemerisDataBlock(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, COV_REFERENCE_FRAMEOffset: Int, TIME_SYSTEM: Byte, START_TIMEOffset: Int, USEABLE_START_TIMEOffset: Int, USEABLE_STOP_TIMEOffset: Int, STOP_TIMEOffset: Int, INTERPOLATIONOffset: Int, INTERPOLATION_DEGREE: UInt, STEP_SIZE: Double, STATE_VECTOR_SIZE: UByte, EPHEMERIS_DATAOffset: Int, EPHEMERIS_DATA_LINESOffset: Int, COVARIANCE_MATRIX_LINESOffset: Int) : Int {
+            builder.startTable(18)
             addSTEP_SIZE(builder, STEP_SIZE)
             addCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset)
             addEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINESOffset)
+            addEPHEMERIS_DATA(builder, EPHEMERIS_DATAOffset)
             addINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
             addINTERPOLATION(builder, INTERPOLATIONOffset)
             addSTOP_TIME(builder, STOP_TIMEOffset)
@@ -257,10 +295,11 @@ class ephemerisDataBlock : Table() {
             addCENTER_NAME(builder, CENTER_NAMEOffset)
             addOBJECT(builder, OBJECTOffset)
             addCOMMENT(builder, COMMENTOffset)
+            addSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
             addTIME_SYSTEM(builder, TIME_SYSTEM)
             return endephemerisDataBlock(builder)
         }
-        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
         fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
         fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(2, CENTER_NAME, 0)
@@ -272,10 +311,20 @@ class ephemerisDataBlock : Table() {
         fun addUSEABLE_START_TIME(builder: FlatBufferBuilder, USEABLE_START_TIME: Int) = builder.addOffset(8, USEABLE_START_TIME, 0)
         fun addUSEABLE_STOP_TIME(builder: FlatBufferBuilder, USEABLE_STOP_TIME: Int) = builder.addOffset(9, USEABLE_STOP_TIME, 0)
         fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(10, STOP_TIME, 0)
-        fun addSTEP_SIZE(builder: FlatBufferBuilder, STEP_SIZE: Double) = builder.addDouble(11, STEP_SIZE, 0.0)
-        fun addINTERPOLATION(builder: FlatBufferBuilder, INTERPOLATION: Int) = builder.addOffset(12, INTERPOLATION, 0)
-        fun addINTERPOLATION_DEGREE(builder: FlatBufferBuilder, INTERPOLATION_DEGREE: UInt) = builder.addInt(13, INTERPOLATION_DEGREE.toInt(), 0)
-        fun addEPHEMERIS_DATA_LINES(builder: FlatBufferBuilder, EPHEMERIS_DATA_LINES: Int) = builder.addOffset(14, EPHEMERIS_DATA_LINES, 0)
+        fun addINTERPOLATION(builder: FlatBufferBuilder, INTERPOLATION: Int) = builder.addOffset(11, INTERPOLATION, 0)
+        fun addINTERPOLATION_DEGREE(builder: FlatBufferBuilder, INTERPOLATION_DEGREE: UInt) = builder.addInt(12, INTERPOLATION_DEGREE.toInt(), 0)
+        fun addSTEP_SIZE(builder: FlatBufferBuilder, STEP_SIZE: Double) = builder.addDouble(13, STEP_SIZE, 0.0)
+        fun addSTATE_VECTOR_SIZE(builder: FlatBufferBuilder, STATE_VECTOR_SIZE: UByte) = builder.addByte(14, STATE_VECTOR_SIZE.toByte(), 6)
+        fun addEPHEMERIS_DATA(builder: FlatBufferBuilder, EPHEMERIS_DATA: Int) = builder.addOffset(15, EPHEMERIS_DATA, 0)
+        fun createEphemerisDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEphemerisDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addEPHEMERIS_DATA_LINES(builder: FlatBufferBuilder, EPHEMERIS_DATA_LINES: Int) = builder.addOffset(16, EPHEMERIS_DATA_LINES, 0)
         fun createEphemerisDataLinesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -284,7 +333,7 @@ class ephemerisDataBlock : Table() {
             return builder.endVector()
         }
         fun startEphemerisDataLinesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOVARIANCE_MATRIX_LINES(builder: FlatBufferBuilder, COVARIANCE_MATRIX_LINES: Int) = builder.addOffset(15, COVARIANCE_MATRIX_LINES, 0)
+        fun addCOVARIANCE_MATRIX_LINES(builder: FlatBufferBuilder, COVARIANCE_MATRIX_LINES: Int) = builder.addOffset(17, COVARIANCE_MATRIX_LINES, 0)
         fun createCovarianceMatrixLinesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

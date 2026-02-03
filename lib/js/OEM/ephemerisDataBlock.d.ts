@@ -65,10 +65,6 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     STOP_TIME(): string | null;
     STOP_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Step size in seconds separating the epochs of each ephemeris data row
-     */
-    STEP_SIZE(): number;
-    /**
      * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
      */
     INTERPOLATION(): string | null;
@@ -78,12 +74,38 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
      */
     INTERPOLATION_DEGREE(): number;
     /**
-     * Array of ephemeris data lines
+     * Time interval between ephemeris states in seconds.
+     * If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+     * If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+     */
+    STEP_SIZE(): number;
+    /**
+     * Number of components per state vector in EPHEMERIS_DATA array.
+     * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+     * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+     * Only used when STEP_SIZE > 0. Default is 6.
+     */
+    STATE_VECTOR_SIZE(): number;
+    /**
+     * Compact ephemeris data as row-major array of doubles.
+     * Only used when STEP_SIZE > 0.
+     * Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+     * Units: position in km, velocity in km/s, acceleration in km/s²
+     * Length must be divisible by STATE_VECTOR_SIZE.
+     * Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+     */
+    EPHEMERIS_DATA(index: number): number | null;
+    ephemerisDataLength(): number;
+    ephemerisDataArray(): Float64Array | null;
+    /**
+     * Array of ephemeris data lines with explicit epochs.
+     * Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+     * Each line contains its own EPOCH timestamp.
      */
     EPHEMERIS_DATA_LINES(index: number, obj?: ephemerisDataLine): ephemerisDataLine | null;
     ephemerisDataLinesLength(): number;
     /**
-     * Array of covariance matrix lines
+     * Array of covariance matrix lines (optional)
      */
     COVARIANCE_MATRIX_LINES(index: number, obj?: covarianceMatrixLine): covarianceMatrixLine | null;
     covarianceMatrixLinesLength(): number;
@@ -99,9 +121,17 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     static addUseableStartTime(builder: flatbuffers.Builder, USEABLE_START_TIMEOffset: flatbuffers.Offset): void;
     static addUseableStopTime(builder: flatbuffers.Builder, USEABLE_STOP_TIMEOffset: flatbuffers.Offset): void;
     static addStopTime(builder: flatbuffers.Builder, STOP_TIMEOffset: flatbuffers.Offset): void;
-    static addStepSize(builder: flatbuffers.Builder, STEP_SIZE: number): void;
     static addInterpolation(builder: flatbuffers.Builder, INTERPOLATIONOffset: flatbuffers.Offset): void;
     static addInterpolationDegree(builder: flatbuffers.Builder, INTERPOLATION_DEGREE: number): void;
+    static addStepSize(builder: flatbuffers.Builder, STEP_SIZE: number): void;
+    static addStateVectorSize(builder: flatbuffers.Builder, STATE_VECTOR_SIZE: number): void;
+    static addEphemerisData(builder: flatbuffers.Builder, EPHEMERIS_DATAOffset: flatbuffers.Offset): void;
+    static createEphemerisDataVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createEphemerisDataVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEphemerisDataVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEphemerisDataLines(builder: flatbuffers.Builder, EPHEMERIS_DATA_LINESOffset: flatbuffers.Offset): void;
     static createEphemerisDataLinesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startEphemerisDataLinesVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -124,12 +154,14 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     USEABLE_START_TIME: string | Uint8Array | null;
     USEABLE_STOP_TIME: string | Uint8Array | null;
     STOP_TIME: string | Uint8Array | null;
-    STEP_SIZE: number;
     INTERPOLATION: string | Uint8Array | null;
     INTERPOLATION_DEGREE: number;
+    STEP_SIZE: number;
+    STATE_VECTOR_SIZE: number;
+    EPHEMERIS_DATA: (number)[];
     EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[];
     COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, STEP_SIZE?: number, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[]);
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ephemerisDataBlock.d.ts.map

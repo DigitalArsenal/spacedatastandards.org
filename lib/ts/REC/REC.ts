@@ -32,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$REC');
 }
 
+/**
+ * Schema version identifier
+ */
 version():string|null
 version(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 version(optionalEncoding?:any):string|Uint8Array|null {
@@ -39,6 +42,9 @@ version(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Array of heterogeneous records from any supported standard
+ */
 RECORDS(index: number, obj?:Record):Record|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new Record()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;

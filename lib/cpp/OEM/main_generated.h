@@ -29,7 +29,9 @@ struct ephemerisDataBlockBuilder;
 struct OEM;
 struct OEMBuilder;
 
-/// A single ephemeris data line
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ephemerisDataLineBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -44,7 +46,7 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_Y_DDOT = 20,
     VT_Z_DDOT = 22
   };
-  /// Epoch time, in ISO 8601 UTC format
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
@@ -72,15 +74,15 @@ struct ephemerisDataLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double Z_DOT() const {
     return GetField<double>(VT_Z_DOT, 0.0);
   }
-  /// Optional: Acceleration vector X-component km/s/s
+  /// Optional: Acceleration vector X-component km/s²
   double X_DDOT() const {
     return GetField<double>(VT_X_DDOT, 0.0);
   }
-  /// Optional: Acceleration vector Y-component km/s/s
+  /// Optional: Acceleration vector Y-component km/s²
   double Y_DDOT() const {
     return GetField<double>(VT_Y_DDOT, 0.0);
   }
-  /// Optional: Acceleration vector Z-component km/s/s
+  /// Optional: Acceleration vector Z-component km/s²
   double Z_DDOT() const {
     return GetField<double>(VT_Z_DDOT, 0.0);
   }
@@ -540,11 +542,13 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_USEABLE_START_TIME = 20,
     VT_USEABLE_STOP_TIME = 22,
     VT_STOP_TIME = 24,
-    VT_STEP_SIZE = 26,
-    VT_INTERPOLATION = 28,
-    VT_INTERPOLATION_DEGREE = 30,
-    VT_EPHEMERIS_DATA_LINES = 32,
-    VT_COVARIANCE_MATRIX_LINES = 34
+    VT_INTERPOLATION = 26,
+    VT_INTERPOLATION_DEGREE = 28,
+    VT_STEP_SIZE = 30,
+    VT_STATE_VECTOR_SIZE = 32,
+    VT_EPHEMERIS_DATA = 34,
+    VT_EPHEMERIS_DATA_LINES = 36,
+    VT_COVARIANCE_MATRIX_LINES = 38
   };
   /// Plain-Text Comment
   const ::flatbuffers::String *COMMENT() const {
@@ -590,10 +594,6 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *STOP_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
   }
-  /// Step size in seconds separating the epochs of each ephemeris data row
-  double STEP_SIZE() const {
-    return GetField<double>(VT_STEP_SIZE, 0.0);
-  }
   /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
   const ::flatbuffers::String *INTERPOLATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INTERPOLATION);
@@ -602,11 +602,35 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   uint32_t INTERPOLATION_DEGREE() const {
     return GetField<uint32_t>(VT_INTERPOLATION_DEGREE, 0);
   }
-  /// Array of ephemeris data lines
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  double STEP_SIZE() const {
+    return GetField<double>(VT_STEP_SIZE, 0.0);
+  }
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
+  uint8_t STATE_VECTOR_SIZE() const {
+    return GetField<uint8_t>(VT_STATE_VECTOR_SIZE, 6);
+  }
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s²
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  const ::flatbuffers::Vector<double> *EPHEMERIS_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_EPHEMERIS_DATA);
+  }
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
   const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>> *>(VT_EPHEMERIS_DATA_LINES);
   }
-  /// Array of covariance matrix lines
+  /// Array of covariance matrix lines (optional)
   const ::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>> *>(VT_COVARIANCE_MATRIX_LINES);
   }
@@ -633,10 +657,13 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyString(USEABLE_STOP_TIME()) &&
            VerifyOffset(verifier, VT_STOP_TIME) &&
            verifier.VerifyString(STOP_TIME()) &&
-           VerifyField<double>(verifier, VT_STEP_SIZE, 8) &&
            VerifyOffset(verifier, VT_INTERPOLATION) &&
            verifier.VerifyString(INTERPOLATION()) &&
            VerifyField<uint32_t>(verifier, VT_INTERPOLATION_DEGREE, 4) &&
+           VerifyField<double>(verifier, VT_STEP_SIZE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_STATE_VECTOR_SIZE, 1) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_DATA) &&
+           verifier.VerifyVector(EPHEMERIS_DATA()) &&
            VerifyOffset(verifier, VT_EPHEMERIS_DATA_LINES) &&
            verifier.VerifyVector(EPHEMERIS_DATA_LINES()) &&
            verifier.VerifyVectorOfTables(EPHEMERIS_DATA_LINES()) &&
@@ -684,14 +711,20 @@ struct ephemerisDataBlockBuilder {
   void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
     fbb_.AddOffset(ephemerisDataBlock::VT_STOP_TIME, STOP_TIME);
   }
-  void add_STEP_SIZE(double STEP_SIZE) {
-    fbb_.AddElement<double>(ephemerisDataBlock::VT_STEP_SIZE, STEP_SIZE, 0.0);
-  }
   void add_INTERPOLATION(::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION) {
     fbb_.AddOffset(ephemerisDataBlock::VT_INTERPOLATION, INTERPOLATION);
   }
   void add_INTERPOLATION_DEGREE(uint32_t INTERPOLATION_DEGREE) {
     fbb_.AddElement<uint32_t>(ephemerisDataBlock::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+  }
+  void add_STEP_SIZE(double STEP_SIZE) {
+    fbb_.AddElement<double>(ephemerisDataBlock::VT_STEP_SIZE, STEP_SIZE, 0.0);
+  }
+  void add_STATE_VECTOR_SIZE(uint8_t STATE_VECTOR_SIZE) {
+    fbb_.AddElement<uint8_t>(ephemerisDataBlock::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
+  }
+  void add_EPHEMERIS_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> EPHEMERIS_DATA) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_EPHEMERIS_DATA, EPHEMERIS_DATA);
   }
   void add_EPHEMERIS_DATA_LINES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>>> EPHEMERIS_DATA_LINES) {
     fbb_.AddOffset(ephemerisDataBlock::VT_EPHEMERIS_DATA_LINES, EPHEMERIS_DATA_LINES);
@@ -723,15 +756,18 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::String> USEABLE_START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USEABLE_STOP_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
-    double STEP_SIZE = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> INTERPOLATION = 0,
     uint32_t INTERPOLATION_DEGREE = 0,
+    double STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> EPHEMERIS_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ephemerisDataLine>>> EPHEMERIS_DATA_LINES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>>> COVARIANCE_MATRIX_LINES = 0) {
   ephemerisDataBlockBuilder builder_(_fbb);
   builder_.add_STEP_SIZE(STEP_SIZE);
   builder_.add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES);
   builder_.add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES);
+  builder_.add_EPHEMERIS_DATA(EPHEMERIS_DATA);
   builder_.add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE);
   builder_.add_INTERPOLATION(INTERPOLATION);
   builder_.add_STOP_TIME(STOP_TIME);
@@ -744,6 +780,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
   builder_.add_CENTER_NAME(CENTER_NAME);
   builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
+  builder_.add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   return builder_.Finish();
 }
@@ -761,9 +798,11 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const char *USEABLE_START_TIME = nullptr,
     const char *USEABLE_STOP_TIME = nullptr,
     const char *STOP_TIME = nullptr,
-    double STEP_SIZE = 0.0,
     const char *INTERPOLATION = nullptr,
     uint32_t INTERPOLATION_DEGREE = 0,
+    double STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    const std::vector<double> *EPHEMERIS_DATA = nullptr,
     const std::vector<::flatbuffers::Offset<ephemerisDataLine>> *EPHEMERIS_DATA_LINES = nullptr,
     const std::vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
@@ -774,6 +813,7 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
   auto USEABLE_STOP_TIME__ = USEABLE_STOP_TIME ? _fbb.CreateString(USEABLE_STOP_TIME) : 0;
   auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
   auto INTERPOLATION__ = INTERPOLATION ? _fbb.CreateString(INTERPOLATION) : 0;
+  auto EPHEMERIS_DATA__ = EPHEMERIS_DATA ? _fbb.CreateVector<double>(*EPHEMERIS_DATA) : 0;
   auto EPHEMERIS_DATA_LINES__ = EPHEMERIS_DATA_LINES ? _fbb.CreateVector<::flatbuffers::Offset<ephemerisDataLine>>(*EPHEMERIS_DATA_LINES) : 0;
   auto COVARIANCE_MATRIX_LINES__ = COVARIANCE_MATRIX_LINES ? _fbb.CreateVector<::flatbuffers::Offset<covarianceMatrixLine>>(*COVARIANCE_MATRIX_LINES) : 0;
   return CreateephemerisDataBlock(
@@ -789,9 +829,11 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
       USEABLE_START_TIME__,
       USEABLE_STOP_TIME__,
       STOP_TIME__,
-      STEP_SIZE,
       INTERPOLATION__,
       INTERPOLATION_DEGREE,
+      STEP_SIZE,
+      STATE_VECTOR_SIZE,
+      EPHEMERIS_DATA__,
       EPHEMERIS_DATA_LINES__,
       COVARIANCE_MATRIX_LINES__);
 }

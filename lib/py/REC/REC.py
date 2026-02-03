@@ -29,6 +29,7 @@ class REC(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Schema version identifier
     # REC
     def Version(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class REC(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Array of heterogeneous records from any supported standard
     # REC
     def RECORDS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))

@@ -978,7 +978,7 @@ echo "\\nBuffer size: " . strlen($buffer) . " bytes\\n";
         content: `// Space Data Standards - Dart Example
 // Using FlatBuffers for zero-copy serialization
 
-import 'dart:typed_data';
+  ${'import'} 'dart:typed_data';
 
 class OMM {
   String objectName;

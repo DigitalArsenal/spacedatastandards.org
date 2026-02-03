@@ -18,7 +18,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * A single ephemeris data line
+ * A single ephemeris data line (for non-uniform time steps only)
+ * Use this format when time intervals between states are irregular.
+ * For uniform time steps, use the compact EPHEMERIS_DATA array instead.
  */
 @SuppressWarnings("unused")
 public final class ephemerisDataLine extends Table {
@@ -29,7 +31,7 @@ public final class ephemerisDataLine extends Table {
   public ephemerisDataLine __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Epoch time, in ISO 8601 UTC format
+   * Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
    */
   public String EPOCH() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -59,15 +61,15 @@ public final class ephemerisDataLine extends Table {
    */
   public double Z_DOT() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Optional: Acceleration vector X-component km/s/s
+   * Optional: Acceleration vector X-component km/s²
    */
   public double X_DDOT() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Optional: Acceleration vector Y-component km/s/s
+   * Optional: Acceleration vector Y-component km/s²
    */
   public double Y_DDOT() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Optional: Acceleration vector Z-component km/s/s
+   * Optional: Acceleration vector Z-component km/s²
    */
   public double Z_DDOT() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 

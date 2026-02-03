@@ -81,24 +81,47 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public ArraySegment<byte>? GetSTOP_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetSTOP_TIMEArray() { return __p.__vector_as_array<byte>(24); }
-  /// Step size in seconds separating the epochs of each ephemeris data row
-  public double STEP_SIZE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
-  public string INTERPOLATION { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string INTERPOLATION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINTERPOLATIONBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetINTERPOLATIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetINTERPOLATIONBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetINTERPOLATIONBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetINTERPOLATIONArray() { return __p.__vector_as_array<byte>(28); }
+  public byte[] GetINTERPOLATIONArray() { return __p.__vector_as_array<byte>(26); }
   /// Recommended interpolation degree for ephemeris data
-  public uint INTERPOLATION_DEGREE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Array of ephemeris data lines
-  public ephemerisDataLine? EPHEMERIS_DATA_LINES(int j) { int o = __p.__offset(32); return o != 0 ? (ephemerisDataLine?)(new ephemerisDataLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int EPHEMERIS_DATA_LINESLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Array of covariance matrix lines
-  public covarianceMatrixLine? COVARIANCE_MATRIX_LINES(int j) { int o = __p.__offset(34); return o != 0 ? (covarianceMatrixLine?)(new covarianceMatrixLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int COVARIANCE_MATRIX_LINESLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint INTERPOLATION_DEGREE { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  public double STEP_SIZE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
+  public byte STATE_VECTOR_SIZE { get { int o = __p.__offset(32); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s²
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  public double EPHEMERIS_DATA(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int EPHEMERIS_DATALength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetEPHEMERIS_DATABytes() { return __p.__vector_as_span<double>(34, 8); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_DATABytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public double[] GetEPHEMERIS_DATAArray() { return __p.__vector_as_array<double>(34); }
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
+  public ephemerisDataLine? EPHEMERIS_DATA_LINES(int j) { int o = __p.__offset(36); return o != 0 ? (ephemerisDataLine?)(new ephemerisDataLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EPHEMERIS_DATA_LINESLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Array of covariance matrix lines (optional)
+  public covarianceMatrixLine? COVARIANCE_MATRIX_LINES(int j) { int o = __p.__offset(38); return o != 0 ? (covarianceMatrixLine?)(new covarianceMatrixLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COVARIANCE_MATRIX_LINESLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ephemerisDataBlock> CreateephemerisDataBlock(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -112,15 +135,18 @@ public struct ephemerisDataBlock : IFlatbufferObject
       StringOffset USEABLE_START_TIMEOffset = default(StringOffset),
       StringOffset USEABLE_STOP_TIMEOffset = default(StringOffset),
       StringOffset STOP_TIMEOffset = default(StringOffset),
-      double STEP_SIZE = 0.0,
       StringOffset INTERPOLATIONOffset = default(StringOffset),
       uint INTERPOLATION_DEGREE = 0,
+      double STEP_SIZE = 0.0,
+      byte STATE_VECTOR_SIZE = 6,
+      VectorOffset EPHEMERIS_DATAOffset = default(VectorOffset),
       VectorOffset EPHEMERIS_DATA_LINESOffset = default(VectorOffset),
       VectorOffset COVARIANCE_MATRIX_LINESOffset = default(VectorOffset)) {
-    builder.StartTable(16);
+    builder.StartTable(18);
     ephemerisDataBlock.AddSTEP_SIZE(builder, STEP_SIZE);
     ephemerisDataBlock.AddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.AddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINESOffset);
+    ephemerisDataBlock.AddEPHEMERIS_DATA(builder, EPHEMERIS_DATAOffset);
     ephemerisDataBlock.AddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE);
     ephemerisDataBlock.AddINTERPOLATION(builder, INTERPOLATIONOffset);
     ephemerisDataBlock.AddSTOP_TIME(builder, STOP_TIMEOffset);
@@ -133,11 +159,12 @@ public struct ephemerisDataBlock : IFlatbufferObject
     ephemerisDataBlock.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     ephemerisDataBlock.AddOBJECT(builder, OBJECTOffset);
     ephemerisDataBlock.AddCOMMENT(builder, COMMENTOffset);
+    ephemerisDataBlock.AddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE);
     ephemerisDataBlock.AddTIME_SYSTEM(builder, TIME_SYSTEM);
     return ephemerisDataBlock.EndephemerisDataBlock(builder);
   }
 
-  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(2, CENTER_NAMEOffset.Value, 0); }
@@ -149,16 +176,23 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static void AddUSEABLE_START_TIME(FlatBufferBuilder builder, StringOffset USEABLE_START_TIMEOffset) { builder.AddOffset(8, USEABLE_START_TIMEOffset.Value, 0); }
   public static void AddUSEABLE_STOP_TIME(FlatBufferBuilder builder, StringOffset USEABLE_STOP_TIMEOffset) { builder.AddOffset(9, USEABLE_STOP_TIMEOffset.Value, 0); }
   public static void AddSTOP_TIME(FlatBufferBuilder builder, StringOffset STOP_TIMEOffset) { builder.AddOffset(10, STOP_TIMEOffset.Value, 0); }
-  public static void AddSTEP_SIZE(FlatBufferBuilder builder, double STEP_SIZE) { builder.AddDouble(11, STEP_SIZE, 0.0); }
-  public static void AddINTERPOLATION(FlatBufferBuilder builder, StringOffset INTERPOLATIONOffset) { builder.AddOffset(12, INTERPOLATIONOffset.Value, 0); }
-  public static void AddINTERPOLATION_DEGREE(FlatBufferBuilder builder, uint INTERPOLATION_DEGREE) { builder.AddUint(13, INTERPOLATION_DEGREE, 0); }
-  public static void AddEPHEMERIS_DATA_LINES(FlatBufferBuilder builder, VectorOffset EPHEMERIS_DATA_LINESOffset) { builder.AddOffset(14, EPHEMERIS_DATA_LINESOffset.Value, 0); }
+  public static void AddINTERPOLATION(FlatBufferBuilder builder, StringOffset INTERPOLATIONOffset) { builder.AddOffset(11, INTERPOLATIONOffset.Value, 0); }
+  public static void AddINTERPOLATION_DEGREE(FlatBufferBuilder builder, uint INTERPOLATION_DEGREE) { builder.AddUint(12, INTERPOLATION_DEGREE, 0); }
+  public static void AddSTEP_SIZE(FlatBufferBuilder builder, double STEP_SIZE) { builder.AddDouble(13, STEP_SIZE, 0.0); }
+  public static void AddSTATE_VECTOR_SIZE(FlatBufferBuilder builder, byte STATE_VECTOR_SIZE) { builder.AddByte(14, STATE_VECTOR_SIZE, 6); }
+  public static void AddEPHEMERIS_DATA(FlatBufferBuilder builder, VectorOffset EPHEMERIS_DATAOffset) { builder.AddOffset(15, EPHEMERIS_DATAOffset.Value, 0); }
+  public static VectorOffset CreateEPHEMERIS_DATAVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateEPHEMERIS_DATAVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEPHEMERIS_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEPHEMERIS_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEPHEMERIS_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddEPHEMERIS_DATA_LINES(FlatBufferBuilder builder, VectorOffset EPHEMERIS_DATA_LINESOffset) { builder.AddOffset(16, EPHEMERIS_DATA_LINESOffset.Value, 0); }
   public static VectorOffset CreateEPHEMERIS_DATA_LINESVector(FlatBufferBuilder builder, Offset<ephemerisDataLine>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_LINESVectorBlock(FlatBufferBuilder builder, Offset<ephemerisDataLine>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_LINESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ephemerisDataLine>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_LINESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ephemerisDataLine>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartEPHEMERIS_DATA_LINESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCOVARIANCE_MATRIX_LINES(FlatBufferBuilder builder, VectorOffset COVARIANCE_MATRIX_LINESOffset) { builder.AddOffset(15, COVARIANCE_MATRIX_LINESOffset.Value, 0); }
+  public static void AddCOVARIANCE_MATRIX_LINES(FlatBufferBuilder builder, VectorOffset COVARIANCE_MATRIX_LINESOffset) { builder.AddOffset(17, COVARIANCE_MATRIX_LINESOffset.Value, 0); }
   public static VectorOffset CreateCOVARIANCE_MATRIX_LINESVector(FlatBufferBuilder builder, Offset<covarianceMatrixLine>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOVARIANCE_MATRIX_LINESVectorBlock(FlatBufferBuilder builder, Offset<covarianceMatrixLine>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOVARIANCE_MATRIX_LINESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<covarianceMatrixLine>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -185,9 +219,12 @@ public struct ephemerisDataBlock : IFlatbufferObject
     _o.USEABLE_START_TIME = this.USEABLE_START_TIME;
     _o.USEABLE_STOP_TIME = this.USEABLE_STOP_TIME;
     _o.STOP_TIME = this.STOP_TIME;
-    _o.STEP_SIZE = this.STEP_SIZE;
     _o.INTERPOLATION = this.INTERPOLATION;
     _o.INTERPOLATION_DEGREE = this.INTERPOLATION_DEGREE;
+    _o.STEP_SIZE = this.STEP_SIZE;
+    _o.STATE_VECTOR_SIZE = this.STATE_VECTOR_SIZE;
+    _o.EPHEMERIS_DATA = new List<double>();
+    for (var _j = 0; _j < this.EPHEMERIS_DATALength; ++_j) {_o.EPHEMERIS_DATA.Add(this.EPHEMERIS_DATA(_j));}
     _o.EPHEMERIS_DATA_LINES = new List<ephemerisDataLineT>();
     for (var _j = 0; _j < this.EPHEMERIS_DATA_LINESLength; ++_j) {_o.EPHEMERIS_DATA_LINES.Add(this.EPHEMERIS_DATA_LINES(_j).HasValue ? this.EPHEMERIS_DATA_LINES(_j).Value.UnPack() : null);}
     _o.COVARIANCE_MATRIX_LINES = new List<covarianceMatrixLineT>();
@@ -206,6 +243,11 @@ public struct ephemerisDataBlock : IFlatbufferObject
     var _USEABLE_STOP_TIME = _o.USEABLE_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.USEABLE_STOP_TIME);
     var _STOP_TIME = _o.STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.STOP_TIME);
     var _INTERPOLATION = _o.INTERPOLATION == null ? default(StringOffset) : builder.CreateString(_o.INTERPOLATION);
+    var _EPHEMERIS_DATA = default(VectorOffset);
+    if (_o.EPHEMERIS_DATA != null) {
+      var __EPHEMERIS_DATA = _o.EPHEMERIS_DATA.ToArray();
+      _EPHEMERIS_DATA = CreateEPHEMERIS_DATAVector(builder, __EPHEMERIS_DATA);
+    }
     var _EPHEMERIS_DATA_LINES = default(VectorOffset);
     if (_o.EPHEMERIS_DATA_LINES != null) {
       var __EPHEMERIS_DATA_LINES = new Offset<ephemerisDataLine>[_o.EPHEMERIS_DATA_LINES.Count];
@@ -231,9 +273,11 @@ public struct ephemerisDataBlock : IFlatbufferObject
       _USEABLE_START_TIME,
       _USEABLE_STOP_TIME,
       _STOP_TIME,
-      _o.STEP_SIZE,
       _INTERPOLATION,
       _o.INTERPOLATION_DEGREE,
+      _o.STEP_SIZE,
+      _o.STATE_VECTOR_SIZE,
+      _EPHEMERIS_DATA,
       _EPHEMERIS_DATA_LINES,
       _COVARIANCE_MATRIX_LINES);
   }
@@ -252,9 +296,11 @@ public class ephemerisDataBlockT
   public string USEABLE_START_TIME { get; set; }
   public string USEABLE_STOP_TIME { get; set; }
   public string STOP_TIME { get; set; }
-  public double STEP_SIZE { get; set; }
   public string INTERPOLATION { get; set; }
   public uint INTERPOLATION_DEGREE { get; set; }
+  public double STEP_SIZE { get; set; }
+  public byte STATE_VECTOR_SIZE { get; set; }
+  public List<double> EPHEMERIS_DATA { get; set; }
   public List<ephemerisDataLineT> EPHEMERIS_DATA_LINES { get; set; }
   public List<covarianceMatrixLineT> COVARIANCE_MATRIX_LINES { get; set; }
 
@@ -270,9 +316,11 @@ public class ephemerisDataBlockT
     this.USEABLE_START_TIME = null;
     this.USEABLE_STOP_TIME = null;
     this.STOP_TIME = null;
-    this.STEP_SIZE = 0.0;
     this.INTERPOLATION = null;
     this.INTERPOLATION_DEGREE = 0;
+    this.STEP_SIZE = 0.0;
+    this.STATE_VECTOR_SIZE = 6;
+    this.EPHEMERIS_DATA = null;
     this.EPHEMERIS_DATA_LINES = null;
     this.COVARIANCE_MATRIX_LINES = null;
   }
@@ -295,11 +343,13 @@ static public class ephemerisDataBlockVerify
       && verifier.VerifyString(tablePos, 20 /*USEABLE_START_TIME*/, false)
       && verifier.VerifyString(tablePos, 22 /*USEABLE_STOP_TIME*/, false)
       && verifier.VerifyString(tablePos, 24 /*STOP_TIME*/, false)
-      && verifier.VerifyField(tablePos, 26 /*STEP_SIZE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 28 /*INTERPOLATION*/, false)
-      && verifier.VerifyField(tablePos, 30 /*INTERPOLATION_DEGREE*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyVectorOfTables(tablePos, 32 /*EPHEMERIS_DATA_LINES*/, ephemerisDataLineVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 34 /*COVARIANCE_MATRIX_LINES*/, covarianceMatrixLineVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 26 /*INTERPOLATION*/, false)
+      && verifier.VerifyField(tablePos, 28 /*INTERPOLATION_DEGREE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 30 /*STEP_SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*STATE_VECTOR_SIZE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 34 /*EPHEMERIS_DATA*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 36 /*EPHEMERIS_DATA_LINES*/, ephemerisDataLineVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*COVARIANCE_MATRIX_LINES*/, covarianceMatrixLineVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

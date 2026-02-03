@@ -283,6 +283,7 @@ class _RecordTypeTypeIdReader extends fb.Reader<RecordTypeTypeId> {
       RecordTypeTypeId.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  Individual record wrapper for any standard type
 class Record {
   Record._(this._bc, this._bcOffset);
   factory Record(List<int> bytes) {
@@ -296,6 +297,7 @@ class Record {
   final int _bcOffset;
 
   RecordTypeTypeId? get valueType => RecordTypeTypeId._createOrNull(const fb.Uint8Reader().vTableGetNullable(_bc, _bcOffset, 4));
+  ///  The record data (union of all supported standards)
   dynamic get value {
     switch (valueType?.value) {
       case 1: return ACL.reader.vTableGetNullable(_bc, _bcOffset, 6);
@@ -418,6 +420,7 @@ class Record {
       default: return null;
     }
   }
+  ///  Standard identifier (e.g., "OMM", "CDM", "CAT")
   String? get standard => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
 
   @override
@@ -509,7 +512,9 @@ class REC {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Schema version identifier
   String? get version => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Array of heterogeneous records from any supported standard
   List<Record>? get RECORDS => const fb.ListReader<Record>(Record.reader).vTableGetNullable(_bc, _bcOffset, 6);
 
   @override

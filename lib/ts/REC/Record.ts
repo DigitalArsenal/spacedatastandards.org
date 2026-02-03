@@ -124,6 +124,9 @@ import { WTH, WTHT } from './WTH.js';
 import { XTC, XTCT } from './XTC.js';
 
 
+/**
+ * Individual record wrapper for any standard type
+ */
 export class Record implements flatbuffers.IUnpackableObject<RecordT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -147,11 +150,17 @@ valueType():RecordType {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : RecordType.NONE;
 }
 
+/**
+ * The record data (union of all supported standards)
+ */
 value<T extends flatbuffers.Table>(obj:any):any|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__union(obj, this.bb_pos + offset) : null;
 }
 
+/**
+ * Standard identifier (e.g., "OMM", "CDM", "CAT")
+ */
 standard():string|null
 standard(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 standard(optionalEncoding?:any):string|Uint8Array|null {

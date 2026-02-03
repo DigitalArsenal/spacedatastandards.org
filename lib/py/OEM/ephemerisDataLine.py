@@ -6,7 +6,9 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# A single ephemeris data line
+# A single ephemeris data line (for non-uniform time steps only)
+# Use this format when time intervals between states are irregular.
+# For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 class ephemerisDataLine(object):
     __slots__ = ['_tab']
 
@@ -29,7 +31,7 @@ class ephemerisDataLine(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Epoch time, in ISO 8601 UTC format
+    # Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
     # ephemerisDataLine
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -85,7 +87,7 @@ class ephemerisDataLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Optional: Acceleration vector X-component km/s/s
+    # Optional: Acceleration vector X-component km/s²
     # ephemerisDataLine
     def X_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -93,7 +95,7 @@ class ephemerisDataLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Optional: Acceleration vector Y-component km/s/s
+    # Optional: Acceleration vector Y-component km/s²
     # ephemerisDataLine
     def Y_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -101,7 +103,7 @@ class ephemerisDataLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Optional: Acceleration vector Z-component km/s/s
+    # Optional: Acceleration vector Z-component km/s²
     # ephemerisDataLine
     def Z_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))

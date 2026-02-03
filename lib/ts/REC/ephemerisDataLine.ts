@@ -7,7 +7,9 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * A single ephemeris data line
+ * A single ephemeris data line (for non-uniform time steps only)
+ * Use this format when time intervals between states are irregular.
+ * For uniform time steps, use the compact EPHEMERIS_DATA array instead.
  */
 export class ephemerisDataLine implements flatbuffers.IUnpackableObject<ephemerisDataLineT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -28,7 +30,7 @@ static getSizePrefixedRootAsephemerisDataLine(bb:flatbuffers.ByteBuffer, obj?:ep
 }
 
 /**
- * Epoch time, in ISO 8601 UTC format
+ * Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
  */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -86,7 +88,7 @@ Z_DOT():number {
 }
 
 /**
- * Optional: Acceleration vector X-component km/s/s
+ * Optional: Acceleration vector X-component km/s²
  */
 X_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -94,7 +96,7 @@ X_DDOT():number {
 }
 
 /**
- * Optional: Acceleration vector Y-component km/s/s
+ * Optional: Acceleration vector Y-component km/s²
  */
 Y_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -102,7 +104,7 @@ Y_DDOT():number {
 }
 
 /**
- * Optional: Acceleration vector Z-component km/s/s
+ * Optional: Acceleration vector Z-component km/s²
  */
 Z_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);

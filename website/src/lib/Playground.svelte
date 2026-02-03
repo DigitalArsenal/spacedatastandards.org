@@ -175,11 +175,20 @@
     validateJson(inputData);
   }
 
+  // Reset camera to home view (instant)
+  function resetCamera() {
+    const Cesium = getCesium();
+    if (!viewer || !Cesium) return;
+
+    viewer.camera.flyHome(0);
+  }
+
   // Load sample data
   function loadSample(type: string) {
     schemaType = type;
     inputData = JSON.stringify(sampleData[type], null, 2);
     validateJson(inputData);
+    resetCamera(); // Reset camera before visualizing
     visualize();
   }
 
@@ -301,6 +310,7 @@
       }
     });
 
+    // Don't zoom - orbit is visible from home view
   }
 
   // Visualize OEM (ephemeris) - supports both compact and verbose formats
@@ -313,6 +323,13 @@
     // Check which format is being used:
     // COMPACT FORMAT: STEP_SIZE > 0 with EPHEMERIS_DATA array
     // VERBOSE FORMAT: EPHEMERIS_DATA_LINES or EPHEMERIS with per-entry epochs
+
+    console.log("OEM data:", {
+      STEP_SIZE: data.STEP_SIZE,
+      hasEphemerisData: !!data.EPHEMERIS_DATA,
+      ephemerisDataLength: data.EPHEMERIS_DATA?.length,
+      STATE_VECTOR_SIZE: data.STATE_VECTOR_SIZE
+    });
 
     if (data.STEP_SIZE && data.STEP_SIZE > 0 && data.EPHEMERIS_DATA) {
       // ─────────────────────────────────────────────────────────────────────
@@ -350,7 +367,12 @@
       }));
     }
 
-    if (stateVectors.length === 0) return;
+    console.log("OEM stateVectors:", stateVectors.length, stateVectors.slice(0, 2));
+
+    if (stateVectors.length === 0) {
+      console.error("OEM: No state vectors extracted!");
+      return;
+    }
 
     // Create orbit path from state vectors
     const positions = stateVectors.map(sv =>

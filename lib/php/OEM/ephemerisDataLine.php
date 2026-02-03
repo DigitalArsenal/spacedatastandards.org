@@ -6,7 +6,9 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// A single ephemeris data line
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 class ephemerisDataLine extends Table
 {
     /**
@@ -41,7 +43,7 @@ class ephemerisDataLine extends Table
         return $this;
     }
 
-    /// Epoch time, in ISO 8601 UTC format
+    /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
     public function getEPOCH()
     {
         $o = $this->__offset(4);
@@ -108,7 +110,7 @@ class ephemerisDataLine extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Optional: Acceleration vector X-component km/s/s
+    /// Optional: Acceleration vector X-component km/s²
     /**
      * @return double
      */
@@ -118,7 +120,7 @@ class ephemerisDataLine extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Optional: Acceleration vector Y-component km/s/s
+    /// Optional: Acceleration vector Y-component km/s²
     /**
      * @return double
      */
@@ -128,7 +130,7 @@ class ephemerisDataLine extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Optional: Acceleration vector Z-component km/s/s
+    /// Optional: Acceleration vector Z-component km/s²
     /**
      * @return double
      */

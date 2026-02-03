@@ -6,6 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# Individual record wrapper for any standard type
 class Record(object):
     __slots__ = ['_tab']
 
@@ -35,6 +36,7 @@ class Record(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # The record data (union of all supported standards)
     # Record
     def Value(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,6 +47,7 @@ class Record(object):
             return obj
         return None
 
+    # Standard identifier (e.g., "OMM", "CDM", "CAT")
     # Record
     def Standard(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

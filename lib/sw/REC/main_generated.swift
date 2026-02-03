@@ -137,6 +137,7 @@ public enum RecordType: UInt8, UnionEnum {
 }
 
 
+///  Individual record wrapper for any standard type
 public struct Record: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }
@@ -157,7 +158,9 @@ public struct Record: FlatBufferObject, Verifiable {
   }
 
   public var valueType: RecordType { let o = _accessor.offset(VTOFFSET.valueType.v); return o == 0 ? .none_ : RecordType(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  The record data (union of all supported standards)
   public func value<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.value.v); return o == 0 ? nil : _accessor.union(o) }
+  ///  Standard identifier (e.g., "OMM", "CDM", "CAT")
   public var standard: String? { let o = _accessor.offset(VTOFFSET.standard.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var standardSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.standard.v) }
   public static func startRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
@@ -444,8 +447,10 @@ public struct REC: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
+  ///  Schema version identifier
   public var version: String? { let o = _accessor.offset(VTOFFSET.version.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.version.v) }
+  ///  Array of heterogeneous records from any supported standard
   public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
   public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func RECORDS(at index: Int32) -> Record? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : Record(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }

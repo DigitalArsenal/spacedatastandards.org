@@ -117,6 +117,9 @@ import { VCMT } from './VCM.js';
 import { WPNT } from './WPN.js';
 import { WTHT } from './WTH.js';
 import { XTCT } from './XTC.js';
+/**
+ * Individual record wrapper for any standard type
+ */
 export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -124,7 +127,13 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     static getRootAsRecord(bb: flatbuffers.ByteBuffer, obj?: Record): Record;
     static getSizePrefixedRootAsRecord(bb: flatbuffers.ByteBuffer, obj?: Record): Record;
     valueType(): RecordType;
+    /**
+     * The record data (union of all supported standards)
+     */
     value<T extends flatbuffers.Table>(obj: any): any | null;
+    /**
+     * Standard identifier (e.g., "OMM", "CDM", "CAT")
+     */
     standard(): string | null;
     standard(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startRecord(builder: flatbuffers.Builder): void;

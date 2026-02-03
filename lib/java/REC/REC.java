@@ -29,9 +29,15 @@ public final class REC extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public REC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Schema version identifier
+   */
   public String version() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer versionAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer versionInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Array of heterogeneous records from any supported standard
+   */
   public Record RECORDS(int j) { return RECORDS(new Record(), j); }
   public Record RECORDS(Record obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int RECORDSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }

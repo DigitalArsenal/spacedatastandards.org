@@ -6,6 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// Individual record wrapper for any standard type
 public struct Record : IFlatbufferObject
 {
   private Table __p;
@@ -17,6 +18,7 @@ public struct Record : IFlatbufferObject
   public Record __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public RecordType ValueType { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
+  /// The record data (union of all supported standards)
   public TTable? Value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
   public ACL ValueAsACL() { return Value<ACL>().Value; }
   public ACM ValueAsACM() { return Value<ACM>().Value; }
@@ -135,6 +137,7 @@ public struct Record : IFlatbufferObject
   public WPN ValueAsWPN() { return Value<WPN>().Value; }
   public WTH ValueAsWTH() { return Value<WTH>().Value; }
   public XTC ValueAsXTC() { return Value<XTC>().Value; }
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string Standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetStandardBytes() { return __p.__vector_as_span<byte>(8, 1); }

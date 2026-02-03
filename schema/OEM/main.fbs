@@ -1,5 +1,5 @@
-// Hash: 367f8502c58df536b35c2555b6b6eef0d6b4f3a7162a75999fb9d4140503e8b2
-// Version: 1.0.3
+// Hash: 9325c94f5e4ff168083fb7c854a89f9fa14bc07fe6c34225c9551553421a1c74
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -14,9 +14,75 @@ include "../CAT/main.fbs";
 // state at an arbitrary time contained within the span of the ephemeris.
 // CCSDS Reference documentation: 502x0b2c1e2.
 
-/// A single ephemeris data line
+// =============================================================================
+// EPHEMERIS DATA FORMAT OPTIONS
+// =============================================================================
+//
+// The OEM supports TWO mutually exclusive formats for ephemeris data:
+//
+// ┌─────────────────────────────────────────────────────────────────────────────┐
+// │ OPTION 1: COMPACT FORMAT (Row-Major Array) - RECOMMENDED FOR UNIFORM STEPS │
+// ├─────────────────────────────────────────────────────────────────────────────┤
+// │ Use when: Time steps are uniform (constant interval between epochs)        │
+// │                                                                             │
+// │ Required fields:                                                            │
+// │   - START_TIME: Epoch of first state vector (ISO 8601)                     │
+// │   - STEP_SIZE: Time interval between states in seconds (must be > 0)       │
+// │   - EPHEMERIS_DATA: Flat array of doubles in row-major order               │
+// │   - STATE_VECTOR_SIZE: Number of components per state (6 or 9)             │
+// │                                                                             │
+// │ Array layout (row-major):                                                   │
+// │   [x0, y0, z0, xdot0, ydot0, zdot0,  ← State at START_TIME                 │
+// │    x1, y1, z1, xdot1, ydot1, zdot1,  ← State at START_TIME + STEP_SIZE     │
+// │    x2, y2, z2, xdot2, ydot2, zdot2,  ← State at START_TIME + 2*STEP_SIZE   │
+// │    ...]                                                                     │
+// │                                                                             │
+// │ With acceleration (STATE_VECTOR_SIZE = 9):                                  │
+// │   [x0, y0, z0, xdot0, ydot0, zdot0, xddot0, yddot0, zddot0,                │
+// │    x1, y1, z1, xdot1, ydot1, zdot1, xddot1, yddot1, zddot1,                │
+// │    ...]                                                                     │
+// │                                                                             │
+// │ Time reconstruction:                                                        │
+// │   epoch[i] = START_TIME + (i * STEP_SIZE)                                  │
+// │   where i = 0, 1, 2, ... (length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE - 1)  │
+// │                                                                             │
+// │ Benefits: ~10x smaller payload, faster parsing, cache-friendly iteration   │
+// └─────────────────────────────────────────────────────────────────────────────┘
+//
+// ┌─────────────────────────────────────────────────────────────────────────────┐
+// │ OPTION 2: VERBOSE FORMAT (Structured Lines) - FOR NON-UNIFORM STEPS        │
+// ├─────────────────────────────────────────────────────────────────────────────┤
+// │ Use when: Time steps are irregular or you need self-describing data        │
+// │                                                                             │
+// │ Required fields:                                                            │
+// │   - EPHEMERIS_DATA_LINES: Array of ephemerisDataLine tables                │
+// │   - STEP_SIZE: Should be 0 or omitted to indicate non-uniform steps        │
+// │                                                                             │
+// │ Each ephemerisDataLine contains:                                            │
+// │   - EPOCH: Explicit timestamp for this state (ISO 8601)                    │
+// │   - X, Y, Z: Position components (km)                                      │
+// │   - X_DOT, Y_DOT, Z_DOT: Velocity components (km/s)                        │
+// │   - X_DDOT, Y_DDOT, Z_DDOT: Optional acceleration (km/s²)                  │
+// │                                                                             │
+// │ Benefits: Self-describing, supports irregular time spacing, easier debug   │
+// └─────────────────────────────────────────────────────────────────────────────┘
+//
+// VALIDATION RULES:
+// 1. If STEP_SIZE > 0, EPHEMERIS_DATA must be populated and EPHEMERIS_DATA_LINES
+//    should be empty or ignored by parsers.
+// 2. If STEP_SIZE == 0 or is omitted, EPHEMERIS_DATA_LINES must be populated
+//    and EPHEMERIS_DATA should be empty or ignored by parsers.
+// 3. Do NOT populate both formats simultaneously.
+// 4. EPHEMERIS_DATA length must be divisible by STATE_VECTOR_SIZE.
+// 5. STATE_VECTOR_SIZE must be 6 (pos+vel) or 9 (pos+vel+accel).
+//
+// =============================================================================
+
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 table ephemerisDataLine {
-  /// Epoch time, in ISO 8601 UTC format
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   EPOCH:string;
   /// Position vector X-component km
   X:double;
@@ -30,11 +96,11 @@ table ephemerisDataLine {
   Y_DOT:double;
   /// Velocity vector Z-component km/s
   Z_DOT:double;
-  /// Optional: Acceleration vector X-component km/s/s
+  /// Optional: Acceleration vector X-component km/s²
   X_DDOT:double;
-  /// Optional: Acceleration vector Y-component km/s/s
+  /// Optional: Acceleration vector Y-component km/s²
   Y_DDOT:double;
-  /// Optional: Acceleration vector Z-component km/s/s
+  /// Optional: Acceleration vector Z-component km/s²
   Z_DDOT:double;
 }
 
@@ -88,6 +154,10 @@ table covarianceMatrixLine {
 
 /// OEM Ephemeris Data Block
 table ephemerisDataBlock {
+  // ─────────────────────────────────────────────────────────────────────────────
+  // METADATA SECTION (common to both formats)
+  // ─────────────────────────────────────────────────────────────────────────────
+
   /// Plain-Text Comment
   COMMENT:string;
   /// Satellite name for the first object
@@ -110,16 +180,55 @@ table ephemerisDataBlock {
   USEABLE_STOP_TIME:string;
   /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   STOP_TIME:string;
-  /// Step size in seconds separating the epochs of each ephemeris data row
-  STEP_SIZE:double;
   /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
   INTERPOLATION:string;
   /// Recommended interpolation degree for ephemeris data
   INTERPOLATION_DEGREE:uint;
 
-  /// Array of ephemeris data lines
+  // ─────────────────────────────────────────────────────────────────────────────
+  // COMPACT FORMAT (Row-Major Array) - Use when STEP_SIZE > 0
+  // ─────────────────────────────────────────────────────────────────────────────
+  // For uniform time steps, use this efficient representation.
+  // Time for state i: epoch[i] = START_TIME + (i * STEP_SIZE)
+  // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  STEP_SIZE:double;
+
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
+  STATE_VECTOR_SIZE:uint8 = 6;
+
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s²
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  EPHEMERIS_DATA:[double];
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // VERBOSE FORMAT (Structured Lines) - Use when STEP_SIZE == 0 or omitted
+  // ─────────────────────────────────────────────────────────────────────────────
+  // For non-uniform time steps, use this self-describing format where each
+  // state vector includes its own timestamp.
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
   EPHEMERIS_DATA_LINES:[ephemerisDataLine];
-  /// Array of covariance matrix lines
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // COVARIANCE DATA (optional, applies to both formats)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Array of covariance matrix lines (optional)
   COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];
 }
 

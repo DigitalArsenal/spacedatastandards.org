@@ -17,7 +17,9 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * A single ephemeris data line
+ * A single ephemeris data line (for non-uniform time steps only)
+ * Use this format when time intervals between states are irregular.
+ * For uniform time steps, use the compact EPHEMERIS_DATA array instead.
  */
 @Suppress("unused")
 class ephemerisDataLine : Table() {
@@ -30,7 +32,7 @@ class ephemerisDataLine : Table() {
         return this
     }
     /**
-     * Epoch time, in ISO 8601 UTC format
+     * Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
      */
     val EPOCH : String?
         get() {
@@ -92,7 +94,7 @@ class ephemerisDataLine : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Optional: Acceleration vector X-component km/s/s
+     * Optional: Acceleration vector X-component km/s²
      */
     val X_DDOT : Double
         get() {
@@ -100,7 +102,7 @@ class ephemerisDataLine : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Optional: Acceleration vector Y-component km/s/s
+     * Optional: Acceleration vector Y-component km/s²
      */
     val Y_DDOT : Double
         get() {
@@ -108,7 +110,7 @@ class ephemerisDataLine : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Optional: Acceleration vector Z-component km/s/s
+     * Optional: Acceleration vector Z-component km/s²
      */
     val Z_DDOT : Double
         get() {

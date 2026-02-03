@@ -3511,6 +3511,7 @@ impl RecordTypeT {
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
+/// Individual record wrapper for any standard type
 pub struct Record<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -4150,6 +4151,7 @@ impl<'a> Record<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<RecordType>(Record::VT_VALUE_TYPE, Some(RecordType::NONE)).unwrap()}
   }
+  /// The record data (union of all supported standards)
   #[inline]
   pub fn value(&self) -> Option<flatbuffers::Table<'a>> {
     // Safety:
@@ -4157,6 +4159,7 @@ impl<'a> Record<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Table<'a>>>(Record::VT_VALUE, None)}
   }
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   #[inline]
   pub fn standard(&self) -> Option<&'a str> {
     // Safety:
@@ -7015,6 +7018,7 @@ impl<'a> REC<'a> {
     }
   }
 
+  /// Schema version identifier
   #[inline]
   pub fn version(&self) -> Option<&'a str> {
     // Safety:
@@ -7022,6 +7026,7 @@ impl<'a> REC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(REC::VT_VERSION, None)}
   }
+  /// Array of heterogeneous records from any supported standard
   #[inline]
   pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Record<'a>>>> {
     // Safety:

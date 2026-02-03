@@ -990,6 +990,7 @@ template<> struct RecordTypeTraits<XTC> {
 bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj, RecordType type);
 bool VerifyRecordTypeVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
+/// Individual record wrapper for any standard type
 struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RecordBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1000,6 +1001,7 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   RecordType value_type() const {
     return static_cast<RecordType>(GetField<uint8_t>(VT_VALUE_TYPE, 0));
   }
+  /// The record data (union of all supported standards)
   const void *value() const {
     return GetPointer<const void *>(VT_VALUE);
   }
@@ -1355,6 +1357,7 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const XTC *value_as_XTC() const {
     return value_type() == RecordType_XTC ? static_cast<const XTC *>(value()) : nullptr;
   }
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
   }
@@ -1893,9 +1896,11 @@ struct REC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_VERSION = 4,
     VT_RECORDS = 6
   };
+  /// Schema version identifier
   const ::flatbuffers::String *version() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VERSION);
   }
+  /// Array of heterogeneous records from any supported standard
   const ::flatbuffers::Vector<::flatbuffers::Offset<Record>> *RECORDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Record>> *>(VT_RECORDS);
   }

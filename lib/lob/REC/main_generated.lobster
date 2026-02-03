@@ -125,9 +125,11 @@ class Record
 
 class REC
 
+/// Individual record wrapper for any standard type
 class Record : flatbuffers.handle
     def value_type() -> RecordType:
         return RecordType(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    /// The record data (union of all supported standards)
     def value_as_ACL():
         return ACL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ACM():
@@ -362,6 +364,7 @@ class Record : flatbuffers.handle
         return WTH { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_XTC():
         return XTC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    /// Standard identifier (e.g., "OMM", "CDM", "CAT")
     def standard() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
 
@@ -386,8 +389,10 @@ struct RecordBuilder:
 
 /// Collection of Standard Records
 class REC : flatbuffers.handle
+    /// Schema version identifier
     def version() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
+    /// Array of heterogeneous records from any supported standard
     def RECORDS(i:int) -> Record:
         return Record { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def RECORDS_length() -> int:

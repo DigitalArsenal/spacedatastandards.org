@@ -7,7 +7,9 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  A single ephemeris data line
+///  A single ephemeris data line (for non-uniform time steps only)
+///  Use this format when time intervals between states are irregular.
+///  For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 class EphemerisDataLine {
   EphemerisDataLine._(this._bc, this._bcOffset);
   factory EphemerisDataLine(List<int> bytes) {
@@ -20,7 +22,7 @@ class EphemerisDataLine {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Epoch time, in ISO 8601 UTC format
+  ///  Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Position vector X-component km
   double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
@@ -34,11 +36,11 @@ class EphemerisDataLine {
   double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   ///  Velocity vector Z-component km/s
   double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///  Optional: Acceleration vector X-component km/s/s
+  ///  Optional: Acceleration vector X-component km/s²
   double get X_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  ///  Optional: Acceleration vector Y-component km/s/s
+  ///  Optional: Acceleration vector Y-component km/s²
   double get Y_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  ///  Optional: Acceleration vector Z-component km/s/s
+  ///  Optional: Acceleration vector Z-component km/s²
   double get Z_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
 
   @override
@@ -492,20 +494,36 @@ class EphemerisDataBlock {
   String? get USEABLE_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  ///  Step size in seconds separating the epochs of each ephemeris data row
-  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   ///  Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
-  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get INTERPOLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Recommended interpolation degree for ephemeris data
-  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
-  ///  Array of ephemeris data lines
-  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 32);
-  ///  Array of covariance matrix lines
-  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  int get INTERPOLATION_DEGREE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  ///  Time interval between ephemeris states in seconds.
+  ///  If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  ///  If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Number of components per state vector in EPHEMERIS_DATA array.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  ///  Only used when STEP_SIZE > 0. Default is 6.
+  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 32, 6);
+  ///  Compact ephemeris data as row-major array of doubles.
+  ///  Only used when STEP_SIZE > 0.
+  ///  Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  ///  Units: position in km, velocity in km/s, acceleration in km/s²
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
+  ///  Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  List<double>? get EPHEMERIS_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Array of ephemeris data lines with explicit epochs.
+  ///  Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  ///  Each line contains its own EPOCH timestamp.
+  List<EphemerisDataLine>? get EPHEMERIS_DATA_LINES => const fb.ListReader<EphemerisDataLine>(EphemerisDataLine.reader).vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Array of covariance matrix lines (optional)
+  List<CovarianceMatrixLine>? get COVARIANCE_MATRIX_LINES => const fb.ListReader<CovarianceMatrixLine>(CovarianceMatrixLine.reader).vTableGetNullable(_bc, _bcOffset, 38);
 
   @override
   String toString() {
-    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
+    return 'EphemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, CENTER_NAME: ${CENTER_NAME}, REFERENCE_FRAME: ${REFERENCE_FRAME}, REFERENCE_FRAME_EPOCH: ${REFERENCE_FRAME_EPOCH}, COV_REFERENCE_FRAME: ${COV_REFERENCE_FRAME}, TIME_SYSTEM: ${TIME_SYSTEM}, START_TIME: ${START_TIME}, USEABLE_START_TIME: ${USEABLE_START_TIME}, USEABLE_STOP_TIME: ${USEABLE_STOP_TIME}, STOP_TIME: ${STOP_TIME}, INTERPOLATION: ${INTERPOLATION}, INTERPOLATION_DEGREE: ${INTERPOLATION_DEGREE}, STEP_SIZE: ${STEP_SIZE}, STATE_VECTOR_SIZE: ${STATE_VECTOR_SIZE}, EPHEMERIS_DATA: ${EPHEMERIS_DATA}, EPHEMERIS_DATA_LINES: ${EPHEMERIS_DATA_LINES}, COVARIANCE_MATRIX_LINES: ${COVARIANCE_MATRIX_LINES}}';
   }
 }
 
@@ -523,7 +541,7 @@ class EphemerisDataBlockBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(18);
   }
 
   int addCommentOffset(int? offset) {
@@ -570,24 +588,32 @@ class EphemerisDataBlockBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addStepSize(double? STEP_SIZE) {
-    fbBuilder.addFloat64(11, STEP_SIZE);
-    return fbBuilder.offset;
-  }
   int addInterpolationOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
   int addInterpolationDegree(int? INTERPOLATION_DEGREE) {
-    fbBuilder.addUint32(13, INTERPOLATION_DEGREE);
+    fbBuilder.addUint32(12, INTERPOLATION_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addStepSize(double? STEP_SIZE) {
+    fbBuilder.addFloat64(13, STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
+    fbBuilder.addUint8(14, STATE_VECTOR_SIZE);
+    return fbBuilder.offset;
+  }
+  int addEphemerisDataOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
   int addEphemerisDataLinesOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
   int addCovarianceMatrixLinesOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
 
@@ -608,9 +634,11 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _USEABLE_START_TIME;
   final String? _USEABLE_STOP_TIME;
   final String? _STOP_TIME;
-  final double? _STEP_SIZE;
   final String? _INTERPOLATION;
   final int? _INTERPOLATION_DEGREE;
+  final double? _STEP_SIZE;
+  final int? _STATE_VECTOR_SIZE;
+  final List<double>? _EPHEMERIS_DATA;
   final List<EphemerisDataLineObjectBuilder>? _EPHEMERIS_DATA_LINES;
   final List<CovarianceMatrixLineObjectBuilder>? _COVARIANCE_MATRIX_LINES;
 
@@ -626,9 +654,11 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     String? USEABLE_START_TIME,
     String? USEABLE_STOP_TIME,
     String? STOP_TIME,
-    double? STEP_SIZE,
     String? INTERPOLATION,
     int? INTERPOLATION_DEGREE,
+    double? STEP_SIZE,
+    int? STATE_VECTOR_SIZE,
+    List<double>? EPHEMERIS_DATA,
     List<EphemerisDataLineObjectBuilder>? EPHEMERIS_DATA_LINES,
     List<CovarianceMatrixLineObjectBuilder>? COVARIANCE_MATRIX_LINES,
   })
@@ -643,9 +673,11 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         _USEABLE_START_TIME = USEABLE_START_TIME,
         _USEABLE_STOP_TIME = USEABLE_STOP_TIME,
         _STOP_TIME = STOP_TIME,
-        _STEP_SIZE = STEP_SIZE,
         _INTERPOLATION = INTERPOLATION,
         _INTERPOLATION_DEGREE = INTERPOLATION_DEGREE,
+        _STEP_SIZE = STEP_SIZE,
+        _STATE_VECTOR_SIZE = STATE_VECTOR_SIZE,
+        _EPHEMERIS_DATA = EPHEMERIS_DATA,
         _EPHEMERIS_DATA_LINES = EPHEMERIS_DATA_LINES,
         _COVARIANCE_MATRIX_LINES = COVARIANCE_MATRIX_LINES;
 
@@ -671,11 +703,13 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_STOP_TIME!);
     final int? INTERPOLATIONOffset = _INTERPOLATION == null ? null
         : fbBuilder.writeString(_INTERPOLATION!);
+    final int? EPHEMERIS_DATAOffset = _EPHEMERIS_DATA == null ? null
+        : fbBuilder.writeListFloat64(_EPHEMERIS_DATA!);
     final int? EPHEMERIS_DATA_LINESOffset = _EPHEMERIS_DATA_LINES == null ? null
         : fbBuilder.writeList(_EPHEMERIS_DATA_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? COVARIANCE_MATRIX_LINESOffset = _COVARIANCE_MATRIX_LINES == null ? null
         : fbBuilder.writeList(_COVARIANCE_MATRIX_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(18);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
@@ -687,11 +721,13 @@ class EphemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, USEABLE_START_TIMEOffset);
     fbBuilder.addOffset(9, USEABLE_STOP_TIMEOffset);
     fbBuilder.addOffset(10, STOP_TIMEOffset);
-    fbBuilder.addFloat64(11, _STEP_SIZE);
-    fbBuilder.addOffset(12, INTERPOLATIONOffset);
-    fbBuilder.addUint32(13, _INTERPOLATION_DEGREE);
-    fbBuilder.addOffset(14, EPHEMERIS_DATA_LINESOffset);
-    fbBuilder.addOffset(15, COVARIANCE_MATRIX_LINESOffset);
+    fbBuilder.addOffset(11, INTERPOLATIONOffset);
+    fbBuilder.addUint32(12, _INTERPOLATION_DEGREE);
+    fbBuilder.addFloat64(13, _STEP_SIZE);
+    fbBuilder.addUint8(14, _STATE_VECTOR_SIZE);
+    fbBuilder.addOffset(15, EPHEMERIS_DATAOffset);
+    fbBuilder.addOffset(16, EPHEMERIS_DATA_LINESOffset);
+    fbBuilder.addOffset(17, COVARIANCE_MATRIX_LINESOffset);
     return fbBuilder.endTable();
   }
 

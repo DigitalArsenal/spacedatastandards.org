@@ -9,9 +9,11 @@ class ephemerisDataBlock
 
 class OEM
 
-/// A single ephemeris data line
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
 class ephemerisDataLine : flatbuffers.handle
-    /// Epoch time, in ISO 8601 UTC format
+    /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Position vector X-component km
@@ -32,13 +34,13 @@ class ephemerisDataLine : flatbuffers.handle
     /// Velocity vector Z-component km/s
     def Z_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    /// Optional: Acceleration vector X-component km/s/s
+    /// Optional: Acceleration vector X-component km/s²
     def X_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    /// Optional: Acceleration vector Y-component km/s/s
+    /// Optional: Acceleration vector Y-component km/s²
     def Y_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    /// Optional: Acceleration vector Z-component km/s/s
+    /// Optional: Acceleration vector Z-component km/s²
     def Z_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
 
@@ -265,32 +267,52 @@ class ephemerisDataBlock : flatbuffers.handle
     /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
     def STOP_TIME() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
-    /// Step size in seconds separating the epochs of each ephemeris data row
-    def STEP_SIZE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
     def INTERPOLATION() -> string:
-        return flatbuffers.field_string(buf_, pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// Recommended interpolation degree for ephemeris data
     def INTERPOLATION_DEGREE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 30, 0)
-    /// Array of ephemeris data lines
-    def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
-        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
-    def EPHEMERIS_DATA_LINES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
-    /// Array of covariance matrix lines
-    def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
-        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
-    def COVARIANCE_MATRIX_LINES_length() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
+    /// Time interval between ephemeris states in seconds.
+    /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+    /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+    def STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// Number of components per state vector in EPHEMERIS_DATA array.
+    /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+    /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    /// Only used when STEP_SIZE > 0. Default is 6.
+    def STATE_VECTOR_SIZE() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 32, 6)
+    /// Compact ephemeris data as row-major array of doubles.
+    /// Only used when STEP_SIZE > 0.
+    /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+    /// Units: position in km, velocity in km/s, acceleration in km/s²
+    /// Length must be divisible by STATE_VECTOR_SIZE.
+    /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+    def EPHEMERIS_DATA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 8)
+    def EPHEMERIS_DATA_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// Array of ephemeris data lines with explicit epochs.
+    /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+    /// Each line contains its own EPOCH timestamp.
+    def EPHEMERIS_DATA_LINES(i:int) -> ephemerisDataLine:
+        return ephemerisDataLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 36) + i * 4) }
+    def EPHEMERIS_DATA_LINES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// Array of covariance matrix lines (optional)
+    def COVARIANCE_MATRIX_LINES(i:int) -> covarianceMatrixLine:
+        return covarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 38) + i * 4) }
+    def COVARIANCE_MATRIX_LINES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
 
 def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(18)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -325,23 +347,36 @@ struct ephemerisDataBlockBuilder:
     def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, STOP_TIME)
         return this
-    def add_STEP_SIZE(STEP_SIZE:float):
-        b_.PrependFloat64Slot(11, STEP_SIZE, 0.0)
-        return this
     def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, INTERPOLATION)
+        b_.PrependUOffsetTRelativeSlot(11, INTERPOLATION)
         return this
     def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
-        b_.PrependUint32Slot(13, INTERPOLATION_DEGREE, 0)
+        b_.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
+        return this
+    def add_STEP_SIZE(STEP_SIZE:float):
+        b_.PrependFloat64Slot(13, STEP_SIZE, 0.0)
+        return this
+    def add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE:int):
+        b_.PrependUint8Slot(14, STATE_VECTOR_SIZE, 6)
+        return this
+    def add_EPHEMERIS_DATA(EPHEMERIS_DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, EPHEMERIS_DATA)
         return this
     def add_EPHEMERIS_DATA_LINES(EPHEMERIS_DATA_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, EPHEMERIS_DATA_LINES)
+        b_.PrependUOffsetTRelativeSlot(16, EPHEMERIS_DATA_LINES)
         return this
     def add_COVARIANCE_MATRIX_LINES(COVARIANCE_MATRIX_LINES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, COVARIANCE_MATRIX_LINES)
+        b_.PrependUOffsetTRelativeSlot(17, COVARIANCE_MATRIX_LINES)
         return this
     def end():
         return b_.EndObject()
+
+def ephemerisDataBlockStartEPHEMERIS_DATAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ephemerisDataBlockCreateEPHEMERIS_DATAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 
 def ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)

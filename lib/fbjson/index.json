@@ -22684,11 +22684,11 @@
                 },
                 "ephemerisDataLine": {
                     "type": "object",
-                    "description": "A single ephemeris data line",
+                    "description": "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
                     "properties": {
                         "EPOCH": {
                             "type": "string",
-                            "description": "Epoch time, in ISO 8601 UTC format",
+                            "description": "Epoch time, in ISO 8601 UTC format (required for non-uniform steps)",
                             "x-flatbuffer-type": "string"
                         },
                         "X": {
@@ -22723,17 +22723,17 @@
                         },
                         "X_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector X-component km/s/s",
+                            "description": "Optional: Acceleration vector X-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         },
                         "Y_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector Y-component km/s/s",
+                            "description": "Optional: Acceleration vector Y-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         },
                         "Z_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector Z-component km/s/s",
+                            "description": "Optional: Acceleration vector Z-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         }
                     },
@@ -22966,11 +22966,6 @@
                             "description": "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
                             "x-flatbuffer-type": "string"
                         },
-                        "STEP_SIZE": {
-                            "type": "number",
-                            "description": "Step size in seconds separating the epochs of each ephemeris data row",
-                            "x-flatbuffer-type": "double"
-                        },
                         "INTERPOLATION": {
                             "type": "string",
                             "description": "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)",
@@ -22983,12 +22978,32 @@
                             "description": "Recommended interpolation degree for ephemeris data",
                             "x-flatbuffer-type": "uint"
                         },
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6.",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "EPHEMERIS_DATA": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s\u00b2\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
+                            "x-flatbuffer-type": "[double]"
+                        },
                         "EPHEMERIS_DATA_LINES": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/ephemerisDataLine"
                             },
-                            "description": "Array of ephemeris data lines",
+                            "description": "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp.",
                             "x-flatbuffer-type": "[ephemerisDataLine]"
                         },
                         "COVARIANCE_MATRIX_LINES": {
@@ -22996,7 +23011,7 @@
                             "items": {
                                 "$ref": "#/definitions/covarianceMatrixLine"
                             },
-                            "description": "Array of covariance matrix lines",
+                            "description": "Array of covariance matrix lines (optional)",
                             "x-flatbuffer-type": "[covarianceMatrixLine]"
                         }
                     },
@@ -42673,11 +42688,11 @@
                 },
                 "ephemerisDataLine": {
                     "type": "object",
-                    "description": "A single ephemeris data line",
+                    "description": "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
                     "properties": {
                         "EPOCH": {
                             "type": "string",
-                            "description": "Epoch time, in ISO 8601 UTC format",
+                            "description": "Epoch time, in ISO 8601 UTC format (required for non-uniform steps)",
                             "x-flatbuffer-type": "string"
                         },
                         "X": {
@@ -42712,17 +42727,17 @@
                         },
                         "X_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector X-component km/s/s",
+                            "description": "Optional: Acceleration vector X-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         },
                         "Y_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector Y-component km/s/s",
+                            "description": "Optional: Acceleration vector Y-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         },
                         "Z_DDOT": {
                             "type": "number",
-                            "description": "Optional: Acceleration vector Z-component km/s/s",
+                            "description": "Optional: Acceleration vector Z-component km/s\u00b2",
                             "x-flatbuffer-type": "double"
                         }
                     },
@@ -42955,11 +42970,6 @@
                             "description": "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)",
                             "x-flatbuffer-type": "string"
                         },
-                        "STEP_SIZE": {
-                            "type": "number",
-                            "description": "Step size in seconds separating the epochs of each ephemeris data row",
-                            "x-flatbuffer-type": "double"
-                        },
                         "INTERPOLATION": {
                             "type": "string",
                             "description": "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)",
@@ -42972,12 +42982,32 @@
                             "description": "Recommended interpolation degree for ephemeris data",
                             "x-flatbuffer-type": "uint"
                         },
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6.",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "EPHEMERIS_DATA": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s\u00b2\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
+                            "x-flatbuffer-type": "[double]"
+                        },
                         "EPHEMERIS_DATA_LINES": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/ephemerisDataLine"
                             },
-                            "description": "Array of ephemeris data lines",
+                            "description": "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp.",
                             "x-flatbuffer-type": "[ephemerisDataLine]"
                         },
                         "COVARIANCE_MATRIX_LINES": {
@@ -42985,7 +43015,7 @@
                             "items": {
                                 "$ref": "#/definitions/covarianceMatrixLine"
                             },
-                            "description": "Array of covariance matrix lines",
+                            "description": "Array of covariance matrix lines (optional)",
                             "x-flatbuffer-type": "[covarianceMatrixLine]"
                         }
                     },
@@ -52803,6 +52833,7 @@
                 },
                 "Record": {
                     "type": "object",
+                    "description": "Individual record wrapper for any standard type",
                     "properties": {
                         "value_type": {
                             "$ref": "#/definitions/RecordType"
@@ -53161,10 +53192,12 @@
                                     "$ref": "#/definitions/XTC"
                                 }
                             ],
+                            "description": "The record data (union of all supported standards)",
                             "x-flatbuffer-type": "RecordType"
                         },
                         "standard": {
                             "type": "string",
+                            "description": "Standard identifier (e.g., \"OMM\", \"CDM\", \"CAT\")",
                             "x-flatbuffer-type": "string"
                         }
                     },
@@ -53176,6 +53209,7 @@
                     "properties": {
                         "version": {
                             "type": "string",
+                            "description": "Schema version identifier",
                             "x-flatbuffer-type": "string"
                         },
                         "RECORDS": {
@@ -53183,6 +53217,7 @@
                             "items": {
                                 "$ref": "#/definitions/Record"
                             },
+                            "description": "Array of heterogeneous records from any supported standard",
                             "x-flatbuffer-type": "[Record]"
                         }
                     },
