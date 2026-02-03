@@ -152,15 +152,20 @@ union RecordType {
   XTC
 }  // Union of all record types
 
+/// Individual record wrapper for any standard type
 table Record {
-  value: RecordType; 
+  /// The record data (union of all supported standards)
+  value: RecordType;
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   standard: string;
 }
 
 /// Collection of Standard Records
 table REC {
+  /// Schema version identifier
   version: string;
-  RECORDS: [Record]; 
+  /// Array of heterogeneous records from any supported standard
+  RECORDS: [Record];
 }
 
 root_type REC;

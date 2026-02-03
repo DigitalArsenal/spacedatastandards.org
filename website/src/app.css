@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   CSS VARIABLES & RESET
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #000000;
+  --text-primary: #F5F5F7;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(134, 134, 139, 1.0);
+  --ui-bg: rgba(42, 42, 45, 0.72);
+  --ui-hover: rgba(66, 66, 69, 0.72);
+  --ui-border: rgba(134, 134, 139, 0.3);
+  --ui-border-hover: rgba(134, 134, 139, 0.5);
+  --nav-bg: rgba(22, 22, 23, 0.95);
+  --code-bg: rgba(30, 30, 32, 0.9);
+  --accent: #667eea;
+  --accent-hover: #764ba2;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --radius: 28px;
+  --radius-sm: 16px;
+  --radius-xs: 8px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================
+   STARFIELD BACKGROUND
+   ============================================ */
+.starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  overflow: hidden;
+}
+
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    50vw 20vh 0 0 rgba(255,255,255,0.8),
+    10vw 40vh 0 0 rgba(255,255,255,0.6),
+    80vw 10vh 0 0 rgba(255,255,255,0.4),
+    30vw 70vh 0 0 rgba(255,255,255,0.5),
+    60vw 50vh 0 0 rgba(255,255,255,0.7),
+    90vw 80vh 0 0 rgba(255,255,255,0.3),
+    15vw 90vh 0 0 rgba(255,255,255,0.6),
+    45vw 30vh 0 0 rgba(255,255,255,0.4),
+    75vw 60vh 0 0 rgba(255,255,255,0.5),
+    25vw 15vh 0 0 rgba(255,255,255,0.7),
+    5vw 55vh 0 0 rgba(255,255,255,0.4),
+    85vw 35vh 0 0 rgba(255,255,255,0.6),
+    40vw 85vh 0 0 rgba(255,255,255,0.5),
+    70vw 25vh 0 0 rgba(255,255,255,0.3),
+    20vw 60vh 0 0 rgba(255,255,255,0.7),
+    55vw 75vh 0 0 rgba(255,255,255,0.4),
+    95vw 45vh 0 0 rgba(255,255,255,0.5),
+    35vw 5vh 0 0 rgba(255,255,255,0.6),
+    65vw 95vh 0 0 rgba(255,255,255,0.4),
+    8vw 25vh 0 0 rgba(255,255,255,0.8);
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+.starfield::after {
+  width: 1px;
+  height: 1px;
+  box-shadow:
+    12vw 18vh 0 0 rgba(255,255,255,0.5),
+    28vw 42vh 0 0 rgba(255,255,255,0.4),
+    48vw 8vh 0 0 rgba(255,255,255,0.3),
+    62vw 68vh 0 0 rgba(255,255,255,0.4),
+    78vw 28vh 0 0 rgba(255,255,255,0.5),
+    92vw 58vh 0 0 rgba(255,255,255,0.3),
+    18vw 78vh 0 0 rgba(255,255,255,0.4),
+    38vw 38vh 0 0 rgba(255,255,255,0.3),
+    58vw 88vh 0 0 rgba(255,255,255,0.4),
+    82vw 12vh 0 0 rgba(255,255,255,0.5);
+  animation: twinkle 6s ease-in-out infinite reverse;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ui-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
