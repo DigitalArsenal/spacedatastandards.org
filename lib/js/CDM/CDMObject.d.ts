@@ -160,185 +160,17 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
      */
     Z_DOT(): number;
     /**
-     * Covariance Matrix component
+     * Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+     * Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+     *         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+     *         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+     *         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+     *         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+     *         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
      */
-    CR_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CT_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CT_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CN_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CN_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CN_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CRDOT_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CRDOT_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CRDOT_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CRDOT_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTDOT_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTDOT_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTDOT_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTDOT_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTDOT_TDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_TDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CNDOT_NDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_TDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_NDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CDRG_DRG(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_TDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_NDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_DRG(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CSRP_SRP(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_R(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_T(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_N(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_RDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_TDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_NDOT(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_DRG(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_SRP(): number;
-    /**
-     * Covariance Matrix component
-     */
-    CTHR_THR(): number;
+    COVARIANCE(index: number): number | null;
+    covarianceLength(): number;
+    covarianceArray(): Float64Array | null;
     static startCDMObject(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
@@ -376,51 +208,13 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     static addXDot(builder: flatbuffers.Builder, X_DOT: number): void;
     static addYDot(builder: flatbuffers.Builder, Y_DOT: number): void;
     static addZDot(builder: flatbuffers.Builder, Z_DOT: number): void;
-    static addCrR(builder: flatbuffers.Builder, CR_R: number): void;
-    static addCtR(builder: flatbuffers.Builder, CT_R: number): void;
-    static addCtT(builder: flatbuffers.Builder, CT_T: number): void;
-    static addCnR(builder: flatbuffers.Builder, CN_R: number): void;
-    static addCnT(builder: flatbuffers.Builder, CN_T: number): void;
-    static addCnN(builder: flatbuffers.Builder, CN_N: number): void;
-    static addCrdotR(builder: flatbuffers.Builder, CRDOT_R: number): void;
-    static addCrdotT(builder: flatbuffers.Builder, CRDOT_T: number): void;
-    static addCrdotN(builder: flatbuffers.Builder, CRDOT_N: number): void;
-    static addCrdotRdot(builder: flatbuffers.Builder, CRDOT_RDOT: number): void;
-    static addCtdotR(builder: flatbuffers.Builder, CTDOT_R: number): void;
-    static addCtdotT(builder: flatbuffers.Builder, CTDOT_T: number): void;
-    static addCtdotN(builder: flatbuffers.Builder, CTDOT_N: number): void;
-    static addCtdotRdot(builder: flatbuffers.Builder, CTDOT_RDOT: number): void;
-    static addCtdotTdot(builder: flatbuffers.Builder, CTDOT_TDOT: number): void;
-    static addCndotR(builder: flatbuffers.Builder, CNDOT_R: number): void;
-    static addCndotT(builder: flatbuffers.Builder, CNDOT_T: number): void;
-    static addCndotN(builder: flatbuffers.Builder, CNDOT_N: number): void;
-    static addCndotRdot(builder: flatbuffers.Builder, CNDOT_RDOT: number): void;
-    static addCndotTdot(builder: flatbuffers.Builder, CNDOT_TDOT: number): void;
-    static addCndotNdot(builder: flatbuffers.Builder, CNDOT_NDOT: number): void;
-    static addCdrgR(builder: flatbuffers.Builder, CDRG_R: number): void;
-    static addCdrgT(builder: flatbuffers.Builder, CDRG_T: number): void;
-    static addCdrgN(builder: flatbuffers.Builder, CDRG_N: number): void;
-    static addCdrgRdot(builder: flatbuffers.Builder, CDRG_RDOT: number): void;
-    static addCdrgTdot(builder: flatbuffers.Builder, CDRG_TDOT: number): void;
-    static addCdrgNdot(builder: flatbuffers.Builder, CDRG_NDOT: number): void;
-    static addCdrgDrg(builder: flatbuffers.Builder, CDRG_DRG: number): void;
-    static addCsrpR(builder: flatbuffers.Builder, CSRP_R: number): void;
-    static addCsrpT(builder: flatbuffers.Builder, CSRP_T: number): void;
-    static addCsrpN(builder: flatbuffers.Builder, CSRP_N: number): void;
-    static addCsrpRdot(builder: flatbuffers.Builder, CSRP_RDOT: number): void;
-    static addCsrpTdot(builder: flatbuffers.Builder, CSRP_TDOT: number): void;
-    static addCsrpNdot(builder: flatbuffers.Builder, CSRP_NDOT: number): void;
-    static addCsrpDrg(builder: flatbuffers.Builder, CSRP_DRG: number): void;
-    static addCsrpSrp(builder: flatbuffers.Builder, CSRP_SRP: number): void;
-    static addCthrR(builder: flatbuffers.Builder, CTHR_R: number): void;
-    static addCthrT(builder: flatbuffers.Builder, CTHR_T: number): void;
-    static addCthrN(builder: flatbuffers.Builder, CTHR_N: number): void;
-    static addCthrRdot(builder: flatbuffers.Builder, CTHR_RDOT: number): void;
-    static addCthrTdot(builder: flatbuffers.Builder, CTHR_TDOT: number): void;
-    static addCthrNdot(builder: flatbuffers.Builder, CTHR_NDOT: number): void;
-    static addCthrDrg(builder: flatbuffers.Builder, CTHR_DRG: number): void;
-    static addCthrSrp(builder: flatbuffers.Builder, CTHR_SRP: number): void;
-    static addCthrThr(builder: flatbuffers.Builder, CTHR_THR: number): void;
+    static addCovariance(builder: flatbuffers.Builder, COVARIANCEOffset: flatbuffers.Offset): void;
+    static createCovarianceVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createCovarianceVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCovarianceVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCDMObject(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CDMObjectT;
     unpackTo(_o: CDMObjectT): void;
@@ -462,52 +256,8 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     X_DOT: number;
     Y_DOT: number;
     Z_DOT: number;
-    CR_R: number;
-    CT_R: number;
-    CT_T: number;
-    CN_R: number;
-    CN_T: number;
-    CN_N: number;
-    CRDOT_R: number;
-    CRDOT_T: number;
-    CRDOT_N: number;
-    CRDOT_RDOT: number;
-    CTDOT_R: number;
-    CTDOT_T: number;
-    CTDOT_N: number;
-    CTDOT_RDOT: number;
-    CTDOT_TDOT: number;
-    CNDOT_R: number;
-    CNDOT_T: number;
-    CNDOT_N: number;
-    CNDOT_RDOT: number;
-    CNDOT_TDOT: number;
-    CNDOT_NDOT: number;
-    CDRG_R: number;
-    CDRG_T: number;
-    CDRG_N: number;
-    CDRG_RDOT: number;
-    CDRG_TDOT: number;
-    CDRG_NDOT: number;
-    CDRG_DRG: number;
-    CSRP_R: number;
-    CSRP_T: number;
-    CSRP_N: number;
-    CSRP_RDOT: number;
-    CSRP_TDOT: number;
-    CSRP_NDOT: number;
-    CSRP_DRG: number;
-    CSRP_SRP: number;
-    CTHR_R: number;
-    CTHR_T: number;
-    CTHR_N: number;
-    CTHR_RDOT: number;
-    CTHR_TDOT: number;
-    CTHR_NDOT: number;
-    CTHR_DRG: number;
-    CTHR_SRP: number;
-    CTHR_THR: number;
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceMethod, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, CR_R?: number, CT_R?: number, CT_T?: number, CN_R?: number, CN_T?: number, CN_N?: number, CRDOT_R?: number, CRDOT_T?: number, CRDOT_N?: number, CRDOT_RDOT?: number, CTDOT_R?: number, CTDOT_T?: number, CTDOT_N?: number, CTDOT_RDOT?: number, CTDOT_TDOT?: number, CNDOT_R?: number, CNDOT_T?: number, CNDOT_N?: number, CNDOT_RDOT?: number, CNDOT_TDOT?: number, CNDOT_NDOT?: number, CDRG_R?: number, CDRG_T?: number, CDRG_N?: number, CDRG_RDOT?: number, CDRG_TDOT?: number, CDRG_NDOT?: number, CDRG_DRG?: number, CSRP_R?: number, CSRP_T?: number, CSRP_N?: number, CSRP_RDOT?: number, CSRP_TDOT?: number, CSRP_NDOT?: number, CSRP_DRG?: number, CSRP_SRP?: number, CTHR_R?: number, CTHR_T?: number, CTHR_N?: number, CTHR_RDOT?: number, CTHR_TDOT?: number, CTHR_NDOT?: number, CTHR_DRG?: number, CTHR_SRP?: number, CTHR_THR?: number);
+    COVARIANCE: (number)[];
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceMethod, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, COVARIANCE?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDMObject.d.ts.map

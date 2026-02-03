@@ -47,41 +47,51 @@ class TRK {
   String? get ENVIRONMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
   double get ENVIRONMENT_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
   double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  List<String>? get ECEF_POS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 62);
-  List<String>? get ECEF_VEL => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 64);
-  List<String>? get ECEF_ACC => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
-  double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  double get HDNG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  double get COURSE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  List<String>? get LCO => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 80);
-  List<String>? get LCS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 82);
-  List<String>? get LC_POS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 84);
-  List<String>? get LC_VEL => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 86);
-  List<String>? get LC_ACC => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 88);
-  List<String>? get E_NUVEL => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 90);
-  List<String>? get E_NUPOS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 92);
-  List<String>? get COV => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 94);
-  List<String>? get ERR_ELLP => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 96);
-  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 98);
-  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 100);
-  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
-  bool get MULTI_SOURCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 104, false);
-  String? get J_SERIES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 106);
-  int get STRENGTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 108, 0);
-  int get M1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 110, 0);
-  int get M1V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 112, 0);
-  int get M2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 114, 0);
-  int get M2V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 116, 0);
-  int get M3A => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 118, 0);
-  int get M3AV => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 120, 0);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 122);
+  double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  double get HDNG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  double get COURSE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
+  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
+  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  bool get MULTI_SOURCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 80, false);
+  String? get J_SERIES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  int get STRENGTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 84, 0);
+  int get M1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 86, 0);
+  int get M1V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 88, 0);
+  int get M2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 90, 0);
+  int get M2V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  int get M3A => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 94, 0);
+  int get M3AV => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 98);
+  ///  Start time for track data (ISO 8601 UTC format).
+  String? get TRACK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  ///  Time interval between track points in seconds.
+  double get TRACK_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
+  ///  Number of components per point (default 3 for X, Y, Z).
+  int get TRACK_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 104, 3);
+  ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  List<double>? get ECEF_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
+  ///  ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  List<double>? get ECEF_VEL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 108);
+  ///  ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  List<double>? get ECEF_ACC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 110);
+  ///  Local coordinate position as flat array
+  List<double>? get LC_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 112);
+  ///  Local coordinate velocity as flat array
+  List<double>? get LC_VEL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 114);
+  ///  Local coordinate acceleration as flat array
+  List<double>? get LC_ACC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 116);
+  ///  Covariance data (21 elements per point for 6x6 lower triangular)
+  List<double>? get COV => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 118);
+  ///  Error ellipse data (6 elements per point)
+  List<double>? get ERR_ELLP => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 120);
 
   @override
   String toString() {
-    return 'TRK{ID: ${ID}, CNTCT: ${CNTCT}, MSG_TS: ${MSG_TS}, MSN_ID: ${MSN_ID}, ASSET_NAT: ${ASSET_NAT}, ASSET: ${ASSET}, SEN: ${SEN}, SEN_QUAL: ${SEN_QUAL}, TRK_ID: ${TRK_ID}, TRK_NUM: ${TRK_NUM}, TRK_STAT: ${TRK_STAT}, OBJ_NAT: ${OBJ_NAT}, OBJ_ID: ${OBJ_ID}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_SPEC: ${OBJ_SPEC}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_ACT: ${OBJ_ACT}, MOD_TYPE: ${MOD_TYPE}, TRK_ITM_ID: ${TRK_ITM_ID}, TS: ${TS}, TRK_QUAL: ${TRK_QUAL}, TRK_PT_TYPE: ${TRK_PT_TYPE}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_CRED: ${IDENT_CRED}, IDENT_REL: ${IDENT_REL}, IDENT_AMP: ${IDENT_AMP}, ENVIRONMENT: ${ENVIRONMENT}, ENVIRONMENT_CONF: ${ENVIRONMENT_CONF}, TRK_CONF: ${TRK_CONF}, ECEF_POS: ${ECEF_POS}, ECEF_VEL: ${ECEF_VEL}, ECEF_ACC: ${ECEF_ACC}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, HDNG: ${HDNG}, COURSE: ${COURSE}, LCO: ${LCO}, LCS: ${LCS}, LC_POS: ${LC_POS}, LC_VEL: ${LC_VEL}, LC_ACC: ${LC_ACC}, E_NUVEL: ${E_NUVEL}, E_NUPOS: ${E_NUPOS}, COV: ${COV}, ERR_ELLP: ${ERR_ELLP}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}, CALL_SIGN: ${CALL_SIGN}, MULTI_SOURCE: ${MULTI_SOURCE}, J_SERIES: ${J_SERIES}, STRENGTH: ${STRENGTH}, M1: ${M1}, M1V: ${M1V}, M2: ${M2}, M2V: ${M2V}, M3A: ${M3A}, M3AV: ${M3AV}, TAGS: ${TAGS}}';
+    return 'TRK{ID: ${ID}, CNTCT: ${CNTCT}, MSG_TS: ${MSG_TS}, MSN_ID: ${MSN_ID}, ASSET_NAT: ${ASSET_NAT}, ASSET: ${ASSET}, SEN: ${SEN}, SEN_QUAL: ${SEN_QUAL}, TRK_ID: ${TRK_ID}, TRK_NUM: ${TRK_NUM}, TRK_STAT: ${TRK_STAT}, OBJ_NAT: ${OBJ_NAT}, OBJ_ID: ${OBJ_ID}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_SPEC: ${OBJ_SPEC}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_ACT: ${OBJ_ACT}, MOD_TYPE: ${MOD_TYPE}, TRK_ITM_ID: ${TRK_ITM_ID}, TS: ${TS}, TRK_QUAL: ${TRK_QUAL}, TRK_PT_TYPE: ${TRK_PT_TYPE}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_CRED: ${IDENT_CRED}, IDENT_REL: ${IDENT_REL}, IDENT_AMP: ${IDENT_AMP}, ENVIRONMENT: ${ENVIRONMENT}, ENVIRONMENT_CONF: ${ENVIRONMENT_CONF}, TRK_CONF: ${TRK_CONF}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, HDNG: ${HDNG}, COURSE: ${COURSE}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}, CALL_SIGN: ${CALL_SIGN}, MULTI_SOURCE: ${MULTI_SOURCE}, J_SERIES: ${J_SERIES}, STRENGTH: ${STRENGTH}, M1: ${M1}, M1V: ${M1V}, M2: ${M2}, M2V: ${M2V}, M3A: ${M3A}, M3AV: ${M3AV}, TAGS: ${TAGS}, TRACK_START_TIME: ${TRACK_START_TIME}, TRACK_STEP_SIZE: ${TRACK_STEP_SIZE}, TRACK_COMPONENTS: ${TRACK_COMPONENTS}, ECEF_POS: ${ECEF_POS}, ECEF_VEL: ${ECEF_VEL}, ECEF_ACC: ${ECEF_ACC}, LC_POS: ${LC_POS}, LC_VEL: ${LC_VEL}, LC_ACC: ${LC_ACC}, COV: ${COV}, ERR_ELLP: ${ERR_ELLP}}';
   }
 }
 
@@ -99,7 +109,7 @@ class TRKBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(60);
+    fbBuilder.startTable(59);
   }
 
   int addIdOffset(int? offset) {
@@ -218,128 +228,124 @@ class TRKBuilder {
     fbBuilder.addFloat64(28, TRK_CONF);
     return fbBuilder.offset;
   }
-  int addEcefPosOffset(int? offset) {
-    fbBuilder.addOffset(29, offset);
-    return fbBuilder.offset;
-  }
-  int addEcefVelOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
-    return fbBuilder.offset;
-  }
-  int addEcefAccOffset(int? offset) {
-    fbBuilder.addOffset(31, offset);
-    return fbBuilder.offset;
-  }
   int addLat(double? LAT) {
-    fbBuilder.addFloat64(32, LAT);
+    fbBuilder.addFloat64(29, LAT);
     return fbBuilder.offset;
   }
   int addLon(double? LON) {
-    fbBuilder.addFloat64(33, LON);
+    fbBuilder.addFloat64(30, LON);
     return fbBuilder.offset;
   }
   int addAlt(double? ALT) {
-    fbBuilder.addFloat64(34, ALT);
+    fbBuilder.addFloat64(31, ALT);
     return fbBuilder.offset;
   }
   int addSpd(double? SPD) {
-    fbBuilder.addFloat64(35, SPD);
+    fbBuilder.addFloat64(32, SPD);
     return fbBuilder.offset;
   }
   int addHdng(double? HDNG) {
-    fbBuilder.addFloat64(36, HDNG);
+    fbBuilder.addFloat64(33, HDNG);
     return fbBuilder.offset;
   }
   int addCourse(double? COURSE) {
-    fbBuilder.addFloat64(37, COURSE);
-    return fbBuilder.offset;
-  }
-  int addLcoOffset(int? offset) {
-    fbBuilder.addOffset(38, offset);
-    return fbBuilder.offset;
-  }
-  int addLcsOffset(int? offset) {
-    fbBuilder.addOffset(39, offset);
-    return fbBuilder.offset;
-  }
-  int addLcPosOffset(int? offset) {
-    fbBuilder.addOffset(40, offset);
-    return fbBuilder.offset;
-  }
-  int addLcVelOffset(int? offset) {
-    fbBuilder.addOffset(41, offset);
-    return fbBuilder.offset;
-  }
-  int addLcAccOffset(int? offset) {
-    fbBuilder.addOffset(42, offset);
-    return fbBuilder.offset;
-  }
-  int addENuvelOffset(int? offset) {
-    fbBuilder.addOffset(43, offset);
-    return fbBuilder.offset;
-  }
-  int addENuposOffset(int? offset) {
-    fbBuilder.addOffset(44, offset);
-    return fbBuilder.offset;
-  }
-  int addCovOffset(int? offset) {
-    fbBuilder.addOffset(45, offset);
-    return fbBuilder.offset;
-  }
-  int addErrEllpOffset(int? offset) {
-    fbBuilder.addOffset(46, offset);
+    fbBuilder.addFloat64(34, COURSE);
     return fbBuilder.offset;
   }
   int addSrcTypsOffset(int? offset) {
-    fbBuilder.addOffset(47, offset);
+    fbBuilder.addOffset(35, offset);
     return fbBuilder.offset;
   }
   int addSrcIdsOffset(int? offset) {
-    fbBuilder.addOffset(48, offset);
+    fbBuilder.addOffset(36, offset);
     return fbBuilder.offset;
   }
   int addCallSignOffset(int? offset) {
-    fbBuilder.addOffset(49, offset);
+    fbBuilder.addOffset(37, offset);
     return fbBuilder.offset;
   }
   int addMultiSource(bool? MULTI_SOURCE) {
-    fbBuilder.addBool(50, MULTI_SOURCE);
+    fbBuilder.addBool(38, MULTI_SOURCE);
     return fbBuilder.offset;
   }
   int addJSeriesOffset(int? offset) {
-    fbBuilder.addOffset(51, offset);
+    fbBuilder.addOffset(39, offset);
     return fbBuilder.offset;
   }
   int addStrength(int? STRENGTH) {
-    fbBuilder.addInt32(52, STRENGTH);
+    fbBuilder.addInt32(40, STRENGTH);
     return fbBuilder.offset;
   }
   int addM1(int? M1) {
-    fbBuilder.addInt32(53, M1);
+    fbBuilder.addInt32(41, M1);
     return fbBuilder.offset;
   }
   int addM1V(int? M1V) {
-    fbBuilder.addInt32(54, M1V);
+    fbBuilder.addInt32(42, M1V);
     return fbBuilder.offset;
   }
   int addM2(int? M2) {
-    fbBuilder.addInt32(55, M2);
+    fbBuilder.addInt32(43, M2);
     return fbBuilder.offset;
   }
   int addM2V(int? M2V) {
-    fbBuilder.addInt32(56, M2V);
+    fbBuilder.addInt32(44, M2V);
     return fbBuilder.offset;
   }
   int addM3A(int? M3A) {
-    fbBuilder.addInt32(57, M3A);
+    fbBuilder.addInt32(45, M3A);
     return fbBuilder.offset;
   }
   int addM3Av(int? M3AV) {
-    fbBuilder.addInt32(58, M3AV);
+    fbBuilder.addInt32(46, M3AV);
     return fbBuilder.offset;
   }
   int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(59, offset);
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackStepSize(double? TRACK_STEP_SIZE) {
+    fbBuilder.addFloat64(49, TRACK_STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addTrackComponents(int? TRACK_COMPONENTS) {
+    fbBuilder.addUint8(50, TRACK_COMPONENTS);
+    return fbBuilder.offset;
+  }
+  int addEcefPosOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addEcefVelOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
+    return fbBuilder.offset;
+  }
+  int addEcefAccOffset(int? offset) {
+    fbBuilder.addOffset(53, offset);
+    return fbBuilder.offset;
+  }
+  int addLcPosOffset(int? offset) {
+    fbBuilder.addOffset(54, offset);
+    return fbBuilder.offset;
+  }
+  int addLcVelOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addLcAccOffset(int? offset) {
+    fbBuilder.addOffset(56, offset);
+    return fbBuilder.offset;
+  }
+  int addCovOffset(int? offset) {
+    fbBuilder.addOffset(57, offset);
+    return fbBuilder.offset;
+  }
+  int addErrEllpOffset(int? offset) {
+    fbBuilder.addOffset(58, offset);
     return fbBuilder.offset;
   }
 
@@ -378,24 +384,12 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
   final String? _ENVIRONMENT;
   final double? _ENVIRONMENT_CONF;
   final double? _TRK_CONF;
-  final List<String>? _ECEF_POS;
-  final List<String>? _ECEF_VEL;
-  final List<String>? _ECEF_ACC;
   final double? _LAT;
   final double? _LON;
   final double? _ALT;
   final double? _SPD;
   final double? _HDNG;
   final double? _COURSE;
-  final List<String>? _LCO;
-  final List<String>? _LCS;
-  final List<String>? _LC_POS;
-  final List<String>? _LC_VEL;
-  final List<String>? _LC_ACC;
-  final List<String>? _E_NUVEL;
-  final List<String>? _E_NUPOS;
-  final List<String>? _COV;
-  final List<String>? _ERR_ELLP;
   final List<String>? _SRC_TYPS;
   final List<String>? _SRC_IDS;
   final String? _CALL_SIGN;
@@ -409,6 +403,17 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
   final int? _M3A;
   final int? _M3AV;
   final List<String>? _TAGS;
+  final String? _TRACK_START_TIME;
+  final double? _TRACK_STEP_SIZE;
+  final int? _TRACK_COMPONENTS;
+  final List<double>? _ECEF_POS;
+  final List<double>? _ECEF_VEL;
+  final List<double>? _ECEF_ACC;
+  final List<double>? _LC_POS;
+  final List<double>? _LC_VEL;
+  final List<double>? _LC_ACC;
+  final List<double>? _COV;
+  final List<double>? _ERR_ELLP;
 
   TRKObjectBuilder({
     String? ID,
@@ -440,24 +445,12 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     String? ENVIRONMENT,
     double? ENVIRONMENT_CONF,
     double? TRK_CONF,
-    List<String>? ECEF_POS,
-    List<String>? ECEF_VEL,
-    List<String>? ECEF_ACC,
     double? LAT,
     double? LON,
     double? ALT,
     double? SPD,
     double? HDNG,
     double? COURSE,
-    List<String>? LCO,
-    List<String>? LCS,
-    List<String>? LC_POS,
-    List<String>? LC_VEL,
-    List<String>? LC_ACC,
-    List<String>? E_NUVEL,
-    List<String>? E_NUPOS,
-    List<String>? COV,
-    List<String>? ERR_ELLP,
     List<String>? SRC_TYPS,
     List<String>? SRC_IDS,
     String? CALL_SIGN,
@@ -471,6 +464,17 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     int? M3A,
     int? M3AV,
     List<String>? TAGS,
+    String? TRACK_START_TIME,
+    double? TRACK_STEP_SIZE,
+    int? TRACK_COMPONENTS,
+    List<double>? ECEF_POS,
+    List<double>? ECEF_VEL,
+    List<double>? ECEF_ACC,
+    List<double>? LC_POS,
+    List<double>? LC_VEL,
+    List<double>? LC_ACC,
+    List<double>? COV,
+    List<double>? ERR_ELLP,
   })
       : _ID = ID,
         _CNTCT = CNTCT,
@@ -501,24 +505,12 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         _ENVIRONMENT = ENVIRONMENT,
         _ENVIRONMENT_CONF = ENVIRONMENT_CONF,
         _TRK_CONF = TRK_CONF,
-        _ECEF_POS = ECEF_POS,
-        _ECEF_VEL = ECEF_VEL,
-        _ECEF_ACC = ECEF_ACC,
         _LAT = LAT,
         _LON = LON,
         _ALT = ALT,
         _SPD = SPD,
         _HDNG = HDNG,
         _COURSE = COURSE,
-        _LCO = LCO,
-        _LCS = LCS,
-        _LC_POS = LC_POS,
-        _LC_VEL = LC_VEL,
-        _LC_ACC = LC_ACC,
-        _E_NUVEL = E_NUVEL,
-        _E_NUPOS = E_NUPOS,
-        _COV = COV,
-        _ERR_ELLP = ERR_ELLP,
         _SRC_TYPS = SRC_TYPS,
         _SRC_IDS = SRC_IDS,
         _CALL_SIGN = CALL_SIGN,
@@ -531,7 +523,18 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         _M2V = M2V,
         _M3A = M3A,
         _M3AV = M3AV,
-        _TAGS = TAGS;
+        _TAGS = TAGS,
+        _TRACK_START_TIME = TRACK_START_TIME,
+        _TRACK_STEP_SIZE = TRACK_STEP_SIZE,
+        _TRACK_COMPONENTS = TRACK_COMPONENTS,
+        _ECEF_POS = ECEF_POS,
+        _ECEF_VEL = ECEF_VEL,
+        _ECEF_ACC = ECEF_ACC,
+        _LC_POS = LC_POS,
+        _LC_VEL = LC_VEL,
+        _LC_ACC = LC_ACC,
+        _COV = COV,
+        _ERR_ELLP = ERR_ELLP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -584,30 +587,6 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_IDENT_AMP!);
     final int? ENVIRONMENTOffset = _ENVIRONMENT == null ? null
         : fbBuilder.writeString(_ENVIRONMENT!);
-    final int? ECEF_POSOffset = _ECEF_POS == null ? null
-        : fbBuilder.writeList(_ECEF_POS!.map(fbBuilder.writeString).toList());
-    final int? ECEF_VELOffset = _ECEF_VEL == null ? null
-        : fbBuilder.writeList(_ECEF_VEL!.map(fbBuilder.writeString).toList());
-    final int? ECEF_ACCOffset = _ECEF_ACC == null ? null
-        : fbBuilder.writeList(_ECEF_ACC!.map(fbBuilder.writeString).toList());
-    final int? LCOOffset = _LCO == null ? null
-        : fbBuilder.writeList(_LCO!.map(fbBuilder.writeString).toList());
-    final int? LCSOffset = _LCS == null ? null
-        : fbBuilder.writeList(_LCS!.map(fbBuilder.writeString).toList());
-    final int? LC_POSOffset = _LC_POS == null ? null
-        : fbBuilder.writeList(_LC_POS!.map(fbBuilder.writeString).toList());
-    final int? LC_VELOffset = _LC_VEL == null ? null
-        : fbBuilder.writeList(_LC_VEL!.map(fbBuilder.writeString).toList());
-    final int? LC_ACCOffset = _LC_ACC == null ? null
-        : fbBuilder.writeList(_LC_ACC!.map(fbBuilder.writeString).toList());
-    final int? E_NUVELOffset = _E_NUVEL == null ? null
-        : fbBuilder.writeList(_E_NUVEL!.map(fbBuilder.writeString).toList());
-    final int? E_NUPOSOffset = _E_NUPOS == null ? null
-        : fbBuilder.writeList(_E_NUPOS!.map(fbBuilder.writeString).toList());
-    final int? COVOffset = _COV == null ? null
-        : fbBuilder.writeList(_COV!.map(fbBuilder.writeString).toList());
-    final int? ERR_ELLPOffset = _ERR_ELLP == null ? null
-        : fbBuilder.writeList(_ERR_ELLP!.map(fbBuilder.writeString).toList());
     final int? SRC_TYPSOffset = _SRC_TYPS == null ? null
         : fbBuilder.writeList(_SRC_TYPS!.map(fbBuilder.writeString).toList());
     final int? SRC_IDSOffset = _SRC_IDS == null ? null
@@ -618,7 +597,25 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_J_SERIES!);
     final int? TAGSOffset = _TAGS == null ? null
         : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(60);
+    final int? TRACK_START_TIMEOffset = _TRACK_START_TIME == null ? null
+        : fbBuilder.writeString(_TRACK_START_TIME!);
+    final int? ECEF_POSOffset = _ECEF_POS == null ? null
+        : fbBuilder.writeListFloat64(_ECEF_POS!);
+    final int? ECEF_VELOffset = _ECEF_VEL == null ? null
+        : fbBuilder.writeListFloat64(_ECEF_VEL!);
+    final int? ECEF_ACCOffset = _ECEF_ACC == null ? null
+        : fbBuilder.writeListFloat64(_ECEF_ACC!);
+    final int? LC_POSOffset = _LC_POS == null ? null
+        : fbBuilder.writeListFloat64(_LC_POS!);
+    final int? LC_VELOffset = _LC_VEL == null ? null
+        : fbBuilder.writeListFloat64(_LC_VEL!);
+    final int? LC_ACCOffset = _LC_ACC == null ? null
+        : fbBuilder.writeListFloat64(_LC_ACC!);
+    final int? COVOffset = _COV == null ? null
+        : fbBuilder.writeListFloat64(_COV!);
+    final int? ERR_ELLPOffset = _ERR_ELLP == null ? null
+        : fbBuilder.writeListFloat64(_ERR_ELLP!);
+    fbBuilder.startTable(59);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, CNTCTOffset);
     fbBuilder.addOffset(2, MSG_TSOffset);
@@ -648,37 +645,36 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(26, ENVIRONMENTOffset);
     fbBuilder.addFloat64(27, _ENVIRONMENT_CONF);
     fbBuilder.addFloat64(28, _TRK_CONF);
-    fbBuilder.addOffset(29, ECEF_POSOffset);
-    fbBuilder.addOffset(30, ECEF_VELOffset);
-    fbBuilder.addOffset(31, ECEF_ACCOffset);
-    fbBuilder.addFloat64(32, _LAT);
-    fbBuilder.addFloat64(33, _LON);
-    fbBuilder.addFloat64(34, _ALT);
-    fbBuilder.addFloat64(35, _SPD);
-    fbBuilder.addFloat64(36, _HDNG);
-    fbBuilder.addFloat64(37, _COURSE);
-    fbBuilder.addOffset(38, LCOOffset);
-    fbBuilder.addOffset(39, LCSOffset);
-    fbBuilder.addOffset(40, LC_POSOffset);
-    fbBuilder.addOffset(41, LC_VELOffset);
-    fbBuilder.addOffset(42, LC_ACCOffset);
-    fbBuilder.addOffset(43, E_NUVELOffset);
-    fbBuilder.addOffset(44, E_NUPOSOffset);
-    fbBuilder.addOffset(45, COVOffset);
-    fbBuilder.addOffset(46, ERR_ELLPOffset);
-    fbBuilder.addOffset(47, SRC_TYPSOffset);
-    fbBuilder.addOffset(48, SRC_IDSOffset);
-    fbBuilder.addOffset(49, CALL_SIGNOffset);
-    fbBuilder.addBool(50, _MULTI_SOURCE);
-    fbBuilder.addOffset(51, J_SERIESOffset);
-    fbBuilder.addInt32(52, _STRENGTH);
-    fbBuilder.addInt32(53, _M1);
-    fbBuilder.addInt32(54, _M1V);
-    fbBuilder.addInt32(55, _M2);
-    fbBuilder.addInt32(56, _M2V);
-    fbBuilder.addInt32(57, _M3A);
-    fbBuilder.addInt32(58, _M3AV);
-    fbBuilder.addOffset(59, TAGSOffset);
+    fbBuilder.addFloat64(29, _LAT);
+    fbBuilder.addFloat64(30, _LON);
+    fbBuilder.addFloat64(31, _ALT);
+    fbBuilder.addFloat64(32, _SPD);
+    fbBuilder.addFloat64(33, _HDNG);
+    fbBuilder.addFloat64(34, _COURSE);
+    fbBuilder.addOffset(35, SRC_TYPSOffset);
+    fbBuilder.addOffset(36, SRC_IDSOffset);
+    fbBuilder.addOffset(37, CALL_SIGNOffset);
+    fbBuilder.addBool(38, _MULTI_SOURCE);
+    fbBuilder.addOffset(39, J_SERIESOffset);
+    fbBuilder.addInt32(40, _STRENGTH);
+    fbBuilder.addInt32(41, _M1);
+    fbBuilder.addInt32(42, _M1V);
+    fbBuilder.addInt32(43, _M2);
+    fbBuilder.addInt32(44, _M2V);
+    fbBuilder.addInt32(45, _M3A);
+    fbBuilder.addInt32(46, _M3AV);
+    fbBuilder.addOffset(47, TAGSOffset);
+    fbBuilder.addOffset(48, TRACK_START_TIMEOffset);
+    fbBuilder.addFloat64(49, _TRACK_STEP_SIZE);
+    fbBuilder.addUint8(50, _TRACK_COMPONENTS);
+    fbBuilder.addOffset(51, ECEF_POSOffset);
+    fbBuilder.addOffset(52, ECEF_VELOffset);
+    fbBuilder.addOffset(53, ECEF_ACCOffset);
+    fbBuilder.addOffset(54, LC_POSOffset);
+    fbBuilder.addOffset(55, LC_VELOffset);
+    fbBuilder.addOffset(56, LC_ACCOffset);
+    fbBuilder.addOffset(57, COVOffset);
+    fbBuilder.addOffset(58, ERR_ELLPOffset);
     return fbBuilder.endTable();
   }
 

@@ -41,7 +41,7 @@ class OMM extends Table
         return $this;
     }
 
-    /// CCSDS OMM Version 
+    /// CCSDS OMM Version
     /**
      * @return double
      */
@@ -51,14 +51,14 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Creation Date (ISO 8601 UTC format) 
+    /// Creation Date (ISO 8601 UTC format)
     public function getCREATION_DATE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Originator 
+    /// Originator
     public function getORIGINATOR()
     {
         $o = $this->__offset(8);
@@ -314,7 +314,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+    /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
     /**
      * @return double
      */
@@ -324,7 +324,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+    /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
     /**
      * @return double
      */
@@ -334,7 +334,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     /**
      * @return double
      */
@@ -354,214 +354,29 @@ class OMM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// CX_X [km**2]
+    /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
     /**
+     * @param int offset
      * @return double
      */
-    public function getCX_X()
+    public function getCOVARIANCE($j)
     {
         $o = $this->__offset(72);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
-    /// CY_X [km**2]
     /**
-     * @return double
+     * @return int
      */
-    public function getCY_X()
+    public function getCOVARIANCELength()
     {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_Y [km**2]
-    /**
-     * @return double
-     */
-    public function getCY_Y()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_X [km**2]
-    /**
-     * @return double
-     */
-    public function getCZ_X()
-    {
-        $o = $this->__offset(78);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_Y [km**2]
-    /**
-     * @return double
-     */
-    public function getCZ_Y()
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_Z [km**2]
-    /**
-     * @return double
-     */
-    public function getCZ_Z()
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CX_DOT_X [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCX_DOT_X()
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CX_DOT_Y [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCX_DOT_Y()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CX_DOT_Z [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCX_DOT_Z()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CX_DOT_X_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCX_DOT_X_DOT()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_DOT_X [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCY_DOT_X()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_DOT_Y [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCY_DOT_Y()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_DOT_Z [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCY_DOT_Z()
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_DOT_X_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCY_DOT_X_DOT()
-    {
-        $o = $this->__offset(98);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CY_DOT_Y_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCY_DOT_Y_DOT()
-    {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_X [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_X()
-    {
-        $o = $this->__offset(102);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_Y [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_Y()
-    {
-        $o = $this->__offset(104);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_Z [km**2/s]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_Z()
-    {
-        $o = $this->__offset(106);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_X_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_X_DOT()
-    {
-        $o = $this->__offset(108);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_Y_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_Y_DOT()
-    {
-        $o = $this->__offset(110);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// CZ_DOT_Z_DOT [km**2/s**2]
-    /**
-     * @return double
-     */
-    public function getCZ_DOT_Z_DOT()
-    {
-        $o = $this->__offset(112);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
@@ -570,21 +385,21 @@ class OMM extends Table
      */
     public function getUSER_DEFINED_BIP_0044_TYPE()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
     /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     public function getUSER_DEFINED_OBJECT_DESIGNATOR()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
     public function getUSER_DEFINED_EARTH_MODEL()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -594,7 +409,7 @@ class OMM extends Table
      */
     public function getUSER_DEFINED_EPOCH_TIMESTAMP()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -604,7 +419,7 @@ class OMM extends Table
      */
     public function getUSER_DEFINED_MICROSECONDS()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -614,16 +429,16 @@ class OMM extends Table
      */
     public static function startOMM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(60);
+        $builder->StartObject(40);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OMM
      */
-    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $CX_X, $CY_X, $CY_Y, $CZ_X, $CZ_Y, $CZ_Z, $CX_DOT_X, $CX_DOT_Y, $CX_DOT_Z, $CX_DOT_X_DOT, $CY_DOT_X, $CY_DOT_Y, $CY_DOT_Z, $CY_DOT_X_DOT, $CY_DOT_Y_DOT, $CZ_DOT_X, $CZ_DOT_Y, $CZ_DOT_Z, $CZ_DOT_X_DOT, $CZ_DOT_Y_DOT, $CZ_DOT_Z_DOT, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS)
+    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS)
     {
-        $builder->startObject(60);
+        $builder->startObject(40);
         self::addCCSDS_OMM_VERS($builder, $CCSDS_OMM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -658,27 +473,7 @@ class OMM extends Table
         self::addMEAN_MOTION_DOT($builder, $MEAN_MOTION_DOT);
         self::addMEAN_MOTION_DDOT($builder, $MEAN_MOTION_DDOT);
         self::addCOV_REFERENCE_FRAME($builder, $COV_REFERENCE_FRAME);
-        self::addCX_X($builder, $CX_X);
-        self::addCY_X($builder, $CY_X);
-        self::addCY_Y($builder, $CY_Y);
-        self::addCZ_X($builder, $CZ_X);
-        self::addCZ_Y($builder, $CZ_Y);
-        self::addCZ_Z($builder, $CZ_Z);
-        self::addCX_DOT_X($builder, $CX_DOT_X);
-        self::addCX_DOT_Y($builder, $CX_DOT_Y);
-        self::addCX_DOT_Z($builder, $CX_DOT_Z);
-        self::addCX_DOT_X_DOT($builder, $CX_DOT_X_DOT);
-        self::addCY_DOT_X($builder, $CY_DOT_X);
-        self::addCY_DOT_Y($builder, $CY_DOT_Y);
-        self::addCY_DOT_Z($builder, $CY_DOT_Z);
-        self::addCY_DOT_X_DOT($builder, $CY_DOT_X_DOT);
-        self::addCY_DOT_Y_DOT($builder, $CY_DOT_Y_DOT);
-        self::addCZ_DOT_X($builder, $CZ_DOT_X);
-        self::addCZ_DOT_Y($builder, $CZ_DOT_Y);
-        self::addCZ_DOT_Z($builder, $CZ_DOT_Z);
-        self::addCZ_DOT_X_DOT($builder, $CZ_DOT_X_DOT);
-        self::addCZ_DOT_Y_DOT($builder, $CZ_DOT_Y_DOT);
-        self::addCZ_DOT_Z_DOT($builder, $CZ_DOT_Z_DOT);
+        self::addCOVARIANCE($builder, $COVARIANCE);
         self::addUSER_DEFINED_BIP_0044_TYPE($builder, $USER_DEFINED_BIP_0044_TYPE);
         self::addUSER_DEFINED_OBJECT_DESIGNATOR($builder, $USER_DEFINED_OBJECT_DESIGNATOR);
         self::addUSER_DEFINED_EARTH_MODEL($builder, $USER_DEFINED_EARTH_MODEL);
@@ -1030,212 +825,36 @@ class OMM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param VectorOffset
      * @return void
      */
-    public static function addCX_X(FlatBufferBuilder $builder, $CX_X)
+    public static function addCOVARIANCE(FlatBufferBuilder $builder, $COVARIANCE)
     {
-        $builder->addDoubleX(34, $CX_X, 0.0);
+        $builder->addOffsetX(34, $COVARIANCE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
+     * @param array offset array
+     * @return int vector offset
      */
-    public static function addCY_X(FlatBufferBuilder $builder, $CY_X)
+    public static function createCOVARIANCEVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->addDoubleX(35, $CY_X, 0.0);
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param int $numElems
      * @return void
      */
-    public static function addCY_Y(FlatBufferBuilder $builder, $CY_Y)
+    public static function startCOVARIANCEVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->addDoubleX(36, $CY_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_X(FlatBufferBuilder $builder, $CZ_X)
-    {
-        $builder->addDoubleX(37, $CZ_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_Y(FlatBufferBuilder $builder, $CZ_Y)
-    {
-        $builder->addDoubleX(38, $CZ_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_Z(FlatBufferBuilder $builder, $CZ_Z)
-    {
-        $builder->addDoubleX(39, $CZ_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCX_DOT_X(FlatBufferBuilder $builder, $CX_DOT_X)
-    {
-        $builder->addDoubleX(40, $CX_DOT_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCX_DOT_Y(FlatBufferBuilder $builder, $CX_DOT_Y)
-    {
-        $builder->addDoubleX(41, $CX_DOT_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCX_DOT_Z(FlatBufferBuilder $builder, $CX_DOT_Z)
-    {
-        $builder->addDoubleX(42, $CX_DOT_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCX_DOT_X_DOT(FlatBufferBuilder $builder, $CX_DOT_X_DOT)
-    {
-        $builder->addDoubleX(43, $CX_DOT_X_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCY_DOT_X(FlatBufferBuilder $builder, $CY_DOT_X)
-    {
-        $builder->addDoubleX(44, $CY_DOT_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCY_DOT_Y(FlatBufferBuilder $builder, $CY_DOT_Y)
-    {
-        $builder->addDoubleX(45, $CY_DOT_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCY_DOT_Z(FlatBufferBuilder $builder, $CY_DOT_Z)
-    {
-        $builder->addDoubleX(46, $CY_DOT_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCY_DOT_X_DOT(FlatBufferBuilder $builder, $CY_DOT_X_DOT)
-    {
-        $builder->addDoubleX(47, $CY_DOT_X_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCY_DOT_Y_DOT(FlatBufferBuilder $builder, $CY_DOT_Y_DOT)
-    {
-        $builder->addDoubleX(48, $CY_DOT_Y_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_X(FlatBufferBuilder $builder, $CZ_DOT_X)
-    {
-        $builder->addDoubleX(49, $CZ_DOT_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_Y(FlatBufferBuilder $builder, $CZ_DOT_Y)
-    {
-        $builder->addDoubleX(50, $CZ_DOT_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_Z(FlatBufferBuilder $builder, $CZ_DOT_Z)
-    {
-        $builder->addDoubleX(51, $CZ_DOT_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_X_DOT(FlatBufferBuilder $builder, $CZ_DOT_X_DOT)
-    {
-        $builder->addDoubleX(52, $CZ_DOT_X_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_Y_DOT(FlatBufferBuilder $builder, $CZ_DOT_Y_DOT)
-    {
-        $builder->addDoubleX(53, $CZ_DOT_Y_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCZ_DOT_Z_DOT(FlatBufferBuilder $builder, $CZ_DOT_Z_DOT)
-    {
-        $builder->addDoubleX(54, $CZ_DOT_Z_DOT, 0.0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -1245,7 +864,7 @@ class OMM extends Table
      */
     public static function addUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder $builder, $USER_DEFINED_BIP_0044_TYPE)
     {
-        $builder->addUintX(55, $USER_DEFINED_BIP_0044_TYPE, 0);
+        $builder->addUintX(35, $USER_DEFINED_BIP_0044_TYPE, 0);
     }
 
     /**
@@ -1255,7 +874,7 @@ class OMM extends Table
      */
     public static function addUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder $builder, $USER_DEFINED_OBJECT_DESIGNATOR)
     {
-        $builder->addOffsetX(56, $USER_DEFINED_OBJECT_DESIGNATOR, 0);
+        $builder->addOffsetX(36, $USER_DEFINED_OBJECT_DESIGNATOR, 0);
     }
 
     /**
@@ -1265,7 +884,7 @@ class OMM extends Table
      */
     public static function addUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder $builder, $USER_DEFINED_EARTH_MODEL)
     {
-        $builder->addOffsetX(57, $USER_DEFINED_EARTH_MODEL, 0);
+        $builder->addOffsetX(37, $USER_DEFINED_EARTH_MODEL, 0);
     }
 
     /**
@@ -1275,7 +894,7 @@ class OMM extends Table
      */
     public static function addUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder $builder, $USER_DEFINED_EPOCH_TIMESTAMP)
     {
-        $builder->addDoubleX(58, $USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+        $builder->addDoubleX(38, $USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
     }
 
     /**
@@ -1285,7 +904,7 @@ class OMM extends Table
      */
     public static function addUSER_DEFINED_MICROSECONDS(FlatBufferBuilder $builder, $USER_DEFINED_MICROSECONDS)
     {
-        $builder->addDoubleX(59, $USER_DEFINED_MICROSECONDS, 0.0);
+        $builder->addDoubleX(39, $USER_DEFINED_MICROSECONDS, 0.0);
     }
 
     /**

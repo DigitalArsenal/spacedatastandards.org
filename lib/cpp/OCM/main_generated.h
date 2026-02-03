@@ -2313,13 +2313,15 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HEADER = 4,
     VT_METADATA = 6,
     VT_TRAJ_TYPE = 8,
-    VT_STATE_DATA = 10,
-    VT_PHYSICAL_PROPERTIES = 12,
-    VT_COVARIANCE_DATA = 14,
-    VT_MANEUVER_DATA = 16,
-    VT_PERTURBATIONS = 18,
-    VT_ORBIT_DETERMINATION = 20,
-    VT_USER_DEFINED_PARAMETERS = 22
+    VT_STATE_STEP_SIZE = 10,
+    VT_STATE_VECTOR_SIZE = 12,
+    VT_STATE_DATA = 14,
+    VT_COVARIANCE_DATA = 16,
+    VT_PHYSICAL_PROPERTIES = 18,
+    VT_MANEUVER_DATA = 20,
+    VT_PERTURBATIONS = 22,
+    VT_ORBIT_DETERMINATION = 24,
+    VT_USER_DEFINED_PARAMETERS = 26
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -2333,17 +2335,31 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRAJ_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRAJ_TYPE);
   }
-  /// State vector data.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<StateVector>> *STATE_DATA() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<StateVector>> *>(VT_STATE_DATA);
+  /// Time interval between state vectors in seconds (required for time-series data).
+  double STATE_STEP_SIZE() const {
+    return GetField<double>(VT_STATE_STEP_SIZE, 0.0);
+  }
+  /// Number of components per state vector.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  uint8_t STATE_VECTOR_SIZE() const {
+    return GetField<uint8_t>(VT_STATE_VECTOR_SIZE, 6);
+  }
+  /// State data as row-major array of doubles.
+  /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  const ::flatbuffers::Vector<double> *STATE_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_STATE_DATA);
+  }
+  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  /// Time alignment matches STATE_DATA epochs.
+  const ::flatbuffers::Vector<double> *COVARIANCE_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE_DATA);
   }
   /// Physical properties of the space object.
   const PhysicalProperties *PHYSICAL_PROPERTIES() const {
     return GetPointer<const PhysicalProperties *>(VT_PHYSICAL_PROPERTIES);
-  }
-  /// Covariance data associated with the state vectors.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<StateVector>> *COVARIANCE_DATA() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<StateVector>> *>(VT_COVARIANCE_DATA);
   }
   /// Maneuver data.
   const ::flatbuffers::Vector<::flatbuffers::Offset<Maneuver>> *MANEUVER_DATA() const {
@@ -2369,14 +2385,14 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(METADATA()) &&
            VerifyOffset(verifier, VT_TRAJ_TYPE) &&
            verifier.VerifyString(TRAJ_TYPE()) &&
+           VerifyField<double>(verifier, VT_STATE_STEP_SIZE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_STATE_VECTOR_SIZE, 1) &&
            VerifyOffset(verifier, VT_STATE_DATA) &&
            verifier.VerifyVector(STATE_DATA()) &&
-           verifier.VerifyVectorOfTables(STATE_DATA()) &&
-           VerifyOffset(verifier, VT_PHYSICAL_PROPERTIES) &&
-           verifier.VerifyTable(PHYSICAL_PROPERTIES()) &&
            VerifyOffset(verifier, VT_COVARIANCE_DATA) &&
            verifier.VerifyVector(COVARIANCE_DATA()) &&
-           verifier.VerifyVectorOfTables(COVARIANCE_DATA()) &&
+           VerifyOffset(verifier, VT_PHYSICAL_PROPERTIES) &&
+           verifier.VerifyTable(PHYSICAL_PROPERTIES()) &&
            VerifyOffset(verifier, VT_MANEUVER_DATA) &&
            verifier.VerifyVector(MANEUVER_DATA()) &&
            verifier.VerifyVectorOfTables(MANEUVER_DATA()) &&
@@ -2404,14 +2420,20 @@ struct OCMBuilder {
   void add_TRAJ_TYPE(::flatbuffers::Offset<::flatbuffers::String> TRAJ_TYPE) {
     fbb_.AddOffset(OCM::VT_TRAJ_TYPE, TRAJ_TYPE);
   }
-  void add_STATE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<StateVector>>> STATE_DATA) {
+  void add_STATE_STEP_SIZE(double STATE_STEP_SIZE) {
+    fbb_.AddElement<double>(OCM::VT_STATE_STEP_SIZE, STATE_STEP_SIZE, 0.0);
+  }
+  void add_STATE_VECTOR_SIZE(uint8_t STATE_VECTOR_SIZE) {
+    fbb_.AddElement<uint8_t>(OCM::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
+  }
+  void add_STATE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> STATE_DATA) {
     fbb_.AddOffset(OCM::VT_STATE_DATA, STATE_DATA);
+  }
+  void add_COVARIANCE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA) {
+    fbb_.AddOffset(OCM::VT_COVARIANCE_DATA, COVARIANCE_DATA);
   }
   void add_PHYSICAL_PROPERTIES(::flatbuffers::Offset<PhysicalProperties> PHYSICAL_PROPERTIES) {
     fbb_.AddOffset(OCM::VT_PHYSICAL_PROPERTIES, PHYSICAL_PROPERTIES);
-  }
-  void add_COVARIANCE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<StateVector>>> COVARIANCE_DATA) {
-    fbb_.AddOffset(OCM::VT_COVARIANCE_DATA, COVARIANCE_DATA);
   }
   void add_MANEUVER_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Maneuver>>> MANEUVER_DATA) {
     fbb_.AddOffset(OCM::VT_MANEUVER_DATA, MANEUVER_DATA);
@@ -2441,24 +2463,28 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     ::flatbuffers::Offset<Header> HEADER = 0,
     ::flatbuffers::Offset<Metadata> METADATA = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRAJ_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<StateVector>>> STATE_DATA = 0,
+    double STATE_STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> STATE_DATA = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA = 0,
     ::flatbuffers::Offset<PhysicalProperties> PHYSICAL_PROPERTIES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<StateVector>>> COVARIANCE_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<Maneuver>>> MANEUVER_DATA = 0,
     ::flatbuffers::Offset<Perturbations> PERTURBATIONS = 0,
     ::flatbuffers::Offset<OrbitDetermination> ORBIT_DETERMINATION = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<UserDefinedParameters>>> USER_DEFINED_PARAMETERS = 0) {
   OCMBuilder builder_(_fbb);
+  builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
   builder_.add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS);
   builder_.add_ORBIT_DETERMINATION(ORBIT_DETERMINATION);
   builder_.add_PERTURBATIONS(PERTURBATIONS);
   builder_.add_MANEUVER_DATA(MANEUVER_DATA);
-  builder_.add_COVARIANCE_DATA(COVARIANCE_DATA);
   builder_.add_PHYSICAL_PROPERTIES(PHYSICAL_PROPERTIES);
+  builder_.add_COVARIANCE_DATA(COVARIANCE_DATA);
   builder_.add_STATE_DATA(STATE_DATA);
   builder_.add_TRAJ_TYPE(TRAJ_TYPE);
   builder_.add_METADATA(METADATA);
   builder_.add_HEADER(HEADER);
+  builder_.add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE);
   return builder_.Finish();
 }
 
@@ -2467,16 +2493,18 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     ::flatbuffers::Offset<Header> HEADER = 0,
     ::flatbuffers::Offset<Metadata> METADATA = 0,
     const char *TRAJ_TYPE = nullptr,
-    const std::vector<::flatbuffers::Offset<StateVector>> *STATE_DATA = nullptr,
+    double STATE_STEP_SIZE = 0.0,
+    uint8_t STATE_VECTOR_SIZE = 6,
+    const std::vector<double> *STATE_DATA = nullptr,
+    const std::vector<double> *COVARIANCE_DATA = nullptr,
     ::flatbuffers::Offset<PhysicalProperties> PHYSICAL_PROPERTIES = 0,
-    const std::vector<::flatbuffers::Offset<StateVector>> *COVARIANCE_DATA = nullptr,
     const std::vector<::flatbuffers::Offset<Maneuver>> *MANEUVER_DATA = nullptr,
     ::flatbuffers::Offset<Perturbations> PERTURBATIONS = 0,
     ::flatbuffers::Offset<OrbitDetermination> ORBIT_DETERMINATION = 0,
     const std::vector<::flatbuffers::Offset<UserDefinedParameters>> *USER_DEFINED_PARAMETERS = nullptr) {
   auto TRAJ_TYPE__ = TRAJ_TYPE ? _fbb.CreateString(TRAJ_TYPE) : 0;
-  auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<::flatbuffers::Offset<StateVector>>(*STATE_DATA) : 0;
-  auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<::flatbuffers::Offset<StateVector>>(*COVARIANCE_DATA) : 0;
+  auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
+  auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
   auto MANEUVER_DATA__ = MANEUVER_DATA ? _fbb.CreateVector<::flatbuffers::Offset<Maneuver>>(*MANEUVER_DATA) : 0;
   auto USER_DEFINED_PARAMETERS__ = USER_DEFINED_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<UserDefinedParameters>>(*USER_DEFINED_PARAMETERS) : 0;
   return CreateOCM(
@@ -2484,9 +2512,11 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       HEADER,
       METADATA,
       TRAJ_TYPE__,
+      STATE_STEP_SIZE,
+      STATE_VECTOR_SIZE,
       STATE_DATA__,
-      PHYSICAL_PROPERTIES,
       COVARIANCE_DATA__,
+      PHYSICAL_PROPERTIES,
       MANEUVER_DATA__,
       PERTURBATIONS,
       ORBIT_DETERMINATION,

@@ -91,33 +91,57 @@ class AEMSegment(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Time interval between attitude states in seconds (required).
     # AEMSegment
-    def DATA(self, j):
+    def STEP_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from AEMAttitudeEntry import AEMAttitudeEntry
-            obj = AEMAttitudeEntry()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of components per attitude state.
+    # 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+    # 4 = quaternion only (Q1, Q2, Q3, QC)
+    # AEMSegment
+    def ATTITUDE_COMPONENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 7
+
+    # Attitude data as row-major array of doubles.
+    # Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+    # Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+    # Length must be divisible by ATTITUDE_COMPONENTS.
+    # AEMSegment
+    def ATTITUDE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
 
     # AEMSegment
-    def DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+    def ATTITUDE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # AEMSegment
+    def ATTITUDE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AEMSegment
-    def DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+    def ATTITUDE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
 def AEMSegmentStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(12)
 
 def Start(builder):
     AEMSegmentStart(builder)
@@ -176,17 +200,29 @@ def AEMSegmentAddSTOP_TIME(builder, STOP_TIME):
 def AddSTOP_TIME(builder, STOP_TIME):
     AEMSegmentAddSTOP_TIME(builder, STOP_TIME)
 
-def AEMSegmentAddDATA(builder, DATA):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
+def AEMSegmentAddSTEP_SIZE(builder, STEP_SIZE):
+    builder.PrependFloat64Slot(9, STEP_SIZE, 0.0)
 
-def AddDATA(builder, DATA):
-    AEMSegmentAddDATA(builder, DATA)
+def AddSTEP_SIZE(builder, STEP_SIZE):
+    AEMSegmentAddSTEP_SIZE(builder, STEP_SIZE)
 
-def AEMSegmentStartDATAVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+def AEMSegmentAddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS):
+    builder.PrependUint8Slot(10, ATTITUDE_COMPONENTS, 7)
 
-def StartDATAVector(builder, numElems):
-    return AEMSegmentStartDATAVector(builder, numElems)
+def AddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS):
+    AEMSegmentAddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS)
+
+def AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_DATA), 0)
+
+def AddATTITUDE_DATA(builder, ATTITUDE_DATA):
+    AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
+
+def AEMSegmentStartATTITUDE_DATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartATTITUDE_DATAVector(builder, numElems):
+    return AEMSegmentStartATTITUDE_DATAVector(builder, numElems)
 
 def AEMSegmentEnd(builder):
     return builder.EndObject()
@@ -194,7 +230,6 @@ def AEMSegmentEnd(builder):
 def End(builder):
     return AEMSegmentEnd(builder)
 
-import AEMAttitudeEntry
 try:
     from typing import List
 except:
@@ -213,7 +248,9 @@ class AEMSegmentT(object):
         self.ATTITUDE_TYPE = None  # type: str
         self.START_TIME = None  # type: str
         self.STOP_TIME = None  # type: str
-        self.DATA = None  # type: List[AEMAttitudeEntry.AEMAttitudeEntryT]
+        self.STEP_SIZE = 0.0  # type: float
+        self.ATTITUDE_COMPONENTS = 7  # type: int
+        self.ATTITUDE_DATA = None  # type: List[float]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -245,14 +282,15 @@ class AEMSegmentT(object):
         self.ATTITUDE_TYPE = aemsegment.ATTITUDE_TYPE()
         self.START_TIME = aemsegment.START_TIME()
         self.STOP_TIME = aemsegment.STOP_TIME()
-        if not aemsegment.DATAIsNone():
-            self.DATA = []
-            for i in range(aemsegment.DATALength()):
-                if aemsegment.DATA(i) is None:
-                    self.DATA.append(None)
-                else:
-                    aEMAttitudeEntry_ = AEMAttitudeEntry.AEMAttitudeEntryT.InitFromObj(aemsegment.DATA(i))
-                    self.DATA.append(aEMAttitudeEntry_)
+        self.STEP_SIZE = aemsegment.STEP_SIZE()
+        self.ATTITUDE_COMPONENTS = aemsegment.ATTITUDE_COMPONENTS()
+        if not aemsegment.ATTITUDE_DATAIsNone():
+            if np is None:
+                self.ATTITUDE_DATA = []
+                for i in range(aemsegment.ATTITUDE_DATALength()):
+                    self.ATTITUDE_DATA.append(aemsegment.ATTITUDE_DATA(i))
+            else:
+                self.ATTITUDE_DATA = aemsegment.ATTITUDE_DATAAsNumpy()
 
     # AEMSegmentT
     def Pack(self, builder):
@@ -274,14 +312,14 @@ class AEMSegmentT(object):
             START_TIME = builder.CreateString(self.START_TIME)
         if self.STOP_TIME is not None:
             STOP_TIME = builder.CreateString(self.STOP_TIME)
-        if self.DATA is not None:
-            DATAlist = []
-            for i in range(len(self.DATA)):
-                DATAlist.append(self.DATA[i].Pack(builder))
-            AEMSegmentStartDATAVector(builder, len(self.DATA))
-            for i in reversed(range(len(self.DATA))):
-                builder.PrependUOffsetTRelative(DATAlist[i])
-            DATA = builder.EndVector()
+        if self.ATTITUDE_DATA is not None:
+            if np is not None and type(self.ATTITUDE_DATA) is np.ndarray:
+                ATTITUDE_DATA = builder.CreateNumpyVector(self.ATTITUDE_DATA)
+            else:
+                AEMSegmentStartATTITUDE_DATAVector(builder, len(self.ATTITUDE_DATA))
+                for i in reversed(range(len(self.ATTITUDE_DATA))):
+                    builder.PrependFloat64(self.ATTITUDE_DATA[i])
+                ATTITUDE_DATA = builder.EndVector()
         AEMSegmentStart(builder)
         if self.OBJECT_NAME is not None:
             AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -301,7 +339,9 @@ class AEMSegmentT(object):
             AEMSegmentAddSTART_TIME(builder, START_TIME)
         if self.STOP_TIME is not None:
             AEMSegmentAddSTOP_TIME(builder, STOP_TIME)
-        if self.DATA is not None:
-            AEMSegmentAddDATA(builder, DATA)
+        AEMSegmentAddSTEP_SIZE(builder, self.STEP_SIZE)
+        AEMSegmentAddATTITUDE_COMPONENTS(builder, self.ATTITUDE_COMPONENTS)
+        if self.ATTITUDE_DATA is not None:
+            AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
         aemsegment = AEMSegmentEnd(builder)
         return aemsegment

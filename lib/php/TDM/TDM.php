@@ -131,10 +131,28 @@ class TDM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time interval between observations in seconds (required).
+    /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+    /**
+     * @return double
+     */
+    public function getOBSERVATION_STEP_SIZE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Start time for observation time reconstruction (ISO 8601 UTC format).
+    public function getOBSERVATION_START_TIME()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// TDM version number -  CCSDS 503.0-B-1, Page D-9
     public function getCCSDS_TDM_VERS()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -145,7 +163,7 @@ class TDM extends Table
      */
     public function getCOMMENT($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -154,91 +172,91 @@ class TDM extends Table
      */
     public function getCOMMENTLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
     public function getCREATION_DATE()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
     public function getORIGINATOR()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9
     public function getMETA_START()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Time system used -  CCSDS 503.0-B-1, Page D-9
     public function getTIME_SYSTEM()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Start time of the data -  CCSDS 503.0-B-1, Page D-9
     public function getSTART_TIME()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9
     public function getSTOP_TIME()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
     public function getPARTICIPANT_1()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
     public function getPARTICIPANT_2()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     public function getPARTICIPANT_3()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     public function getPARTICIPANT_4()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
     public function getPARTICIPANT_5()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
     public function getMODE()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -248,7 +266,7 @@ class TDM extends Table
      */
     public function getPATH_1()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
@@ -258,21 +276,21 @@ class TDM extends Table
      */
     public function getPATH_2()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
     /// Transmit band -  CCSDS 503.0-B-1, Page D-9
     public function getTRANSMIT_BAND()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Receive band -  CCSDS 503.0-B-1, Page D-9
     public function getRECEIVE_BAND()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -282,14 +300,14 @@ class TDM extends Table
      */
     public function getINTEGRATION_INTERVAL()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
     /// Integration reference -  CCSDS 503.0-B-1, Page D-9
     public function getINTEGRATION_REF()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -299,7 +317,7 @@ class TDM extends Table
      */
     public function getRECEIVE_DELAY_2()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -309,28 +327,28 @@ class TDM extends Table
      */
     public function getRECEIVE_DELAY_3()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     /// Data quality -  CCSDS 503.0-B-1, Page D-9
     public function getDATA_QUALITY()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
     public function getMETA_STOP()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Start of data section -  CCSDS 503.0-B-1, Page D-9
     public function getDATA_START()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -340,7 +358,7 @@ class TDM extends Table
      */
     public function getTRANSMIT_FREQ_1()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -351,7 +369,7 @@ class TDM extends Table
      */
     public function getRECEIVE_FREQ($j)
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -360,14 +378,14 @@ class TDM extends Table
      */
     public function getRECEIVE_FREQLength()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /// End of data section -  CCSDS 503.0-B-1, Page D-9
     public function getDATA_STOP()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -375,7 +393,7 @@ class TDM extends Table
     /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
     public function getTIMETAG_REF()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -383,7 +401,7 @@ class TDM extends Table
     /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
     public function getANGLE_TYPE()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -394,7 +412,7 @@ class TDM extends Table
      */
     public function getANGLE_1($j)
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getFloat($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -403,7 +421,7 @@ class TDM extends Table
      */
     public function getANGLE_1Length()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -414,7 +432,7 @@ class TDM extends Table
      */
     public function getANGLE_2($j)
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getFloat($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -423,7 +441,7 @@ class TDM extends Table
      */
     public function getANGLE_2Length()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -433,7 +451,7 @@ class TDM extends Table
      */
     public function getANGLE_UNCERTAINTY_1()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -443,7 +461,7 @@ class TDM extends Table
      */
     public function getANGLE_UNCERTAINTY_2()
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -453,7 +471,7 @@ class TDM extends Table
      */
     public function getRANGE_RATE()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -463,14 +481,14 @@ class TDM extends Table
      */
     public function getRANGE_UNCERTAINTY()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
     public function getRANGE_MODE()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(100);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -480,7 +498,7 @@ class TDM extends Table
      */
     public function getRANGE_MODULUS()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -490,7 +508,7 @@ class TDM extends Table
      */
     public function getCORRECTION_ANGLE_1()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
@@ -500,14 +518,14 @@ class TDM extends Table
      */
     public function getCORRECTION_ANGLE_2()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
     /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
     public function getCORRECTIONS_APPLIED()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(108);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -518,7 +536,7 @@ class TDM extends Table
      */
     public function getTROPO_DRY($j)
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(110);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -527,7 +545,7 @@ class TDM extends Table
      */
     public function getTROPO_DRYLength()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(110);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -538,7 +556,7 @@ class TDM extends Table
      */
     public function getTROPO_WET($j)
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(112);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -547,7 +565,7 @@ class TDM extends Table
      */
     public function getTROPO_WETLength()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(112);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -558,7 +576,7 @@ class TDM extends Table
      */
     public function getSTEC($j)
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -567,7 +585,7 @@ class TDM extends Table
      */
     public function getSTECLength()
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -578,7 +596,7 @@ class TDM extends Table
      */
     public function getPRESSURE($j)
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -587,7 +605,7 @@ class TDM extends Table
      */
     public function getPRESSURELength()
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -598,7 +616,7 @@ class TDM extends Table
      */
     public function getRHUMIDITY($j)
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -607,7 +625,7 @@ class TDM extends Table
      */
     public function getRHUMIDITYLength()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -618,7 +636,7 @@ class TDM extends Table
      */
     public function getTEMPERATURE($j)
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(120);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -627,7 +645,7 @@ class TDM extends Table
      */
     public function getTEMPERATURELength()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(120);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -638,7 +656,7 @@ class TDM extends Table
      */
     public function getCLOCK_BIAS($j)
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(122);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -647,7 +665,7 @@ class TDM extends Table
      */
     public function getCLOCK_BIASLength()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(122);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -658,7 +676,7 @@ class TDM extends Table
      */
     public function getCLOCK_DRIFT($j)
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(124);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -667,7 +685,7 @@ class TDM extends Table
      */
     public function getCLOCK_DRIFTLength()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(124);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -677,16 +695,16 @@ class TDM extends Table
      */
     public static function startTDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(59);
+        $builder->StartObject(61);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TDM
      */
-    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT)
+    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $OBSERVATION_STEP_SIZE, $OBSERVATION_START_TIME, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT)
     {
-        $builder->startObject(59);
+        $builder->startObject(61);
         self::addOBSERVER_ID($builder, $OBSERVER_ID);
         self::addOBSERVER_X($builder, $OBSERVER_X);
         self::addOBSERVER_Y($builder, $OBSERVER_Y);
@@ -697,6 +715,8 @@ class TDM extends Table
         self::addOBSERVER_POSITION_REFERENCE_FRAME($builder, $OBSERVER_POSITION_REFERENCE_FRAME);
         self::addOBS_REFERENCE_FRAME($builder, $OBS_REFERENCE_FRAME);
         self::addEPOCH($builder, $EPOCH);
+        self::addOBSERVATION_STEP_SIZE($builder, $OBSERVATION_STEP_SIZE);
+        self::addOBSERVATION_START_TIME($builder, $OBSERVATION_START_TIME);
         self::addCCSDS_TDM_VERS($builder, $CCSDS_TDM_VERS);
         self::addCOMMENT($builder, $COMMENT);
         self::addCREATION_DATE($builder, $CREATION_DATE);
@@ -852,12 +872,32 @@ class TDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOBSERVATION_STEP_SIZE(FlatBufferBuilder $builder, $OBSERVATION_STEP_SIZE)
+    {
+        $builder->addDoubleX(10, $OBSERVATION_STEP_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBSERVATION_START_TIME(FlatBufferBuilder $builder, $OBSERVATION_START_TIME)
+    {
+        $builder->addOffsetX(11, $OBSERVATION_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addCCSDS_TDM_VERS(FlatBufferBuilder $builder, $CCSDS_TDM_VERS)
     {
-        $builder->addOffsetX(10, $CCSDS_TDM_VERS, 0);
+        $builder->addOffsetX(12, $CCSDS_TDM_VERS, 0);
     }
 
     /**
@@ -867,7 +907,7 @@ class TDM extends Table
      */
     public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
     {
-        $builder->addOffsetX(11, $COMMENT, 0);
+        $builder->addOffsetX(13, $COMMENT, 0);
     }
 
     /**
@@ -901,7 +941,7 @@ class TDM extends Table
      */
     public static function addCREATION_DATE(FlatBufferBuilder $builder, $CREATION_DATE)
     {
-        $builder->addOffsetX(12, $CREATION_DATE, 0);
+        $builder->addOffsetX(14, $CREATION_DATE, 0);
     }
 
     /**
@@ -911,7 +951,7 @@ class TDM extends Table
      */
     public static function addORIGINATOR(FlatBufferBuilder $builder, $ORIGINATOR)
     {
-        $builder->addOffsetX(13, $ORIGINATOR, 0);
+        $builder->addOffsetX(15, $ORIGINATOR, 0);
     }
 
     /**
@@ -921,7 +961,7 @@ class TDM extends Table
      */
     public static function addMETA_START(FlatBufferBuilder $builder, $META_START)
     {
-        $builder->addOffsetX(14, $META_START, 0);
+        $builder->addOffsetX(16, $META_START, 0);
     }
 
     /**
@@ -931,7 +971,7 @@ class TDM extends Table
      */
     public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
     {
-        $builder->addOffsetX(15, $TIME_SYSTEM, 0);
+        $builder->addOffsetX(17, $TIME_SYSTEM, 0);
     }
 
     /**
@@ -941,7 +981,7 @@ class TDM extends Table
      */
     public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
     {
-        $builder->addOffsetX(16, $START_TIME, 0);
+        $builder->addOffsetX(18, $START_TIME, 0);
     }
 
     /**
@@ -951,7 +991,7 @@ class TDM extends Table
      */
     public static function addSTOP_TIME(FlatBufferBuilder $builder, $STOP_TIME)
     {
-        $builder->addOffsetX(17, $STOP_TIME, 0);
+        $builder->addOffsetX(19, $STOP_TIME, 0);
     }
 
     /**
@@ -961,7 +1001,7 @@ class TDM extends Table
      */
     public static function addPARTICIPANT_1(FlatBufferBuilder $builder, $PARTICIPANT_1)
     {
-        $builder->addOffsetX(18, $PARTICIPANT_1, 0);
+        $builder->addOffsetX(20, $PARTICIPANT_1, 0);
     }
 
     /**
@@ -971,7 +1011,7 @@ class TDM extends Table
      */
     public static function addPARTICIPANT_2(FlatBufferBuilder $builder, $PARTICIPANT_2)
     {
-        $builder->addOffsetX(19, $PARTICIPANT_2, 0);
+        $builder->addOffsetX(21, $PARTICIPANT_2, 0);
     }
 
     /**
@@ -981,7 +1021,7 @@ class TDM extends Table
      */
     public static function addPARTICIPANT_3(FlatBufferBuilder $builder, $PARTICIPANT_3)
     {
-        $builder->addOffsetX(20, $PARTICIPANT_3, 0);
+        $builder->addOffsetX(22, $PARTICIPANT_3, 0);
     }
 
     /**
@@ -991,7 +1031,7 @@ class TDM extends Table
      */
     public static function addPARTICIPANT_4(FlatBufferBuilder $builder, $PARTICIPANT_4)
     {
-        $builder->addOffsetX(21, $PARTICIPANT_4, 0);
+        $builder->addOffsetX(23, $PARTICIPANT_4, 0);
     }
 
     /**
@@ -1001,7 +1041,7 @@ class TDM extends Table
      */
     public static function addPARTICIPANT_5(FlatBufferBuilder $builder, $PARTICIPANT_5)
     {
-        $builder->addOffsetX(22, $PARTICIPANT_5, 0);
+        $builder->addOffsetX(24, $PARTICIPANT_5, 0);
     }
 
     /**
@@ -1011,7 +1051,7 @@ class TDM extends Table
      */
     public static function addMODE(FlatBufferBuilder $builder, $MODE)
     {
-        $builder->addOffsetX(23, $MODE, 0);
+        $builder->addOffsetX(25, $MODE, 0);
     }
 
     /**
@@ -1021,7 +1061,7 @@ class TDM extends Table
      */
     public static function addPATH_1(FlatBufferBuilder $builder, $PATH_1)
     {
-        $builder->addUshortX(24, $PATH_1, 0);
+        $builder->addUshortX(26, $PATH_1, 0);
     }
 
     /**
@@ -1031,7 +1071,7 @@ class TDM extends Table
      */
     public static function addPATH_2(FlatBufferBuilder $builder, $PATH_2)
     {
-        $builder->addUshortX(25, $PATH_2, 0);
+        $builder->addUshortX(27, $PATH_2, 0);
     }
 
     /**
@@ -1041,7 +1081,7 @@ class TDM extends Table
      */
     public static function addTRANSMIT_BAND(FlatBufferBuilder $builder, $TRANSMIT_BAND)
     {
-        $builder->addOffsetX(26, $TRANSMIT_BAND, 0);
+        $builder->addOffsetX(28, $TRANSMIT_BAND, 0);
     }
 
     /**
@@ -1051,7 +1091,7 @@ class TDM extends Table
      */
     public static function addRECEIVE_BAND(FlatBufferBuilder $builder, $RECEIVE_BAND)
     {
-        $builder->addOffsetX(27, $RECEIVE_BAND, 0);
+        $builder->addOffsetX(29, $RECEIVE_BAND, 0);
     }
 
     /**
@@ -1061,7 +1101,7 @@ class TDM extends Table
      */
     public static function addINTEGRATION_INTERVAL(FlatBufferBuilder $builder, $INTEGRATION_INTERVAL)
     {
-        $builder->addFloatX(28, $INTEGRATION_INTERVAL, 0.0);
+        $builder->addFloatX(30, $INTEGRATION_INTERVAL, 0.0);
     }
 
     /**
@@ -1071,7 +1111,7 @@ class TDM extends Table
      */
     public static function addINTEGRATION_REF(FlatBufferBuilder $builder, $INTEGRATION_REF)
     {
-        $builder->addOffsetX(29, $INTEGRATION_REF, 0);
+        $builder->addOffsetX(31, $INTEGRATION_REF, 0);
     }
 
     /**
@@ -1081,7 +1121,7 @@ class TDM extends Table
      */
     public static function addRECEIVE_DELAY_2(FlatBufferBuilder $builder, $RECEIVE_DELAY_2)
     {
-        $builder->addDoubleX(30, $RECEIVE_DELAY_2, 0.0);
+        $builder->addDoubleX(32, $RECEIVE_DELAY_2, 0.0);
     }
 
     /**
@@ -1091,7 +1131,7 @@ class TDM extends Table
      */
     public static function addRECEIVE_DELAY_3(FlatBufferBuilder $builder, $RECEIVE_DELAY_3)
     {
-        $builder->addDoubleX(31, $RECEIVE_DELAY_3, 0.0);
+        $builder->addDoubleX(33, $RECEIVE_DELAY_3, 0.0);
     }
 
     /**
@@ -1101,7 +1141,7 @@ class TDM extends Table
      */
     public static function addDATA_QUALITY(FlatBufferBuilder $builder, $DATA_QUALITY)
     {
-        $builder->addOffsetX(32, $DATA_QUALITY, 0);
+        $builder->addOffsetX(34, $DATA_QUALITY, 0);
     }
 
     /**
@@ -1111,7 +1151,7 @@ class TDM extends Table
      */
     public static function addMETA_STOP(FlatBufferBuilder $builder, $META_STOP)
     {
-        $builder->addOffsetX(33, $META_STOP, 0);
+        $builder->addOffsetX(35, $META_STOP, 0);
     }
 
     /**
@@ -1121,7 +1161,7 @@ class TDM extends Table
      */
     public static function addDATA_START(FlatBufferBuilder $builder, $DATA_START)
     {
-        $builder->addOffsetX(34, $DATA_START, 0);
+        $builder->addOffsetX(36, $DATA_START, 0);
     }
 
     /**
@@ -1131,7 +1171,7 @@ class TDM extends Table
      */
     public static function addTRANSMIT_FREQ_1(FlatBufferBuilder $builder, $TRANSMIT_FREQ_1)
     {
-        $builder->addDoubleX(35, $TRANSMIT_FREQ_1, 0.0);
+        $builder->addDoubleX(37, $TRANSMIT_FREQ_1, 0.0);
     }
 
     /**
@@ -1141,7 +1181,7 @@ class TDM extends Table
      */
     public static function addRECEIVE_FREQ(FlatBufferBuilder $builder, $RECEIVE_FREQ)
     {
-        $builder->addOffsetX(36, $RECEIVE_FREQ, 0);
+        $builder->addOffsetX(38, $RECEIVE_FREQ, 0);
     }
 
     /**
@@ -1175,7 +1215,7 @@ class TDM extends Table
      */
     public static function addDATA_STOP(FlatBufferBuilder $builder, $DATA_STOP)
     {
-        $builder->addOffsetX(37, $DATA_STOP, 0);
+        $builder->addOffsetX(39, $DATA_STOP, 0);
     }
 
     /**
@@ -1185,7 +1225,7 @@ class TDM extends Table
      */
     public static function addTIMETAG_REF(FlatBufferBuilder $builder, $TIMETAG_REF)
     {
-        $builder->addOffsetX(38, $TIMETAG_REF, 0);
+        $builder->addOffsetX(40, $TIMETAG_REF, 0);
     }
 
     /**
@@ -1195,7 +1235,7 @@ class TDM extends Table
      */
     public static function addANGLE_TYPE(FlatBufferBuilder $builder, $ANGLE_TYPE)
     {
-        $builder->addOffsetX(39, $ANGLE_TYPE, 0);
+        $builder->addOffsetX(41, $ANGLE_TYPE, 0);
     }
 
     /**
@@ -1205,7 +1245,7 @@ class TDM extends Table
      */
     public static function addANGLE_1(FlatBufferBuilder $builder, $ANGLE_1)
     {
-        $builder->addOffsetX(40, $ANGLE_1, 0);
+        $builder->addOffsetX(42, $ANGLE_1, 0);
     }
 
     /**
@@ -1239,7 +1279,7 @@ class TDM extends Table
      */
     public static function addANGLE_2(FlatBufferBuilder $builder, $ANGLE_2)
     {
-        $builder->addOffsetX(41, $ANGLE_2, 0);
+        $builder->addOffsetX(43, $ANGLE_2, 0);
     }
 
     /**
@@ -1273,7 +1313,7 @@ class TDM extends Table
      */
     public static function addANGLE_UNCERTAINTY_1(FlatBufferBuilder $builder, $ANGLE_UNCERTAINTY_1)
     {
-        $builder->addFloatX(42, $ANGLE_UNCERTAINTY_1, 0.0);
+        $builder->addFloatX(44, $ANGLE_UNCERTAINTY_1, 0.0);
     }
 
     /**
@@ -1283,7 +1323,7 @@ class TDM extends Table
      */
     public static function addANGLE_UNCERTAINTY_2(FlatBufferBuilder $builder, $ANGLE_UNCERTAINTY_2)
     {
-        $builder->addFloatX(43, $ANGLE_UNCERTAINTY_2, 0.0);
+        $builder->addFloatX(45, $ANGLE_UNCERTAINTY_2, 0.0);
     }
 
     /**
@@ -1293,7 +1333,7 @@ class TDM extends Table
      */
     public static function addRANGE_RATE(FlatBufferBuilder $builder, $RANGE_RATE)
     {
-        $builder->addDoubleX(44, $RANGE_RATE, 0.0);
+        $builder->addDoubleX(46, $RANGE_RATE, 0.0);
     }
 
     /**
@@ -1303,7 +1343,7 @@ class TDM extends Table
      */
     public static function addRANGE_UNCERTAINTY(FlatBufferBuilder $builder, $RANGE_UNCERTAINTY)
     {
-        $builder->addDoubleX(45, $RANGE_UNCERTAINTY, 0.0);
+        $builder->addDoubleX(47, $RANGE_UNCERTAINTY, 0.0);
     }
 
     /**
@@ -1313,7 +1353,7 @@ class TDM extends Table
      */
     public static function addRANGE_MODE(FlatBufferBuilder $builder, $RANGE_MODE)
     {
-        $builder->addOffsetX(46, $RANGE_MODE, 0);
+        $builder->addOffsetX(48, $RANGE_MODE, 0);
     }
 
     /**
@@ -1323,7 +1363,7 @@ class TDM extends Table
      */
     public static function addRANGE_MODULUS(FlatBufferBuilder $builder, $RANGE_MODULUS)
     {
-        $builder->addDoubleX(47, $RANGE_MODULUS, 0.0);
+        $builder->addDoubleX(49, $RANGE_MODULUS, 0.0);
     }
 
     /**
@@ -1333,7 +1373,7 @@ class TDM extends Table
      */
     public static function addCORRECTION_ANGLE_1(FlatBufferBuilder $builder, $CORRECTION_ANGLE_1)
     {
-        $builder->addFloatX(48, $CORRECTION_ANGLE_1, 0.0);
+        $builder->addFloatX(50, $CORRECTION_ANGLE_1, 0.0);
     }
 
     /**
@@ -1343,7 +1383,7 @@ class TDM extends Table
      */
     public static function addCORRECTION_ANGLE_2(FlatBufferBuilder $builder, $CORRECTION_ANGLE_2)
     {
-        $builder->addFloatX(49, $CORRECTION_ANGLE_2, 0.0);
+        $builder->addFloatX(51, $CORRECTION_ANGLE_2, 0.0);
     }
 
     /**
@@ -1353,7 +1393,7 @@ class TDM extends Table
      */
     public static function addCORRECTIONS_APPLIED(FlatBufferBuilder $builder, $CORRECTIONS_APPLIED)
     {
-        $builder->addOffsetX(50, $CORRECTIONS_APPLIED, 0);
+        $builder->addOffsetX(52, $CORRECTIONS_APPLIED, 0);
     }
 
     /**
@@ -1363,7 +1403,7 @@ class TDM extends Table
      */
     public static function addTROPO_DRY(FlatBufferBuilder $builder, $TROPO_DRY)
     {
-        $builder->addOffsetX(51, $TROPO_DRY, 0);
+        $builder->addOffsetX(53, $TROPO_DRY, 0);
     }
 
     /**
@@ -1397,7 +1437,7 @@ class TDM extends Table
      */
     public static function addTROPO_WET(FlatBufferBuilder $builder, $TROPO_WET)
     {
-        $builder->addOffsetX(52, $TROPO_WET, 0);
+        $builder->addOffsetX(54, $TROPO_WET, 0);
     }
 
     /**
@@ -1431,7 +1471,7 @@ class TDM extends Table
      */
     public static function addSTEC(FlatBufferBuilder $builder, $STEC)
     {
-        $builder->addOffsetX(53, $STEC, 0);
+        $builder->addOffsetX(55, $STEC, 0);
     }
 
     /**
@@ -1465,7 +1505,7 @@ class TDM extends Table
      */
     public static function addPRESSURE(FlatBufferBuilder $builder, $PRESSURE)
     {
-        $builder->addOffsetX(54, $PRESSURE, 0);
+        $builder->addOffsetX(56, $PRESSURE, 0);
     }
 
     /**
@@ -1499,7 +1539,7 @@ class TDM extends Table
      */
     public static function addRHUMIDITY(FlatBufferBuilder $builder, $RHUMIDITY)
     {
-        $builder->addOffsetX(55, $RHUMIDITY, 0);
+        $builder->addOffsetX(57, $RHUMIDITY, 0);
     }
 
     /**
@@ -1533,7 +1573,7 @@ class TDM extends Table
      */
     public static function addTEMPERATURE(FlatBufferBuilder $builder, $TEMPERATURE)
     {
-        $builder->addOffsetX(56, $TEMPERATURE, 0);
+        $builder->addOffsetX(58, $TEMPERATURE, 0);
     }
 
     /**
@@ -1567,7 +1607,7 @@ class TDM extends Table
      */
     public static function addCLOCK_BIAS(FlatBufferBuilder $builder, $CLOCK_BIAS)
     {
-        $builder->addOffsetX(57, $CLOCK_BIAS, 0);
+        $builder->addOffsetX(59, $CLOCK_BIAS, 0);
     }
 
     /**
@@ -1601,7 +1641,7 @@ class TDM extends Table
      */
     public static function addCLOCK_DRIFT(FlatBufferBuilder $builder, $CLOCK_DRIFT)
     {
-        $builder->addOffsetX(58, $CLOCK_DRIFT, 0);
+        $builder->addOffsetX(60, $CLOCK_DRIFT, 0);
     }
 
     /**

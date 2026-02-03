@@ -1,5 +1,5 @@
-// Hash: 333db757e4fde574bac5e8bd7c4fd5c3f3b42c8d17737e2aaa8b8233f06c403c
-// Version: 1.0.4
+// Hash: 89b1dd71dff9f6dfc5a7ed28891da2f9e98da024943f0db51b7c69aec18b051c
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 
@@ -11,6 +11,16 @@ include "../ATM/main.fbs";
 // The OCM is designed to provide a comprehensive set of orbit-related information to support mission
 // operations, analysis, and planning activities.
 // CCSDS Reference documentation: 502.0-B-3 (April 2023).
+//
+// COMPACT FORMAT (v2.0.0):
+// This schema uses a compact row-major array format for state and covariance data instead of
+// individual StateVector objects. This provides significant storage and parsing efficiency for
+// time-series ephemeris data with uniform time steps.
+//
+// State data layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, X_DOT1, ...]
+// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+//
+// Covariance uses 21 elements per epoch (lower triangular 6x6 matrix) aligned with state epochs.
 
 table Header {
   /// Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
@@ -316,12 +326,27 @@ table OCM {
   METADATA: Metadata;
   /// Trajectory type (e.g., PROPAGATED, ESTIMATED).
   TRAJ_TYPE: string;
-  /// State vector data.
-  STATE_DATA: [StateVector];
+
+  /// Time interval between state vectors in seconds (required for time-series data).
+  STATE_STEP_SIZE:double;
+
+  /// Number of components per state vector.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  STATE_VECTOR_SIZE:uint8 = 6;
+
+  /// State data as row-major array of doubles.
+  /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  STATE_DATA:[double];
+
+  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  /// Time alignment matches STATE_DATA epochs.
+  COVARIANCE_DATA:[double];
+
   /// Physical properties of the space object.
   PHYSICAL_PROPERTIES: PhysicalProperties;
-  /// Covariance data associated with the state vectors.
-  COVARIANCE_DATA: [StateVector]; // Replace with specific CovarianceData table if needed
   /// Maneuver data.
   MANEUVER_DATA: [Maneuver];
   /// Perturbations parameters used.

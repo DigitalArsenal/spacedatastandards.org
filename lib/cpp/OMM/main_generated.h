@@ -102,42 +102,22 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MEAN_MOTION_DOT = 66,
     VT_MEAN_MOTION_DDOT = 68,
     VT_COV_REFERENCE_FRAME = 70,
-    VT_CX_X = 72,
-    VT_CY_X = 74,
-    VT_CY_Y = 76,
-    VT_CZ_X = 78,
-    VT_CZ_Y = 80,
-    VT_CZ_Z = 82,
-    VT_CX_DOT_X = 84,
-    VT_CX_DOT_Y = 86,
-    VT_CX_DOT_Z = 88,
-    VT_CX_DOT_X_DOT = 90,
-    VT_CY_DOT_X = 92,
-    VT_CY_DOT_Y = 94,
-    VT_CY_DOT_Z = 96,
-    VT_CY_DOT_X_DOT = 98,
-    VT_CY_DOT_Y_DOT = 100,
-    VT_CZ_DOT_X = 102,
-    VT_CZ_DOT_Y = 104,
-    VT_CZ_DOT_Z = 106,
-    VT_CZ_DOT_X_DOT = 108,
-    VT_CZ_DOT_Y_DOT = 110,
-    VT_CZ_DOT_Z_DOT = 112,
-    VT_USER_DEFINED_BIP_0044_TYPE = 114,
-    VT_USER_DEFINED_OBJECT_DESIGNATOR = 116,
-    VT_USER_DEFINED_EARTH_MODEL = 118,
-    VT_USER_DEFINED_EPOCH_TIMESTAMP = 120,
-    VT_USER_DEFINED_MICROSECONDS = 122
+    VT_COVARIANCE = 72,
+    VT_USER_DEFINED_BIP_0044_TYPE = 74,
+    VT_USER_DEFINED_OBJECT_DESIGNATOR = 76,
+    VT_USER_DEFINED_EARTH_MODEL = 78,
+    VT_USER_DEFINED_EPOCH_TIMESTAMP = 80,
+    VT_USER_DEFINED_MICROSECONDS = 82
   };
-  /// CCSDS OMM Version 
+  /// CCSDS OMM Version
   double CCSDS_OMM_VERS() const {
     return GetField<double>(VT_CCSDS_OMM_VERS, 0.0);
   }
-  /// Creation Date (ISO 8601 UTC format) 
+  /// Creation Date (ISO 8601 UTC format)
   const ::flatbuffers::String *CREATION_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
   }
-  /// Originator 
+  /// Originator
   const ::flatbuffers::String *ORIGINATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
   }
@@ -251,15 +231,15 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double REV_AT_EPOCH() const {
     return GetField<double>(VT_REV_AT_EPOCH, 0.0);
   }
-  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
-  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   double MEAN_MOTION_DOT() const {
     return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
   }
-  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   double MEAN_MOTION_DDOT() const {
     return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
   }
@@ -269,89 +249,14 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const RFM *COV_REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_COV_REFERENCE_FRAME);
   }
-  /// CX_X [km**2]
-  double CX_X() const {
-    return GetField<double>(VT_CX_X, 0.0);
-  }
-  /// CY_X [km**2]
-  double CY_X() const {
-    return GetField<double>(VT_CY_X, 0.0);
-  }
-  /// CY_Y [km**2]
-  double CY_Y() const {
-    return GetField<double>(VT_CY_Y, 0.0);
-  }
-  /// CZ_X [km**2]
-  double CZ_X() const {
-    return GetField<double>(VT_CZ_X, 0.0);
-  }
-  /// CZ_Y [km**2]
-  double CZ_Y() const {
-    return GetField<double>(VT_CZ_Y, 0.0);
-  }
-  /// CZ_Z [km**2]
-  double CZ_Z() const {
-    return GetField<double>(VT_CZ_Z, 0.0);
-  }
-  /// CX_DOT_X [km**2/s]
-  double CX_DOT_X() const {
-    return GetField<double>(VT_CX_DOT_X, 0.0);
-  }
-  /// CX_DOT_Y [km**2/s]
-  double CX_DOT_Y() const {
-    return GetField<double>(VT_CX_DOT_Y, 0.0);
-  }
-  /// CX_DOT_Z [km**2/s]
-  double CX_DOT_Z() const {
-    return GetField<double>(VT_CX_DOT_Z, 0.0);
-  }
-  /// CX_DOT_X_DOT [km**2/s**2]
-  double CX_DOT_X_DOT() const {
-    return GetField<double>(VT_CX_DOT_X_DOT, 0.0);
-  }
-  /// CY_DOT_X [km**2/s]
-  double CY_DOT_X() const {
-    return GetField<double>(VT_CY_DOT_X, 0.0);
-  }
-  /// CY_DOT_Y [km**2/s]
-  double CY_DOT_Y() const {
-    return GetField<double>(VT_CY_DOT_Y, 0.0);
-  }
-  /// CY_DOT_Z [km**2/s]
-  double CY_DOT_Z() const {
-    return GetField<double>(VT_CY_DOT_Z, 0.0);
-  }
-  /// CY_DOT_X_DOT [km**2/s**2]
-  double CY_DOT_X_DOT() const {
-    return GetField<double>(VT_CY_DOT_X_DOT, 0.0);
-  }
-  /// CY_DOT_Y_DOT [km**2/s**2]
-  double CY_DOT_Y_DOT() const {
-    return GetField<double>(VT_CY_DOT_Y_DOT, 0.0);
-  }
-  /// CZ_DOT_X [km**2/s]
-  double CZ_DOT_X() const {
-    return GetField<double>(VT_CZ_DOT_X, 0.0);
-  }
-  /// CZ_DOT_Y [km**2/s]
-  double CZ_DOT_Y() const {
-    return GetField<double>(VT_CZ_DOT_Y, 0.0);
-  }
-  /// CZ_DOT_Z [km**2/s]
-  double CZ_DOT_Z() const {
-    return GetField<double>(VT_CZ_DOT_Z, 0.0);
-  }
-  /// CZ_DOT_X_DOT [km**2/s**2]
-  double CZ_DOT_X_DOT() const {
-    return GetField<double>(VT_CZ_DOT_X_DOT, 0.0);
-  }
-  /// CZ_DOT_Y_DOT [km**2/s**2]
-  double CZ_DOT_Y_DOT() const {
-    return GetField<double>(VT_CZ_DOT_Y_DOT, 0.0);
-  }
-  /// CZ_DOT_Z_DOT [km**2/s**2]
-  double CZ_DOT_Z_DOT() const {
-    return GetField<double>(VT_CZ_DOT_Z_DOT, 0.0);
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
   }
   /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   uint32_t USER_DEFINED_BIP_0044_TYPE() const {
@@ -420,27 +325,8 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
            VerifyOffset(verifier, VT_COV_REFERENCE_FRAME) &&
            verifier.VerifyTable(COV_REFERENCE_FRAME()) &&
-           VerifyField<double>(verifier, VT_CX_X, 8) &&
-           VerifyField<double>(verifier, VT_CY_X, 8) &&
-           VerifyField<double>(verifier, VT_CY_Y, 8) &&
-           VerifyField<double>(verifier, VT_CZ_X, 8) &&
-           VerifyField<double>(verifier, VT_CZ_Y, 8) &&
-           VerifyField<double>(verifier, VT_CZ_Z, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_X, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_Y, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_Z, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_X_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CY_DOT_X, 8) &&
-           VerifyField<double>(verifier, VT_CY_DOT_Y, 8) &&
-           VerifyField<double>(verifier, VT_CY_DOT_Z, 8) &&
-           VerifyField<double>(verifier, VT_CY_DOT_X_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CY_DOT_Y_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_X, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_Y, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_Z, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_X_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_Y_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CZ_DOT_Z_DOT, 8) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
            VerifyField<uint32_t>(verifier, VT_USER_DEFINED_BIP_0044_TYPE, 4) &&
            VerifyOffset(verifier, VT_USER_DEFINED_OBJECT_DESIGNATOR) &&
            verifier.VerifyString(USER_DEFINED_OBJECT_DESIGNATOR()) &&
@@ -558,68 +444,8 @@ struct OMMBuilder {
   void add_COV_REFERENCE_FRAME(::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME) {
     fbb_.AddOffset(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
-  void add_CX_X(double CX_X) {
-    fbb_.AddElement<double>(OMM::VT_CX_X, CX_X, 0.0);
-  }
-  void add_CY_X(double CY_X) {
-    fbb_.AddElement<double>(OMM::VT_CY_X, CY_X, 0.0);
-  }
-  void add_CY_Y(double CY_Y) {
-    fbb_.AddElement<double>(OMM::VT_CY_Y, CY_Y, 0.0);
-  }
-  void add_CZ_X(double CZ_X) {
-    fbb_.AddElement<double>(OMM::VT_CZ_X, CZ_X, 0.0);
-  }
-  void add_CZ_Y(double CZ_Y) {
-    fbb_.AddElement<double>(OMM::VT_CZ_Y, CZ_Y, 0.0);
-  }
-  void add_CZ_Z(double CZ_Z) {
-    fbb_.AddElement<double>(OMM::VT_CZ_Z, CZ_Z, 0.0);
-  }
-  void add_CX_DOT_X(double CX_DOT_X) {
-    fbb_.AddElement<double>(OMM::VT_CX_DOT_X, CX_DOT_X, 0.0);
-  }
-  void add_CX_DOT_Y(double CX_DOT_Y) {
-    fbb_.AddElement<double>(OMM::VT_CX_DOT_Y, CX_DOT_Y, 0.0);
-  }
-  void add_CX_DOT_Z(double CX_DOT_Z) {
-    fbb_.AddElement<double>(OMM::VT_CX_DOT_Z, CX_DOT_Z, 0.0);
-  }
-  void add_CX_DOT_X_DOT(double CX_DOT_X_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CX_DOT_X_DOT, CX_DOT_X_DOT, 0.0);
-  }
-  void add_CY_DOT_X(double CY_DOT_X) {
-    fbb_.AddElement<double>(OMM::VT_CY_DOT_X, CY_DOT_X, 0.0);
-  }
-  void add_CY_DOT_Y(double CY_DOT_Y) {
-    fbb_.AddElement<double>(OMM::VT_CY_DOT_Y, CY_DOT_Y, 0.0);
-  }
-  void add_CY_DOT_Z(double CY_DOT_Z) {
-    fbb_.AddElement<double>(OMM::VT_CY_DOT_Z, CY_DOT_Z, 0.0);
-  }
-  void add_CY_DOT_X_DOT(double CY_DOT_X_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CY_DOT_X_DOT, CY_DOT_X_DOT, 0.0);
-  }
-  void add_CY_DOT_Y_DOT(double CY_DOT_Y_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CY_DOT_Y_DOT, CY_DOT_Y_DOT, 0.0);
-  }
-  void add_CZ_DOT_X(double CZ_DOT_X) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_X, CZ_DOT_X, 0.0);
-  }
-  void add_CZ_DOT_Y(double CZ_DOT_Y) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_Y, CZ_DOT_Y, 0.0);
-  }
-  void add_CZ_DOT_Z(double CZ_DOT_Z) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_Z, CZ_DOT_Z, 0.0);
-  }
-  void add_CZ_DOT_X_DOT(double CZ_DOT_X_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_X_DOT, CZ_DOT_X_DOT, 0.0);
-  }
-  void add_CZ_DOT_Y_DOT(double CZ_DOT_Y_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_Y_DOT, CZ_DOT_Y_DOT, 0.0);
-  }
-  void add_CZ_DOT_Z_DOT(double CZ_DOT_Z_DOT) {
-    fbb_.AddElement<double>(OMM::VT_CZ_DOT_Z_DOT, CZ_DOT_Z_DOT, 0.0);
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(OMM::VT_COVARIANCE, COVARIANCE);
   }
   void add_USER_DEFINED_BIP_0044_TYPE(uint32_t USER_DEFINED_BIP_0044_TYPE) {
     fbb_.AddElement<uint32_t>(OMM::VT_USER_DEFINED_BIP_0044_TYPE, USER_DEFINED_BIP_0044_TYPE, 0);
@@ -683,27 +509,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
     ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
-    double CX_X = 0.0,
-    double CY_X = 0.0,
-    double CY_Y = 0.0,
-    double CZ_X = 0.0,
-    double CZ_Y = 0.0,
-    double CZ_Z = 0.0,
-    double CX_DOT_X = 0.0,
-    double CX_DOT_Y = 0.0,
-    double CX_DOT_Z = 0.0,
-    double CX_DOT_X_DOT = 0.0,
-    double CY_DOT_X = 0.0,
-    double CY_DOT_Y = 0.0,
-    double CY_DOT_Z = 0.0,
-    double CY_DOT_X_DOT = 0.0,
-    double CY_DOT_Y_DOT = 0.0,
-    double CZ_DOT_X = 0.0,
-    double CZ_DOT_Y = 0.0,
-    double CZ_DOT_Z = 0.0,
-    double CZ_DOT_X_DOT = 0.0,
-    double CZ_DOT_Y_DOT = 0.0,
-    double CZ_DOT_Z_DOT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
     uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_OBJECT_DESIGNATOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_EARTH_MODEL = 0,
@@ -712,27 +518,6 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
   OMMBuilder builder_(_fbb);
   builder_.add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS);
   builder_.add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP);
-  builder_.add_CZ_DOT_Z_DOT(CZ_DOT_Z_DOT);
-  builder_.add_CZ_DOT_Y_DOT(CZ_DOT_Y_DOT);
-  builder_.add_CZ_DOT_X_DOT(CZ_DOT_X_DOT);
-  builder_.add_CZ_DOT_Z(CZ_DOT_Z);
-  builder_.add_CZ_DOT_Y(CZ_DOT_Y);
-  builder_.add_CZ_DOT_X(CZ_DOT_X);
-  builder_.add_CY_DOT_Y_DOT(CY_DOT_Y_DOT);
-  builder_.add_CY_DOT_X_DOT(CY_DOT_X_DOT);
-  builder_.add_CY_DOT_Z(CY_DOT_Z);
-  builder_.add_CY_DOT_Y(CY_DOT_Y);
-  builder_.add_CY_DOT_X(CY_DOT_X);
-  builder_.add_CX_DOT_X_DOT(CX_DOT_X_DOT);
-  builder_.add_CX_DOT_Z(CX_DOT_Z);
-  builder_.add_CX_DOT_Y(CX_DOT_Y);
-  builder_.add_CX_DOT_X(CX_DOT_X);
-  builder_.add_CZ_Z(CZ_Z);
-  builder_.add_CZ_Y(CZ_Y);
-  builder_.add_CZ_X(CZ_X);
-  builder_.add_CY_Y(CY_Y);
-  builder_.add_CY_X(CY_X);
-  builder_.add_CX_X(CX_X);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
   builder_.add_MEAN_MOTION_DOT(MEAN_MOTION_DOT);
   builder_.add_BSTAR(BSTAR);
@@ -754,6 +539,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
   builder_.add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL);
   builder_.add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR);
   builder_.add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE);
+  builder_.add_COVARIANCE(COVARIANCE);
   builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   builder_.add_ELEMENT_SET_NO(ELEMENT_SET_NO);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
@@ -809,27 +595,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
     ::flatbuffers::Offset<RFM> COV_REFERENCE_FRAME = 0,
-    double CX_X = 0.0,
-    double CY_X = 0.0,
-    double CY_Y = 0.0,
-    double CZ_X = 0.0,
-    double CZ_Y = 0.0,
-    double CZ_Z = 0.0,
-    double CX_DOT_X = 0.0,
-    double CX_DOT_Y = 0.0,
-    double CX_DOT_Z = 0.0,
-    double CX_DOT_X_DOT = 0.0,
-    double CY_DOT_X = 0.0,
-    double CY_DOT_Y = 0.0,
-    double CY_DOT_Z = 0.0,
-    double CY_DOT_X_DOT = 0.0,
-    double CY_DOT_Y_DOT = 0.0,
-    double CZ_DOT_X = 0.0,
-    double CZ_DOT_Y = 0.0,
-    double CZ_DOT_Z = 0.0,
-    double CZ_DOT_X_DOT = 0.0,
-    double CZ_DOT_Y_DOT = 0.0,
-    double CZ_DOT_Z_DOT = 0.0,
+    const std::vector<double> *COVARIANCE = nullptr,
     uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
     const char *USER_DEFINED_OBJECT_DESIGNATOR = nullptr,
     const char *USER_DEFINED_EARTH_MODEL = nullptr,
@@ -844,6 +610,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
   auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
   auto USER_DEFINED_OBJECT_DESIGNATOR__ = USER_DEFINED_OBJECT_DESIGNATOR ? _fbb.CreateString(USER_DEFINED_OBJECT_DESIGNATOR) : 0;
   auto USER_DEFINED_EARTH_MODEL__ = USER_DEFINED_EARTH_MODEL ? _fbb.CreateString(USER_DEFINED_EARTH_MODEL) : 0;
   return CreateOMM(
@@ -882,27 +649,7 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME,
-      CX_X,
-      CY_X,
-      CY_Y,
-      CZ_X,
-      CZ_Y,
-      CZ_Z,
-      CX_DOT_X,
-      CX_DOT_Y,
-      CX_DOT_Z,
-      CX_DOT_X_DOT,
-      CY_DOT_X,
-      CY_DOT_Y,
-      CY_DOT_Z,
-      CY_DOT_X_DOT,
-      CY_DOT_Y_DOT,
-      CZ_DOT_X,
-      CZ_DOT_Y,
-      CZ_DOT_Z,
-      CZ_DOT_X_DOT,
-      CZ_DOT_Y_DOT,
-      CZ_DOT_Z_DOT,
+      COVARIANCE__,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR__,
       USER_DEFINED_EARTH_MODEL__,

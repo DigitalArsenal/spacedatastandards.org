@@ -17,13 +17,13 @@ class OMM
 
 /// Orbit Mean Elements Message
 class OMM : flatbuffers.handle
-    /// CCSDS OMM Version 
+    /// CCSDS OMM Version
     def CCSDS_OMM_VERS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    /// Creation Date (ISO 8601 UTC format) 
+    /// Creation Date (ISO 8601 UTC format)
     def CREATION_DATE() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
-    /// Originator 
+    /// Originator
     def ORIGINATOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// Satellite Name(s)
@@ -110,13 +110,13 @@ class OMM : flatbuffers.handle
     /// REV_AT_EPOCH [O if SGP/SGP4]
     def REV_AT_EPOCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
-    /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+    /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
     def BSTAR() -> float:
         return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
-    /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+    /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
     def MEAN_MOTION_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
-    /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     def MEAN_MOTION_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -125,91 +125,38 @@ class OMM : flatbuffers.handle
     def COV_REFERENCE_FRAME() -> RFM?:
         let o = flatbuffers.field_table(buf_, pos_, 70)
         return if o: RFM { buf_, o } else: nil
-    /// CX_X [km**2]
-    def CX_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
-    /// CY_X [km**2]
-    def CY_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
-    /// CY_Y [km**2]
-    def CY_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
-    /// CZ_X [km**2]
-    def CZ_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
-    /// CZ_Y [km**2]
-    def CZ_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
-    /// CZ_Z [km**2]
-    def CZ_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
-    /// CX_DOT_X [km**2/s]
-    def CX_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
-    /// CX_DOT_Y [km**2/s]
-    def CX_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 86, 0.0)
-    /// CX_DOT_Z [km**2/s]
-    def CX_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 88, 0.0)
-    /// CX_DOT_X_DOT [km**2/s**2]
-    def CX_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 90, 0.0)
-    /// CY_DOT_X [km**2/s]
-    def CY_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
-    /// CY_DOT_Y [km**2/s]
-    def CY_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
-    /// CY_DOT_Z [km**2/s]
-    def CY_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
-    /// CY_DOT_X_DOT [km**2/s**2]
-    def CY_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
-    /// CY_DOT_Y_DOT [km**2/s**2]
-    def CY_DOT_Y_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 100, 0.0)
-    /// CZ_DOT_X [km**2/s]
-    def CZ_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
-    /// CZ_DOT_Y [km**2/s]
-    def CZ_DOT_Y() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 104, 0.0)
-    /// CZ_DOT_Z [km**2/s]
-    def CZ_DOT_Z() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 106, 0.0)
-    /// CZ_DOT_X_DOT [km**2/s**2]
-    def CZ_DOT_X_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
-    /// CZ_DOT_Y_DOT [km**2/s**2]
-    def CZ_DOT_Y_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 110, 0.0)
-    /// CZ_DOT_Z_DOT [km**2/s**2]
-    def CZ_DOT_Z_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 112, 0.0)
+    /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+    def COVARIANCE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 72) + i * 8)
+    def COVARIANCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 72)
     /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
     def USER_DEFINED_BIP_0044_TYPE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 114, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 74, 0)
     /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     def USER_DEFINED_OBJECT_DESIGNATOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 116)
+        return flatbuffers.field_string(buf_, pos_, 76)
     /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
     def USER_DEFINED_EARTH_MODEL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 118)
+        return flatbuffers.field_string(buf_, pos_, 78)
     /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
     def USER_DEFINED_EPOCH_TIMESTAMP() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 120, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
     /// USER_DEFINED_MICROSECONDS [O, units per ICD]
     def USER_DEFINED_MICROSECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 122, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
 
 def GetRootAsOMM(buf:string): return OMM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OMMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(60)
+        b_.StartObject(40)
         return this
     def add_CCSDS_OMM_VERS(CCSDS_OMM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -313,84 +260,31 @@ struct OMMBuilder:
     def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(33, COV_REFERENCE_FRAME)
         return this
-    def add_CX_X(CX_X:float):
-        b_.PrependFloat64Slot(34, CX_X, 0.0)
-        return this
-    def add_CY_X(CY_X:float):
-        b_.PrependFloat64Slot(35, CY_X, 0.0)
-        return this
-    def add_CY_Y(CY_Y:float):
-        b_.PrependFloat64Slot(36, CY_Y, 0.0)
-        return this
-    def add_CZ_X(CZ_X:float):
-        b_.PrependFloat64Slot(37, CZ_X, 0.0)
-        return this
-    def add_CZ_Y(CZ_Y:float):
-        b_.PrependFloat64Slot(38, CZ_Y, 0.0)
-        return this
-    def add_CZ_Z(CZ_Z:float):
-        b_.PrependFloat64Slot(39, CZ_Z, 0.0)
-        return this
-    def add_CX_DOT_X(CX_DOT_X:float):
-        b_.PrependFloat64Slot(40, CX_DOT_X, 0.0)
-        return this
-    def add_CX_DOT_Y(CX_DOT_Y:float):
-        b_.PrependFloat64Slot(41, CX_DOT_Y, 0.0)
-        return this
-    def add_CX_DOT_Z(CX_DOT_Z:float):
-        b_.PrependFloat64Slot(42, CX_DOT_Z, 0.0)
-        return this
-    def add_CX_DOT_X_DOT(CX_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(43, CX_DOT_X_DOT, 0.0)
-        return this
-    def add_CY_DOT_X(CY_DOT_X:float):
-        b_.PrependFloat64Slot(44, CY_DOT_X, 0.0)
-        return this
-    def add_CY_DOT_Y(CY_DOT_Y:float):
-        b_.PrependFloat64Slot(45, CY_DOT_Y, 0.0)
-        return this
-    def add_CY_DOT_Z(CY_DOT_Z:float):
-        b_.PrependFloat64Slot(46, CY_DOT_Z, 0.0)
-        return this
-    def add_CY_DOT_X_DOT(CY_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(47, CY_DOT_X_DOT, 0.0)
-        return this
-    def add_CY_DOT_Y_DOT(CY_DOT_Y_DOT:float):
-        b_.PrependFloat64Slot(48, CY_DOT_Y_DOT, 0.0)
-        return this
-    def add_CZ_DOT_X(CZ_DOT_X:float):
-        b_.PrependFloat64Slot(49, CZ_DOT_X, 0.0)
-        return this
-    def add_CZ_DOT_Y(CZ_DOT_Y:float):
-        b_.PrependFloat64Slot(50, CZ_DOT_Y, 0.0)
-        return this
-    def add_CZ_DOT_Z(CZ_DOT_Z:float):
-        b_.PrependFloat64Slot(51, CZ_DOT_Z, 0.0)
-        return this
-    def add_CZ_DOT_X_DOT(CZ_DOT_X_DOT:float):
-        b_.PrependFloat64Slot(52, CZ_DOT_X_DOT, 0.0)
-        return this
-    def add_CZ_DOT_Y_DOT(CZ_DOT_Y_DOT:float):
-        b_.PrependFloat64Slot(53, CZ_DOT_Y_DOT, 0.0)
-        return this
-    def add_CZ_DOT_Z_DOT(CZ_DOT_Z_DOT:float):
-        b_.PrependFloat64Slot(54, CZ_DOT_Z_DOT, 0.0)
+    def add_COVARIANCE(COVARIANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, COVARIANCE)
         return this
     def add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE:int):
-        b_.PrependUint32Slot(55, USER_DEFINED_BIP_0044_TYPE, 0)
+        b_.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)
         return this
     def add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(56, USER_DEFINED_OBJECT_DESIGNATOR)
+        b_.PrependUOffsetTRelativeSlot(36, USER_DEFINED_OBJECT_DESIGNATOR)
         return this
     def add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(57, USER_DEFINED_EARTH_MODEL)
+        b_.PrependUOffsetTRelativeSlot(37, USER_DEFINED_EARTH_MODEL)
         return this
     def add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP:float):
-        b_.PrependFloat64Slot(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+        b_.PrependFloat64Slot(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
         return this
     def add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS:float):
-        b_.PrependFloat64Slot(59, USER_DEFINED_MICROSECONDS, 0.0)
+        b_.PrependFloat64Slot(39, USER_DEFINED_MICROSECONDS, 0.0)
         return this
     def end():
         return b_.EndObject()
+
+def OMMStartCOVARIANCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OMMCreateCOVARIANCEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 

@@ -79,8 +79,24 @@ public struct AEMSegment : IFlatbufferObject
   public ArraySegment<byte>? GetSTOP_TIMEBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetSTOP_TIMEArray() { return __p.__vector_as_array<byte>(20); }
-  public AEMAttitudeEntry? DATA(int j) { int o = __p.__offset(22); return o != 0 ? (AEMAttitudeEntry?)(new AEMAttitudeEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int DATALength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Time interval between attitude states in seconds (required).
+  public double STEP_SIZE { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of components per attitude state.
+  /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  /// 4 = quaternion only (Q1, Q2, Q3, QC)
+  public byte ATTITUDE_COMPONENTS { get { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)7; } }
+  /// Attitude data as row-major array of doubles.
+  /// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  /// Length must be divisible by ATTITUDE_COMPONENTS.
+  public double ATTITUDE_DATA(int j) { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ATTITUDE_DATALength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetATTITUDE_DATABytes() { return __p.__vector_as_span<double>(26, 8); }
+#else
+  public ArraySegment<byte>? GetATTITUDE_DATABytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public double[] GetATTITUDE_DATAArray() { return __p.__vector_as_array<double>(26); }
 
   public static Offset<AEMSegment> CreateAEMSegment(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -92,9 +108,12 @@ public struct AEMSegment : IFlatbufferObject
       StringOffset ATTITUDE_TYPEOffset = default(StringOffset),
       StringOffset START_TIMEOffset = default(StringOffset),
       StringOffset STOP_TIMEOffset = default(StringOffset),
-      VectorOffset DATAOffset = default(VectorOffset)) {
-    builder.StartTable(10);
-    AEMSegment.AddDATA(builder, DATAOffset);
+      double STEP_SIZE = 0.0,
+      byte ATTITUDE_COMPONENTS = 7,
+      VectorOffset ATTITUDE_DATAOffset = default(VectorOffset)) {
+    builder.StartTable(12);
+    AEMSegment.AddSTEP_SIZE(builder, STEP_SIZE);
+    AEMSegment.AddATTITUDE_DATA(builder, ATTITUDE_DATAOffset);
     AEMSegment.AddSTOP_TIME(builder, STOP_TIMEOffset);
     AEMSegment.AddSTART_TIME(builder, START_TIMEOffset);
     AEMSegment.AddATTITUDE_TYPE(builder, ATTITUDE_TYPEOffset);
@@ -104,10 +123,11 @@ public struct AEMSegment : IFlatbufferObject
     AEMSegment.AddREF_FRAME_A(builder, REF_FRAME_AOffset);
     AEMSegment.AddOBJECT_ID(builder, OBJECT_IDOffset);
     AEMSegment.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
+    AEMSegment.AddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS);
     return AEMSegment.EndAEMSegment(builder);
   }
 
-  public static void StartAEMSegment(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartAEMSegment(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddREF_FRAME_A(FlatBufferBuilder builder, StringOffset REF_FRAME_AOffset) { builder.AddOffset(2, REF_FRAME_AOffset.Value, 0); }
@@ -117,12 +137,14 @@ public struct AEMSegment : IFlatbufferObject
   public static void AddATTITUDE_TYPE(FlatBufferBuilder builder, StringOffset ATTITUDE_TYPEOffset) { builder.AddOffset(6, ATTITUDE_TYPEOffset.Value, 0); }
   public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(7, START_TIMEOffset.Value, 0); }
   public static void AddSTOP_TIME(FlatBufferBuilder builder, StringOffset STOP_TIMEOffset) { builder.AddOffset(8, STOP_TIMEOffset.Value, 0); }
-  public static void AddDATA(FlatBufferBuilder builder, VectorOffset DATAOffset) { builder.AddOffset(9, DATAOffset.Value, 0); }
-  public static VectorOffset CreateDATAVector(FlatBufferBuilder builder, Offset<AEMAttitudeEntry>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateDATAVectorBlock(FlatBufferBuilder builder, Offset<AEMAttitudeEntry>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDATAVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<AEMAttitudeEntry>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<AEMAttitudeEntry>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartDATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTEP_SIZE(FlatBufferBuilder builder, double STEP_SIZE) { builder.AddDouble(9, STEP_SIZE, 0.0); }
+  public static void AddATTITUDE_COMPONENTS(FlatBufferBuilder builder, byte ATTITUDE_COMPONENTS) { builder.AddByte(10, ATTITUDE_COMPONENTS, 7); }
+  public static void AddATTITUDE_DATA(FlatBufferBuilder builder, VectorOffset ATTITUDE_DATAOffset) { builder.AddOffset(11, ATTITUDE_DATAOffset.Value, 0); }
+  public static VectorOffset CreateATTITUDE_DATAVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATAVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATTITUDE_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartATTITUDE_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<AEMSegment> EndAEMSegment(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<AEMSegment>(o);
@@ -142,8 +164,10 @@ public struct AEMSegment : IFlatbufferObject
     _o.ATTITUDE_TYPE = this.ATTITUDE_TYPE;
     _o.START_TIME = this.START_TIME;
     _o.STOP_TIME = this.STOP_TIME;
-    _o.DATA = new List<AEMAttitudeEntryT>();
-    for (var _j = 0; _j < this.DATALength; ++_j) {_o.DATA.Add(this.DATA(_j).HasValue ? this.DATA(_j).Value.UnPack() : null);}
+    _o.STEP_SIZE = this.STEP_SIZE;
+    _o.ATTITUDE_COMPONENTS = this.ATTITUDE_COMPONENTS;
+    _o.ATTITUDE_DATA = new List<double>();
+    for (var _j = 0; _j < this.ATTITUDE_DATALength; ++_j) {_o.ATTITUDE_DATA.Add(this.ATTITUDE_DATA(_j));}
   }
   public static Offset<AEMSegment> Pack(FlatBufferBuilder builder, AEMSegmentT _o) {
     if (_o == null) return default(Offset<AEMSegment>);
@@ -156,11 +180,10 @@ public struct AEMSegment : IFlatbufferObject
     var _ATTITUDE_TYPE = _o.ATTITUDE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ATTITUDE_TYPE);
     var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
     var _STOP_TIME = _o.STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.STOP_TIME);
-    var _DATA = default(VectorOffset);
-    if (_o.DATA != null) {
-      var __DATA = new Offset<AEMAttitudeEntry>[_o.DATA.Count];
-      for (var _j = 0; _j < __DATA.Length; ++_j) { __DATA[_j] = AEMAttitudeEntry.Pack(builder, _o.DATA[_j]); }
-      _DATA = CreateDATAVector(builder, __DATA);
+    var _ATTITUDE_DATA = default(VectorOffset);
+    if (_o.ATTITUDE_DATA != null) {
+      var __ATTITUDE_DATA = _o.ATTITUDE_DATA.ToArray();
+      _ATTITUDE_DATA = CreateATTITUDE_DATAVector(builder, __ATTITUDE_DATA);
     }
     return CreateAEMSegment(
       builder,
@@ -173,7 +196,9 @@ public struct AEMSegment : IFlatbufferObject
       _ATTITUDE_TYPE,
       _START_TIME,
       _STOP_TIME,
-      _DATA);
+      _o.STEP_SIZE,
+      _o.ATTITUDE_COMPONENTS,
+      _ATTITUDE_DATA);
   }
 }
 
@@ -188,7 +213,9 @@ public class AEMSegmentT
   public string ATTITUDE_TYPE { get; set; }
   public string START_TIME { get; set; }
   public string STOP_TIME { get; set; }
-  public List<AEMAttitudeEntryT> DATA { get; set; }
+  public double STEP_SIZE { get; set; }
+  public byte ATTITUDE_COMPONENTS { get; set; }
+  public List<double> ATTITUDE_DATA { get; set; }
 
   public AEMSegmentT() {
     this.OBJECT_NAME = null;
@@ -200,7 +227,9 @@ public class AEMSegmentT
     this.ATTITUDE_TYPE = null;
     this.START_TIME = null;
     this.STOP_TIME = null;
-    this.DATA = null;
+    this.STEP_SIZE = 0.0;
+    this.ATTITUDE_COMPONENTS = 7;
+    this.ATTITUDE_DATA = null;
   }
 }
 
@@ -219,7 +248,9 @@ static public class AEMSegmentVerify
       && verifier.VerifyString(tablePos, 16 /*ATTITUDE_TYPE*/, false)
       && verifier.VerifyString(tablePos, 18 /*START_TIME*/, false)
       && verifier.VerifyString(tablePos, 20 /*STOP_TIME*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 22 /*DATA*/, AEMAttitudeEntryVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 22 /*STEP_SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*ATTITUDE_COMPONENTS*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 26 /*ATTITUDE_DATA*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

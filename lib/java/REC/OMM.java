@@ -30,17 +30,17 @@ public final class OMM extends Table {
   public OMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * CCSDS OMM Version 
+   * CCSDS OMM Version
    */
   public double CCSDS_OMM_VERS() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Creation Date (ISO 8601 UTC format) 
+   * Creation Date (ISO 8601 UTC format)
    */
   public String CREATION_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Originator 
+   * Originator
    */
   public String ORIGINATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
@@ -171,15 +171,15 @@ public final class OMM extends Table {
    */
   public double REV_AT_EPOCH() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+   * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
    */
   public double BSTAR() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+   * MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
    */
   public double MEAN_MOTION_DOT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+   * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
    */
   public double MEAN_MOTION_DDOT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -190,113 +190,43 @@ public final class OMM extends Table {
   public RFM COV_REFERENCE_FRAME() { return COV_REFERENCE_FRAME(new RFM()); }
   public RFM COV_REFERENCE_FRAME(RFM obj) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * CX_X [km**2]
+   * Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+   * Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+   *         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+   *         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+   *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+   * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
    */
-  public double CX_X() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_X [km**2]
-   */
-  public double CY_X() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_Y [km**2]
-   */
-  public double CY_Y() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_X [km**2]
-   */
-  public double CZ_X() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_Y [km**2]
-   */
-  public double CZ_Y() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_Z [km**2]
-   */
-  public double CZ_Z() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CX_DOT_X [km**2/s]
-   */
-  public double CX_DOT_X() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CX_DOT_Y [km**2/s]
-   */
-  public double CX_DOT_Y() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CX_DOT_Z [km**2/s]
-   */
-  public double CX_DOT_Z() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CX_DOT_X_DOT [km**2/s**2]
-   */
-  public double CX_DOT_X_DOT() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_DOT_X [km**2/s]
-   */
-  public double CY_DOT_X() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_DOT_Y [km**2/s]
-   */
-  public double CY_DOT_Y() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_DOT_Z [km**2/s]
-   */
-  public double CY_DOT_Z() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_DOT_X_DOT [km**2/s**2]
-   */
-  public double CY_DOT_X_DOT() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CY_DOT_Y_DOT [km**2/s**2]
-   */
-  public double CY_DOT_Y_DOT() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_X [km**2/s]
-   */
-  public double CZ_DOT_X() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_Y [km**2/s]
-   */
-  public double CZ_DOT_Y() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_Z [km**2/s]
-   */
-  public double CZ_DOT_Z() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_X_DOT [km**2/s**2]
-   */
-  public double CZ_DOT_X_DOT() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_Y_DOT [km**2/s**2]
-   */
-  public double CZ_DOT_Y_DOT() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * CZ_DOT_Z_DOT [km**2/s**2]
-   */
-  public double CZ_DOT_Z_DOT() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double COVARIANCE(int j) { int o = __offset(72); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCELength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceVector() { return covarianceVector(new DoubleVector()); }
+  public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(72, 8); }
+  public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 8); }
   /**
    * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
    */
-  public long USER_DEFINED_BIP_0044_TYPE() { int o = __offset(114); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long USER_DEFINED_BIP_0044_TYPE() { int o = __offset(74); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
    */
-  public String USER_DEFINED_OBJECT_DESIGNATOR() { int o = __offset(116); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(116, 1); }
-  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 1); }
+  public String USER_DEFINED_OBJECT_DESIGNATOR() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
   /**
    * USER_DEFINED_EARTH_MODEL [O, units per ICD]
    */
-  public String USER_DEFINED_EARTH_MODEL() { int o = __offset(118); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer USER_DEFINED_EARTH_MODELAsByteBuffer() { return __vector_as_bytebuffer(118, 1); }
-  public ByteBuffer USER_DEFINED_EARTH_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 1); }
+  public String USER_DEFINED_EARTH_MODEL() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USER_DEFINED_EARTH_MODELAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer USER_DEFINED_EARTH_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
   /**
    * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
    */
-  public double USER_DEFINED_EPOCH_TIMESTAMP() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double USER_DEFINED_EPOCH_TIMESTAMP() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * USER_DEFINED_MICROSECONDS [O, units per ICD]
    */
-  public double USER_DEFINED_MICROSECONDS() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double USER_DEFINED_MICROSECONDS() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS,
@@ -333,56 +263,15 @@ public final class OMM extends Table {
       double MEAN_MOTION_DOT,
       double MEAN_MOTION_DDOT,
       int COV_REFERENCE_FRAMEOffset,
-      double CX_X,
-      double CY_X,
-      double CY_Y,
-      double CZ_X,
-      double CZ_Y,
-      double CZ_Z,
-      double CX_DOT_X,
-      double CX_DOT_Y,
-      double CX_DOT_Z,
-      double CX_DOT_X_DOT,
-      double CY_DOT_X,
-      double CY_DOT_Y,
-      double CY_DOT_Z,
-      double CY_DOT_X_DOT,
-      double CY_DOT_Y_DOT,
-      double CZ_DOT_X,
-      double CZ_DOT_Y,
-      double CZ_DOT_Z,
-      double CZ_DOT_X_DOT,
-      double CZ_DOT_Y_DOT,
-      double CZ_DOT_Z_DOT,
+      int COVARIANCEOffset,
       long USER_DEFINED_BIP_0044_TYPE,
       int USER_DEFINED_OBJECT_DESIGNATOROffset,
       int USER_DEFINED_EARTH_MODELOffset,
       double USER_DEFINED_EPOCH_TIMESTAMP,
       double USER_DEFINED_MICROSECONDS) {
-    builder.startTable(60);
+    builder.startTable(40);
     OMM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
     OMM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
-    OMM.addCzDotZDot(builder, CZ_DOT_Z_DOT);
-    OMM.addCzDotYDot(builder, CZ_DOT_Y_DOT);
-    OMM.addCzDotXDot(builder, CZ_DOT_X_DOT);
-    OMM.addCzDotZ(builder, CZ_DOT_Z);
-    OMM.addCzDotY(builder, CZ_DOT_Y);
-    OMM.addCzDotX(builder, CZ_DOT_X);
-    OMM.addCyDotYDot(builder, CY_DOT_Y_DOT);
-    OMM.addCyDotXDot(builder, CY_DOT_X_DOT);
-    OMM.addCyDotZ(builder, CY_DOT_Z);
-    OMM.addCyDotY(builder, CY_DOT_Y);
-    OMM.addCyDotX(builder, CY_DOT_X);
-    OMM.addCxDotXDot(builder, CX_DOT_X_DOT);
-    OMM.addCxDotZ(builder, CX_DOT_Z);
-    OMM.addCxDotY(builder, CX_DOT_Y);
-    OMM.addCxDotX(builder, CX_DOT_X);
-    OMM.addCzZ(builder, CZ_Z);
-    OMM.addCzY(builder, CZ_Y);
-    OMM.addCzX(builder, CZ_X);
-    OMM.addCyY(builder, CY_Y);
-    OMM.addCyX(builder, CY_X);
-    OMM.addCxX(builder, CX_X);
     OMM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
     OMM.addMeanMotionDot(builder, MEAN_MOTION_DOT);
     OMM.addBstar(builder, BSTAR);
@@ -404,6 +293,7 @@ public final class OMM extends Table {
     OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.addUserDefinedBip0044Type(builder, USER_DEFINED_BIP_0044_TYPE);
+    OMM.addCovariance(builder, COVARIANCEOffset);
     OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAMEOffset);
     OMM.addElementSetNo(builder, ELEMENT_SET_NO);
     OMM.addNoradCatId(builder, NORAD_CAT_ID);
@@ -423,7 +313,7 @@ public final class OMM extends Table {
     return OMM.endOMM(builder);
   }
 
-  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(60); }
+  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(40); }
   public static void addCcsdsOmmVers(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.addDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -458,32 +348,14 @@ public final class OMM extends Table {
   public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(31, MEAN_MOTION_DOT, 0.0); }
   public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(32, MEAN_MOTION_DDOT, 0.0); }
   public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(33, COV_REFERENCE_FRAMEOffset, 0); }
-  public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(34, CX_X, 0.0); }
-  public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(35, CY_X, 0.0); }
-  public static void addCyY(FlatBufferBuilder builder, double CY_Y) { builder.addDouble(36, CY_Y, 0.0); }
-  public static void addCzX(FlatBufferBuilder builder, double CZ_X) { builder.addDouble(37, CZ_X, 0.0); }
-  public static void addCzY(FlatBufferBuilder builder, double CZ_Y) { builder.addDouble(38, CZ_Y, 0.0); }
-  public static void addCzZ(FlatBufferBuilder builder, double CZ_Z) { builder.addDouble(39, CZ_Z, 0.0); }
-  public static void addCxDotX(FlatBufferBuilder builder, double CX_DOT_X) { builder.addDouble(40, CX_DOT_X, 0.0); }
-  public static void addCxDotY(FlatBufferBuilder builder, double CX_DOT_Y) { builder.addDouble(41, CX_DOT_Y, 0.0); }
-  public static void addCxDotZ(FlatBufferBuilder builder, double CX_DOT_Z) { builder.addDouble(42, CX_DOT_Z, 0.0); }
-  public static void addCxDotXDot(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.addDouble(43, CX_DOT_X_DOT, 0.0); }
-  public static void addCyDotX(FlatBufferBuilder builder, double CY_DOT_X) { builder.addDouble(44, CY_DOT_X, 0.0); }
-  public static void addCyDotY(FlatBufferBuilder builder, double CY_DOT_Y) { builder.addDouble(45, CY_DOT_Y, 0.0); }
-  public static void addCyDotZ(FlatBufferBuilder builder, double CY_DOT_Z) { builder.addDouble(46, CY_DOT_Z, 0.0); }
-  public static void addCyDotXDot(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.addDouble(47, CY_DOT_X_DOT, 0.0); }
-  public static void addCyDotYDot(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.addDouble(48, CY_DOT_Y_DOT, 0.0); }
-  public static void addCzDotX(FlatBufferBuilder builder, double CZ_DOT_X) { builder.addDouble(49, CZ_DOT_X, 0.0); }
-  public static void addCzDotY(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.addDouble(50, CZ_DOT_Y, 0.0); }
-  public static void addCzDotZ(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.addDouble(51, CZ_DOT_Z, 0.0); }
-  public static void addCzDotXDot(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.addDouble(52, CZ_DOT_X_DOT, 0.0); }
-  public static void addCzDotYDot(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.addDouble(53, CZ_DOT_Y_DOT, 0.0); }
-  public static void addCzDotZDot(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.addDouble(54, CZ_DOT_Z_DOT, 0.0); }
-  public static void addUserDefinedBip0044Type(FlatBufferBuilder builder, long USER_DEFINED_BIP_0044_TYPE) { builder.addInt(55, (int) USER_DEFINED_BIP_0044_TYPE, (int) 0L); }
-  public static void addUserDefinedObjectDesignator(FlatBufferBuilder builder, int USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.addOffset(56, USER_DEFINED_OBJECT_DESIGNATOROffset, 0); }
-  public static void addUserDefinedEarthModel(FlatBufferBuilder builder, int USER_DEFINED_EARTH_MODELOffset) { builder.addOffset(57, USER_DEFINED_EARTH_MODELOffset, 0); }
-  public static void addUserDefinedEpochTimestamp(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.addDouble(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
-  public static void addUserDefinedMicroseconds(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.addDouble(59, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(34, COVARIANCEOffset, 0); }
+  public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUserDefinedBip0044Type(FlatBufferBuilder builder, long USER_DEFINED_BIP_0044_TYPE) { builder.addInt(35, (int) USER_DEFINED_BIP_0044_TYPE, (int) 0L); }
+  public static void addUserDefinedObjectDesignator(FlatBufferBuilder builder, int USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.addOffset(36, USER_DEFINED_OBJECT_DESIGNATOROffset, 0); }
+  public static void addUserDefinedEarthModel(FlatBufferBuilder builder, int USER_DEFINED_EARTH_MODELOffset) { builder.addOffset(37, USER_DEFINED_EARTH_MODELOffset, 0); }
+  public static void addUserDefinedEpochTimestamp(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.addDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
+  public static void addUserDefinedMicroseconds(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.addDouble(39, USER_DEFINED_MICROSECONDS, 0.0); }
   public static int endOMM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

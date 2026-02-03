@@ -94,22 +94,48 @@ class AEMSegment extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time interval between attitude states in seconds (required).
     /**
-     * @returnVectorOffset
+     * @return double
      */
-    public function getDATA($j)
+    public function getSTEP_SIZE()
     {
         $o = $this->__offset(22);
-        $obj = new AEMAttitudeEntry();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of components per attitude state.
+    /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+    /// 4 = quaternion only (Q1, Q2, Q3, QC)
+    /**
+     * @return byte
+     */
+    public function getATTITUDE_COMPONENTS()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 7;
+    }
+
+    /// Attitude data as row-major array of doubles.
+    /// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+    /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+    /// Length must be divisible by ATTITUDE_COMPONENTS.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getATTITUDE_DATA($j)
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
      * @return int
      */
-    public function getDATALength()
+    public function getATTITUDE_DATALength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -119,16 +145,16 @@ class AEMSegment extends Table
      */
     public static function startAEMSegment(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return AEMSegment
      */
-    public static function createAEMSegment(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $REF_FRAME_A, $REF_FRAME_B, $ATTITUDE_DIR, $TIME_SYSTEM, $ATTITUDE_TYPE, $START_TIME, $STOP_TIME, $DATA)
+    public static function createAEMSegment(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $REF_FRAME_A, $REF_FRAME_B, $ATTITUDE_DIR, $TIME_SYSTEM, $ATTITUDE_TYPE, $START_TIME, $STOP_TIME, $STEP_SIZE, $ATTITUDE_COMPONENTS, $ATTITUDE_DATA)
     {
-        $builder->startObject(10);
+        $builder->startObject(12);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addREF_FRAME_A($builder, $REF_FRAME_A);
@@ -138,7 +164,9 @@ class AEMSegment extends Table
         self::addATTITUDE_TYPE($builder, $ATTITUDE_TYPE);
         self::addSTART_TIME($builder, $START_TIME);
         self::addSTOP_TIME($builder, $STOP_TIME);
-        self::addDATA($builder, $DATA);
+        self::addSTEP_SIZE($builder, $STEP_SIZE);
+        self::addATTITUDE_COMPONENTS($builder, $ATTITUDE_COMPONENTS);
+        self::addATTITUDE_DATA($builder, $ATTITUDE_DATA);
         $o = $builder->endObject();
         return $o;
     }
@@ -235,12 +263,32 @@ class AEMSegment extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSTEP_SIZE(FlatBufferBuilder $builder, $STEP_SIZE)
+    {
+        $builder->addDoubleX(9, $STEP_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addATTITUDE_COMPONENTS(FlatBufferBuilder $builder, $ATTITUDE_COMPONENTS)
+    {
+        $builder->addByteX(10, $ATTITUDE_COMPONENTS, 7);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
-    public static function addDATA(FlatBufferBuilder $builder, $DATA)
+    public static function addATTITUDE_DATA(FlatBufferBuilder $builder, $ATTITUDE_DATA)
     {
-        $builder->addOffsetX(9, $DATA, 0);
+        $builder->addOffsetX(11, $ATTITUDE_DATA, 0);
     }
 
     /**
@@ -248,11 +296,11 @@ class AEMSegment extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createDATAVector(FlatBufferBuilder $builder, array $data)
+    public static function createATTITUDE_DATAVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -262,9 +310,9 @@ class AEMSegment extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startDATAVector(FlatBufferBuilder $builder, $numElems)
+    public static function startATTITUDE_DATAVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

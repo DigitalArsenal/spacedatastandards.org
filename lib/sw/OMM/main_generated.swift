@@ -71,42 +71,22 @@ public struct OMM: FlatBufferObject, Verifiable {
     case MEAN_MOTION_DOT = 66
     case MEAN_MOTION_DDOT = 68
     case COV_REFERENCE_FRAME = 70
-    case CX_X = 72
-    case CY_X = 74
-    case CY_Y = 76
-    case CZ_X = 78
-    case CZ_Y = 80
-    case CZ_Z = 82
-    case CX_DOT_X = 84
-    case CX_DOT_Y = 86
-    case CX_DOT_Z = 88
-    case CX_DOT_X_DOT = 90
-    case CY_DOT_X = 92
-    case CY_DOT_Y = 94
-    case CY_DOT_Z = 96
-    case CY_DOT_X_DOT = 98
-    case CY_DOT_Y_DOT = 100
-    case CZ_DOT_X = 102
-    case CZ_DOT_Y = 104
-    case CZ_DOT_Z = 106
-    case CZ_DOT_X_DOT = 108
-    case CZ_DOT_Y_DOT = 110
-    case CZ_DOT_Z_DOT = 112
-    case USER_DEFINED_BIP_0044_TYPE = 114
-    case USER_DEFINED_OBJECT_DESIGNATOR = 116
-    case USER_DEFINED_EARTH_MODEL = 118
-    case USER_DEFINED_EPOCH_TIMESTAMP = 120
-    case USER_DEFINED_MICROSECONDS = 122
+    case COVARIANCE = 72
+    case USER_DEFINED_BIP_0044_TYPE = 74
+    case USER_DEFINED_OBJECT_DESIGNATOR = 76
+    case USER_DEFINED_EARTH_MODEL = 78
+    case USER_DEFINED_EPOCH_TIMESTAMP = 80
+    case USER_DEFINED_MICROSECONDS = 82
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  CCSDS OMM Version 
+  ///  CCSDS OMM Version
   public var CCSDS_OMM_VERS: Double { let o = _accessor.offset(VTOFFSET.CCSDS_OMM_VERS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Creation Date (ISO 8601 UTC format) 
+  ///  Creation Date (ISO 8601 UTC format)
   public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  ///  Originator 
+  ///  Originator
   public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
   ///  Satellite Name(s)
@@ -172,58 +152,26 @@ public struct OMM: FlatBufferObject, Verifiable {
   public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VTOFFSET.ELEMENT_SET_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   public var REV_AT_EPOCH: Double { let o = _accessor.offset(VTOFFSET.REV_AT_EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+  ///  BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
   public var BSTAR: Double { let o = _accessor.offset(VTOFFSET.BSTAR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+  ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
   ///  Typically RSW
   public var COV_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  CX_X [km**2]
-  public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_X [km**2]
-  public var CY_X: Double { let o = _accessor.offset(VTOFFSET.CY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_Y [km**2]
-  public var CY_Y: Double { let o = _accessor.offset(VTOFFSET.CY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_X [km**2]
-  public var CZ_X: Double { let o = _accessor.offset(VTOFFSET.CZ_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_Y [km**2]
-  public var CZ_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_Z [km**2]
-  public var CZ_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CX_DOT_X [km**2/s]
-  public var CX_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CX_DOT_Y [km**2/s]
-  public var CX_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CX_DOT_Z [km**2/s]
-  public var CX_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CX_DOT_X_DOT [km**2/s**2]
-  public var CX_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_DOT_X [km**2/s]
-  public var CY_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_DOT_Y [km**2/s]
-  public var CY_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_DOT_Z [km**2/s]
-  public var CY_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_DOT_X_DOT [km**2/s**2]
-  public var CY_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CY_DOT_Y_DOT [km**2/s**2]
-  public var CY_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_X [km**2/s]
-  public var CZ_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_Y [km**2/s]
-  public var CZ_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_Z [km**2/s]
-  public var CZ_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_X_DOT [km**2/s**2]
-  public var CZ_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_Y_DOT [km**2/s**2]
-  public var CZ_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  CZ_DOT_Z_DOT [km**2/s**2]
-  public var CZ_DOT_Z_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public var hasCovariance: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? false : true }
+  public var COVARIANCECount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func COVARIANCE(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var COVARIANCE: [Double] { return _accessor.getVector(at: VTOFFSET.COVARIANCE.v) ?? [] }
   ///  USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   public var USER_DEFINED_BIP_0044_TYPE: UInt32 { let o = _accessor.offset(VTOFFSET.USER_DEFINED_BIP_0044_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
@@ -236,7 +184,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   public var USER_DEFINED_EPOCH_TIMESTAMP: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_EPOCH_TIMESTAMP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  USER_DEFINED_MICROSECONDS [O, units per ICD]
   public var USER_DEFINED_MICROSECONDS: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_MICROSECONDS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 60) }
+  public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }
   public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VTOFFSET.CCSDS_OMM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
@@ -271,27 +219,7 @@ public struct OMM: FlatBufferObject, Verifiable {
   public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DOT.p) }
   public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DDOT.p) }
   public static func add(COV_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REFERENCE_FRAME, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
-  public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
-  public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
-  public static func add(CY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_Y, def: 0.0, at: VTOFFSET.CY_Y.p) }
-  public static func add(CZ_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_X, def: 0.0, at: VTOFFSET.CZ_X.p) }
-  public static func add(CZ_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_Y, def: 0.0, at: VTOFFSET.CZ_Y.p) }
-  public static func add(CZ_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_Z, def: 0.0, at: VTOFFSET.CZ_Z.p) }
-  public static func add(CX_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X, def: 0.0, at: VTOFFSET.CX_DOT_X.p) }
-  public static func add(CX_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_Y, def: 0.0, at: VTOFFSET.CX_DOT_Y.p) }
-  public static func add(CX_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_Z, def: 0.0, at: VTOFFSET.CX_DOT_Z.p) }
-  public static func add(CX_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X_DOT, def: 0.0, at: VTOFFSET.CX_DOT_X_DOT.p) }
-  public static func add(CY_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_X, def: 0.0, at: VTOFFSET.CY_DOT_X.p) }
-  public static func add(CY_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Y, def: 0.0, at: VTOFFSET.CY_DOT_Y.p) }
-  public static func add(CY_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Z, def: 0.0, at: VTOFFSET.CY_DOT_Z.p) }
-  public static func add(CY_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_X_DOT, def: 0.0, at: VTOFFSET.CY_DOT_X_DOT.p) }
-  public static func add(CY_DOT_Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Y_DOT, def: 0.0, at: VTOFFSET.CY_DOT_Y_DOT.p) }
-  public static func add(CZ_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_X, def: 0.0, at: VTOFFSET.CZ_DOT_X.p) }
-  public static func add(CZ_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Y, def: 0.0, at: VTOFFSET.CZ_DOT_Y.p) }
-  public static func add(CZ_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Z, def: 0.0, at: VTOFFSET.CZ_DOT_Z.p) }
-  public static func add(CZ_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_X_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_X_DOT.p) }
-  public static func add(CZ_DOT_Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Y_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_Y_DOT.p) }
-  public static func add(CZ_DOT_Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Z_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_Z_DOT.p) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VTOFFSET.COVARIANCE.p) }
   public static func add(USER_DEFINED_BIP_0044_TYPE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_BIP_0044_TYPE, def: 0, at: VTOFFSET.USER_DEFINED_BIP_0044_TYPE.p) }
   public static func add(USER_DEFINED_OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_OBJECT_DESIGNATOR, at: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.p) }
   public static func add(USER_DEFINED_EARTH_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_EARTH_MODEL, at: VTOFFSET.USER_DEFINED_EARTH_MODEL.p) }
@@ -334,27 +262,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     MEAN_MOTION_DOT: Double = 0.0,
     MEAN_MOTION_DDOT: Double = 0.0,
     COV_REFERENCE_FRAMEOffset COV_REFERENCE_FRAME: Offset = Offset(),
-    CX_X: Double = 0.0,
-    CY_X: Double = 0.0,
-    CY_Y: Double = 0.0,
-    CZ_X: Double = 0.0,
-    CZ_Y: Double = 0.0,
-    CZ_Z: Double = 0.0,
-    CX_DOT_X: Double = 0.0,
-    CX_DOT_Y: Double = 0.0,
-    CX_DOT_Z: Double = 0.0,
-    CX_DOT_X_DOT: Double = 0.0,
-    CY_DOT_X: Double = 0.0,
-    CY_DOT_Y: Double = 0.0,
-    CY_DOT_Z: Double = 0.0,
-    CY_DOT_X_DOT: Double = 0.0,
-    CY_DOT_Y_DOT: Double = 0.0,
-    CZ_DOT_X: Double = 0.0,
-    CZ_DOT_Y: Double = 0.0,
-    CZ_DOT_Z: Double = 0.0,
-    CZ_DOT_X_DOT: Double = 0.0,
-    CZ_DOT_Y_DOT: Double = 0.0,
-    CZ_DOT_Z_DOT: Double = 0.0,
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
     USER_DEFINED_BIP_0044_TYPE: UInt32 = 0,
     USER_DEFINED_OBJECT_DESIGNATOROffset USER_DEFINED_OBJECT_DESIGNATOR: Offset = Offset(),
     USER_DEFINED_EARTH_MODELOffset USER_DEFINED_EARTH_MODEL: Offset = Offset(),
@@ -396,27 +304,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     OMM.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
     OMM.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
     OMM.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
-    OMM.add(CX_X: CX_X, &fbb)
-    OMM.add(CY_X: CY_X, &fbb)
-    OMM.add(CY_Y: CY_Y, &fbb)
-    OMM.add(CZ_X: CZ_X, &fbb)
-    OMM.add(CZ_Y: CZ_Y, &fbb)
-    OMM.add(CZ_Z: CZ_Z, &fbb)
-    OMM.add(CX_DOT_X: CX_DOT_X, &fbb)
-    OMM.add(CX_DOT_Y: CX_DOT_Y, &fbb)
-    OMM.add(CX_DOT_Z: CX_DOT_Z, &fbb)
-    OMM.add(CX_DOT_X_DOT: CX_DOT_X_DOT, &fbb)
-    OMM.add(CY_DOT_X: CY_DOT_X, &fbb)
-    OMM.add(CY_DOT_Y: CY_DOT_Y, &fbb)
-    OMM.add(CY_DOT_Z: CY_DOT_Z, &fbb)
-    OMM.add(CY_DOT_X_DOT: CY_DOT_X_DOT, &fbb)
-    OMM.add(CY_DOT_Y_DOT: CY_DOT_Y_DOT, &fbb)
-    OMM.add(CZ_DOT_X: CZ_DOT_X, &fbb)
-    OMM.add(CZ_DOT_Y: CZ_DOT_Y, &fbb)
-    OMM.add(CZ_DOT_Z: CZ_DOT_Z, &fbb)
-    OMM.add(CZ_DOT_X_DOT: CZ_DOT_X_DOT, &fbb)
-    OMM.add(CZ_DOT_Y_DOT: CZ_DOT_Y_DOT, &fbb)
-    OMM.add(CZ_DOT_Z_DOT: CZ_DOT_Z_DOT, &fbb)
+    OMM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
     OMM.add(USER_DEFINED_BIP_0044_TYPE: USER_DEFINED_BIP_0044_TYPE, &fbb)
     OMM.add(USER_DEFINED_OBJECT_DESIGNATOR: USER_DEFINED_OBJECT_DESIGNATOR, &fbb)
     OMM.add(USER_DEFINED_EARTH_MODEL: USER_DEFINED_EARTH_MODEL, &fbb)
@@ -461,27 +349,7 @@ public struct OMM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DOT.p, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DDOT.p, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
-    try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_Y.p, fieldName: "CY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_X.p, fieldName: "CZ_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_Y.p, fieldName: "CZ_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_Z.p, fieldName: "CZ_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X.p, fieldName: "CX_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_Y.p, fieldName: "CX_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_Z.p, fieldName: "CX_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X_DOT.p, fieldName: "CX_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_X.p, fieldName: "CY_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Y.p, fieldName: "CY_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Z.p, fieldName: "CY_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_X_DOT.p, fieldName: "CY_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Y_DOT.p, fieldName: "CY_DOT_Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_X.p, fieldName: "CZ_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Y.p, fieldName: "CZ_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Z.p, fieldName: "CZ_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_X_DOT.p, fieldName: "CZ_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Y_DOT.p, fieldName: "CZ_DOT_Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Z_DOT.p, fieldName: "CZ_DOT_Z_DOT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.COVARIANCE.p, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_BIP_0044_TYPE.p, fieldName: "USER_DEFINED_BIP_0044_TYPE", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.p, fieldName: "USER_DEFINED_OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_EARTH_MODEL.p, fieldName: "USER_DEFINED_EARTH_MODEL", required: false, type: ForwardOffset<String>.self)

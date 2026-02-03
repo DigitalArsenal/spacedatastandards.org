@@ -55,37 +55,36 @@ impl<'a> TRK<'a> {
   pub const VT_ENVIRONMENT: flatbuffers::VOffsetT = 56;
   pub const VT_ENVIRONMENT_CONF: flatbuffers::VOffsetT = 58;
   pub const VT_TRK_CONF: flatbuffers::VOffsetT = 60;
-  pub const VT_ECEF_POS: flatbuffers::VOffsetT = 62;
-  pub const VT_ECEF_VEL: flatbuffers::VOffsetT = 64;
-  pub const VT_ECEF_ACC: flatbuffers::VOffsetT = 66;
-  pub const VT_LAT: flatbuffers::VOffsetT = 68;
-  pub const VT_LON: flatbuffers::VOffsetT = 70;
-  pub const VT_ALT: flatbuffers::VOffsetT = 72;
-  pub const VT_SPD: flatbuffers::VOffsetT = 74;
-  pub const VT_HDNG: flatbuffers::VOffsetT = 76;
-  pub const VT_COURSE: flatbuffers::VOffsetT = 78;
-  pub const VT_LCO: flatbuffers::VOffsetT = 80;
-  pub const VT_LCS: flatbuffers::VOffsetT = 82;
-  pub const VT_LC_POS: flatbuffers::VOffsetT = 84;
-  pub const VT_LC_VEL: flatbuffers::VOffsetT = 86;
-  pub const VT_LC_ACC: flatbuffers::VOffsetT = 88;
-  pub const VT_E_NUVEL: flatbuffers::VOffsetT = 90;
-  pub const VT_E_NUPOS: flatbuffers::VOffsetT = 92;
-  pub const VT_COV: flatbuffers::VOffsetT = 94;
-  pub const VT_ERR_ELLP: flatbuffers::VOffsetT = 96;
-  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 98;
-  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 100;
-  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 102;
-  pub const VT_MULTI_SOURCE: flatbuffers::VOffsetT = 104;
-  pub const VT_J_SERIES: flatbuffers::VOffsetT = 106;
-  pub const VT_STRENGTH: flatbuffers::VOffsetT = 108;
-  pub const VT_M1: flatbuffers::VOffsetT = 110;
-  pub const VT_M1V: flatbuffers::VOffsetT = 112;
-  pub const VT_M2: flatbuffers::VOffsetT = 114;
-  pub const VT_M2V: flatbuffers::VOffsetT = 116;
-  pub const VT_M3A: flatbuffers::VOffsetT = 118;
-  pub const VT_M3AV: flatbuffers::VOffsetT = 120;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 122;
+  pub const VT_LAT: flatbuffers::VOffsetT = 62;
+  pub const VT_LON: flatbuffers::VOffsetT = 64;
+  pub const VT_ALT: flatbuffers::VOffsetT = 66;
+  pub const VT_SPD: flatbuffers::VOffsetT = 68;
+  pub const VT_HDNG: flatbuffers::VOffsetT = 70;
+  pub const VT_COURSE: flatbuffers::VOffsetT = 72;
+  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 74;
+  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 76;
+  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 78;
+  pub const VT_MULTI_SOURCE: flatbuffers::VOffsetT = 80;
+  pub const VT_J_SERIES: flatbuffers::VOffsetT = 82;
+  pub const VT_STRENGTH: flatbuffers::VOffsetT = 84;
+  pub const VT_M1: flatbuffers::VOffsetT = 86;
+  pub const VT_M1V: flatbuffers::VOffsetT = 88;
+  pub const VT_M2: flatbuffers::VOffsetT = 90;
+  pub const VT_M2V: flatbuffers::VOffsetT = 92;
+  pub const VT_M3A: flatbuffers::VOffsetT = 94;
+  pub const VT_M3AV: flatbuffers::VOffsetT = 96;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 98;
+  pub const VT_TRACK_START_TIME: flatbuffers::VOffsetT = 100;
+  pub const VT_TRACK_STEP_SIZE: flatbuffers::VOffsetT = 102;
+  pub const VT_TRACK_COMPONENTS: flatbuffers::VOffsetT = 104;
+  pub const VT_ECEF_POS: flatbuffers::VOffsetT = 106;
+  pub const VT_ECEF_VEL: flatbuffers::VOffsetT = 108;
+  pub const VT_ECEF_ACC: flatbuffers::VOffsetT = 110;
+  pub const VT_LC_POS: flatbuffers::VOffsetT = 112;
+  pub const VT_LC_VEL: flatbuffers::VOffsetT = 114;
+  pub const VT_LC_ACC: flatbuffers::VOffsetT = 116;
+  pub const VT_COV: flatbuffers::VOffsetT = 118;
+  pub const VT_ERR_ELLP: flatbuffers::VOffsetT = 120;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -97,6 +96,7 @@ impl<'a> TRK<'a> {
     args: &'args TRKArgs<'args>
   ) -> flatbuffers::WIPOffset<TRK<'bldr>> {
     let mut builder = TRKBuilder::new(_fbb);
+    builder.add_TRACK_STEP_SIZE(args.TRACK_STEP_SIZE);
     builder.add_COURSE(args.COURSE);
     builder.add_HDNG(args.HDNG);
     builder.add_SPD(args.SPD);
@@ -105,6 +105,15 @@ impl<'a> TRK<'a> {
     builder.add_LAT(args.LAT);
     builder.add_TRK_CONF(args.TRK_CONF);
     builder.add_ENVIRONMENT_CONF(args.ENVIRONMENT_CONF);
+    if let Some(x) = args.ERR_ELLP { builder.add_ERR_ELLP(x); }
+    if let Some(x) = args.COV { builder.add_COV(x); }
+    if let Some(x) = args.LC_ACC { builder.add_LC_ACC(x); }
+    if let Some(x) = args.LC_VEL { builder.add_LC_VEL(x); }
+    if let Some(x) = args.LC_POS { builder.add_LC_POS(x); }
+    if let Some(x) = args.ECEF_ACC { builder.add_ECEF_ACC(x); }
+    if let Some(x) = args.ECEF_VEL { builder.add_ECEF_VEL(x); }
+    if let Some(x) = args.ECEF_POS { builder.add_ECEF_POS(x); }
+    if let Some(x) = args.TRACK_START_TIME { builder.add_TRACK_START_TIME(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     builder.add_M3AV(args.M3AV);
     builder.add_M3A(args.M3A);
@@ -117,18 +126,6 @@ impl<'a> TRK<'a> {
     if let Some(x) = args.CALL_SIGN { builder.add_CALL_SIGN(x); }
     if let Some(x) = args.SRC_IDS { builder.add_SRC_IDS(x); }
     if let Some(x) = args.SRC_TYPS { builder.add_SRC_TYPS(x); }
-    if let Some(x) = args.ERR_ELLP { builder.add_ERR_ELLP(x); }
-    if let Some(x) = args.COV { builder.add_COV(x); }
-    if let Some(x) = args.E_NUPOS { builder.add_E_NUPOS(x); }
-    if let Some(x) = args.E_NUVEL { builder.add_E_NUVEL(x); }
-    if let Some(x) = args.LC_ACC { builder.add_LC_ACC(x); }
-    if let Some(x) = args.LC_VEL { builder.add_LC_VEL(x); }
-    if let Some(x) = args.LC_POS { builder.add_LC_POS(x); }
-    if let Some(x) = args.LCS { builder.add_LCS(x); }
-    if let Some(x) = args.LCO { builder.add_LCO(x); }
-    if let Some(x) = args.ECEF_ACC { builder.add_ECEF_ACC(x); }
-    if let Some(x) = args.ECEF_VEL { builder.add_ECEF_VEL(x); }
-    if let Some(x) = args.ECEF_POS { builder.add_ECEF_POS(x); }
     if let Some(x) = args.ENVIRONMENT { builder.add_ENVIRONMENT(x); }
     if let Some(x) = args.IDENT_AMP { builder.add_IDENT_AMP(x); }
     builder.add_IDENT_REL(args.IDENT_REL);
@@ -156,6 +153,7 @@ impl<'a> TRK<'a> {
     if let Some(x) = args.MSG_TS { builder.add_MSG_TS(x); }
     if let Some(x) = args.CNTCT { builder.add_CNTCT(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_TRACK_COMPONENTS(args.TRACK_COMPONENTS);
     builder.add_MULTI_SOURCE(args.MULTI_SOURCE);
     builder.finish()
   }
@@ -238,48 +236,12 @@ impl<'a> TRK<'a> {
     });
     let ENVIRONMENT_CONF = self.ENVIRONMENT_CONF();
     let TRK_CONF = self.TRK_CONF();
-    let ECEF_POS = self.ECEF_POS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let ECEF_VEL = self.ECEF_VEL().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let ECEF_ACC = self.ECEF_ACC().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
     let LAT = self.LAT();
     let LON = self.LON();
     let ALT = self.ALT();
     let SPD = self.SPD();
     let HDNG = self.HDNG();
     let COURSE = self.COURSE();
-    let LCO = self.LCO().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let LCS = self.LCS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let LC_POS = self.LC_POS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let LC_VEL = self.LC_VEL().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let LC_ACC = self.LC_ACC().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let E_NUVEL = self.E_NUVEL().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let E_NUPOS = self.E_NUPOS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let COV = self.COV().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let ERR_ELLP = self.ERR_ELLP().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
     let SRC_TYPS = self.SRC_TYPS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
@@ -302,6 +264,35 @@ impl<'a> TRK<'a> {
     let M3AV = self.M3AV();
     let TAGS = self.TAGS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
+    });
+    let TRACK_START_TIME = self.TRACK_START_TIME().map(|x| {
+      x.to_string()
+    });
+    let TRACK_STEP_SIZE = self.TRACK_STEP_SIZE();
+    let TRACK_COMPONENTS = self.TRACK_COMPONENTS();
+    let ECEF_POS = self.ECEF_POS().map(|x| {
+      x.into_iter().collect()
+    });
+    let ECEF_VEL = self.ECEF_VEL().map(|x| {
+      x.into_iter().collect()
+    });
+    let ECEF_ACC = self.ECEF_ACC().map(|x| {
+      x.into_iter().collect()
+    });
+    let LC_POS = self.LC_POS().map(|x| {
+      x.into_iter().collect()
+    });
+    let LC_VEL = self.LC_VEL().map(|x| {
+      x.into_iter().collect()
+    });
+    let LC_ACC = self.LC_ACC().map(|x| {
+      x.into_iter().collect()
+    });
+    let COV = self.COV().map(|x| {
+      x.into_iter().collect()
+    });
+    let ERR_ELLP = self.ERR_ELLP().map(|x| {
+      x.into_iter().collect()
     });
     TRKT {
       ID,
@@ -333,24 +324,12 @@ impl<'a> TRK<'a> {
       ENVIRONMENT,
       ENVIRONMENT_CONF,
       TRK_CONF,
-      ECEF_POS,
-      ECEF_VEL,
-      ECEF_ACC,
       LAT,
       LON,
       ALT,
       SPD,
       HDNG,
       COURSE,
-      LCO,
-      LCS,
-      LC_POS,
-      LC_VEL,
-      LC_ACC,
-      E_NUVEL,
-      E_NUPOS,
-      COV,
-      ERR_ELLP,
       SRC_TYPS,
       SRC_IDS,
       CALL_SIGN,
@@ -364,6 +343,17 @@ impl<'a> TRK<'a> {
       M3A,
       M3AV,
       TAGS,
+      TRACK_START_TIME,
+      TRACK_STEP_SIZE,
+      TRACK_COMPONENTS,
+      ECEF_POS,
+      ECEF_VEL,
+      ECEF_ACC,
+      LC_POS,
+      LC_VEL,
+      LC_ACC,
+      COV,
+      ERR_ELLP,
     }
   }
 
@@ -571,27 +561,6 @@ impl<'a> TRK<'a> {
     unsafe { self._tab.get::<f64>(TRK::VT_TRK_CONF, Some(0.0)).unwrap()}
   }
   #[inline]
-  pub fn ECEF_POS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_ECEF_POS, None)}
-  }
-  #[inline]
-  pub fn ECEF_VEL(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_ECEF_VEL, None)}
-  }
-  #[inline]
-  pub fn ECEF_ACC(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_ECEF_ACC, None)}
-  }
-  #[inline]
   pub fn LAT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
@@ -632,69 +601,6 @@ impl<'a> TRK<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_COURSE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LCO(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_LCO, None)}
-  }
-  #[inline]
-  pub fn LCS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_LCS, None)}
-  }
-  #[inline]
-  pub fn LC_POS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_LC_POS, None)}
-  }
-  #[inline]
-  pub fn LC_VEL(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_LC_VEL, None)}
-  }
-  #[inline]
-  pub fn LC_ACC(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_LC_ACC, None)}
-  }
-  #[inline]
-  pub fn E_NUVEL(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_E_NUVEL, None)}
-  }
-  #[inline]
-  pub fn E_NUPOS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_E_NUPOS, None)}
-  }
-  #[inline]
-  pub fn COV(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_COV, None)}
-  }
-  #[inline]
-  pub fn ERR_ELLP(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_ERR_ELLP, None)}
   }
   #[inline]
   pub fn SRC_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
@@ -787,6 +693,94 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_TAGS, None)}
   }
+  /// Start time for track data (ISO 8601 UTC format).
+  #[inline]
+  pub fn TRACK_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRACK_START_TIME, None)}
+  }
+  /// Time interval between track points in seconds.
+  #[inline]
+  pub fn TRACK_STEP_SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TRK::VT_TRACK_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Number of components per point (default 3 for X, Y, Z).
+  #[inline]
+  pub fn TRACK_COMPONENTS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(TRK::VT_TRACK_COMPONENTS, Some(3)).unwrap()}
+  }
+  /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  #[inline]
+  pub fn ECEF_POS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_ECEF_POS, None)}
+  }
+  /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  #[inline]
+  pub fn ECEF_VEL(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_ECEF_VEL, None)}
+  }
+  /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  #[inline]
+  pub fn ECEF_ACC(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_ECEF_ACC, None)}
+  }
+  /// Local coordinate position as flat array
+  #[inline]
+  pub fn LC_POS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_LC_POS, None)}
+  }
+  /// Local coordinate velocity as flat array
+  #[inline]
+  pub fn LC_VEL(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_LC_VEL, None)}
+  }
+  /// Local coordinate acceleration as flat array
+  #[inline]
+  pub fn LC_ACC(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_LC_ACC, None)}
+  }
+  /// Covariance data (21 elements per point for 6x6 lower triangular)
+  #[inline]
+  pub fn COV(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_COV, None)}
+  }
+  /// Error ellipse data (6 elements per point)
+  #[inline]
+  pub fn ERR_ELLP(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(TRK::VT_ERR_ELLP, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for TRK<'_> {
@@ -825,24 +819,12 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENVIRONMENT", Self::VT_ENVIRONMENT, false)?
      .visit_field::<f64>("ENVIRONMENT_CONF", Self::VT_ENVIRONMENT_CONF, false)?
      .visit_field::<f64>("TRK_CONF", Self::VT_TRK_CONF, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ECEF_POS", Self::VT_ECEF_POS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ECEF_VEL", Self::VT_ECEF_VEL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ECEF_ACC", Self::VT_ECEF_ACC, false)?
      .visit_field::<f64>("LAT", Self::VT_LAT, false)?
      .visit_field::<f64>("LON", Self::VT_LON, false)?
      .visit_field::<f64>("ALT", Self::VT_ALT, false)?
      .visit_field::<f64>("SPD", Self::VT_SPD, false)?
      .visit_field::<f64>("HDNG", Self::VT_HDNG, false)?
      .visit_field::<f64>("COURSE", Self::VT_COURSE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LCO", Self::VT_LCO, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LCS", Self::VT_LCS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LC_POS", Self::VT_LC_POS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LC_VEL", Self::VT_LC_VEL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LC_ACC", Self::VT_LC_ACC, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("E_NUVEL", Self::VT_E_NUVEL, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("E_NUPOS", Self::VT_E_NUPOS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COV", Self::VT_COV, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ERR_ELLP", Self::VT_ERR_ELLP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SRC_TYPS", Self::VT_SRC_TYPS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SRC_IDS", Self::VT_SRC_IDS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CALL_SIGN", Self::VT_CALL_SIGN, false)?
@@ -856,6 +838,17 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<i32>("M3A", Self::VT_M3A, false)?
      .visit_field::<i32>("M3AV", Self::VT_M3AV, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_START_TIME", Self::VT_TRACK_START_TIME, false)?
+     .visit_field::<f64>("TRACK_STEP_SIZE", Self::VT_TRACK_STEP_SIZE, false)?
+     .visit_field::<u8>("TRACK_COMPONENTS", Self::VT_TRACK_COMPONENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ECEF_POS", Self::VT_ECEF_POS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ECEF_VEL", Self::VT_ECEF_VEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ECEF_ACC", Self::VT_ECEF_ACC, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("LC_POS", Self::VT_LC_POS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("LC_VEL", Self::VT_LC_VEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("LC_ACC", Self::VT_LC_ACC, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COV", Self::VT_COV, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ERR_ELLP", Self::VT_ERR_ELLP, false)?
      .finish();
     Ok(())
   }
@@ -890,24 +883,12 @@ pub struct TRKArgs<'a> {
     pub ENVIRONMENT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ENVIRONMENT_CONF: f64,
     pub TRK_CONF: f64,
-    pub ECEF_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ECEF_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ECEF_ACC: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub LAT: f64,
     pub LON: f64,
     pub ALT: f64,
     pub SPD: f64,
     pub HDNG: f64,
     pub COURSE: f64,
-    pub LCO: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LCS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LC_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LC_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub LC_ACC: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub E_NUVEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub E_NUPOS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub COV: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ERR_ELLP: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SRC_TYPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SRC_IDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub CALL_SIGN: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -921,6 +902,17 @@ pub struct TRKArgs<'a> {
     pub M3A: i32,
     pub M3AV: i32,
     pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub TRACK_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRACK_STEP_SIZE: f64,
+    pub TRACK_COMPONENTS: u8,
+    pub ECEF_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub ECEF_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub ECEF_ACC: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub LC_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub LC_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub LC_ACC: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub COV: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub ERR_ELLP: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for TRKArgs<'a> {
   #[inline]
@@ -955,24 +947,12 @@ impl<'a> Default for TRKArgs<'a> {
       ENVIRONMENT: None,
       ENVIRONMENT_CONF: 0.0,
       TRK_CONF: 0.0,
-      ECEF_POS: None,
-      ECEF_VEL: None,
-      ECEF_ACC: None,
       LAT: 0.0,
       LON: 0.0,
       ALT: 0.0,
       SPD: 0.0,
       HDNG: 0.0,
       COURSE: 0.0,
-      LCO: None,
-      LCS: None,
-      LC_POS: None,
-      LC_VEL: None,
-      LC_ACC: None,
-      E_NUVEL: None,
-      E_NUPOS: None,
-      COV: None,
-      ERR_ELLP: None,
       SRC_TYPS: None,
       SRC_IDS: None,
       CALL_SIGN: None,
@@ -986,6 +966,17 @@ impl<'a> Default for TRKArgs<'a> {
       M3A: 0,
       M3AV: 0,
       TAGS: None,
+      TRACK_START_TIME: None,
+      TRACK_STEP_SIZE: 0.0,
+      TRACK_COMPONENTS: 3,
+      ECEF_POS: None,
+      ECEF_VEL: None,
+      ECEF_ACC: None,
+      LC_POS: None,
+      LC_VEL: None,
+      LC_ACC: None,
+      COV: None,
+      ERR_ELLP: None,
     }
   }
 }
@@ -1112,18 +1103,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(TRK::VT_TRK_CONF, TRK_CONF, 0.0);
   }
   #[inline]
-  pub fn add_ECEF_POS(&mut self, ECEF_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_POS, ECEF_POS);
-  }
-  #[inline]
-  pub fn add_ECEF_VEL(&mut self, ECEF_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_VEL, ECEF_VEL);
-  }
-  #[inline]
-  pub fn add_ECEF_ACC(&mut self, ECEF_ACC: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_ACC, ECEF_ACC);
-  }
-  #[inline]
   pub fn add_LAT(&mut self, LAT: f64) {
     self.fbb_.push_slot::<f64>(TRK::VT_LAT, LAT, 0.0);
   }
@@ -1146,42 +1125,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_COURSE(&mut self, COURSE: f64) {
     self.fbb_.push_slot::<f64>(TRK::VT_COURSE, COURSE, 0.0);
-  }
-  #[inline]
-  pub fn add_LCO(&mut self, LCO: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LCO, LCO);
-  }
-  #[inline]
-  pub fn add_LCS(&mut self, LCS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LCS, LCS);
-  }
-  #[inline]
-  pub fn add_LC_POS(&mut self, LC_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_POS, LC_POS);
-  }
-  #[inline]
-  pub fn add_LC_VEL(&mut self, LC_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_VEL, LC_VEL);
-  }
-  #[inline]
-  pub fn add_LC_ACC(&mut self, LC_ACC: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_ACC, LC_ACC);
-  }
-  #[inline]
-  pub fn add_E_NUVEL(&mut self, E_NUVEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_E_NUVEL, E_NUVEL);
-  }
-  #[inline]
-  pub fn add_E_NUPOS(&mut self, E_NUPOS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_E_NUPOS, E_NUPOS);
-  }
-  #[inline]
-  pub fn add_COV(&mut self, COV: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_COV, COV);
-  }
-  #[inline]
-  pub fn add_ERR_ELLP(&mut self, ERR_ELLP: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ERR_ELLP, ERR_ELLP);
   }
   #[inline]
   pub fn add_SRC_TYPS(&mut self, SRC_TYPS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -1236,6 +1179,50 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TAGS, TAGS);
   }
   #[inline]
+  pub fn add_TRACK_START_TIME(&mut self, TRACK_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TRACK_START_TIME, TRACK_START_TIME);
+  }
+  #[inline]
+  pub fn add_TRACK_STEP_SIZE(&mut self, TRACK_STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(TRK::VT_TRACK_STEP_SIZE, TRACK_STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_TRACK_COMPONENTS(&mut self, TRACK_COMPONENTS: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_TRACK_COMPONENTS, TRACK_COMPONENTS, 3);
+  }
+  #[inline]
+  pub fn add_ECEF_POS(&mut self, ECEF_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_POS, ECEF_POS);
+  }
+  #[inline]
+  pub fn add_ECEF_VEL(&mut self, ECEF_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_VEL, ECEF_VEL);
+  }
+  #[inline]
+  pub fn add_ECEF_ACC(&mut self, ECEF_ACC: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ECEF_ACC, ECEF_ACC);
+  }
+  #[inline]
+  pub fn add_LC_POS(&mut self, LC_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_POS, LC_POS);
+  }
+  #[inline]
+  pub fn add_LC_VEL(&mut self, LC_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_VEL, LC_VEL);
+  }
+  #[inline]
+  pub fn add_LC_ACC(&mut self, LC_ACC: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_LC_ACC, LC_ACC);
+  }
+  #[inline]
+  pub fn add_COV(&mut self, COV: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_COV, COV);
+  }
+  #[inline]
+  pub fn add_ERR_ELLP(&mut self, ERR_ELLP: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ERR_ELLP, ERR_ELLP);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> TRKBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TRKBuilder {
@@ -1282,24 +1269,12 @@ impl core::fmt::Debug for TRK<'_> {
       ds.field("ENVIRONMENT", &self.ENVIRONMENT());
       ds.field("ENVIRONMENT_CONF", &self.ENVIRONMENT_CONF());
       ds.field("TRK_CONF", &self.TRK_CONF());
-      ds.field("ECEF_POS", &self.ECEF_POS());
-      ds.field("ECEF_VEL", &self.ECEF_VEL());
-      ds.field("ECEF_ACC", &self.ECEF_ACC());
       ds.field("LAT", &self.LAT());
       ds.field("LON", &self.LON());
       ds.field("ALT", &self.ALT());
       ds.field("SPD", &self.SPD());
       ds.field("HDNG", &self.HDNG());
       ds.field("COURSE", &self.COURSE());
-      ds.field("LCO", &self.LCO());
-      ds.field("LCS", &self.LCS());
-      ds.field("LC_POS", &self.LC_POS());
-      ds.field("LC_VEL", &self.LC_VEL());
-      ds.field("LC_ACC", &self.LC_ACC());
-      ds.field("E_NUVEL", &self.E_NUVEL());
-      ds.field("E_NUPOS", &self.E_NUPOS());
-      ds.field("COV", &self.COV());
-      ds.field("ERR_ELLP", &self.ERR_ELLP());
       ds.field("SRC_TYPS", &self.SRC_TYPS());
       ds.field("SRC_IDS", &self.SRC_IDS());
       ds.field("CALL_SIGN", &self.CALL_SIGN());
@@ -1313,6 +1288,17 @@ impl core::fmt::Debug for TRK<'_> {
       ds.field("M3A", &self.M3A());
       ds.field("M3AV", &self.M3AV());
       ds.field("TAGS", &self.TAGS());
+      ds.field("TRACK_START_TIME", &self.TRACK_START_TIME());
+      ds.field("TRACK_STEP_SIZE", &self.TRACK_STEP_SIZE());
+      ds.field("TRACK_COMPONENTS", &self.TRACK_COMPONENTS());
+      ds.field("ECEF_POS", &self.ECEF_POS());
+      ds.field("ECEF_VEL", &self.ECEF_VEL());
+      ds.field("ECEF_ACC", &self.ECEF_ACC());
+      ds.field("LC_POS", &self.LC_POS());
+      ds.field("LC_VEL", &self.LC_VEL());
+      ds.field("LC_ACC", &self.LC_ACC());
+      ds.field("COV", &self.COV());
+      ds.field("ERR_ELLP", &self.ERR_ELLP());
       ds.finish()
   }
 }
@@ -1348,24 +1334,12 @@ pub struct TRKT {
   pub ENVIRONMENT: Option<String>,
   pub ENVIRONMENT_CONF: f64,
   pub TRK_CONF: f64,
-  pub ECEF_POS: Option<Vec<String>>,
-  pub ECEF_VEL: Option<Vec<String>>,
-  pub ECEF_ACC: Option<Vec<String>>,
   pub LAT: f64,
   pub LON: f64,
   pub ALT: f64,
   pub SPD: f64,
   pub HDNG: f64,
   pub COURSE: f64,
-  pub LCO: Option<Vec<String>>,
-  pub LCS: Option<Vec<String>>,
-  pub LC_POS: Option<Vec<String>>,
-  pub LC_VEL: Option<Vec<String>>,
-  pub LC_ACC: Option<Vec<String>>,
-  pub E_NUVEL: Option<Vec<String>>,
-  pub E_NUPOS: Option<Vec<String>>,
-  pub COV: Option<Vec<String>>,
-  pub ERR_ELLP: Option<Vec<String>>,
   pub SRC_TYPS: Option<Vec<String>>,
   pub SRC_IDS: Option<Vec<String>>,
   pub CALL_SIGN: Option<String>,
@@ -1379,6 +1353,17 @@ pub struct TRKT {
   pub M3A: i32,
   pub M3AV: i32,
   pub TAGS: Option<Vec<String>>,
+  pub TRACK_START_TIME: Option<String>,
+  pub TRACK_STEP_SIZE: f64,
+  pub TRACK_COMPONENTS: u8,
+  pub ECEF_POS: Option<Vec<f64>>,
+  pub ECEF_VEL: Option<Vec<f64>>,
+  pub ECEF_ACC: Option<Vec<f64>>,
+  pub LC_POS: Option<Vec<f64>>,
+  pub LC_VEL: Option<Vec<f64>>,
+  pub LC_ACC: Option<Vec<f64>>,
+  pub COV: Option<Vec<f64>>,
+  pub ERR_ELLP: Option<Vec<f64>>,
 }
 impl Default for TRKT {
   fn default() -> Self {
@@ -1412,24 +1397,12 @@ impl Default for TRKT {
       ENVIRONMENT: None,
       ENVIRONMENT_CONF: 0.0,
       TRK_CONF: 0.0,
-      ECEF_POS: None,
-      ECEF_VEL: None,
-      ECEF_ACC: None,
       LAT: 0.0,
       LON: 0.0,
       ALT: 0.0,
       SPD: 0.0,
       HDNG: 0.0,
       COURSE: 0.0,
-      LCO: None,
-      LCS: None,
-      LC_POS: None,
-      LC_VEL: None,
-      LC_ACC: None,
-      E_NUVEL: None,
-      E_NUPOS: None,
-      COV: None,
-      ERR_ELLP: None,
       SRC_TYPS: None,
       SRC_IDS: None,
       CALL_SIGN: None,
@@ -1443,6 +1416,17 @@ impl Default for TRKT {
       M3A: 0,
       M3AV: 0,
       TAGS: None,
+      TRACK_START_TIME: None,
+      TRACK_STEP_SIZE: 0.0,
+      TRACK_COMPONENTS: 3,
+      ECEF_POS: None,
+      ECEF_VEL: None,
+      ECEF_ACC: None,
+      LC_POS: None,
+      LC_VEL: None,
+      LC_ACC: None,
+      COV: None,
+      ERR_ELLP: None,
     }
   }
 }
@@ -1528,48 +1512,12 @@ impl TRKT {
     });
     let ENVIRONMENT_CONF = self.ENVIRONMENT_CONF;
     let TRK_CONF = self.TRK_CONF;
-    let ECEF_POS = self.ECEF_POS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ECEF_VEL = self.ECEF_VEL.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ECEF_ACC = self.ECEF_ACC.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let LAT = self.LAT;
     let LON = self.LON;
     let ALT = self.ALT;
     let SPD = self.SPD;
     let HDNG = self.HDNG;
     let COURSE = self.COURSE;
-    let LCO = self.LCO.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let LCS = self.LCS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let LC_POS = self.LC_POS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let LC_VEL = self.LC_VEL.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let LC_ACC = self.LC_ACC.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let E_NUVEL = self.E_NUVEL.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let E_NUPOS = self.E_NUPOS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let COV = self.COV.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ERR_ELLP = self.ERR_ELLP.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let SRC_TYPS = self.SRC_TYPS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -1592,6 +1540,35 @@ impl TRKT {
     let M3AV = self.M3AV;
     let TAGS = self.TAGS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let TRACK_START_TIME = self.TRACK_START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACK_STEP_SIZE = self.TRACK_STEP_SIZE;
+    let TRACK_COMPONENTS = self.TRACK_COMPONENTS;
+    let ECEF_POS = self.ECEF_POS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ECEF_VEL = self.ECEF_VEL.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ECEF_ACC = self.ECEF_ACC.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let LC_POS = self.LC_POS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let LC_VEL = self.LC_VEL.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let LC_ACC = self.LC_ACC.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let COV = self.COV.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ERR_ELLP = self.ERR_ELLP.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     TRK::create(_fbb, &TRKArgs{
       ID,
@@ -1623,24 +1600,12 @@ impl TRKT {
       ENVIRONMENT,
       ENVIRONMENT_CONF,
       TRK_CONF,
-      ECEF_POS,
-      ECEF_VEL,
-      ECEF_ACC,
       LAT,
       LON,
       ALT,
       SPD,
       HDNG,
       COURSE,
-      LCO,
-      LCS,
-      LC_POS,
-      LC_VEL,
-      LC_ACC,
-      E_NUVEL,
-      E_NUPOS,
-      COV,
-      ERR_ELLP,
       SRC_TYPS,
       SRC_IDS,
       CALL_SIGN,
@@ -1654,6 +1619,17 @@ impl TRKT {
       M3A,
       M3AV,
       TAGS,
+      TRACK_START_TIME,
+      TRACK_STEP_SIZE,
+      TRACK_COMPONENTS,
+      ECEF_POS,
+      ECEF_VEL,
+      ECEF_ACC,
+      LC_POS,
+      LC_VEL,
+      LC_ACC,
+      COV,
+      ERR_ELLP,
     })
   }
 }

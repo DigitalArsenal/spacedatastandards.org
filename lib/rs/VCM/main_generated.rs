@@ -1631,202 +1631,6 @@ impl VCMStateVectorT {
     })
   }
 }
-pub enum VCMCovarianceMatrixLineOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// VCM Covariance Matrix Line
-pub struct VCMCovarianceMatrixLine<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for VCMCovarianceMatrixLine<'a> {
-  type Inner = VCMCovarianceMatrixLine<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> VCMCovarianceMatrixLine<'a> {
-  pub const VT_CX_X: flatbuffers::VOffsetT = 4;
-  pub const VT_CY_X: flatbuffers::VOffsetT = 6;
-  pub const VT_CZ_X: flatbuffers::VOffsetT = 8;
-  pub const VT_CX_DOT_X: flatbuffers::VOffsetT = 10;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    VCMCovarianceMatrixLine { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args VCMCovarianceMatrixLineArgs
-  ) -> flatbuffers::WIPOffset<VCMCovarianceMatrixLine<'bldr>> {
-    let mut builder = VCMCovarianceMatrixLineBuilder::new(_fbb);
-    builder.add_CX_DOT_X(args.CX_DOT_X);
-    builder.add_CZ_X(args.CZ_X);
-    builder.add_CY_X(args.CY_X);
-    builder.add_CX_X(args.CX_X);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> VCMCovarianceMatrixLineT {
-    let CX_X = self.CX_X();
-    let CY_X = self.CY_X();
-    let CZ_X = self.CZ_X();
-    let CX_DOT_X = self.CX_DOT_X();
-    VCMCovarianceMatrixLineT {
-      CX_X,
-      CY_X,
-      CZ_X,
-      CX_DOT_X,
-    }
-  }
-
-  #[inline]
-  pub fn CX_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCMCovarianceMatrixLine::VT_CX_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CY_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCMCovarianceMatrixLine::VT_CY_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CZ_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCMCovarianceMatrixLine::VT_CZ_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CX_DOT_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCMCovarianceMatrixLine::VT_CX_DOT_X, Some(0.0)).unwrap()}
-  }
-}
-
-impl flatbuffers::Verifiable for VCMCovarianceMatrixLine<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
-     .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
-     .visit_field::<f64>("CZ_X", Self::VT_CZ_X, false)?
-     .visit_field::<f64>("CX_DOT_X", Self::VT_CX_DOT_X, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct VCMCovarianceMatrixLineArgs {
-    pub CX_X: f64,
-    pub CY_X: f64,
-    pub CZ_X: f64,
-    pub CX_DOT_X: f64,
-}
-impl<'a> Default for VCMCovarianceMatrixLineArgs {
-  #[inline]
-  fn default() -> Self {
-    VCMCovarianceMatrixLineArgs {
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CZ_X: 0.0,
-      CX_DOT_X: 0.0,
-    }
-  }
-}
-
-pub struct VCMCovarianceMatrixLineBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> VCMCovarianceMatrixLineBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_CX_X(&mut self, CX_X: f64) {
-    self.fbb_.push_slot::<f64>(VCMCovarianceMatrixLine::VT_CX_X, CX_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_X(&mut self, CY_X: f64) {
-    self.fbb_.push_slot::<f64>(VCMCovarianceMatrixLine::VT_CY_X, CY_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_X(&mut self, CZ_X: f64) {
-    self.fbb_.push_slot::<f64>(VCMCovarianceMatrixLine::VT_CZ_X, CZ_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_X(&mut self, CX_DOT_X: f64) {
-    self.fbb_.push_slot::<f64>(VCMCovarianceMatrixLine::VT_CX_DOT_X, CX_DOT_X, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> VCMCovarianceMatrixLineBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    VCMCovarianceMatrixLineBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<VCMCovarianceMatrixLine<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for VCMCovarianceMatrixLine<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("VCMCovarianceMatrixLine");
-      ds.field("CX_X", &self.CX_X());
-      ds.field("CY_X", &self.CY_X());
-      ds.field("CZ_X", &self.CZ_X());
-      ds.field("CX_DOT_X", &self.CX_DOT_X());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct VCMCovarianceMatrixLineT {
-  pub CX_X: f64,
-  pub CY_X: f64,
-  pub CZ_X: f64,
-  pub CX_DOT_X: f64,
-}
-impl Default for VCMCovarianceMatrixLineT {
-  fn default() -> Self {
-    Self {
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CZ_X: 0.0,
-      CX_DOT_X: 0.0,
-    }
-  }
-}
-impl VCMCovarianceMatrixLineT {
-  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> flatbuffers::WIPOffset<VCMCovarianceMatrixLine<'b>> {
-    let CX_X = self.CX_X;
-    let CY_X = self.CY_X;
-    let CZ_X = self.CZ_X;
-    let CX_DOT_X = self.CX_DOT_X;
-    VCMCovarianceMatrixLine::create(_fbb, &VCMCovarianceMatrixLineArgs{
-      CX_X,
-      CY_X,
-      CZ_X,
-      CX_DOT_X,
-    })
-  }
-}
 pub enum keplerianElementsOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -2895,31 +2699,27 @@ impl<'a> VCM<'a> {
   pub const VT_GM: flatbuffers::VOffsetT = 26;
   pub const VT_ATMOSPHERIC_MODEL_DATA: flatbuffers::VOffsetT = 28;
   pub const VT_PROPAGATOR_SETTINGS: flatbuffers::VOffsetT = 30;
-  pub const VT_COVARIANCE_MATRIX: flatbuffers::VOffsetT = 32;
-  pub const VT_UVW_SIGMAS: flatbuffers::VOffsetT = 34;
-  pub const VT_MASS: flatbuffers::VOffsetT = 36;
-  pub const VT_SOLAR_RAD_AREA: flatbuffers::VOffsetT = 38;
-  pub const VT_SOLAR_RAD_COEFF: flatbuffers::VOffsetT = 40;
-  pub const VT_DRAG_AREA: flatbuffers::VOffsetT = 42;
-  pub const VT_DRAG_COEFF: flatbuffers::VOffsetT = 44;
-  pub const VT_SRP: flatbuffers::VOffsetT = 46;
-  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 48;
-  pub const VT_NORAD_CAT_ID: flatbuffers::VOffsetT = 50;
-  pub const VT_ELEMENT_SET_NO: flatbuffers::VOffsetT = 52;
-  pub const VT_REV_AT_EPOCH: flatbuffers::VOffsetT = 54;
-  pub const VT_BSTAR: flatbuffers::VOffsetT = 56;
-  pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 58;
-  pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 60;
-  pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 62;
-  pub const VT_CX_X: flatbuffers::VOffsetT = 64;
-  pub const VT_CY_X: flatbuffers::VOffsetT = 66;
-  pub const VT_CZ_X: flatbuffers::VOffsetT = 68;
-  pub const VT_CX_DOT_X: flatbuffers::VOffsetT = 70;
-  pub const VT_USER_DEFINED_BIP_0044_TYPE: flatbuffers::VOffsetT = 72;
-  pub const VT_USER_DEFINED_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 74;
-  pub const VT_USER_DEFINED_EARTH_MODEL: flatbuffers::VOffsetT = 76;
-  pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: flatbuffers::VOffsetT = 78;
-  pub const VT_USER_DEFINED_MICROSECONDS: flatbuffers::VOffsetT = 80;
+  pub const VT_UVW_SIGMAS: flatbuffers::VOffsetT = 32;
+  pub const VT_MASS: flatbuffers::VOffsetT = 34;
+  pub const VT_SOLAR_RAD_AREA: flatbuffers::VOffsetT = 36;
+  pub const VT_SOLAR_RAD_COEFF: flatbuffers::VOffsetT = 38;
+  pub const VT_DRAG_AREA: flatbuffers::VOffsetT = 40;
+  pub const VT_DRAG_COEFF: flatbuffers::VOffsetT = 42;
+  pub const VT_SRP: flatbuffers::VOffsetT = 44;
+  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 46;
+  pub const VT_NORAD_CAT_ID: flatbuffers::VOffsetT = 48;
+  pub const VT_ELEMENT_SET_NO: flatbuffers::VOffsetT = 50;
+  pub const VT_REV_AT_EPOCH: flatbuffers::VOffsetT = 52;
+  pub const VT_BSTAR: flatbuffers::VOffsetT = 54;
+  pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 56;
+  pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 58;
+  pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 60;
+  pub const VT_COVARIANCE: flatbuffers::VOffsetT = 62;
+  pub const VT_USER_DEFINED_BIP_0044_TYPE: flatbuffers::VOffsetT = 64;
+  pub const VT_USER_DEFINED_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 66;
+  pub const VT_USER_DEFINED_EARTH_MODEL: flatbuffers::VOffsetT = 68;
+  pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: flatbuffers::VOffsetT = 70;
+  pub const VT_USER_DEFINED_MICROSECONDS: flatbuffers::VOffsetT = 72;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2933,10 +2733,6 @@ impl<'a> VCM<'a> {
     let mut builder = VCMBuilder::new(_fbb);
     builder.add_USER_DEFINED_MICROSECONDS(args.USER_DEFINED_MICROSECONDS);
     builder.add_USER_DEFINED_EPOCH_TIMESTAMP(args.USER_DEFINED_EPOCH_TIMESTAMP);
-    builder.add_CX_DOT_X(args.CX_DOT_X);
-    builder.add_CZ_X(args.CZ_X);
-    builder.add_CY_X(args.CY_X);
-    builder.add_CX_X(args.CX_X);
     builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
     builder.add_MEAN_MOTION_DOT(args.MEAN_MOTION_DOT);
     builder.add_BSTAR(args.BSTAR);
@@ -2951,12 +2747,12 @@ impl<'a> VCM<'a> {
     if let Some(x) = args.USER_DEFINED_EARTH_MODEL { builder.add_USER_DEFINED_EARTH_MODEL(x); }
     if let Some(x) = args.USER_DEFINED_OBJECT_DESIGNATOR { builder.add_USER_DEFINED_OBJECT_DESIGNATOR(x); }
     builder.add_USER_DEFINED_BIP_0044_TYPE(args.USER_DEFINED_BIP_0044_TYPE);
+    if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
     if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
     builder.add_ELEMENT_SET_NO(args.ELEMENT_SET_NO);
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
     if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
     if let Some(x) = args.UVW_SIGMAS { builder.add_UVW_SIGMAS(x); }
-    if let Some(x) = args.COVARIANCE_MATRIX { builder.add_COVARIANCE_MATRIX(x); }
     if let Some(x) = args.PROPAGATOR_SETTINGS { builder.add_PROPAGATOR_SETTINGS(x); }
     if let Some(x) = args.ATMOSPHERIC_MODEL_DATA { builder.add_ATMOSPHERIC_MODEL_DATA(x); }
     if let Some(x) = args.EQUINOCTIAL_ELEMENTS { builder.add_EQUINOCTIAL_ELEMENTS(x); }
@@ -3012,9 +2808,6 @@ impl<'a> VCM<'a> {
     let PROPAGATOR_SETTINGS = self.PROPAGATOR_SETTINGS().map(|x| {
       Box::new(x.unpack())
     });
-    let COVARIANCE_MATRIX = self.COVARIANCE_MATRIX().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
     let UVW_SIGMAS = self.UVW_SIGMAS().map(|x| {
       Box::new(x.unpack())
     });
@@ -3036,10 +2829,9 @@ impl<'a> VCM<'a> {
     let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
       x.to_string()
     });
-    let CX_X = self.CX_X();
-    let CY_X = self.CY_X();
-    let CZ_X = self.CZ_X();
-    let CX_DOT_X = self.CX_DOT_X();
+    let COVARIANCE = self.COVARIANCE().map(|x| {
+      x.into_iter().collect()
+    });
     let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE();
     let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR().map(|x| {
       x.to_string()
@@ -3064,7 +2856,6 @@ impl<'a> VCM<'a> {
       GM,
       ATMOSPHERIC_MODEL_DATA,
       PROPAGATOR_SETTINGS,
-      COVARIANCE_MATRIX,
       UVW_SIGMAS,
       MASS,
       SOLAR_RAD_AREA,
@@ -3080,10 +2871,7 @@ impl<'a> VCM<'a> {
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME,
-      CX_X,
-      CY_X,
-      CZ_X,
-      CX_DOT_X,
+      COVARIANCE,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR,
       USER_DEFINED_EARTH_MODEL,
@@ -3191,13 +2979,6 @@ impl<'a> VCM<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<propagatorConfig>>(VCM::VT_PROPAGATOR_SETTINGS, None)}
   }
   #[inline]
-  pub fn COVARIANCE_MATRIX(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<VCMCovarianceMatrixLine<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<VCMCovarianceMatrixLine>>>>(VCM::VT_COVARIANCE_MATRIX, None)}
-  }
-  #[inline]
   pub fn UVW_SIGMAS(&self) -> Option<uvwSigmas<'a>> {
     // Safety:
     // Created from valid Table for this object
@@ -3302,33 +3083,18 @@ impl<'a> VCM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(VCM::VT_COV_REFERENCE_FRAME, None)}
   }
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
   #[inline]
-  pub fn CX_X(&self) -> f64 {
+  pub fn COVARIANCE(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCM::VT_CX_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CY_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCM::VT_CY_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CZ_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCM::VT_CZ_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CX_DOT_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VCM::VT_CX_DOT_X, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(VCM::VT_COVARIANCE, None)}
   }
   #[inline]
   pub fn USER_DEFINED_BIP_0044_TYPE(&self) -> u32 {
@@ -3388,7 +3154,6 @@ impl flatbuffers::Verifiable for VCM<'_> {
      .visit_field::<f64>("GM", Self::VT_GM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<VCMAtmosphericModelData>>("ATMOSPHERIC_MODEL_DATA", Self::VT_ATMOSPHERIC_MODEL_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<propagatorConfig>>("PROPAGATOR_SETTINGS", Self::VT_PROPAGATOR_SETTINGS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<VCMCovarianceMatrixLine>>>>("COVARIANCE_MATRIX", Self::VT_COVARIANCE_MATRIX, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<uvwSigmas>>("UVW_SIGMAS", Self::VT_UVW_SIGMAS, false)?
      .visit_field::<f64>("MASS", Self::VT_MASS, false)?
      .visit_field::<f64>("SOLAR_RAD_AREA", Self::VT_SOLAR_RAD_AREA, false)?
@@ -3404,10 +3169,7 @@ impl flatbuffers::Verifiable for VCM<'_> {
      .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
      .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
-     .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
-     .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
-     .visit_field::<f64>("CZ_X", Self::VT_CZ_X, false)?
-     .visit_field::<f64>("CX_DOT_X", Self::VT_CX_DOT_X, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
      .visit_field::<u32>("USER_DEFINED_BIP_0044_TYPE", Self::VT_USER_DEFINED_BIP_0044_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_OBJECT_DESIGNATOR", Self::VT_USER_DEFINED_OBJECT_DESIGNATOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_EARTH_MODEL", Self::VT_USER_DEFINED_EARTH_MODEL, false)?
@@ -3432,7 +3194,6 @@ pub struct VCMArgs<'a> {
     pub GM: f64,
     pub ATMOSPHERIC_MODEL_DATA: Option<flatbuffers::WIPOffset<VCMAtmosphericModelData<'a>>>,
     pub PROPAGATOR_SETTINGS: Option<flatbuffers::WIPOffset<propagatorConfig<'a>>>,
-    pub COVARIANCE_MATRIX: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<VCMCovarianceMatrixLine<'a>>>>>,
     pub UVW_SIGMAS: Option<flatbuffers::WIPOffset<uvwSigmas<'a>>>,
     pub MASS: f64,
     pub SOLAR_RAD_AREA: f64,
@@ -3448,10 +3209,7 @@ pub struct VCMArgs<'a> {
     pub MEAN_MOTION_DOT: f64,
     pub MEAN_MOTION_DDOT: f64,
     pub COV_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CX_X: f64,
-    pub CY_X: f64,
-    pub CZ_X: f64,
-    pub CX_DOT_X: f64,
+    pub COVARIANCE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub USER_DEFINED_BIP_0044_TYPE: u32,
     pub USER_DEFINED_OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub USER_DEFINED_EARTH_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -3476,7 +3234,6 @@ impl<'a> Default for VCMArgs<'a> {
       GM: 0.0,
       ATMOSPHERIC_MODEL_DATA: None,
       PROPAGATOR_SETTINGS: None,
-      COVARIANCE_MATRIX: None,
       UVW_SIGMAS: None,
       MASS: 0.0,
       SOLAR_RAD_AREA: 0.0,
@@ -3492,10 +3249,7 @@ impl<'a> Default for VCMArgs<'a> {
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
       COV_REFERENCE_FRAME: None,
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CZ_X: 0.0,
-      CX_DOT_X: 0.0,
+      COVARIANCE: None,
       USER_DEFINED_BIP_0044_TYPE: 0,
       USER_DEFINED_OBJECT_DESIGNATOR: None,
       USER_DEFINED_EARTH_MODEL: None,
@@ -3567,10 +3321,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> VCMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<propagatorConfig>>(VCM::VT_PROPAGATOR_SETTINGS, PROPAGATOR_SETTINGS);
   }
   #[inline]
-  pub fn add_COVARIANCE_MATRIX(&mut self, COVARIANCE_MATRIX: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<VCMCovarianceMatrixLine<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(VCM::VT_COVARIANCE_MATRIX, COVARIANCE_MATRIX);
-  }
-  #[inline]
   pub fn add_UVW_SIGMAS(&mut self, UVW_SIGMAS: flatbuffers::WIPOffset<uvwSigmas<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<uvwSigmas>>(VCM::VT_UVW_SIGMAS, UVW_SIGMAS);
   }
@@ -3631,20 +3381,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> VCMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(VCM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_CX_X(&mut self, CX_X: f64) {
-    self.fbb_.push_slot::<f64>(VCM::VT_CX_X, CX_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_X(&mut self, CY_X: f64) {
-    self.fbb_.push_slot::<f64>(VCM::VT_CY_X, CY_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_X(&mut self, CZ_X: f64) {
-    self.fbb_.push_slot::<f64>(VCM::VT_CZ_X, CZ_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_X(&mut self, CX_DOT_X: f64) {
-    self.fbb_.push_slot::<f64>(VCM::VT_CX_DOT_X, CX_DOT_X, 0.0);
+  pub fn add_COVARIANCE(&mut self, COVARIANCE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(VCM::VT_COVARIANCE, COVARIANCE);
   }
   #[inline]
   pub fn add_USER_DEFINED_BIP_0044_TYPE(&mut self, USER_DEFINED_BIP_0044_TYPE: u32) {
@@ -3698,7 +3436,6 @@ impl core::fmt::Debug for VCM<'_> {
       ds.field("GM", &self.GM());
       ds.field("ATMOSPHERIC_MODEL_DATA", &self.ATMOSPHERIC_MODEL_DATA());
       ds.field("PROPAGATOR_SETTINGS", &self.PROPAGATOR_SETTINGS());
-      ds.field("COVARIANCE_MATRIX", &self.COVARIANCE_MATRIX());
       ds.field("UVW_SIGMAS", &self.UVW_SIGMAS());
       ds.field("MASS", &self.MASS());
       ds.field("SOLAR_RAD_AREA", &self.SOLAR_RAD_AREA());
@@ -3714,10 +3451,7 @@ impl core::fmt::Debug for VCM<'_> {
       ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
       ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
       ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
-      ds.field("CX_X", &self.CX_X());
-      ds.field("CY_X", &self.CY_X());
-      ds.field("CZ_X", &self.CZ_X());
-      ds.field("CX_DOT_X", &self.CX_DOT_X());
+      ds.field("COVARIANCE", &self.COVARIANCE());
       ds.field("USER_DEFINED_BIP_0044_TYPE", &self.USER_DEFINED_BIP_0044_TYPE());
       ds.field("USER_DEFINED_OBJECT_DESIGNATOR", &self.USER_DEFINED_OBJECT_DESIGNATOR());
       ds.field("USER_DEFINED_EARTH_MODEL", &self.USER_DEFINED_EARTH_MODEL());
@@ -3743,7 +3477,6 @@ pub struct VCMT {
   pub GM: f64,
   pub ATMOSPHERIC_MODEL_DATA: Option<Box<VCMAtmosphericModelDataT>>,
   pub PROPAGATOR_SETTINGS: Option<Box<propagatorConfigT>>,
-  pub COVARIANCE_MATRIX: Option<Vec<VCMCovarianceMatrixLineT>>,
   pub UVW_SIGMAS: Option<Box<uvwSigmasT>>,
   pub MASS: f64,
   pub SOLAR_RAD_AREA: f64,
@@ -3759,10 +3492,7 @@ pub struct VCMT {
   pub MEAN_MOTION_DOT: f64,
   pub MEAN_MOTION_DDOT: f64,
   pub COV_REFERENCE_FRAME: Option<String>,
-  pub CX_X: f64,
-  pub CY_X: f64,
-  pub CZ_X: f64,
-  pub CX_DOT_X: f64,
+  pub COVARIANCE: Option<Vec<f64>>,
   pub USER_DEFINED_BIP_0044_TYPE: u32,
   pub USER_DEFINED_OBJECT_DESIGNATOR: Option<String>,
   pub USER_DEFINED_EARTH_MODEL: Option<String>,
@@ -3786,7 +3516,6 @@ impl Default for VCMT {
       GM: 0.0,
       ATMOSPHERIC_MODEL_DATA: None,
       PROPAGATOR_SETTINGS: None,
-      COVARIANCE_MATRIX: None,
       UVW_SIGMAS: None,
       MASS: 0.0,
       SOLAR_RAD_AREA: 0.0,
@@ -3802,10 +3531,7 @@ impl Default for VCMT {
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
       COV_REFERENCE_FRAME: None,
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CZ_X: 0.0,
-      CX_DOT_X: 0.0,
+      COVARIANCE: None,
       USER_DEFINED_BIP_0044_TYPE: 0,
       USER_DEFINED_OBJECT_DESIGNATOR: None,
       USER_DEFINED_EARTH_MODEL: None,
@@ -3857,9 +3583,6 @@ impl VCMT {
     let PROPAGATOR_SETTINGS = self.PROPAGATOR_SETTINGS.as_ref().map(|x|{
       x.pack(_fbb)
     });
-    let COVARIANCE_MATRIX = self.COVARIANCE_MATRIX.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
     let UVW_SIGMAS = self.UVW_SIGMAS.as_ref().map(|x|{
       x.pack(_fbb)
     });
@@ -3881,10 +3604,9 @@ impl VCMT {
     let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let CX_X = self.CX_X;
-    let CY_X = self.CY_X;
-    let CZ_X = self.CZ_X;
-    let CX_DOT_X = self.CX_DOT_X;
+    let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE;
     let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -3909,7 +3631,6 @@ impl VCMT {
       GM,
       ATMOSPHERIC_MODEL_DATA,
       PROPAGATOR_SETTINGS,
-      COVARIANCE_MATRIX,
       UVW_SIGMAS,
       MASS,
       SOLAR_RAD_AREA,
@@ -3925,10 +3646,7 @@ impl VCMT {
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME,
-      CX_X,
-      CY_X,
-      CZ_X,
-      CX_DOT_X,
+      COVARIANCE,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR,
       USER_DEFINED_EARTH_MODEL,

@@ -77,9 +77,6 @@
         "AOU_RPT_TYPE" : {
                 "type" : "string"
               },
-        "AOU_RPT_DATA" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
         "CONTAINMENT" : {
                 "type" : "number"
               },
@@ -134,9 +131,6 @@
         "LAUNCH_AOU_TYPE" : {
                 "type" : "string"
               },
-        "LAUNCH_AOU_DATA" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
         "IMPACT_TIME" : {
                 "type" : "string"
               },
@@ -149,11 +143,33 @@
         "IMPACT_AOU_TYPE" : {
                 "type" : "string"
               },
-        "IMPACT_AOU_DATA" : {
-                "type" : "array", "items" : {"type" : "string"}
+        "VECTOR_START_TIME" : {
+                "type" : "string",
+                "description" : "Start time for vector data (ISO 8601 UTC format)."
+              },
+        "VECTOR_STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Time interval between vector points in seconds."
+              },
+        "VECTOR_COMPONENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)."
               },
         "VECTORS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]"
+              },
+        "AOU_RPT" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "AOU report data as flat array (layout depends on AOU_RPT_TYPE)."
+              },
+        "LAUNCH_AOU" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE)."
+              },
+        "IMPACT_AOU" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE)."
               }
       },
       "additionalProperties" : false

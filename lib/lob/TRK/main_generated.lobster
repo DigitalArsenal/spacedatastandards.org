@@ -63,105 +63,106 @@ class TRK : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
     def TRK_CONF() -> float:
         return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
-    def ECEF_POS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 4)
-    def ECEF_POS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 62)
-    def ECEF_VEL(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 64) + i * 4)
-    def ECEF_VEL_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 64)
-    def ECEF_ACC(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 66) + i * 4)
-    def ECEF_ACC_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 66)
     def LAT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
     def LON() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
     def ALT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
     def SPD() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     def HDNG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
     def COURSE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
-    def LCO(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 80) + i * 4)
-    def LCO_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 80)
-    def LCS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 82) + i * 4)
-    def LCS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 82)
-    def LC_POS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 84) + i * 4)
-    def LC_POS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 84)
-    def LC_VEL(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
-    def LC_VEL_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 86)
-    def LC_ACC(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 88) + i * 4)
-    def LC_ACC_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 88)
-    def E_NUVEL(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 4)
-    def E_NUVEL_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 90)
-    def E_NUPOS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 92) + i * 4)
-    def E_NUPOS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 92)
-    def COV(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 94) + i * 4)
-    def COV_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 94)
-    def ERR_ELLP(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 96) + i * 4)
-    def ERR_ELLP_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 96)
+        return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
     def SRC_TYPS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 98) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 74) + i * 4)
     def SRC_TYPS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 98)
+        return flatbuffers.field_vector_len(buf_, pos_, 74)
     def SRC_IDS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 100) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 76) + i * 4)
     def SRC_IDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 100)
+        return flatbuffers.field_vector_len(buf_, pos_, 76)
     def CALL_SIGN() -> string:
-        return flatbuffers.field_string(buf_, pos_, 102)
+        return flatbuffers.field_string(buf_, pos_, 78)
     def MULTI_SOURCE() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 104, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 80, 0))
     def J_SERIES() -> string:
-        return flatbuffers.field_string(buf_, pos_, 106)
+        return flatbuffers.field_string(buf_, pos_, 82)
     def STRENGTH() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 108, 0)
+        return flatbuffers.field_int32(buf_, pos_, 84, 0)
     def M1() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 110, 0)
+        return flatbuffers.field_int32(buf_, pos_, 86, 0)
     def M1V() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 112, 0)
+        return flatbuffers.field_int32(buf_, pos_, 88, 0)
     def M2() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 114, 0)
+        return flatbuffers.field_int32(buf_, pos_, 90, 0)
     def M2V() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 116, 0)
+        return flatbuffers.field_int32(buf_, pos_, 92, 0)
     def M3A() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 118, 0)
+        return flatbuffers.field_int32(buf_, pos_, 94, 0)
     def M3AV() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 120, 0)
+        return flatbuffers.field_int32(buf_, pos_, 96, 0)
     def TAGS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 122) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 98) + i * 4)
     def TAGS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 122)
+        return flatbuffers.field_vector_len(buf_, pos_, 98)
+    /// Start time for track data (ISO 8601 UTC format).
+    def TRACK_START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 100)
+    /// Time interval between track points in seconds.
+    def TRACK_STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
+    /// Number of components per point (default 3 for X, Y, Z).
+    def TRACK_COMPONENTS() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 104, 3)
+    /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+    def ECEF_POS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 106) + i * 8)
+    def ECEF_POS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 106)
+    /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+    def ECEF_VEL(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 108) + i * 8)
+    def ECEF_VEL_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 108)
+    /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+    def ECEF_ACC(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 110) + i * 8)
+    def ECEF_ACC_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 110)
+    /// Local coordinate position as flat array
+    def LC_POS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 112) + i * 8)
+    def LC_POS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 112)
+    /// Local coordinate velocity as flat array
+    def LC_VEL(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 114) + i * 8)
+    def LC_VEL_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 114)
+    /// Local coordinate acceleration as flat array
+    def LC_ACC(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 116) + i * 8)
+    def LC_ACC_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 116)
+    /// Covariance data (21 elements per point for 6x6 lower triangular)
+    def COV(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 118) + i * 8)
+    def COV_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 118)
+    /// Error ellipse data (6 elements per point)
+    def ERR_ELLP(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 120) + i * 8)
+    def ERR_ELLP_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 120)
 
 def GetRootAsTRK(buf:string): return TRK { buf, flatbuffers.indirect(buf, 0) }
 
 struct TRKBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(60)
+        b_.StartObject(59)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -250,185 +251,98 @@ struct TRKBuilder:
     def add_TRK_CONF(TRK_CONF:float):
         b_.PrependFloat64Slot(28, TRK_CONF, 0.0)
         return this
-    def add_ECEF_POS(ECEF_POS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(29, ECEF_POS)
-        return this
-    def add_ECEF_VEL(ECEF_VEL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(30, ECEF_VEL)
-        return this
-    def add_ECEF_ACC(ECEF_ACC:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(31, ECEF_ACC)
-        return this
     def add_LAT(LAT:float):
-        b_.PrependFloat64Slot(32, LAT, 0.0)
+        b_.PrependFloat64Slot(29, LAT, 0.0)
         return this
     def add_LON(LON:float):
-        b_.PrependFloat64Slot(33, LON, 0.0)
+        b_.PrependFloat64Slot(30, LON, 0.0)
         return this
     def add_ALT(ALT:float):
-        b_.PrependFloat64Slot(34, ALT, 0.0)
+        b_.PrependFloat64Slot(31, ALT, 0.0)
         return this
     def add_SPD(SPD:float):
-        b_.PrependFloat64Slot(35, SPD, 0.0)
+        b_.PrependFloat64Slot(32, SPD, 0.0)
         return this
     def add_HDNG(HDNG:float):
-        b_.PrependFloat64Slot(36, HDNG, 0.0)
+        b_.PrependFloat64Slot(33, HDNG, 0.0)
         return this
     def add_COURSE(COURSE:float):
-        b_.PrependFloat64Slot(37, COURSE, 0.0)
-        return this
-    def add_LCO(LCO:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(38, LCO)
-        return this
-    def add_LCS(LCS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(39, LCS)
-        return this
-    def add_LC_POS(LC_POS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(40, LC_POS)
-        return this
-    def add_LC_VEL(LC_VEL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(41, LC_VEL)
-        return this
-    def add_LC_ACC(LC_ACC:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(42, LC_ACC)
-        return this
-    def add_E_NUVEL(E_NUVEL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(43, E_NUVEL)
-        return this
-    def add_E_NUPOS(E_NUPOS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(44, E_NUPOS)
-        return this
-    def add_COV(COV:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(45, COV)
-        return this
-    def add_ERR_ELLP(ERR_ELLP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(46, ERR_ELLP)
+        b_.PrependFloat64Slot(34, COURSE, 0.0)
         return this
     def add_SRC_TYPS(SRC_TYPS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(47, SRC_TYPS)
+        b_.PrependUOffsetTRelativeSlot(35, SRC_TYPS)
         return this
     def add_SRC_IDS(SRC_IDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(48, SRC_IDS)
+        b_.PrependUOffsetTRelativeSlot(36, SRC_IDS)
         return this
     def add_CALL_SIGN(CALL_SIGN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(49, CALL_SIGN)
+        b_.PrependUOffsetTRelativeSlot(37, CALL_SIGN)
         return this
     def add_MULTI_SOURCE(MULTI_SOURCE:bool):
-        b_.PrependBoolSlot(50, MULTI_SOURCE, 0)
+        b_.PrependBoolSlot(38, MULTI_SOURCE, 0)
         return this
     def add_J_SERIES(J_SERIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(51, J_SERIES)
+        b_.PrependUOffsetTRelativeSlot(39, J_SERIES)
         return this
     def add_STRENGTH(STRENGTH:int):
-        b_.PrependInt32Slot(52, STRENGTH, 0)
+        b_.PrependInt32Slot(40, STRENGTH, 0)
         return this
     def add_M1(M1:int):
-        b_.PrependInt32Slot(53, M1, 0)
+        b_.PrependInt32Slot(41, M1, 0)
         return this
     def add_M1V(M1V:int):
-        b_.PrependInt32Slot(54, M1V, 0)
+        b_.PrependInt32Slot(42, M1V, 0)
         return this
     def add_M2(M2:int):
-        b_.PrependInt32Slot(55, M2, 0)
+        b_.PrependInt32Slot(43, M2, 0)
         return this
     def add_M2V(M2V:int):
-        b_.PrependInt32Slot(56, M2V, 0)
+        b_.PrependInt32Slot(44, M2V, 0)
         return this
     def add_M3A(M3A:int):
-        b_.PrependInt32Slot(57, M3A, 0)
+        b_.PrependInt32Slot(45, M3A, 0)
         return this
     def add_M3AV(M3AV:int):
-        b_.PrependInt32Slot(58, M3AV, 0)
+        b_.PrependInt32Slot(46, M3AV, 0)
         return this
     def add_TAGS(TAGS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(59, TAGS)
+        b_.PrependUOffsetTRelativeSlot(47, TAGS)
+        return this
+    def add_TRACK_START_TIME(TRACK_START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(48, TRACK_START_TIME)
+        return this
+    def add_TRACK_STEP_SIZE(TRACK_STEP_SIZE:float):
+        b_.PrependFloat64Slot(49, TRACK_STEP_SIZE, 0.0)
+        return this
+    def add_TRACK_COMPONENTS(TRACK_COMPONENTS:int):
+        b_.PrependUint8Slot(50, TRACK_COMPONENTS, 3)
+        return this
+    def add_ECEF_POS(ECEF_POS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(51, ECEF_POS)
+        return this
+    def add_ECEF_VEL(ECEF_VEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(52, ECEF_VEL)
+        return this
+    def add_ECEF_ACC(ECEF_ACC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(53, ECEF_ACC)
+        return this
+    def add_LC_POS(LC_POS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(54, LC_POS)
+        return this
+    def add_LC_VEL(LC_VEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(55, LC_VEL)
+        return this
+    def add_LC_ACC(LC_ACC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(56, LC_ACC)
+        return this
+    def add_COV(COV:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(57, COV)
+        return this
+    def add_ERR_ELLP(ERR_ELLP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(58, ERR_ELLP)
         return this
     def end():
         return b_.EndObject()
-
-def TRKStartECEF_POSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateECEF_POSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartECEF_VELVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateECEF_VELVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartECEF_ACCVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateECEF_ACCVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartLCOVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateLCOVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartLCSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateLCSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartLC_POSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateLC_POSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartLC_VELVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateLC_VELVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartLC_ACCVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateLC_ACCVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartE_NUVELVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateE_NUVELVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartE_NUPOSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateE_NUPOSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartCOVVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateCOVVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def TRKStartERR_ELLPVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def TRKCreateERR_ELLPVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
 
 def TRKStartSRC_TYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
@@ -449,5 +363,61 @@ def TRKStartTAGSVector(b_:flatbuffers.builder, n_:int):
 def TRKCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartECEF_POSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateECEF_POSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartECEF_VELVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateECEF_VELVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartECEF_ACCVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateECEF_ACCVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartLC_POSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateLC_POSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartLC_VELVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateLC_VELVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartLC_ACCVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateLC_ACCVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartCOVVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateCOVVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def TRKStartERR_ELLPVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def TRKCreateERR_ELLPVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 

@@ -892,6 +892,16 @@
           "description": "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1",
           "x-flatbuffer-type": "string"
         },
+        "OBSERVATION_STEP_SIZE": {
+          "type": "number",
+          "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)",
+          "x-flatbuffer-type": "double"
+        },
+        "OBSERVATION_START_TIME": {
+          "type": "string",
+          "description": "Start time for observation time reconstruction (ISO 8601 UTC format).",
+          "x-flatbuffer-type": "string"
+        },
         "CCSDS_TDM_VERS": {
           "type": "string",
           "description": "TDM version number -  CCSDS 503.0-B-1, Page D-9",

@@ -41,32 +41,35 @@ public struct MST: FlatBufferObject, Verifiable {
     case MSL_STATUS = 46
     case TS = 48
     case AOU_RPT_TYPE = 50
-    case AOU_RPT_DATA = 52
-    case CONTAINMENT = 54
-    case TRK_CONF = 56
-    case TRK_QUAL = 58
-    case ANG_ELEV = 60
-    case SEN_MODE = 62
-    case INFO_SOURCE = 64
-    case BOOSTING = 66
-    case POLAR_SING_LOC_LAT = 68
-    case POLAR_SING_LOC_LON = 70
-    case EMG_IND = 72
-    case DROP_PT_IND = 74
-    case SPACE_AMP_CONF = 76
-    case LAUNCH_TIME = 78
-    case LAUNCH_LAT = 80
-    case LAUNCH_LON = 82
-    case AZ_CORR = 84
-    case BURNOUT_ALT = 86
-    case LAUNCH_AOU_TYPE = 88
-    case LAUNCH_AOU_DATA = 90
-    case IMPACT_TIME = 92
-    case IMPACT_LAT = 94
-    case IMPACT_LON = 96
-    case IMPACT_AOU_TYPE = 98
-    case IMPACT_AOU_DATA = 100
+    case CONTAINMENT = 52
+    case TRK_CONF = 54
+    case TRK_QUAL = 56
+    case ANG_ELEV = 58
+    case SEN_MODE = 60
+    case INFO_SOURCE = 62
+    case BOOSTING = 64
+    case POLAR_SING_LOC_LAT = 66
+    case POLAR_SING_LOC_LON = 68
+    case EMG_IND = 70
+    case DROP_PT_IND = 72
+    case SPACE_AMP_CONF = 74
+    case LAUNCH_TIME = 76
+    case LAUNCH_LAT = 78
+    case LAUNCH_LON = 80
+    case AZ_CORR = 82
+    case BURNOUT_ALT = 84
+    case LAUNCH_AOU_TYPE = 86
+    case IMPACT_TIME = 88
+    case IMPACT_LAT = 90
+    case IMPACT_LON = 92
+    case IMPACT_AOU_TYPE = 94
+    case VECTOR_START_TIME = 96
+    case VECTOR_STEP_SIZE = 98
+    case VECTOR_COMPONENTS = 100
     case VECTORS = 102
+    case AOU_RPT = 104
+    case LAUNCH_AOU = 106
+    case IMPACT_AOU = 108
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -117,9 +120,6 @@ public struct MST: FlatBufferObject, Verifiable {
   public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TS.v) }
   public var AOU_RPT_TYPE: String? { let o = _accessor.offset(VTOFFSET.AOU_RPT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var AOU_RPT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AOU_RPT_TYPE.v) }
-  public var hasAouRptData: Bool { let o = _accessor.offset(VTOFFSET.AOU_RPT_DATA.v); return o == 0 ? false : true }
-  public var AOU_RPT_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.AOU_RPT_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AOU_RPT_DATA(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.AOU_RPT_DATA.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
   public var CONTAINMENT: Double { let o = _accessor.offset(VTOFFSET.CONTAINMENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var TRK_CONF: Double { let o = _accessor.offset(VTOFFSET.TRK_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var TRK_QUAL: Int32 { let o = _accessor.offset(VTOFFSET.TRK_QUAL.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
@@ -142,22 +142,40 @@ public struct MST: FlatBufferObject, Verifiable {
   public var BURNOUT_ALT: Double { let o = _accessor.offset(VTOFFSET.BURNOUT_ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var LAUNCH_AOU_TYPE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LAUNCH_AOU_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_AOU_TYPE.v) }
-  public var hasLaunchAouData: Bool { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU_DATA.v); return o == 0 ? false : true }
-  public var LAUNCH_AOU_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LAUNCH_AOU_DATA(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU_DATA.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
   public var IMPACT_TIME: String? { let o = _accessor.offset(VTOFFSET.IMPACT_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IMPACT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMPACT_TIME.v) }
   public var IMPACT_LAT: Double { let o = _accessor.offset(VTOFFSET.IMPACT_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var IMPACT_LON: Double { let o = _accessor.offset(VTOFFSET.IMPACT_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var IMPACT_AOU_TYPE: String? { let o = _accessor.offset(VTOFFSET.IMPACT_AOU_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IMPACT_AOU_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMPACT_AOU_TYPE.v) }
-  public var hasImpactAouData: Bool { let o = _accessor.offset(VTOFFSET.IMPACT_AOU_DATA.v); return o == 0 ? false : true }
-  public var IMPACT_AOU_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.IMPACT_AOU_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func IMPACT_AOU_DATA(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.IMPACT_AOU_DATA.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Start time for vector data (ISO 8601 UTC format).
+  public var VECTOR_START_TIME: String? { let o = _accessor.offset(VTOFFSET.VECTOR_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VECTOR_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VECTOR_START_TIME.v) }
+  ///  Time interval between vector points in seconds.
+  public var VECTOR_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.VECTOR_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  public var VECTOR_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.VECTOR_COMPONENTS.v); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
   public var hasVectors: Bool { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? false : true }
   public var VECTORSCount: Int32 { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VECTORS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startMST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
+  public func VECTORS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var VECTORS: [Double] { return _accessor.getVector(at: VTOFFSET.VECTORS.v) ?? [] }
+  ///  AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  public var hasAouRpt: Bool { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? false : true }
+  public var AOU_RPTCount: Int32 { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func AOU_RPT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var AOU_RPT: [Double] { return _accessor.getVector(at: VTOFFSET.AOU_RPT.v) ?? [] }
+  ///  Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  public var hasLaunchAou: Bool { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? false : true }
+  public var LAUNCH_AOUCount: Int32 { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func LAUNCH_AOU(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var LAUNCH_AOU: [Double] { return _accessor.getVector(at: VTOFFSET.LAUNCH_AOU.v) ?? [] }
+  ///  Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  public var hasImpactAou: Bool { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? false : true }
+  public var IMPACT_AOUCount: Int32 { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func IMPACT_AOU(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var IMPACT_AOU: [Double] { return _accessor.getVector(at: VTOFFSET.IMPACT_AOU.v) ?? [] }
+  public static func startMST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VTOFFSET.MSG_TYPE.p) }
   public static func add(MSG_SUB_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_SUB_TYPE, at: VTOFFSET.MSG_SUB_TYPE.p) }
@@ -183,7 +201,6 @@ public struct MST: FlatBufferObject, Verifiable {
   public static func add(MSL_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSL_STATUS, at: VTOFFSET.MSL_STATUS.p) }
   public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VTOFFSET.TS.p) }
   public static func add(AOU_RPT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT_TYPE, at: VTOFFSET.AOU_RPT_TYPE.p) }
-  public static func addVectorOf(AOU_RPT_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT_DATA, at: VTOFFSET.AOU_RPT_DATA.p) }
   public static func add(CONTAINMENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTAINMENT, def: 0.0, at: VTOFFSET.CONTAINMENT.p) }
   public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VTOFFSET.TRK_CONF.p) }
   public static func add(TRK_QUAL: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VTOFFSET.TRK_QUAL.p) }
@@ -205,13 +222,17 @@ public struct MST: FlatBufferObject, Verifiable {
   public static func add(AZ_CORR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZ_CORR, def: 0.0, at: VTOFFSET.AZ_CORR.p) }
   public static func add(BURNOUT_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BURNOUT_ALT, def: 0.0, at: VTOFFSET.BURNOUT_ALT.p) }
   public static func add(LAUNCH_AOU_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU_TYPE, at: VTOFFSET.LAUNCH_AOU_TYPE.p) }
-  public static func addVectorOf(LAUNCH_AOU_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU_DATA, at: VTOFFSET.LAUNCH_AOU_DATA.p) }
   public static func add(IMPACT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_TIME, at: VTOFFSET.IMPACT_TIME.p) }
   public static func add(IMPACT_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LAT, def: 0.0, at: VTOFFSET.IMPACT_LAT.p) }
   public static func add(IMPACT_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_LON, def: 0.0, at: VTOFFSET.IMPACT_LON.p) }
   public static func add(IMPACT_AOU_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU_TYPE, at: VTOFFSET.IMPACT_AOU_TYPE.p) }
-  public static func addVectorOf(IMPACT_AOU_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU_DATA, at: VTOFFSET.IMPACT_AOU_DATA.p) }
+  public static func add(VECTOR_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTOR_START_TIME, at: VTOFFSET.VECTOR_START_TIME.p) }
+  public static func add(VECTOR_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_STEP_SIZE, def: 0.0, at: VTOFFSET.VECTOR_STEP_SIZE.p) }
+  public static func add(VECTOR_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VECTOR_COMPONENTS, def: 6, at: VTOFFSET.VECTOR_COMPONENTS.p) }
   public static func addVectorOf(VECTORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VECTORS, at: VTOFFSET.VECTORS.p) }
+  public static func addVectorOf(AOU_RPT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AOU_RPT, at: VTOFFSET.AOU_RPT.p) }
+  public static func addVectorOf(LAUNCH_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_AOU, at: VTOFFSET.LAUNCH_AOU.p) }
+  public static func addVectorOf(IMPACT_AOU: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_AOU, at: VTOFFSET.IMPACT_AOU.p) }
   public static func endMST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMST(
     _ fbb: inout FlatBufferBuilder,
@@ -239,7 +260,6 @@ public struct MST: FlatBufferObject, Verifiable {
     MSL_STATUSOffset MSL_STATUS: Offset = Offset(),
     TSOffset TS: Offset = Offset(),
     AOU_RPT_TYPEOffset AOU_RPT_TYPE: Offset = Offset(),
-    AOU_RPT_DATAVectorOffset AOU_RPT_DATA: Offset = Offset(),
     CONTAINMENT: Double = 0.0,
     TRK_CONF: Double = 0.0,
     TRK_QUAL: Int32 = 0,
@@ -258,13 +278,17 @@ public struct MST: FlatBufferObject, Verifiable {
     AZ_CORR: Double = 0.0,
     BURNOUT_ALT: Double = 0.0,
     LAUNCH_AOU_TYPEOffset LAUNCH_AOU_TYPE: Offset = Offset(),
-    LAUNCH_AOU_DATAVectorOffset LAUNCH_AOU_DATA: Offset = Offset(),
     IMPACT_TIMEOffset IMPACT_TIME: Offset = Offset(),
     IMPACT_LAT: Double = 0.0,
     IMPACT_LON: Double = 0.0,
     IMPACT_AOU_TYPEOffset IMPACT_AOU_TYPE: Offset = Offset(),
-    IMPACT_AOU_DATAVectorOffset IMPACT_AOU_DATA: Offset = Offset(),
-    VECTORSVectorOffset VECTORS: Offset = Offset()
+    VECTOR_START_TIMEOffset VECTOR_START_TIME: Offset = Offset(),
+    VECTOR_STEP_SIZE: Double = 0.0,
+    VECTOR_COMPONENTS: UInt8 = 6,
+    VECTORSVectorOffset VECTORS: Offset = Offset(),
+    AOU_RPTVectorOffset AOU_RPT: Offset = Offset(),
+    LAUNCH_AOUVectorOffset LAUNCH_AOU: Offset = Offset(),
+    IMPACT_AOUVectorOffset IMPACT_AOU: Offset = Offset()
   ) -> Offset {
     let __start = MST.startMST(&fbb)
     MST.add(ID: ID, &fbb)
@@ -291,7 +315,6 @@ public struct MST: FlatBufferObject, Verifiable {
     MST.add(MSL_STATUS: MSL_STATUS, &fbb)
     MST.add(TS: TS, &fbb)
     MST.add(AOU_RPT_TYPE: AOU_RPT_TYPE, &fbb)
-    MST.addVectorOf(AOU_RPT_DATA: AOU_RPT_DATA, &fbb)
     MST.add(CONTAINMENT: CONTAINMENT, &fbb)
     MST.add(TRK_CONF: TRK_CONF, &fbb)
     MST.add(TRK_QUAL: TRK_QUAL, &fbb)
@@ -310,13 +333,17 @@ public struct MST: FlatBufferObject, Verifiable {
     MST.add(AZ_CORR: AZ_CORR, &fbb)
     MST.add(BURNOUT_ALT: BURNOUT_ALT, &fbb)
     MST.add(LAUNCH_AOU_TYPE: LAUNCH_AOU_TYPE, &fbb)
-    MST.addVectorOf(LAUNCH_AOU_DATA: LAUNCH_AOU_DATA, &fbb)
     MST.add(IMPACT_TIME: IMPACT_TIME, &fbb)
     MST.add(IMPACT_LAT: IMPACT_LAT, &fbb)
     MST.add(IMPACT_LON: IMPACT_LON, &fbb)
     MST.add(IMPACT_AOU_TYPE: IMPACT_AOU_TYPE, &fbb)
-    MST.addVectorOf(IMPACT_AOU_DATA: IMPACT_AOU_DATA, &fbb)
+    MST.add(VECTOR_START_TIME: VECTOR_START_TIME, &fbb)
+    MST.add(VECTOR_STEP_SIZE: VECTOR_STEP_SIZE, &fbb)
+    MST.add(VECTOR_COMPONENTS: VECTOR_COMPONENTS, &fbb)
     MST.addVectorOf(VECTORS: VECTORS, &fbb)
+    MST.addVectorOf(AOU_RPT: AOU_RPT, &fbb)
+    MST.addVectorOf(LAUNCH_AOU: LAUNCH_AOU, &fbb)
+    MST.addVectorOf(IMPACT_AOU: IMPACT_AOU, &fbb)
     return MST.endMST(&fbb, start: __start)
   }
 
@@ -346,7 +373,6 @@ public struct MST: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MSL_STATUS.p, fieldName: "MSL_STATUS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TS.p, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AOU_RPT_TYPE.p, fieldName: "AOU_RPT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.AOU_RPT_DATA.p, fieldName: "AOU_RPT_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.CONTAINMENT.p, fieldName: "CONTAINMENT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TRK_CONF.p, fieldName: "TRK_CONF", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TRK_QUAL.p, fieldName: "TRK_QUAL", required: false, type: Int32.self)
@@ -365,13 +391,17 @@ public struct MST: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.AZ_CORR.p, fieldName: "AZ_CORR", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BURNOUT_ALT.p, fieldName: "BURNOUT_ALT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LAUNCH_AOU_TYPE.p, fieldName: "LAUNCH_AOU_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_AOU_DATA.p, fieldName: "LAUNCH_AOU_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.IMPACT_TIME.p, fieldName: "IMPACT_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.IMPACT_LAT.p, fieldName: "IMPACT_LAT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.IMPACT_LON.p, fieldName: "IMPACT_LON", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.IMPACT_AOU_TYPE.p, fieldName: "IMPACT_AOU_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IMPACT_AOU_DATA.p, fieldName: "IMPACT_AOU_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.VECTORS.p, fieldName: "VECTORS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.VECTOR_START_TIME.p, fieldName: "VECTOR_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.VECTOR_STEP_SIZE.p, fieldName: "VECTOR_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.VECTOR_COMPONENTS.p, fieldName: "VECTOR_COMPONENTS", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.VECTORS.p, fieldName: "VECTORS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.AOU_RPT.p, fieldName: "AOU_RPT", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.LAUNCH_AOU.p, fieldName: "LAUNCH_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.IMPACT_AOU.p, fieldName: "IMPACT_AOU", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

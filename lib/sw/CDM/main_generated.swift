@@ -76,51 +76,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     case X_DOT = 70
     case Y_DOT = 72
     case Z_DOT = 74
-    case CR_R = 76
-    case CT_R = 78
-    case CT_T = 80
-    case CN_R = 82
-    case CN_T = 84
-    case CN_N = 86
-    case CRDOT_R = 88
-    case CRDOT_T = 90
-    case CRDOT_N = 92
-    case CRDOT_RDOT = 94
-    case CTDOT_R = 96
-    case CTDOT_T = 98
-    case CTDOT_N = 100
-    case CTDOT_RDOT = 102
-    case CTDOT_TDOT = 104
-    case CNDOT_R = 106
-    case CNDOT_T = 108
-    case CNDOT_N = 110
-    case CNDOT_RDOT = 112
-    case CNDOT_TDOT = 114
-    case CNDOT_NDOT = 116
-    case CDRG_R = 118
-    case CDRG_T = 120
-    case CDRG_N = 122
-    case CDRG_RDOT = 124
-    case CDRG_TDOT = 126
-    case CDRG_NDOT = 128
-    case CDRG_DRG = 130
-    case CSRP_R = 132
-    case CSRP_T = 134
-    case CSRP_N = 136
-    case CSRP_RDOT = 138
-    case CSRP_TDOT = 140
-    case CSRP_NDOT = 142
-    case CSRP_DRG = 144
-    case CSRP_SRP = 146
-    case CTHR_R = 148
-    case CTHR_T = 150
-    case CTHR_N = 152
-    case CTHR_RDOT = 154
-    case CTHR_TDOT = 156
-    case CTHR_NDOT = 158
-    case CTHR_DRG = 160
-    case CTHR_SRP = 162
-    case CTHR_THR = 164
+    case COVARIANCE = 76
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -205,97 +161,18 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public var Y_DOT: Double { let o = _accessor.offset(VTOFFSET.Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Z-coordinate of the object's position in RTN
   public var Z_DOT: Double { let o = _accessor.offset(VTOFFSET.Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CR_R: Double { let o = _accessor.offset(VTOFFSET.CR_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CT_R: Double { let o = _accessor.offset(VTOFFSET.CT_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CT_T: Double { let o = _accessor.offset(VTOFFSET.CT_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CN_R: Double { let o = _accessor.offset(VTOFFSET.CN_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CN_T: Double { let o = _accessor.offset(VTOFFSET.CN_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CN_N: Double { let o = _accessor.offset(VTOFFSET.CN_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CRDOT_R: Double { let o = _accessor.offset(VTOFFSET.CRDOT_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CRDOT_T: Double { let o = _accessor.offset(VTOFFSET.CRDOT_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CRDOT_N: Double { let o = _accessor.offset(VTOFFSET.CRDOT_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CRDOT_RDOT: Double { let o = _accessor.offset(VTOFFSET.CRDOT_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTDOT_R: Double { let o = _accessor.offset(VTOFFSET.CTDOT_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTDOT_T: Double { let o = _accessor.offset(VTOFFSET.CTDOT_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTDOT_N: Double { let o = _accessor.offset(VTOFFSET.CTDOT_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTDOT_RDOT: Double { let o = _accessor.offset(VTOFFSET.CTDOT_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTDOT_TDOT: Double { let o = _accessor.offset(VTOFFSET.CTDOT_TDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_R: Double { let o = _accessor.offset(VTOFFSET.CNDOT_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_T: Double { let o = _accessor.offset(VTOFFSET.CNDOT_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_N: Double { let o = _accessor.offset(VTOFFSET.CNDOT_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_RDOT: Double { let o = _accessor.offset(VTOFFSET.CNDOT_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_TDOT: Double { let o = _accessor.offset(VTOFFSET.CNDOT_TDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CNDOT_NDOT: Double { let o = _accessor.offset(VTOFFSET.CNDOT_NDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_R: Double { let o = _accessor.offset(VTOFFSET.CDRG_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_T: Double { let o = _accessor.offset(VTOFFSET.CDRG_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_N: Double { let o = _accessor.offset(VTOFFSET.CDRG_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_RDOT: Double { let o = _accessor.offset(VTOFFSET.CDRG_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_TDOT: Double { let o = _accessor.offset(VTOFFSET.CDRG_TDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_NDOT: Double { let o = _accessor.offset(VTOFFSET.CDRG_NDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CDRG_DRG: Double { let o = _accessor.offset(VTOFFSET.CDRG_DRG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_R: Double { let o = _accessor.offset(VTOFFSET.CSRP_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_T: Double { let o = _accessor.offset(VTOFFSET.CSRP_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_N: Double { let o = _accessor.offset(VTOFFSET.CSRP_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_RDOT: Double { let o = _accessor.offset(VTOFFSET.CSRP_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_TDOT: Double { let o = _accessor.offset(VTOFFSET.CSRP_TDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_NDOT: Double { let o = _accessor.offset(VTOFFSET.CSRP_NDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_DRG: Double { let o = _accessor.offset(VTOFFSET.CSRP_DRG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CSRP_SRP: Double { let o = _accessor.offset(VTOFFSET.CSRP_SRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_R: Double { let o = _accessor.offset(VTOFFSET.CTHR_R.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_T: Double { let o = _accessor.offset(VTOFFSET.CTHR_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_N: Double { let o = _accessor.offset(VTOFFSET.CTHR_N.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_RDOT: Double { let o = _accessor.offset(VTOFFSET.CTHR_RDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_TDOT: Double { let o = _accessor.offset(VTOFFSET.CTHR_TDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_NDOT: Double { let o = _accessor.offset(VTOFFSET.CTHR_NDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_DRG: Double { let o = _accessor.offset(VTOFFSET.CTHR_DRG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_SRP: Double { let o = _accessor.offset(VTOFFSET.CTHR_SRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance Matrix component
-  public var CTHR_THR: Double { let o = _accessor.offset(VTOFFSET.CTHR_THR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCDMObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 81) }
+  ///  Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  ///  Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///          CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///          CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///          CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///          CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///          CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  public var hasCovariance: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? false : true }
+  public var COVARIANCECount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func COVARIANCE(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var COVARIANCE: [Double] { return _accessor.getVector(at: VTOFFSET.COVARIANCE.v) ?? [] }
+  public static func startCDMObject(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
   public static func add(POC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POC, at: VTOFFSET.POC.p) }
@@ -335,51 +212,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
   public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VTOFFSET.X_DOT.p) }
   public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VTOFFSET.Y_DOT.p) }
   public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VTOFFSET.Z_DOT.p) }
-  public static func add(CR_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CR_R, def: 0.0, at: VTOFFSET.CR_R.p) }
-  public static func add(CT_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CT_R, def: 0.0, at: VTOFFSET.CT_R.p) }
-  public static func add(CT_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CT_T, def: 0.0, at: VTOFFSET.CT_T.p) }
-  public static func add(CN_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CN_R, def: 0.0, at: VTOFFSET.CN_R.p) }
-  public static func add(CN_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CN_T, def: 0.0, at: VTOFFSET.CN_T.p) }
-  public static func add(CN_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CN_N, def: 0.0, at: VTOFFSET.CN_N.p) }
-  public static func add(CRDOT_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRDOT_R, def: 0.0, at: VTOFFSET.CRDOT_R.p) }
-  public static func add(CRDOT_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRDOT_T, def: 0.0, at: VTOFFSET.CRDOT_T.p) }
-  public static func add(CRDOT_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRDOT_N, def: 0.0, at: VTOFFSET.CRDOT_N.p) }
-  public static func add(CRDOT_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CRDOT_RDOT, def: 0.0, at: VTOFFSET.CRDOT_RDOT.p) }
-  public static func add(CTDOT_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTDOT_R, def: 0.0, at: VTOFFSET.CTDOT_R.p) }
-  public static func add(CTDOT_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTDOT_T, def: 0.0, at: VTOFFSET.CTDOT_T.p) }
-  public static func add(CTDOT_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTDOT_N, def: 0.0, at: VTOFFSET.CTDOT_N.p) }
-  public static func add(CTDOT_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTDOT_RDOT, def: 0.0, at: VTOFFSET.CTDOT_RDOT.p) }
-  public static func add(CTDOT_TDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTDOT_TDOT, def: 0.0, at: VTOFFSET.CTDOT_TDOT.p) }
-  public static func add(CNDOT_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_R, def: 0.0, at: VTOFFSET.CNDOT_R.p) }
-  public static func add(CNDOT_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_T, def: 0.0, at: VTOFFSET.CNDOT_T.p) }
-  public static func add(CNDOT_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_N, def: 0.0, at: VTOFFSET.CNDOT_N.p) }
-  public static func add(CNDOT_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_RDOT, def: 0.0, at: VTOFFSET.CNDOT_RDOT.p) }
-  public static func add(CNDOT_TDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_TDOT, def: 0.0, at: VTOFFSET.CNDOT_TDOT.p) }
-  public static func add(CNDOT_NDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CNDOT_NDOT, def: 0.0, at: VTOFFSET.CNDOT_NDOT.p) }
-  public static func add(CDRG_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_R, def: 0.0, at: VTOFFSET.CDRG_R.p) }
-  public static func add(CDRG_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_T, def: 0.0, at: VTOFFSET.CDRG_T.p) }
-  public static func add(CDRG_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_N, def: 0.0, at: VTOFFSET.CDRG_N.p) }
-  public static func add(CDRG_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_RDOT, def: 0.0, at: VTOFFSET.CDRG_RDOT.p) }
-  public static func add(CDRG_TDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_TDOT, def: 0.0, at: VTOFFSET.CDRG_TDOT.p) }
-  public static func add(CDRG_NDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_NDOT, def: 0.0, at: VTOFFSET.CDRG_NDOT.p) }
-  public static func add(CDRG_DRG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CDRG_DRG, def: 0.0, at: VTOFFSET.CDRG_DRG.p) }
-  public static func add(CSRP_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_R, def: 0.0, at: VTOFFSET.CSRP_R.p) }
-  public static func add(CSRP_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_T, def: 0.0, at: VTOFFSET.CSRP_T.p) }
-  public static func add(CSRP_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_N, def: 0.0, at: VTOFFSET.CSRP_N.p) }
-  public static func add(CSRP_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_RDOT, def: 0.0, at: VTOFFSET.CSRP_RDOT.p) }
-  public static func add(CSRP_TDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_TDOT, def: 0.0, at: VTOFFSET.CSRP_TDOT.p) }
-  public static func add(CSRP_NDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_NDOT, def: 0.0, at: VTOFFSET.CSRP_NDOT.p) }
-  public static func add(CSRP_DRG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_DRG, def: 0.0, at: VTOFFSET.CSRP_DRG.p) }
-  public static func add(CSRP_SRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CSRP_SRP, def: 0.0, at: VTOFFSET.CSRP_SRP.p) }
-  public static func add(CTHR_R: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_R, def: 0.0, at: VTOFFSET.CTHR_R.p) }
-  public static func add(CTHR_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_T, def: 0.0, at: VTOFFSET.CTHR_T.p) }
-  public static func add(CTHR_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_N, def: 0.0, at: VTOFFSET.CTHR_N.p) }
-  public static func add(CTHR_RDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_RDOT, def: 0.0, at: VTOFFSET.CTHR_RDOT.p) }
-  public static func add(CTHR_TDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_TDOT, def: 0.0, at: VTOFFSET.CTHR_TDOT.p) }
-  public static func add(CTHR_NDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_NDOT, def: 0.0, at: VTOFFSET.CTHR_NDOT.p) }
-  public static func add(CTHR_DRG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_DRG, def: 0.0, at: VTOFFSET.CTHR_DRG.p) }
-  public static func add(CTHR_SRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_SRP, def: 0.0, at: VTOFFSET.CTHR_SRP.p) }
-  public static func add(CTHR_THR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CTHR_THR, def: 0.0, at: VTOFFSET.CTHR_THR.p) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VTOFFSET.COVARIANCE.p) }
   public static func endCDMObject(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCDMObject(
     _ fbb: inout FlatBufferBuilder,
@@ -419,51 +252,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     X_DOT: Double = 0.0,
     Y_DOT: Double = 0.0,
     Z_DOT: Double = 0.0,
-    CR_R: Double = 0.0,
-    CT_R: Double = 0.0,
-    CT_T: Double = 0.0,
-    CN_R: Double = 0.0,
-    CN_T: Double = 0.0,
-    CN_N: Double = 0.0,
-    CRDOT_R: Double = 0.0,
-    CRDOT_T: Double = 0.0,
-    CRDOT_N: Double = 0.0,
-    CRDOT_RDOT: Double = 0.0,
-    CTDOT_R: Double = 0.0,
-    CTDOT_T: Double = 0.0,
-    CTDOT_N: Double = 0.0,
-    CTDOT_RDOT: Double = 0.0,
-    CTDOT_TDOT: Double = 0.0,
-    CNDOT_R: Double = 0.0,
-    CNDOT_T: Double = 0.0,
-    CNDOT_N: Double = 0.0,
-    CNDOT_RDOT: Double = 0.0,
-    CNDOT_TDOT: Double = 0.0,
-    CNDOT_NDOT: Double = 0.0,
-    CDRG_R: Double = 0.0,
-    CDRG_T: Double = 0.0,
-    CDRG_N: Double = 0.0,
-    CDRG_RDOT: Double = 0.0,
-    CDRG_TDOT: Double = 0.0,
-    CDRG_NDOT: Double = 0.0,
-    CDRG_DRG: Double = 0.0,
-    CSRP_R: Double = 0.0,
-    CSRP_T: Double = 0.0,
-    CSRP_N: Double = 0.0,
-    CSRP_RDOT: Double = 0.0,
-    CSRP_TDOT: Double = 0.0,
-    CSRP_NDOT: Double = 0.0,
-    CSRP_DRG: Double = 0.0,
-    CSRP_SRP: Double = 0.0,
-    CTHR_R: Double = 0.0,
-    CTHR_T: Double = 0.0,
-    CTHR_N: Double = 0.0,
-    CTHR_RDOT: Double = 0.0,
-    CTHR_TDOT: Double = 0.0,
-    CTHR_NDOT: Double = 0.0,
-    CTHR_DRG: Double = 0.0,
-    CTHR_SRP: Double = 0.0,
-    CTHR_THR: Double = 0.0
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset()
   ) -> Offset {
     let __start = CDMObject.startCDMObject(&fbb)
     CDMObject.add(COMMENT: COMMENT, &fbb)
@@ -502,51 +291,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     CDMObject.add(X_DOT: X_DOT, &fbb)
     CDMObject.add(Y_DOT: Y_DOT, &fbb)
     CDMObject.add(Z_DOT: Z_DOT, &fbb)
-    CDMObject.add(CR_R: CR_R, &fbb)
-    CDMObject.add(CT_R: CT_R, &fbb)
-    CDMObject.add(CT_T: CT_T, &fbb)
-    CDMObject.add(CN_R: CN_R, &fbb)
-    CDMObject.add(CN_T: CN_T, &fbb)
-    CDMObject.add(CN_N: CN_N, &fbb)
-    CDMObject.add(CRDOT_R: CRDOT_R, &fbb)
-    CDMObject.add(CRDOT_T: CRDOT_T, &fbb)
-    CDMObject.add(CRDOT_N: CRDOT_N, &fbb)
-    CDMObject.add(CRDOT_RDOT: CRDOT_RDOT, &fbb)
-    CDMObject.add(CTDOT_R: CTDOT_R, &fbb)
-    CDMObject.add(CTDOT_T: CTDOT_T, &fbb)
-    CDMObject.add(CTDOT_N: CTDOT_N, &fbb)
-    CDMObject.add(CTDOT_RDOT: CTDOT_RDOT, &fbb)
-    CDMObject.add(CTDOT_TDOT: CTDOT_TDOT, &fbb)
-    CDMObject.add(CNDOT_R: CNDOT_R, &fbb)
-    CDMObject.add(CNDOT_T: CNDOT_T, &fbb)
-    CDMObject.add(CNDOT_N: CNDOT_N, &fbb)
-    CDMObject.add(CNDOT_RDOT: CNDOT_RDOT, &fbb)
-    CDMObject.add(CNDOT_TDOT: CNDOT_TDOT, &fbb)
-    CDMObject.add(CNDOT_NDOT: CNDOT_NDOT, &fbb)
-    CDMObject.add(CDRG_R: CDRG_R, &fbb)
-    CDMObject.add(CDRG_T: CDRG_T, &fbb)
-    CDMObject.add(CDRG_N: CDRG_N, &fbb)
-    CDMObject.add(CDRG_RDOT: CDRG_RDOT, &fbb)
-    CDMObject.add(CDRG_TDOT: CDRG_TDOT, &fbb)
-    CDMObject.add(CDRG_NDOT: CDRG_NDOT, &fbb)
-    CDMObject.add(CDRG_DRG: CDRG_DRG, &fbb)
-    CDMObject.add(CSRP_R: CSRP_R, &fbb)
-    CDMObject.add(CSRP_T: CSRP_T, &fbb)
-    CDMObject.add(CSRP_N: CSRP_N, &fbb)
-    CDMObject.add(CSRP_RDOT: CSRP_RDOT, &fbb)
-    CDMObject.add(CSRP_TDOT: CSRP_TDOT, &fbb)
-    CDMObject.add(CSRP_NDOT: CSRP_NDOT, &fbb)
-    CDMObject.add(CSRP_DRG: CSRP_DRG, &fbb)
-    CDMObject.add(CSRP_SRP: CSRP_SRP, &fbb)
-    CDMObject.add(CTHR_R: CTHR_R, &fbb)
-    CDMObject.add(CTHR_T: CTHR_T, &fbb)
-    CDMObject.add(CTHR_N: CTHR_N, &fbb)
-    CDMObject.add(CTHR_RDOT: CTHR_RDOT, &fbb)
-    CDMObject.add(CTHR_TDOT: CTHR_TDOT, &fbb)
-    CDMObject.add(CTHR_NDOT: CTHR_NDOT, &fbb)
-    CDMObject.add(CTHR_DRG: CTHR_DRG, &fbb)
-    CDMObject.add(CTHR_SRP: CTHR_SRP, &fbb)
-    CDMObject.add(CTHR_THR: CTHR_THR, &fbb)
+    CDMObject.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
     return CDMObject.endCDMObject(&fbb, start: __start)
   }
 
@@ -588,51 +333,7 @@ public struct CDMObject: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.X_DOT.p, fieldName: "X_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Y_DOT.p, fieldName: "Y_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Z_DOT.p, fieldName: "Z_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CR_R.p, fieldName: "CR_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CT_R.p, fieldName: "CT_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CT_T.p, fieldName: "CT_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CN_R.p, fieldName: "CN_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CN_T.p, fieldName: "CN_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CN_N.p, fieldName: "CN_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CRDOT_R.p, fieldName: "CRDOT_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CRDOT_T.p, fieldName: "CRDOT_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CRDOT_N.p, fieldName: "CRDOT_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CRDOT_RDOT.p, fieldName: "CRDOT_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTDOT_R.p, fieldName: "CTDOT_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTDOT_T.p, fieldName: "CTDOT_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTDOT_N.p, fieldName: "CTDOT_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTDOT_RDOT.p, fieldName: "CTDOT_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTDOT_TDOT.p, fieldName: "CTDOT_TDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_R.p, fieldName: "CNDOT_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_T.p, fieldName: "CNDOT_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_N.p, fieldName: "CNDOT_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_RDOT.p, fieldName: "CNDOT_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_TDOT.p, fieldName: "CNDOT_TDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CNDOT_NDOT.p, fieldName: "CNDOT_NDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_R.p, fieldName: "CDRG_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_T.p, fieldName: "CDRG_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_N.p, fieldName: "CDRG_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_RDOT.p, fieldName: "CDRG_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_TDOT.p, fieldName: "CDRG_TDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_NDOT.p, fieldName: "CDRG_NDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CDRG_DRG.p, fieldName: "CDRG_DRG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_R.p, fieldName: "CSRP_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_T.p, fieldName: "CSRP_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_N.p, fieldName: "CSRP_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_RDOT.p, fieldName: "CSRP_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_TDOT.p, fieldName: "CSRP_TDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_NDOT.p, fieldName: "CSRP_NDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_DRG.p, fieldName: "CSRP_DRG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CSRP_SRP.p, fieldName: "CSRP_SRP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_R.p, fieldName: "CTHR_R", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_T.p, fieldName: "CTHR_T", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_N.p, fieldName: "CTHR_N", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_RDOT.p, fieldName: "CTHR_RDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_TDOT.p, fieldName: "CTHR_TDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_NDOT.p, fieldName: "CTHR_NDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_DRG.p, fieldName: "CTHR_DRG", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_SRP.p, fieldName: "CTHR_SRP", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CTHR_THR.p, fieldName: "CTHR_THR", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.COVARIANCE.p, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

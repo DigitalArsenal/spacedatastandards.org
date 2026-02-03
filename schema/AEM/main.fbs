@@ -1,16 +1,10 @@
-// Hash: 274046db6e9b23adde4bd2eca7b67222f0cc2e81d804f1fbaddb6e475059d288
-// Version: 0.0.2
+// Hash: 7da76b81a11e6e9d9d5e28deb29684942f49692e97c856ec5248347a64aa192e
+// Version: 2.0.1
 // -----------------------------------END_HEADER
-table AEMAttitudeEntry {
-  EPOCH:string;
-  Q1:double;
-  Q2:double;
-  Q3:double;
-  QC:double;
-  RATE_X:double;
-  RATE_Y:double;
-  RATE_Z:double;
-}
+// COMPACT FORMAT: This schema uses a row-major array layout for attitude data
+// instead of individual entry tables. Time is reconstructed from START_TIME
+// and STEP_SIZE rather than stored per-entry. This reduces storage overhead
+// and improves serialization performance for large attitude ephemeris datasets.
 
 table AEMSegment {
   OBJECT_NAME:string;
@@ -22,7 +16,20 @@ table AEMSegment {
   ATTITUDE_TYPE:string;
   START_TIME:string;
   STOP_TIME:string;
-  DATA:[AEMAttitudeEntry];
+
+  /// Time interval between attitude states in seconds (required).
+  STEP_SIZE:double;
+
+  /// Number of components per attitude state.
+  /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  /// 4 = quaternion only (Q1, Q2, Q3, QC)
+  ATTITUDE_COMPONENTS:uint8 = 7;
+
+  /// Attitude data as row-major array of doubles.
+  /// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  /// Length must be divisible by ATTITUDE_COMPONENTS.
+  ATTITUDE_DATA:[double];
 }
 
 /// Attitude Ephemeris Message

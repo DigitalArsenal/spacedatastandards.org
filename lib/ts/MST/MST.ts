@@ -195,169 +195,160 @@ AOU_RPT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AOU_RPT_DATA(index: number):string
-AOU_RPT_DATA(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-AOU_RPT_DATA(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-aouRptDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 CONTAINMENT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 TRK_CONF():number {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
+  const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 TRK_QUAL():number {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
+  const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 ANG_ELEV():number {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 SEN_MODE():string|null
 SEN_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_MODE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
+  const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 INFO_SOURCE():string|null
 INFO_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 INFO_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 BOOSTING():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
 POLAR_SING_LOC_LAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 POLAR_SING_LOC_LON():number {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 EMG_IND():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
 DROP_PT_IND():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
 SPACE_AMP_CONF():number {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 LAUNCH_TIME():string|null
 LAUNCH_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LAUNCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 LAUNCH_LAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 LAUNCH_LON():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
+  const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 AZ_CORR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
+  const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 BURNOUT_ALT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
+  const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 LAUNCH_AOU_TYPE():string|null
 LAUNCH_AOU_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LAUNCH_AOU_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
+  const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-LAUNCH_AOU_DATA(index: number):string
-LAUNCH_AOU_DATA(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LAUNCH_AOU_DATA(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-launchAouDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 IMPACT_TIME():string|null
 IMPACT_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IMPACT_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 IMPACT_LAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 IMPACT_LON():number {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
+  const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 IMPACT_AOU_TYPE():string|null
 IMPACT_AOU_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IMPACT_AOU_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
+  const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-IMPACT_AOU_DATA(index: number):string
-IMPACT_AOU_DATA(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-IMPACT_AOU_DATA(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+/**
+ * Start time for vector data (ISO 8601 UTC format).
+ */
+VECTOR_START_TIME():string|null
+VECTOR_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VECTOR_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-impactAouDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+/**
+ * Time interval between vector points in seconds.
+ */
+VECTOR_STEP_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-VECTORS(index: number):string
-VECTORS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-VECTORS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+ */
+VECTOR_COMPONENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 6;
+}
+
+/**
+ * Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+ */
+VECTORS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 102);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 vectorsLength():number {
@@ -365,8 +356,67 @@ vectorsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+vectorsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+ */
+AOU_RPT(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+aouRptLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+aouRptArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+ */
+LAUNCH_AOU(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+launchAouLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+launchAouArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+ */
+IMPACT_AOU(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+impactAouLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+impactAouArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startMST(builder:flatbuffers.Builder) {
-  builder.startObject(50);
+  builder.startObject(53);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -465,156 +515,188 @@ static addAouRptType(builder:flatbuffers.Builder, AOU_RPT_TYPEOffset:flatbuffers
   builder.addFieldOffset(23, AOU_RPT_TYPEOffset, 0);
 }
 
-static addAouRptData(builder:flatbuffers.Builder, AOU_RPT_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(24, AOU_RPT_DATAOffset, 0);
-}
-
-static createAouRptDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startAouRptDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addContainment(builder:flatbuffers.Builder, CONTAINMENT:number) {
-  builder.addFieldFloat64(25, CONTAINMENT, 0.0);
+  builder.addFieldFloat64(24, CONTAINMENT, 0.0);
 }
 
 static addTrkConf(builder:flatbuffers.Builder, TRK_CONF:number) {
-  builder.addFieldFloat64(26, TRK_CONF, 0.0);
+  builder.addFieldFloat64(25, TRK_CONF, 0.0);
 }
 
 static addTrkQual(builder:flatbuffers.Builder, TRK_QUAL:number) {
-  builder.addFieldInt32(27, TRK_QUAL, 0);
+  builder.addFieldInt32(26, TRK_QUAL, 0);
 }
 
 static addAngElev(builder:flatbuffers.Builder, ANG_ELEV:number) {
-  builder.addFieldFloat64(28, ANG_ELEV, 0.0);
+  builder.addFieldFloat64(27, ANG_ELEV, 0.0);
 }
 
 static addSenMode(builder:flatbuffers.Builder, SEN_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, SEN_MODEOffset, 0);
+  builder.addFieldOffset(28, SEN_MODEOffset, 0);
 }
 
 static addInfoSource(builder:flatbuffers.Builder, INFO_SOURCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(30, INFO_SOURCEOffset, 0);
+  builder.addFieldOffset(29, INFO_SOURCEOffset, 0);
 }
 
 static addBoosting(builder:flatbuffers.Builder, BOOSTING:boolean) {
-  builder.addFieldInt8(31, +BOOSTING, +false);
+  builder.addFieldInt8(30, +BOOSTING, +false);
 }
 
 static addPolarSingLocLat(builder:flatbuffers.Builder, POLAR_SING_LOC_LAT:number) {
-  builder.addFieldFloat64(32, POLAR_SING_LOC_LAT, 0.0);
+  builder.addFieldFloat64(31, POLAR_SING_LOC_LAT, 0.0);
 }
 
 static addPolarSingLocLon(builder:flatbuffers.Builder, POLAR_SING_LOC_LON:number) {
-  builder.addFieldFloat64(33, POLAR_SING_LOC_LON, 0.0);
+  builder.addFieldFloat64(32, POLAR_SING_LOC_LON, 0.0);
 }
 
 static addEmgInd(builder:flatbuffers.Builder, EMG_IND:boolean) {
-  builder.addFieldInt8(34, +EMG_IND, +false);
+  builder.addFieldInt8(33, +EMG_IND, +false);
 }
 
 static addDropPtInd(builder:flatbuffers.Builder, DROP_PT_IND:boolean) {
-  builder.addFieldInt8(35, +DROP_PT_IND, +false);
+  builder.addFieldInt8(34, +DROP_PT_IND, +false);
 }
 
 static addSpaceAmpConf(builder:flatbuffers.Builder, SPACE_AMP_CONF:number) {
-  builder.addFieldInt32(36, SPACE_AMP_CONF, 0);
+  builder.addFieldInt32(35, SPACE_AMP_CONF, 0);
 }
 
 static addLaunchTime(builder:flatbuffers.Builder, LAUNCH_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(37, LAUNCH_TIMEOffset, 0);
+  builder.addFieldOffset(36, LAUNCH_TIMEOffset, 0);
 }
 
 static addLaunchLat(builder:flatbuffers.Builder, LAUNCH_LAT:number) {
-  builder.addFieldFloat64(38, LAUNCH_LAT, 0.0);
+  builder.addFieldFloat64(37, LAUNCH_LAT, 0.0);
 }
 
 static addLaunchLon(builder:flatbuffers.Builder, LAUNCH_LON:number) {
-  builder.addFieldFloat64(39, LAUNCH_LON, 0.0);
+  builder.addFieldFloat64(38, LAUNCH_LON, 0.0);
 }
 
 static addAzCorr(builder:flatbuffers.Builder, AZ_CORR:number) {
-  builder.addFieldFloat64(40, AZ_CORR, 0.0);
+  builder.addFieldFloat64(39, AZ_CORR, 0.0);
 }
 
 static addBurnoutAlt(builder:flatbuffers.Builder, BURNOUT_ALT:number) {
-  builder.addFieldFloat64(41, BURNOUT_ALT, 0.0);
+  builder.addFieldFloat64(40, BURNOUT_ALT, 0.0);
 }
 
 static addLaunchAouType(builder:flatbuffers.Builder, LAUNCH_AOU_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(42, LAUNCH_AOU_TYPEOffset, 0);
-}
-
-static addLaunchAouData(builder:flatbuffers.Builder, LAUNCH_AOU_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, LAUNCH_AOU_DATAOffset, 0);
-}
-
-static createLaunchAouDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLaunchAouDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.addFieldOffset(41, LAUNCH_AOU_TYPEOffset, 0);
 }
 
 static addImpactTime(builder:flatbuffers.Builder, IMPACT_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(44, IMPACT_TIMEOffset, 0);
+  builder.addFieldOffset(42, IMPACT_TIMEOffset, 0);
 }
 
 static addImpactLat(builder:flatbuffers.Builder, IMPACT_LAT:number) {
-  builder.addFieldFloat64(45, IMPACT_LAT, 0.0);
+  builder.addFieldFloat64(43, IMPACT_LAT, 0.0);
 }
 
 static addImpactLon(builder:flatbuffers.Builder, IMPACT_LON:number) {
-  builder.addFieldFloat64(46, IMPACT_LON, 0.0);
+  builder.addFieldFloat64(44, IMPACT_LON, 0.0);
 }
 
 static addImpactAouType(builder:flatbuffers.Builder, IMPACT_AOU_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(47, IMPACT_AOU_TYPEOffset, 0);
+  builder.addFieldOffset(45, IMPACT_AOU_TYPEOffset, 0);
 }
 
-static addImpactAouData(builder:flatbuffers.Builder, IMPACT_AOU_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(48, IMPACT_AOU_DATAOffset, 0);
+static addVectorStartTime(builder:flatbuffers.Builder, VECTOR_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(46, VECTOR_START_TIMEOffset, 0);
 }
 
-static createImpactAouDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
+static addVectorStepSize(builder:flatbuffers.Builder, VECTOR_STEP_SIZE:number) {
+  builder.addFieldFloat64(47, VECTOR_STEP_SIZE, 0.0);
 }
 
-static startImpactAouDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static addVectorComponents(builder:flatbuffers.Builder, VECTOR_COMPONENTS:number) {
+  builder.addFieldInt8(48, VECTOR_COMPONENTS, 6);
 }
 
 static addVectors(builder:flatbuffers.Builder, VECTORSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(49, VECTORSOffset, 0);
 }
 
-static createVectorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createVectorsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createVectorsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createVectorsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startVectorsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
+}
+
+static addAouRpt(builder:flatbuffers.Builder, AOU_RPTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, AOU_RPTOffset, 0);
+}
+
+static createAouRptVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAouRptVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAouRptVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAouRptVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addLaunchAou(builder:flatbuffers.Builder, LAUNCH_AOUOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, LAUNCH_AOUOffset, 0);
+}
+
+static createLaunchAouVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createLaunchAouVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createLaunchAouVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLaunchAouVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addImpactAou(builder:flatbuffers.Builder, IMPACT_AOUOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, IMPACT_AOUOffset, 0);
+}
+
+static createImpactAouVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createImpactAouVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createImpactAouVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startImpactAouVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
 }
 
 static endMST(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -630,7 +712,7 @@ static finishSizePrefixedMSTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MST', true);
 }
 
-static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, MSG_SUB_TYPEOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_TYPE_CONF:number, OBJ_PLATOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, SPACE_AMPOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, SPACE_SPEC_TYPEOffset:flatbuffers.Offset, ACFT_SUB_TYPEOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, LOST_TRK_IND:boolean, TRACK_IDOffset:flatbuffers.Offset, PARENT_TRACK_IDOffset:flatbuffers.Offset, MUID_SRC_TRKOffset:flatbuffers.Offset, MUID_SRCOffset:flatbuffers.Offset, ALERTOffset:flatbuffers.Offset, MSL_STATUSOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, AOU_RPT_TYPEOffset:flatbuffers.Offset, AOU_RPT_DATAOffset:flatbuffers.Offset, CONTAINMENT:number, TRK_CONF:number, TRK_QUAL:number, ANG_ELEV:number, SEN_MODEOffset:flatbuffers.Offset, INFO_SOURCEOffset:flatbuffers.Offset, BOOSTING:boolean, POLAR_SING_LOC_LAT:number, POLAR_SING_LOC_LON:number, EMG_IND:boolean, DROP_PT_IND:boolean, SPACE_AMP_CONF:number, LAUNCH_TIMEOffset:flatbuffers.Offset, LAUNCH_LAT:number, LAUNCH_LON:number, AZ_CORR:number, BURNOUT_ALT:number, LAUNCH_AOU_TYPEOffset:flatbuffers.Offset, LAUNCH_AOU_DATAOffset:flatbuffers.Offset, IMPACT_TIMEOffset:flatbuffers.Offset, IMPACT_LAT:number, IMPACT_LON:number, IMPACT_AOU_TYPEOffset:flatbuffers.Offset, IMPACT_AOU_DATAOffset:flatbuffers.Offset, VECTORSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, MSG_SUB_TYPEOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_TYPE_CONF:number, OBJ_PLATOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, SPACE_AMPOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, SPACE_SPEC_TYPEOffset:flatbuffers.Offset, ACFT_SUB_TYPEOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, LOST_TRK_IND:boolean, TRACK_IDOffset:flatbuffers.Offset, PARENT_TRACK_IDOffset:flatbuffers.Offset, MUID_SRC_TRKOffset:flatbuffers.Offset, MUID_SRCOffset:flatbuffers.Offset, ALERTOffset:flatbuffers.Offset, MSL_STATUSOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, AOU_RPT_TYPEOffset:flatbuffers.Offset, CONTAINMENT:number, TRK_CONF:number, TRK_QUAL:number, ANG_ELEV:number, SEN_MODEOffset:flatbuffers.Offset, INFO_SOURCEOffset:flatbuffers.Offset, BOOSTING:boolean, POLAR_SING_LOC_LAT:number, POLAR_SING_LOC_LON:number, EMG_IND:boolean, DROP_PT_IND:boolean, SPACE_AMP_CONF:number, LAUNCH_TIMEOffset:flatbuffers.Offset, LAUNCH_LAT:number, LAUNCH_LON:number, AZ_CORR:number, BURNOUT_ALT:number, LAUNCH_AOU_TYPEOffset:flatbuffers.Offset, IMPACT_TIMEOffset:flatbuffers.Offset, IMPACT_LAT:number, IMPACT_LON:number, IMPACT_AOU_TYPEOffset:flatbuffers.Offset, VECTOR_START_TIMEOffset:flatbuffers.Offset, VECTOR_STEP_SIZE:number, VECTOR_COMPONENTS:number, VECTORSOffset:flatbuffers.Offset, AOU_RPTOffset:flatbuffers.Offset, LAUNCH_AOUOffset:flatbuffers.Offset, IMPACT_AOUOffset:flatbuffers.Offset):flatbuffers.Offset {
   MST.startMST(builder);
   MST.addId(builder, IDOffset);
   MST.addMsgType(builder, MSG_TYPEOffset);
@@ -656,7 +738,6 @@ static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   MST.addMslStatus(builder, MSL_STATUSOffset);
   MST.addTs(builder, TSOffset);
   MST.addAouRptType(builder, AOU_RPT_TYPEOffset);
-  MST.addAouRptData(builder, AOU_RPT_DATAOffset);
   MST.addContainment(builder, CONTAINMENT);
   MST.addTrkConf(builder, TRK_CONF);
   MST.addTrkQual(builder, TRK_QUAL);
@@ -675,13 +756,17 @@ static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   MST.addAzCorr(builder, AZ_CORR);
   MST.addBurnoutAlt(builder, BURNOUT_ALT);
   MST.addLaunchAouType(builder, LAUNCH_AOU_TYPEOffset);
-  MST.addLaunchAouData(builder, LAUNCH_AOU_DATAOffset);
   MST.addImpactTime(builder, IMPACT_TIMEOffset);
   MST.addImpactLat(builder, IMPACT_LAT);
   MST.addImpactLon(builder, IMPACT_LON);
   MST.addImpactAouType(builder, IMPACT_AOU_TYPEOffset);
-  MST.addImpactAouData(builder, IMPACT_AOU_DATAOffset);
+  MST.addVectorStartTime(builder, VECTOR_START_TIMEOffset);
+  MST.addVectorStepSize(builder, VECTOR_STEP_SIZE);
+  MST.addVectorComponents(builder, VECTOR_COMPONENTS);
   MST.addVectors(builder, VECTORSOffset);
+  MST.addAouRpt(builder, AOU_RPTOffset);
+  MST.addLaunchAou(builder, LAUNCH_AOUOffset);
+  MST.addImpactAou(builder, IMPACT_AOUOffset);
   return MST.endMST(builder);
 }
 
@@ -711,7 +796,6 @@ unpack(): MSTT {
     this.MSL_STATUS(),
     this.TS(),
     this.AOU_RPT_TYPE(),
-    this.bb!.createScalarList<string>(this.AOU_RPT_DATA.bind(this), this.aouRptDataLength()),
     this.CONTAINMENT(),
     this.TRK_CONF(),
     this.TRK_QUAL(),
@@ -730,13 +814,17 @@ unpack(): MSTT {
     this.AZ_CORR(),
     this.BURNOUT_ALT(),
     this.LAUNCH_AOU_TYPE(),
-    this.bb!.createScalarList<string>(this.LAUNCH_AOU_DATA.bind(this), this.launchAouDataLength()),
     this.IMPACT_TIME(),
     this.IMPACT_LAT(),
     this.IMPACT_LON(),
     this.IMPACT_AOU_TYPE(),
-    this.bb!.createScalarList<string>(this.IMPACT_AOU_DATA.bind(this), this.impactAouDataLength()),
-    this.bb!.createScalarList<string>(this.VECTORS.bind(this), this.vectorsLength())
+    this.VECTOR_START_TIME(),
+    this.VECTOR_STEP_SIZE(),
+    this.VECTOR_COMPONENTS(),
+    this.bb!.createScalarList<number>(this.VECTORS.bind(this), this.vectorsLength()),
+    this.bb!.createScalarList<number>(this.AOU_RPT.bind(this), this.aouRptLength()),
+    this.bb!.createScalarList<number>(this.LAUNCH_AOU.bind(this), this.launchAouLength()),
+    this.bb!.createScalarList<number>(this.IMPACT_AOU.bind(this), this.impactAouLength())
   );
 }
 
@@ -766,7 +854,6 @@ unpackTo(_o: MSTT): void {
   _o.MSL_STATUS = this.MSL_STATUS();
   _o.TS = this.TS();
   _o.AOU_RPT_TYPE = this.AOU_RPT_TYPE();
-  _o.AOU_RPT_DATA = this.bb!.createScalarList<string>(this.AOU_RPT_DATA.bind(this), this.aouRptDataLength());
   _o.CONTAINMENT = this.CONTAINMENT();
   _o.TRK_CONF = this.TRK_CONF();
   _o.TRK_QUAL = this.TRK_QUAL();
@@ -785,13 +872,17 @@ unpackTo(_o: MSTT): void {
   _o.AZ_CORR = this.AZ_CORR();
   _o.BURNOUT_ALT = this.BURNOUT_ALT();
   _o.LAUNCH_AOU_TYPE = this.LAUNCH_AOU_TYPE();
-  _o.LAUNCH_AOU_DATA = this.bb!.createScalarList<string>(this.LAUNCH_AOU_DATA.bind(this), this.launchAouDataLength());
   _o.IMPACT_TIME = this.IMPACT_TIME();
   _o.IMPACT_LAT = this.IMPACT_LAT();
   _o.IMPACT_LON = this.IMPACT_LON();
   _o.IMPACT_AOU_TYPE = this.IMPACT_AOU_TYPE();
-  _o.IMPACT_AOU_DATA = this.bb!.createScalarList<string>(this.IMPACT_AOU_DATA.bind(this), this.impactAouDataLength());
-  _o.VECTORS = this.bb!.createScalarList<string>(this.VECTORS.bind(this), this.vectorsLength());
+  _o.VECTOR_START_TIME = this.VECTOR_START_TIME();
+  _o.VECTOR_STEP_SIZE = this.VECTOR_STEP_SIZE();
+  _o.VECTOR_COMPONENTS = this.VECTOR_COMPONENTS();
+  _o.VECTORS = this.bb!.createScalarList<number>(this.VECTORS.bind(this), this.vectorsLength());
+  _o.AOU_RPT = this.bb!.createScalarList<number>(this.AOU_RPT.bind(this), this.aouRptLength());
+  _o.LAUNCH_AOU = this.bb!.createScalarList<number>(this.LAUNCH_AOU.bind(this), this.launchAouLength());
+  _o.IMPACT_AOU = this.bb!.createScalarList<number>(this.IMPACT_AOU.bind(this), this.impactAouLength());
 }
 }
 
@@ -821,7 +912,6 @@ constructor(
   public MSL_STATUS: string|Uint8Array|null = null,
   public TS: string|Uint8Array|null = null,
   public AOU_RPT_TYPE: string|Uint8Array|null = null,
-  public AOU_RPT_DATA: (string)[] = [],
   public CONTAINMENT: number = 0.0,
   public TRK_CONF: number = 0.0,
   public TRK_QUAL: number = 0,
@@ -840,13 +930,17 @@ constructor(
   public AZ_CORR: number = 0.0,
   public BURNOUT_ALT: number = 0.0,
   public LAUNCH_AOU_TYPE: string|Uint8Array|null = null,
-  public LAUNCH_AOU_DATA: (string)[] = [],
   public IMPACT_TIME: string|Uint8Array|null = null,
   public IMPACT_LAT: number = 0.0,
   public IMPACT_LON: number = 0.0,
   public IMPACT_AOU_TYPE: string|Uint8Array|null = null,
-  public IMPACT_AOU_DATA: (string)[] = [],
-  public VECTORS: (string)[] = []
+  public VECTOR_START_TIME: string|Uint8Array|null = null,
+  public VECTOR_STEP_SIZE: number = 0.0,
+  public VECTOR_COMPONENTS: number = 6,
+  public VECTORS: (number)[] = [],
+  public AOU_RPT: (number)[] = [],
+  public LAUNCH_AOU: (number)[] = [],
+  public IMPACT_AOU: (number)[] = []
 ){}
 
 
@@ -873,16 +967,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MSL_STATUS = (this.MSL_STATUS !== null ? builder.createString(this.MSL_STATUS!) : 0);
   const TS = (this.TS !== null ? builder.createString(this.TS!) : 0);
   const AOU_RPT_TYPE = (this.AOU_RPT_TYPE !== null ? builder.createString(this.AOU_RPT_TYPE!) : 0);
-  const AOU_RPT_DATA = MST.createAouRptDataVector(builder, builder.createObjectOffsetList(this.AOU_RPT_DATA));
   const SEN_MODE = (this.SEN_MODE !== null ? builder.createString(this.SEN_MODE!) : 0);
   const INFO_SOURCE = (this.INFO_SOURCE !== null ? builder.createString(this.INFO_SOURCE!) : 0);
   const LAUNCH_TIME = (this.LAUNCH_TIME !== null ? builder.createString(this.LAUNCH_TIME!) : 0);
   const LAUNCH_AOU_TYPE = (this.LAUNCH_AOU_TYPE !== null ? builder.createString(this.LAUNCH_AOU_TYPE!) : 0);
-  const LAUNCH_AOU_DATA = MST.createLaunchAouDataVector(builder, builder.createObjectOffsetList(this.LAUNCH_AOU_DATA));
   const IMPACT_TIME = (this.IMPACT_TIME !== null ? builder.createString(this.IMPACT_TIME!) : 0);
   const IMPACT_AOU_TYPE = (this.IMPACT_AOU_TYPE !== null ? builder.createString(this.IMPACT_AOU_TYPE!) : 0);
-  const IMPACT_AOU_DATA = MST.createImpactAouDataVector(builder, builder.createObjectOffsetList(this.IMPACT_AOU_DATA));
-  const VECTORS = MST.createVectorsVector(builder, builder.createObjectOffsetList(this.VECTORS));
+  const VECTOR_START_TIME = (this.VECTOR_START_TIME !== null ? builder.createString(this.VECTOR_START_TIME!) : 0);
+  const VECTORS = MST.createVectorsVector(builder, this.VECTORS);
+  const AOU_RPT = MST.createAouRptVector(builder, this.AOU_RPT);
+  const LAUNCH_AOU = MST.createLaunchAouVector(builder, this.LAUNCH_AOU);
+  const IMPACT_AOU = MST.createImpactAouVector(builder, this.IMPACT_AOU);
 
   return MST.createMST(builder,
     ID,
@@ -909,7 +1004,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     MSL_STATUS,
     TS,
     AOU_RPT_TYPE,
-    AOU_RPT_DATA,
     this.CONTAINMENT,
     this.TRK_CONF,
     this.TRK_QUAL,
@@ -928,13 +1022,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.AZ_CORR,
     this.BURNOUT_ALT,
     LAUNCH_AOU_TYPE,
-    LAUNCH_AOU_DATA,
     IMPACT_TIME,
     this.IMPACT_LAT,
     this.IMPACT_LON,
     IMPACT_AOU_TYPE,
-    IMPACT_AOU_DATA,
-    VECTORS
+    VECTOR_START_TIME,
+    this.VECTOR_STEP_SIZE,
+    this.VECTOR_COMPONENTS,
+    VECTORS,
+    AOU_RPT,
+    LAUNCH_AOU,
+    IMPACT_AOU
   );
 }
 }

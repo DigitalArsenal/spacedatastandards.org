@@ -1,36 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "AEMAttitudeEntry" : {
-      "type" : "object",
-      "properties" : {
-        "EPOCH" : {
-                "type" : "string"
-              },
-        "Q1" : {
-                "type" : "number"
-              },
-        "Q2" : {
-                "type" : "number"
-              },
-        "Q3" : {
-                "type" : "number"
-              },
-        "QC" : {
-                "type" : "number"
-              },
-        "RATE_X" : {
-                "type" : "number"
-              },
-        "RATE_Y" : {
-                "type" : "number"
-              },
-        "RATE_Z" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
     "AEMSegment" : {
       "type" : "object",
       "properties" : {
@@ -61,8 +31,17 @@
         "STOP_TIME" : {
                 "type" : "string"
               },
-        "DATA" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/AEMAttitudeEntry"}
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Time interval between attitude states in seconds (required)."
+              },
+        "ATTITUDE_COMPONENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)"
+              },
+        "ATTITUDE_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS."
               }
       },
       "additionalProperties" : false

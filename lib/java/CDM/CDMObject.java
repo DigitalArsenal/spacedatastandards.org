@@ -188,185 +188,20 @@ public final class CDMObject extends Table {
    */
   public double Z_DOT() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Covariance Matrix component
+   * Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+   * Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+   *         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+   *         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+   *         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+   *         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+   *         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
    */
-  public double CR_R() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CT_R() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CT_T() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CN_R() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CN_T() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CN_N() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CRDOT_R() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CRDOT_T() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CRDOT_N() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CRDOT_RDOT() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTDOT_R() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTDOT_T() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTDOT_N() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTDOT_RDOT() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTDOT_TDOT() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_R() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_T() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_N() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_RDOT() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_TDOT() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CNDOT_NDOT() { int o = __offset(116); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_R() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_T() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_N() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_RDOT() { int o = __offset(124); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_TDOT() { int o = __offset(126); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_NDOT() { int o = __offset(128); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CDRG_DRG() { int o = __offset(130); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_R() { int o = __offset(132); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_T() { int o = __offset(134); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_N() { int o = __offset(136); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_RDOT() { int o = __offset(138); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_TDOT() { int o = __offset(140); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_NDOT() { int o = __offset(142); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_DRG() { int o = __offset(144); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CSRP_SRP() { int o = __offset(146); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_R() { int o = __offset(148); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_T() { int o = __offset(150); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_N() { int o = __offset(152); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_RDOT() { int o = __offset(154); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_TDOT() { int o = __offset(156); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_NDOT() { int o = __offset(158); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_DRG() { int o = __offset(160); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_SRP() { int o = __offset(162); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  /**
-   * Covariance Matrix component
-   */
-  public double CTHR_THR() { int o = __offset(164); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double COVARIANCE(int j) { int o = __offset(76); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCELength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceVector() { return covarianceVector(new DoubleVector()); }
+  public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(76, 8); }
+  public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 8); }
 
   public static int createCDMObject(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -405,97 +240,8 @@ public final class CDMObject extends Table {
       double X_DOT,
       double Y_DOT,
       double Z_DOT,
-      double CR_R,
-      double CT_R,
-      double CT_T,
-      double CN_R,
-      double CN_T,
-      double CN_N,
-      double CRDOT_R,
-      double CRDOT_T,
-      double CRDOT_N,
-      double CRDOT_RDOT,
-      double CTDOT_R,
-      double CTDOT_T,
-      double CTDOT_N,
-      double CTDOT_RDOT,
-      double CTDOT_TDOT,
-      double CNDOT_R,
-      double CNDOT_T,
-      double CNDOT_N,
-      double CNDOT_RDOT,
-      double CNDOT_TDOT,
-      double CNDOT_NDOT,
-      double CDRG_R,
-      double CDRG_T,
-      double CDRG_N,
-      double CDRG_RDOT,
-      double CDRG_TDOT,
-      double CDRG_NDOT,
-      double CDRG_DRG,
-      double CSRP_R,
-      double CSRP_T,
-      double CSRP_N,
-      double CSRP_RDOT,
-      double CSRP_TDOT,
-      double CSRP_NDOT,
-      double CSRP_DRG,
-      double CSRP_SRP,
-      double CTHR_R,
-      double CTHR_T,
-      double CTHR_N,
-      double CTHR_RDOT,
-      double CTHR_TDOT,
-      double CTHR_NDOT,
-      double CTHR_DRG,
-      double CTHR_SRP,
-      double CTHR_THR) {
-    builder.startTable(81);
-    CDMObject.addCthrThr(builder, CTHR_THR);
-    CDMObject.addCthrSrp(builder, CTHR_SRP);
-    CDMObject.addCthrDrg(builder, CTHR_DRG);
-    CDMObject.addCthrNdot(builder, CTHR_NDOT);
-    CDMObject.addCthrTdot(builder, CTHR_TDOT);
-    CDMObject.addCthrRdot(builder, CTHR_RDOT);
-    CDMObject.addCthrN(builder, CTHR_N);
-    CDMObject.addCthrT(builder, CTHR_T);
-    CDMObject.addCthrR(builder, CTHR_R);
-    CDMObject.addCsrpSrp(builder, CSRP_SRP);
-    CDMObject.addCsrpDrg(builder, CSRP_DRG);
-    CDMObject.addCsrpNdot(builder, CSRP_NDOT);
-    CDMObject.addCsrpTdot(builder, CSRP_TDOT);
-    CDMObject.addCsrpRdot(builder, CSRP_RDOT);
-    CDMObject.addCsrpN(builder, CSRP_N);
-    CDMObject.addCsrpT(builder, CSRP_T);
-    CDMObject.addCsrpR(builder, CSRP_R);
-    CDMObject.addCdrgDrg(builder, CDRG_DRG);
-    CDMObject.addCdrgNdot(builder, CDRG_NDOT);
-    CDMObject.addCdrgTdot(builder, CDRG_TDOT);
-    CDMObject.addCdrgRdot(builder, CDRG_RDOT);
-    CDMObject.addCdrgN(builder, CDRG_N);
-    CDMObject.addCdrgT(builder, CDRG_T);
-    CDMObject.addCdrgR(builder, CDRG_R);
-    CDMObject.addCndotNdot(builder, CNDOT_NDOT);
-    CDMObject.addCndotTdot(builder, CNDOT_TDOT);
-    CDMObject.addCndotRdot(builder, CNDOT_RDOT);
-    CDMObject.addCndotN(builder, CNDOT_N);
-    CDMObject.addCndotT(builder, CNDOT_T);
-    CDMObject.addCndotR(builder, CNDOT_R);
-    CDMObject.addCtdotTdot(builder, CTDOT_TDOT);
-    CDMObject.addCtdotRdot(builder, CTDOT_RDOT);
-    CDMObject.addCtdotN(builder, CTDOT_N);
-    CDMObject.addCtdotT(builder, CTDOT_T);
-    CDMObject.addCtdotR(builder, CTDOT_R);
-    CDMObject.addCrdotRdot(builder, CRDOT_RDOT);
-    CDMObject.addCrdotN(builder, CRDOT_N);
-    CDMObject.addCrdotT(builder, CRDOT_T);
-    CDMObject.addCrdotR(builder, CRDOT_R);
-    CDMObject.addCnN(builder, CN_N);
-    CDMObject.addCnT(builder, CN_T);
-    CDMObject.addCnR(builder, CN_R);
-    CDMObject.addCtT(builder, CT_T);
-    CDMObject.addCtR(builder, CT_R);
-    CDMObject.addCrR(builder, CR_R);
+      int COVARIANCEOffset) {
+    builder.startTable(37);
     CDMObject.addZDot(builder, Z_DOT);
     CDMObject.addYDot(builder, Y_DOT);
     CDMObject.addXDot(builder, X_DOT);
@@ -512,6 +258,7 @@ public final class CDMObject extends Table {
     CDMObject.addResidualsAccepted(builder, RESIDUALS_ACCEPTED);
     CDMObject.addActualOdSpan(builder, ACTUAL_OD_SPAN);
     CDMObject.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
+    CDMObject.addCovariance(builder, COVARIANCEOffset);
     CDMObject.addTracksUsed(builder, TRACKS_USED);
     CDMObject.addTracksAvailable(builder, TRACKS_AVAILABLE);
     CDMObject.addObsUsed(builder, OBS_USED);
@@ -535,7 +282,7 @@ public final class CDMObject extends Table {
     return CDMObject.endCDMObject(builder);
   }
 
-  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(81); }
+  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(37); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addPoc(FlatBufferBuilder builder, int POCOffset) { builder.addOffset(2, POCOffset, 0); }
@@ -572,51 +319,9 @@ public final class CDMObject extends Table {
   public static void addXDot(FlatBufferBuilder builder, double X_DOT) { builder.addDouble(33, X_DOT, 0.0); }
   public static void addYDot(FlatBufferBuilder builder, double Y_DOT) { builder.addDouble(34, Y_DOT, 0.0); }
   public static void addZDot(FlatBufferBuilder builder, double Z_DOT) { builder.addDouble(35, Z_DOT, 0.0); }
-  public static void addCrR(FlatBufferBuilder builder, double CR_R) { builder.addDouble(36, CR_R, 0.0); }
-  public static void addCtR(FlatBufferBuilder builder, double CT_R) { builder.addDouble(37, CT_R, 0.0); }
-  public static void addCtT(FlatBufferBuilder builder, double CT_T) { builder.addDouble(38, CT_T, 0.0); }
-  public static void addCnR(FlatBufferBuilder builder, double CN_R) { builder.addDouble(39, CN_R, 0.0); }
-  public static void addCnT(FlatBufferBuilder builder, double CN_T) { builder.addDouble(40, CN_T, 0.0); }
-  public static void addCnN(FlatBufferBuilder builder, double CN_N) { builder.addDouble(41, CN_N, 0.0); }
-  public static void addCrdotR(FlatBufferBuilder builder, double CRDOT_R) { builder.addDouble(42, CRDOT_R, 0.0); }
-  public static void addCrdotT(FlatBufferBuilder builder, double CRDOT_T) { builder.addDouble(43, CRDOT_T, 0.0); }
-  public static void addCrdotN(FlatBufferBuilder builder, double CRDOT_N) { builder.addDouble(44, CRDOT_N, 0.0); }
-  public static void addCrdotRdot(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.addDouble(45, CRDOT_RDOT, 0.0); }
-  public static void addCtdotR(FlatBufferBuilder builder, double CTDOT_R) { builder.addDouble(46, CTDOT_R, 0.0); }
-  public static void addCtdotT(FlatBufferBuilder builder, double CTDOT_T) { builder.addDouble(47, CTDOT_T, 0.0); }
-  public static void addCtdotN(FlatBufferBuilder builder, double CTDOT_N) { builder.addDouble(48, CTDOT_N, 0.0); }
-  public static void addCtdotRdot(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.addDouble(49, CTDOT_RDOT, 0.0); }
-  public static void addCtdotTdot(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.addDouble(50, CTDOT_TDOT, 0.0); }
-  public static void addCndotR(FlatBufferBuilder builder, double CNDOT_R) { builder.addDouble(51, CNDOT_R, 0.0); }
-  public static void addCndotT(FlatBufferBuilder builder, double CNDOT_T) { builder.addDouble(52, CNDOT_T, 0.0); }
-  public static void addCndotN(FlatBufferBuilder builder, double CNDOT_N) { builder.addDouble(53, CNDOT_N, 0.0); }
-  public static void addCndotRdot(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.addDouble(54, CNDOT_RDOT, 0.0); }
-  public static void addCndotTdot(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.addDouble(55, CNDOT_TDOT, 0.0); }
-  public static void addCndotNdot(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.addDouble(56, CNDOT_NDOT, 0.0); }
-  public static void addCdrgR(FlatBufferBuilder builder, double CDRG_R) { builder.addDouble(57, CDRG_R, 0.0); }
-  public static void addCdrgT(FlatBufferBuilder builder, double CDRG_T) { builder.addDouble(58, CDRG_T, 0.0); }
-  public static void addCdrgN(FlatBufferBuilder builder, double CDRG_N) { builder.addDouble(59, CDRG_N, 0.0); }
-  public static void addCdrgRdot(FlatBufferBuilder builder, double CDRG_RDOT) { builder.addDouble(60, CDRG_RDOT, 0.0); }
-  public static void addCdrgTdot(FlatBufferBuilder builder, double CDRG_TDOT) { builder.addDouble(61, CDRG_TDOT, 0.0); }
-  public static void addCdrgNdot(FlatBufferBuilder builder, double CDRG_NDOT) { builder.addDouble(62, CDRG_NDOT, 0.0); }
-  public static void addCdrgDrg(FlatBufferBuilder builder, double CDRG_DRG) { builder.addDouble(63, CDRG_DRG, 0.0); }
-  public static void addCsrpR(FlatBufferBuilder builder, double CSRP_R) { builder.addDouble(64, CSRP_R, 0.0); }
-  public static void addCsrpT(FlatBufferBuilder builder, double CSRP_T) { builder.addDouble(65, CSRP_T, 0.0); }
-  public static void addCsrpN(FlatBufferBuilder builder, double CSRP_N) { builder.addDouble(66, CSRP_N, 0.0); }
-  public static void addCsrpRdot(FlatBufferBuilder builder, double CSRP_RDOT) { builder.addDouble(67, CSRP_RDOT, 0.0); }
-  public static void addCsrpTdot(FlatBufferBuilder builder, double CSRP_TDOT) { builder.addDouble(68, CSRP_TDOT, 0.0); }
-  public static void addCsrpNdot(FlatBufferBuilder builder, double CSRP_NDOT) { builder.addDouble(69, CSRP_NDOT, 0.0); }
-  public static void addCsrpDrg(FlatBufferBuilder builder, double CSRP_DRG) { builder.addDouble(70, CSRP_DRG, 0.0); }
-  public static void addCsrpSrp(FlatBufferBuilder builder, double CSRP_SRP) { builder.addDouble(71, CSRP_SRP, 0.0); }
-  public static void addCthrR(FlatBufferBuilder builder, double CTHR_R) { builder.addDouble(72, CTHR_R, 0.0); }
-  public static void addCthrT(FlatBufferBuilder builder, double CTHR_T) { builder.addDouble(73, CTHR_T, 0.0); }
-  public static void addCthrN(FlatBufferBuilder builder, double CTHR_N) { builder.addDouble(74, CTHR_N, 0.0); }
-  public static void addCthrRdot(FlatBufferBuilder builder, double CTHR_RDOT) { builder.addDouble(75, CTHR_RDOT, 0.0); }
-  public static void addCthrTdot(FlatBufferBuilder builder, double CTHR_TDOT) { builder.addDouble(76, CTHR_TDOT, 0.0); }
-  public static void addCthrNdot(FlatBufferBuilder builder, double CTHR_NDOT) { builder.addDouble(77, CTHR_NDOT, 0.0); }
-  public static void addCthrDrg(FlatBufferBuilder builder, double CTHR_DRG) { builder.addDouble(78, CTHR_DRG, 0.0); }
-  public static void addCthrSrp(FlatBufferBuilder builder, double CTHR_SRP) { builder.addDouble(79, CTHR_SRP, 0.0); }
-  public static void addCthrThr(FlatBufferBuilder builder, double CTHR_THR) { builder.addDouble(80, CTHR_THR, 0.0); }
+  public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(36, COVARIANCEOffset, 0); }
+  public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endCDMObject(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

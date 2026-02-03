@@ -1062,45 +1062,57 @@ class OCM : flatbuffers.handle
     /// Trajectory type (e.g., PROPAGATED, ESTIMATED).
     def TRAJ_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// State vector data.
-    def STATE_DATA(i:int) -> StateVector:
-        return StateVector { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
+    /// Time interval between state vectors in seconds (required for time-series data).
+    def STATE_STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Number of components per state vector.
+    /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+    /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    def STATE_VECTOR_SIZE() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 12, 6)
+    /// State data as row-major array of doubles.
+    /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+    /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    /// Length must be divisible by STATE_VECTOR_SIZE.
+    def STATE_DATA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
     def STATE_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 10)
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+    /// Time alignment matches STATE_DATA epochs.
+    def COVARIANCE_DATA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
+    def COVARIANCE_DATA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// Physical properties of the space object.
     def PHYSICAL_PROPERTIES() -> PhysicalProperties?:
-        let o = flatbuffers.field_table(buf_, pos_, 12)
+        let o = flatbuffers.field_table(buf_, pos_, 18)
         return if o: PhysicalProperties { buf_, o } else: nil
-    /// Covariance data associated with the state vectors.
-    def COVARIANCE_DATA(i:int) -> StateVector:
-        return StateVector { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
-    def COVARIANCE_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 14)
     /// Maneuver data.
     def MANEUVER_DATA(i:int) -> Maneuver:
-        return Maneuver { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
+        return Maneuver { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 20) + i * 4) }
     def MANEUVER_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 16)
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
     /// Perturbations parameters used.
     def PERTURBATIONS() -> Perturbations?:
-        let o = flatbuffers.field_table(buf_, pos_, 18)
+        let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: Perturbations { buf_, o } else: nil
     /// Orbit determination data.
     def ORBIT_DETERMINATION() -> OrbitDetermination?:
-        let o = flatbuffers.field_table(buf_, pos_, 20)
+        let o = flatbuffers.field_table(buf_, pos_, 24)
         return if o: OrbitDetermination { buf_, o } else: nil
     /// User-defined parameters and supplemental comments.
     def USER_DEFINED_PARAMETERS(i:int) -> UserDefinedParameters:
-        return UserDefinedParameters { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+        return UserDefinedParameters { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
     def USER_DEFINED_PARAMETERS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 22)
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(12)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1111,42 +1123,48 @@ struct OCMBuilder:
     def add_TRAJ_TYPE(TRAJ_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, TRAJ_TYPE)
         return this
-    def add_STATE_DATA(STATE_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, STATE_DATA)
+    def add_STATE_STEP_SIZE(STATE_STEP_SIZE:float):
+        b_.PrependFloat64Slot(3, STATE_STEP_SIZE, 0.0)
         return this
-    def add_PHYSICAL_PROPERTIES(PHYSICAL_PROPERTIES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(4, PHYSICAL_PROPERTIES)
+    def add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE:int):
+        b_.PrependUint8Slot(4, STATE_VECTOR_SIZE, 6)
+        return this
+    def add_STATE_DATA(STATE_DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, STATE_DATA)
         return this
     def add_COVARIANCE_DATA(COVARIANCE_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, COVARIANCE_DATA)
+        b_.PrependUOffsetTRelativeSlot(6, COVARIANCE_DATA)
+        return this
+    def add_PHYSICAL_PROPERTIES(PHYSICAL_PROPERTIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, PHYSICAL_PROPERTIES)
         return this
     def add_MANEUVER_DATA(MANEUVER_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, MANEUVER_DATA)
+        b_.PrependUOffsetTRelativeSlot(8, MANEUVER_DATA)
         return this
     def add_PERTURBATIONS(PERTURBATIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, PERTURBATIONS)
+        b_.PrependUOffsetTRelativeSlot(9, PERTURBATIONS)
         return this
     def add_ORBIT_DETERMINATION(ORBIT_DETERMINATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, ORBIT_DETERMINATION)
+        b_.PrependUOffsetTRelativeSlot(10, ORBIT_DETERMINATION)
         return this
     def add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, USER_DEFINED_PARAMETERS)
+        b_.PrependUOffsetTRelativeSlot(11, USER_DEFINED_PARAMETERS)
         return this
     def end():
         return b_.EndObject()
 
 def OCMStartSTATE_DATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def OCMCreateSTATE_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def OCMCreateSTATE_DATAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def OCMStartCOVARIANCE_DATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def OCMCreateCOVARIANCE_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def OCMCreateCOVARIANCE_DATAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def OCMStartMANEUVER_DATAVector(b_:flatbuffers.builder, n_:int):

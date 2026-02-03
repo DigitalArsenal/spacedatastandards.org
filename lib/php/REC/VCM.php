@@ -126,29 +126,10 @@ class VCM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /**
-     * @returnVectorOffset
-     */
-    public function getCOVARIANCE_MATRIX($j)
-    {
-        $o = $this->__offset(32);
-        $obj = new VCMCovarianceMatrixLine();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCOVARIANCE_MATRIXLength()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
     public function getUVW_SIGMAS()
     {
         $obj = new UvwSigmas();
-        $o = $this->__offset(34);
+        $o = $this->__offset(32);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -157,7 +138,7 @@ class VCM extends Table
      */
     public function getMASS()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -166,7 +147,7 @@ class VCM extends Table
      */
     public function getSOLAR_RAD_AREA()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -175,7 +156,7 @@ class VCM extends Table
      */
     public function getSOLAR_RAD_COEFF()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -184,7 +165,7 @@ class VCM extends Table
      */
     public function getDRAG_AREA()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -193,7 +174,7 @@ class VCM extends Table
      */
     public function getDRAG_COEFF()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -202,13 +183,13 @@ class VCM extends Table
      */
     public function getSRP()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \perturbationStatus::OFF;
     }
 
     public function getCLASSIFICATION_TYPE()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -217,7 +198,7 @@ class VCM extends Table
      */
     public function getNORAD_CAT_ID()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -226,7 +207,7 @@ class VCM extends Table
      */
     public function getELEMENT_SET_NO()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -235,7 +216,7 @@ class VCM extends Table
      */
     public function getREV_AT_EPOCH()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -244,7 +225,7 @@ class VCM extends Table
      */
     public function getBSTAR()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -253,7 +234,7 @@ class VCM extends Table
      */
     public function getMEAN_MOTION_DOT()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -262,50 +243,39 @@ class VCM extends Table
      */
     public function getMEAN_MOTION_DDOT()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     public function getCOV_REFERENCE_FRAME()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
     /**
+     * @param int offset
      * @return double
      */
-    public function getCX_X()
+    public function getCOVARIANCE($j)
     {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
-     * @return double
+     * @return int
      */
-    public function getCY_X()
+    public function getCOVARIANCELength()
     {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getCZ_X()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getCX_DOT_X()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -313,19 +283,19 @@ class VCM extends Table
      */
     public function getUSER_DEFINED_BIP_0044_TYPE()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
     public function getUSER_DEFINED_OBJECT_DESIGNATOR()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     public function getUSER_DEFINED_EARTH_MODEL()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -334,7 +304,7 @@ class VCM extends Table
      */
     public function getUSER_DEFINED_EPOCH_TIMESTAMP()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -343,7 +313,7 @@ class VCM extends Table
      */
     public function getUSER_DEFINED_MICROSECONDS()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -353,16 +323,16 @@ class VCM extends Table
      */
     public static function startVCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(39);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return VCM
      */
-    public static function createVCM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REF_FRAME, $TIME_SYSTEM, $STATE_VECTOR, $KEPLERIAN_ELEMENTS, $EQUINOCTIAL_ELEMENTS, $GM, $ATMOSPHERIC_MODEL_DATA, $PROPAGATOR_SETTINGS, $COVARIANCE_MATRIX, $UVW_SIGMAS, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $SRP, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $CX_X, $CY_X, $CZ_X, $CX_DOT_X, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS)
+    public static function createVCM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REF_FRAME, $TIME_SYSTEM, $STATE_VECTOR, $KEPLERIAN_ELEMENTS, $EQUINOCTIAL_ELEMENTS, $GM, $ATMOSPHERIC_MODEL_DATA, $PROPAGATOR_SETTINGS, $UVW_SIGMAS, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $SRP, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS)
     {
-        $builder->startObject(39);
+        $builder->startObject(35);
         self::addCCSDS_OMM_VERS($builder, $CCSDS_OMM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -377,7 +347,6 @@ class VCM extends Table
         self::addGM($builder, $GM);
         self::addATMOSPHERIC_MODEL_DATA($builder, $ATMOSPHERIC_MODEL_DATA);
         self::addPROPAGATOR_SETTINGS($builder, $PROPAGATOR_SETTINGS);
-        self::addCOVARIANCE_MATRIX($builder, $COVARIANCE_MATRIX);
         self::addUVW_SIGMAS($builder, $UVW_SIGMAS);
         self::addMASS($builder, $MASS);
         self::addSOLAR_RAD_AREA($builder, $SOLAR_RAD_AREA);
@@ -393,10 +362,7 @@ class VCM extends Table
         self::addMEAN_MOTION_DOT($builder, $MEAN_MOTION_DOT);
         self::addMEAN_MOTION_DDOT($builder, $MEAN_MOTION_DDOT);
         self::addCOV_REFERENCE_FRAME($builder, $COV_REFERENCE_FRAME);
-        self::addCX_X($builder, $CX_X);
-        self::addCY_X($builder, $CY_X);
-        self::addCZ_X($builder, $CZ_X);
-        self::addCX_DOT_X($builder, $CX_DOT_X);
+        self::addCOVARIANCE($builder, $COVARIANCE);
         self::addUSER_DEFINED_BIP_0044_TYPE($builder, $USER_DEFINED_BIP_0044_TYPE);
         self::addUSER_DEFINED_OBJECT_DESIGNATOR($builder, $USER_DEFINED_OBJECT_DESIGNATOR);
         self::addUSER_DEFINED_EARTH_MODEL($builder, $USER_DEFINED_EARTH_MODEL);
@@ -551,43 +517,9 @@ class VCM extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addCOVARIANCE_MATRIX(FlatBufferBuilder $builder, $COVARIANCE_MATRIX)
-    {
-        $builder->addOffsetX(14, $COVARIANCE_MATRIX, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createCOVARIANCE_MATRIXVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startCOVARIANCE_MATRIXVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addUVW_SIGMAS(FlatBufferBuilder $builder, $UVW_SIGMAS)
     {
-        $builder->addOffsetX(15, $UVW_SIGMAS, 0);
+        $builder->addOffsetX(14, $UVW_SIGMAS, 0);
     }
 
     /**
@@ -597,7 +529,7 @@ class VCM extends Table
      */
     public static function addMASS(FlatBufferBuilder $builder, $MASS)
     {
-        $builder->addDoubleX(16, $MASS, 0.0);
+        $builder->addDoubleX(15, $MASS, 0.0);
     }
 
     /**
@@ -607,7 +539,7 @@ class VCM extends Table
      */
     public static function addSOLAR_RAD_AREA(FlatBufferBuilder $builder, $SOLAR_RAD_AREA)
     {
-        $builder->addDoubleX(17, $SOLAR_RAD_AREA, 0.0);
+        $builder->addDoubleX(16, $SOLAR_RAD_AREA, 0.0);
     }
 
     /**
@@ -617,7 +549,7 @@ class VCM extends Table
      */
     public static function addSOLAR_RAD_COEFF(FlatBufferBuilder $builder, $SOLAR_RAD_COEFF)
     {
-        $builder->addDoubleX(18, $SOLAR_RAD_COEFF, 0.0);
+        $builder->addDoubleX(17, $SOLAR_RAD_COEFF, 0.0);
     }
 
     /**
@@ -627,7 +559,7 @@ class VCM extends Table
      */
     public static function addDRAG_AREA(FlatBufferBuilder $builder, $DRAG_AREA)
     {
-        $builder->addDoubleX(19, $DRAG_AREA, 0.0);
+        $builder->addDoubleX(18, $DRAG_AREA, 0.0);
     }
 
     /**
@@ -637,7 +569,7 @@ class VCM extends Table
      */
     public static function addDRAG_COEFF(FlatBufferBuilder $builder, $DRAG_COEFF)
     {
-        $builder->addDoubleX(20, $DRAG_COEFF, 0.0);
+        $builder->addDoubleX(19, $DRAG_COEFF, 0.0);
     }
 
     /**
@@ -647,7 +579,7 @@ class VCM extends Table
      */
     public static function addSRP(FlatBufferBuilder $builder, $SRP)
     {
-        $builder->addSbyteX(21, $SRP, 0);
+        $builder->addSbyteX(20, $SRP, 0);
     }
 
     /**
@@ -657,7 +589,7 @@ class VCM extends Table
      */
     public static function addCLASSIFICATION_TYPE(FlatBufferBuilder $builder, $CLASSIFICATION_TYPE)
     {
-        $builder->addOffsetX(22, $CLASSIFICATION_TYPE, 0);
+        $builder->addOffsetX(21, $CLASSIFICATION_TYPE, 0);
     }
 
     /**
@@ -667,7 +599,7 @@ class VCM extends Table
      */
     public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
     {
-        $builder->addUintX(23, $NORAD_CAT_ID, 0);
+        $builder->addUintX(22, $NORAD_CAT_ID, 0);
     }
 
     /**
@@ -677,7 +609,7 @@ class VCM extends Table
      */
     public static function addELEMENT_SET_NO(FlatBufferBuilder $builder, $ELEMENT_SET_NO)
     {
-        $builder->addUintX(24, $ELEMENT_SET_NO, 0);
+        $builder->addUintX(23, $ELEMENT_SET_NO, 0);
     }
 
     /**
@@ -687,7 +619,7 @@ class VCM extends Table
      */
     public static function addREV_AT_EPOCH(FlatBufferBuilder $builder, $REV_AT_EPOCH)
     {
-        $builder->addDoubleX(25, $REV_AT_EPOCH, 0.0);
+        $builder->addDoubleX(24, $REV_AT_EPOCH, 0.0);
     }
 
     /**
@@ -697,7 +629,7 @@ class VCM extends Table
      */
     public static function addBSTAR(FlatBufferBuilder $builder, $BSTAR)
     {
-        $builder->addDoubleX(26, $BSTAR, 0.0);
+        $builder->addDoubleX(25, $BSTAR, 0.0);
     }
 
     /**
@@ -707,7 +639,7 @@ class VCM extends Table
      */
     public static function addMEAN_MOTION_DOT(FlatBufferBuilder $builder, $MEAN_MOTION_DOT)
     {
-        $builder->addDoubleX(27, $MEAN_MOTION_DOT, 0.0);
+        $builder->addDoubleX(26, $MEAN_MOTION_DOT, 0.0);
     }
 
     /**
@@ -717,7 +649,7 @@ class VCM extends Table
      */
     public static function addMEAN_MOTION_DDOT(FlatBufferBuilder $builder, $MEAN_MOTION_DDOT)
     {
-        $builder->addDoubleX(28, $MEAN_MOTION_DDOT, 0.0);
+        $builder->addDoubleX(27, $MEAN_MOTION_DDOT, 0.0);
     }
 
     /**
@@ -727,47 +659,41 @@ class VCM extends Table
      */
     public static function addCOV_REFERENCE_FRAME(FlatBufferBuilder $builder, $COV_REFERENCE_FRAME)
     {
-        $builder->addOffsetX(29, $COV_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(28, $COV_REFERENCE_FRAME, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param VectorOffset
      * @return void
      */
-    public static function addCX_X(FlatBufferBuilder $builder, $CX_X)
+    public static function addCOVARIANCE(FlatBufferBuilder $builder, $COVARIANCE)
     {
-        $builder->addDoubleX(30, $CX_X, 0.0);
+        $builder->addOffsetX(29, $COVARIANCE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
+     * @param array offset array
+     * @return int vector offset
      */
-    public static function addCY_X(FlatBufferBuilder $builder, $CY_X)
+    public static function createCOVARIANCEVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->addDoubleX(31, $CY_X, 0.0);
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param int $numElems
      * @return void
      */
-    public static function addCZ_X(FlatBufferBuilder $builder, $CZ_X)
+    public static function startCOVARIANCEVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->addDoubleX(32, $CZ_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCX_DOT_X(FlatBufferBuilder $builder, $CX_DOT_X)
-    {
-        $builder->addDoubleX(33, $CX_DOT_X, 0.0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -777,7 +703,7 @@ class VCM extends Table
      */
     public static function addUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder $builder, $USER_DEFINED_BIP_0044_TYPE)
     {
-        $builder->addUintX(34, $USER_DEFINED_BIP_0044_TYPE, 0);
+        $builder->addUintX(30, $USER_DEFINED_BIP_0044_TYPE, 0);
     }
 
     /**
@@ -787,7 +713,7 @@ class VCM extends Table
      */
     public static function addUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder $builder, $USER_DEFINED_OBJECT_DESIGNATOR)
     {
-        $builder->addOffsetX(35, $USER_DEFINED_OBJECT_DESIGNATOR, 0);
+        $builder->addOffsetX(31, $USER_DEFINED_OBJECT_DESIGNATOR, 0);
     }
 
     /**
@@ -797,7 +723,7 @@ class VCM extends Table
      */
     public static function addUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder $builder, $USER_DEFINED_EARTH_MODEL)
     {
-        $builder->addOffsetX(36, $USER_DEFINED_EARTH_MODEL, 0);
+        $builder->addOffsetX(32, $USER_DEFINED_EARTH_MODEL, 0);
     }
 
     /**
@@ -807,7 +733,7 @@ class VCM extends Table
      */
     public static function addUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder $builder, $USER_DEFINED_EPOCH_TIMESTAMP)
     {
-        $builder->addDoubleX(37, $USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+        $builder->addDoubleX(33, $USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
     }
 
     /**
@@ -817,7 +743,7 @@ class VCM extends Table
      */
     public static function addUSER_DEFINED_MICROSECONDS(FlatBufferBuilder $builder, $USER_DEFINED_MICROSECONDS)
     {
-        $builder->addDoubleX(38, $USER_DEFINED_MICROSECONDS, 0.0);
+        $builder->addDoubleX(34, $USER_DEFINED_MICROSECONDS, 0.0);
     }
 
     /**

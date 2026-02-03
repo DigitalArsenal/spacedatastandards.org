@@ -1529,25 +1529,6 @@
                     },
                     "additionalProperties": false
                 },
-                "VCMCovarianceMatrixLine": {
-                    "type": "object",
-                    "description": "VCM Covariance Matrix Line",
-                    "properties": {
-                        "CX_X": {
-                            "type": "number"
-                        },
-                        "CY_X": {
-                            "type": "number"
-                        },
-                        "CZ_X": {
-                            "type": "number"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "keplerianElements": {
                     "type": "object",
                     "description": "Keplerian Elements",
@@ -1703,12 +1684,6 @@
                         "PROPAGATOR_SETTINGS": {
                             "$ref": "#/definitions/propagatorConfig"
                         },
-                        "COVARIANCE_MATRIX": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/VCMCovarianceMatrixLine"
-                            }
-                        },
                         "UVW_SIGMAS": {
                             "$ref": "#/definitions/uvwSigmas"
                         },
@@ -1758,17 +1733,12 @@
                         "COV_REFERENCE_FRAME": {
                             "type": "string"
                         },
-                        "CX_X": {
-                            "type": "number"
-                        },
-                        "CY_X": {
-                            "type": "number"
-                        },
-                        "CZ_X": {
-                            "type": "number"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -3473,185 +3443,12 @@
                             "type": "number",
                             "description": "Z-coordinate of the object's position in RTN"
                         },
-                        "CR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_THR": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
                         }
                     },
                     "additionalProperties": false
@@ -4626,12 +4423,6 @@
                         "AOU_RPT_TYPE": {
                             "type": "string"
                         },
-                        "AOU_RPT_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "CONTAINMENT": {
                             "type": "number"
                         },
@@ -4690,12 +4481,6 @@
                         "LAUNCH_AOU_TYPE": {
                             "type": "string"
                         },
-                        "LAUNCH_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "IMPACT_TIME": {
                             "type": "string"
                         },
@@ -4708,17 +4493,47 @@
                         "IMPACT_AOU_TYPE": {
                             "type": "string"
                         },
-                        "IMPACT_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                        "VECTOR_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for vector data (ISO 8601 UTC format)."
+                        },
+                        "VECTOR_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between vector points in seconds."
+                        },
+                        "VECTOR_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)."
                         },
                         "VECTORS": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
+                                "type": "number"
+                            },
+                            "description": "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]"
+                        },
+                        "AOU_RPT": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE)."
+                        },
+                        "LAUNCH_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE)."
+                        },
+                        "IMPACT_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE)."
                         }
                     },
                     "additionalProperties": false
@@ -7968,36 +7783,6 @@
         "AEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "AEMAttitudeEntry": {
-                    "type": "object",
-                    "properties": {
-                        "EPOCH": {
-                            "type": "string"
-                        },
-                        "Q1": {
-                            "type": "number"
-                        },
-                        "Q2": {
-                            "type": "number"
-                        },
-                        "Q3": {
-                            "type": "number"
-                        },
-                        "QC": {
-                            "type": "number"
-                        },
-                        "RATE_X": {
-                            "type": "number"
-                        },
-                        "RATE_Y": {
-                            "type": "number"
-                        },
-                        "RATE_Z": {
-                            "type": "number"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "AEMSegment": {
                     "type": "object",
                     "properties": {
@@ -8028,11 +7813,22 @@
                         "STOP_TIME": {
                             "type": "string"
                         },
-                        "DATA": {
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between attitude states in seconds (required)."
+                        },
+                        "ATTITUDE_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)"
+                        },
+                        "ATTITUDE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AEMAttitudeEntry"
-                            }
+                                "type": "number"
+                            },
+                            "description": "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS."
                         }
                     },
                     "additionalProperties": false
@@ -12692,36 +12488,6 @@
                     },
                     "additionalProperties": false
                 },
-                "AEMAttitudeEntry": {
-                    "type": "object",
-                    "properties": {
-                        "EPOCH": {
-                            "type": "string"
-                        },
-                        "Q1": {
-                            "type": "number"
-                        },
-                        "Q2": {
-                            "type": "number"
-                        },
-                        "Q3": {
-                            "type": "number"
-                        },
-                        "QC": {
-                            "type": "number"
-                        },
-                        "RATE_X": {
-                            "type": "number"
-                        },
-                        "RATE_Y": {
-                            "type": "number"
-                        },
-                        "RATE_Z": {
-                            "type": "number"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "AEMSegment": {
                     "type": "object",
                     "properties": {
@@ -12752,11 +12518,22 @@
                         "STOP_TIME": {
                             "type": "string"
                         },
-                        "DATA": {
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between attitude states in seconds (required)."
+                        },
+                        "ATTITUDE_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)"
+                        },
+                        "ATTITUDE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AEMAttitudeEntry"
-                            }
+                                "type": "number"
+                            },
+                            "description": "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS."
                         }
                     },
                     "additionalProperties": false
@@ -13993,185 +13770,12 @@
                             "type": "number",
                             "description": "Z-coordinate of the object's position in RTN"
                         },
-                        "CR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CN_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CRDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CNDOT_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CDRG_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CSRP_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
-                        },
-                        "CTHR_THR": {
-                            "type": "number",
-                            "description": "Covariance Matrix component"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
                         }
                     },
                     "additionalProperties": false
@@ -17784,12 +17388,6 @@
                         "AOU_RPT_TYPE": {
                             "type": "string"
                         },
-                        "AOU_RPT_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "CONTAINMENT": {
                             "type": "number"
                         },
@@ -17848,12 +17446,6 @@
                         "LAUNCH_AOU_TYPE": {
                             "type": "string"
                         },
-                        "LAUNCH_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "IMPACT_TIME": {
                             "type": "string"
                         },
@@ -17866,17 +17458,47 @@
                         "IMPACT_AOU_TYPE": {
                             "type": "string"
                         },
-                        "IMPACT_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                        "VECTOR_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for vector data (ISO 8601 UTC format)."
+                        },
+                        "VECTOR_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between vector points in seconds."
+                        },
+                        "VECTOR_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)."
                         },
                         "VECTORS": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
+                                "type": "number"
+                            },
+                            "description": "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]"
+                        },
+                        "AOU_RPT": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE)."
+                        },
+                        "LAUNCH_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE)."
+                        },
+                        "IMPACT_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE)."
                         }
                     },
                     "additionalProperties": false
@@ -19011,23 +18633,33 @@
                             "type": "string",
                             "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED)."
                         },
+                        "STATE_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between state vectors in seconds (required for time-series data)."
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)"
+                        },
                         "STATE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "State vector data."
-                        },
-                        "PHYSICAL_PROPERTIES": {
-                            "$ref": "#/definitions/PhysicalProperties",
-                            "description": "Physical properties of the space object."
+                            "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE."
                         },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "Covariance data associated with the state vectors."
+                            "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs."
+                        },
+                        "PHYSICAL_PROPERTIES": {
+                            "$ref": "#/definitions/PhysicalProperties",
+                            "description": "Physical properties of the space object."
                         },
                         "MANEUVER_DATA": {
                             "type": "array",
@@ -19458,103 +19090,26 @@
                         },
                         "BSTAR": {
                             "type": "number",
-                            "description": "BSTAR in 1/Earth radii or BTERM in m\u00b2/kg depending on MEAN_ELEMENT_THEORY [C]"
+                            "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
                         },
                         "MEAN_MOTION_DOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DOT in rev/day\u00b2 [C if SGP or PPT3]"
+                            "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]"
                         },
                         "MEAN_MOTION_DDOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]"
+                            "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
                         },
                         "COV_REFERENCE_FRAME": {
                             "$ref": "#/definitions/RFM",
                             "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "description": "CX_X [km**2]"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "description": "CY_X [km**2]"
-                        },
-                        "CY_Y": {
-                            "type": "number",
-                            "description": "CY_Y [km**2]"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "description": "CZ_X [km**2]"
-                        },
-                        "CZ_Y": {
-                            "type": "number",
-                            "description": "CZ_Y [km**2]"
-                        },
-                        "CZ_Z": {
-                            "type": "number",
-                            "description": "CZ_Z [km**2]"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "description": "CX_DOT_X [km**2/s]"
-                        },
-                        "CX_DOT_Y": {
-                            "type": "number",
-                            "description": "CX_DOT_Y [km**2/s]"
-                        },
-                        "CX_DOT_Z": {
-                            "type": "number",
-                            "description": "CX_DOT_Z [km**2/s]"
-                        },
-                        "CX_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CX_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CY_DOT_X": {
-                            "type": "number",
-                            "description": "CY_DOT_X [km**2/s]"
-                        },
-                        "CY_DOT_Y": {
-                            "type": "number",
-                            "description": "CY_DOT_Y [km**2/s]"
-                        },
-                        "CY_DOT_Z": {
-                            "type": "number",
-                            "description": "CY_DOT_Z [km**2/s]"
-                        },
-                        "CY_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CY_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_Y_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_X": {
-                            "type": "number",
-                            "description": "CZ_DOT_X [km**2/s]"
-                        },
-                        "CZ_DOT_Y": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y [km**2/s]"
-                        },
-                        "CZ_DOT_Z": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z [km**2/s]"
-                        },
-                        "CZ_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_Z_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z_DOT [km**2/s**2]"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -23027,6 +22582,14 @@
                             "type": "string",
                             "description": "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1"
                         },
+                        "OBSERVATION_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)"
+                        },
+                        "OBSERVATION_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for observation time reconstruction (ISO 8601 UTC format)."
+                        },
                         "CCSDS_TDM_VERS": {
                             "type": "string",
                             "description": "TDM version number -  CCSDS 503.0-B-1, Page D-9"
@@ -23577,24 +23140,6 @@
                         "TRK_CONF": {
                             "type": "number"
                         },
-                        "ECEF_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ECEF_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ECEF_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "LAT": {
                             "type": "number"
                         },
@@ -23612,60 +23157,6 @@
                         },
                         "COURSE": {
                             "type": "number"
-                        },
-                        "LCO": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LCS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "E_NUVEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "E_NUPOS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "COV": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ERR_ELLP": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
                         },
                         "SRC_TYPS": {
                             "type": "array",
@@ -23728,6 +23219,76 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        "TRACK_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for track data (ISO 8601 UTC format)."
+                        },
+                        "TRACK_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between track points in seconds."
+                        },
+                        "TRACK_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per point (default 3 for X, Y, Z)."
+                        },
+                        "ECEF_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]"
+                        },
+                        "ECEF_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]"
+                        },
+                        "ECEF_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]"
+                        },
+                        "LC_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate position as flat array"
+                        },
+                        "LC_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate velocity as flat array"
+                        },
+                        "LC_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate acceleration as flat array"
+                        },
+                        "COV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data (21 elements per point for 6x6 lower triangular)"
+                        },
+                        "ERR_ELLP": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Error ellipse data (6 elements per point)"
                         }
                     },
                     "additionalProperties": false
@@ -23813,25 +23374,6 @@
                             "type": "number"
                         },
                         "Z_DOT": {
-                            "type": "number"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "VCMCovarianceMatrixLine": {
-                    "type": "object",
-                    "description": "VCM Covariance Matrix Line",
-                    "properties": {
-                        "CX_X": {
-                            "type": "number"
-                        },
-                        "CY_X": {
-                            "type": "number"
-                        },
-                        "CZ_X": {
-                            "type": "number"
-                        },
-                        "CX_DOT_X": {
                             "type": "number"
                         }
                     },
@@ -23992,12 +23534,6 @@
                         "PROPAGATOR_SETTINGS": {
                             "$ref": "#/definitions/propagatorConfig"
                         },
-                        "COVARIANCE_MATRIX": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/VCMCovarianceMatrixLine"
-                            }
-                        },
                         "UVW_SIGMAS": {
                             "$ref": "#/definitions/uvwSigmas"
                         },
@@ -24047,17 +23583,12 @@
                         "COV_REFERENCE_FRAME": {
                             "type": "string"
                         },
-                        "CX_X": {
-                            "type": "number"
-                        },
-                        "CY_X": {
-                            "type": "number"
-                        },
-                        "CZ_X": {
-                            "type": "number"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -28222,103 +27753,26 @@
                         },
                         "BSTAR": {
                             "type": "number",
-                            "description": "BSTAR in 1/Earth radii or BTERM in m\u00b2/kg depending on MEAN_ELEMENT_THEORY [C]"
+                            "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
                         },
                         "MEAN_MOTION_DOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DOT in rev/day\u00b2 [C if SGP or PPT3]"
+                            "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]"
                         },
                         "MEAN_MOTION_DDOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]"
+                            "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
                         },
                         "COV_REFERENCE_FRAME": {
                             "$ref": "#/definitions/RFM",
                             "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "description": "CX_X [km**2]"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "description": "CY_X [km**2]"
-                        },
-                        "CY_Y": {
-                            "type": "number",
-                            "description": "CY_Y [km**2]"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "description": "CZ_X [km**2]"
-                        },
-                        "CZ_Y": {
-                            "type": "number",
-                            "description": "CZ_Y [km**2]"
-                        },
-                        "CZ_Z": {
-                            "type": "number",
-                            "description": "CZ_Z [km**2]"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "description": "CX_DOT_X [km**2/s]"
-                        },
-                        "CX_DOT_Y": {
-                            "type": "number",
-                            "description": "CX_DOT_Y [km**2/s]"
-                        },
-                        "CX_DOT_Z": {
-                            "type": "number",
-                            "description": "CX_DOT_Z [km**2/s]"
-                        },
-                        "CX_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CX_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CY_DOT_X": {
-                            "type": "number",
-                            "description": "CY_DOT_X [km**2/s]"
-                        },
-                        "CY_DOT_Y": {
-                            "type": "number",
-                            "description": "CY_DOT_Y [km**2/s]"
-                        },
-                        "CY_DOT_Z": {
-                            "type": "number",
-                            "description": "CY_DOT_Z [km**2/s]"
-                        },
-                        "CY_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CY_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_Y_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_X": {
-                            "type": "number",
-                            "description": "CZ_DOT_X [km**2/s]"
-                        },
-                        "CZ_DOT_Y": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y [km**2/s]"
-                        },
-                        "CZ_DOT_Z": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z [km**2/s]"
-                        },
-                        "CZ_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_X_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y_DOT [km**2/s**2]"
-                        },
-                        "CZ_DOT_Z_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z_DOT [km**2/s**2]"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -33060,24 +32514,6 @@
                         "TRK_CONF": {
                             "type": "number"
                         },
-                        "ECEF_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ECEF_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ECEF_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
                         "LAT": {
                             "type": "number"
                         },
@@ -33095,60 +32531,6 @@
                         },
                         "COURSE": {
                             "type": "number"
-                        },
-                        "LCO": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LCS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "LC_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "E_NUVEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "E_NUPOS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "COV": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "ERR_ELLP": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
                         },
                         "SRC_TYPS": {
                             "type": "array",
@@ -33211,6 +32593,76 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        "TRACK_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for track data (ISO 8601 UTC format)."
+                        },
+                        "TRACK_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between track points in seconds."
+                        },
+                        "TRACK_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per point (default 3 for X, Y, Z)."
+                        },
+                        "ECEF_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]"
+                        },
+                        "ECEF_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]"
+                        },
+                        "ECEF_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]"
+                        },
+                        "LC_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate position as flat array"
+                        },
+                        "LC_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate velocity as flat array"
+                        },
+                        "LC_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate acceleration as flat array"
+                        },
+                        "COV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data (21 elements per point for 6x6 lower triangular)"
+                        },
+                        "ERR_ELLP": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Error ellipse data (6 elements per point)"
                         }
                     },
                     "additionalProperties": false
@@ -37152,6 +36604,14 @@
                             "type": "string",
                             "description": "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1"
                         },
+                        "OBSERVATION_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)"
+                        },
+                        "OBSERVATION_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for observation time reconstruction (ISO 8601 UTC format)."
+                        },
                         "CCSDS_TDM_VERS": {
                             "type": "string",
                             "description": "TDM version number -  CCSDS 503.0-B-1, Page D-9"
@@ -38091,23 +37551,33 @@
                             "type": "string",
                             "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED)."
                         },
+                        "STATE_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between state vectors in seconds (required for time-series data)."
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)"
+                        },
                         "STATE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "State vector data."
-                        },
-                        "PHYSICAL_PROPERTIES": {
-                            "$ref": "#/definitions/PhysicalProperties",
-                            "description": "Physical properties of the space object."
+                            "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE."
                         },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "Covariance data associated with the state vectors."
+                            "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs."
+                        },
+                        "PHYSICAL_PROPERTIES": {
+                            "$ref": "#/definitions/PhysicalProperties",
+                            "description": "Physical properties of the space object."
                         },
                         "MANEUVER_DATA": {
                             "type": "array",

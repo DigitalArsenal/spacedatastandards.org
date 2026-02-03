@@ -238,51 +238,7 @@ impl<'a> CDMObject<'a> {
   pub const VT_X_DOT: flatbuffers::VOffsetT = 70;
   pub const VT_Y_DOT: flatbuffers::VOffsetT = 72;
   pub const VT_Z_DOT: flatbuffers::VOffsetT = 74;
-  pub const VT_CR_R: flatbuffers::VOffsetT = 76;
-  pub const VT_CT_R: flatbuffers::VOffsetT = 78;
-  pub const VT_CT_T: flatbuffers::VOffsetT = 80;
-  pub const VT_CN_R: flatbuffers::VOffsetT = 82;
-  pub const VT_CN_T: flatbuffers::VOffsetT = 84;
-  pub const VT_CN_N: flatbuffers::VOffsetT = 86;
-  pub const VT_CRDOT_R: flatbuffers::VOffsetT = 88;
-  pub const VT_CRDOT_T: flatbuffers::VOffsetT = 90;
-  pub const VT_CRDOT_N: flatbuffers::VOffsetT = 92;
-  pub const VT_CRDOT_RDOT: flatbuffers::VOffsetT = 94;
-  pub const VT_CTDOT_R: flatbuffers::VOffsetT = 96;
-  pub const VT_CTDOT_T: flatbuffers::VOffsetT = 98;
-  pub const VT_CTDOT_N: flatbuffers::VOffsetT = 100;
-  pub const VT_CTDOT_RDOT: flatbuffers::VOffsetT = 102;
-  pub const VT_CTDOT_TDOT: flatbuffers::VOffsetT = 104;
-  pub const VT_CNDOT_R: flatbuffers::VOffsetT = 106;
-  pub const VT_CNDOT_T: flatbuffers::VOffsetT = 108;
-  pub const VT_CNDOT_N: flatbuffers::VOffsetT = 110;
-  pub const VT_CNDOT_RDOT: flatbuffers::VOffsetT = 112;
-  pub const VT_CNDOT_TDOT: flatbuffers::VOffsetT = 114;
-  pub const VT_CNDOT_NDOT: flatbuffers::VOffsetT = 116;
-  pub const VT_CDRG_R: flatbuffers::VOffsetT = 118;
-  pub const VT_CDRG_T: flatbuffers::VOffsetT = 120;
-  pub const VT_CDRG_N: flatbuffers::VOffsetT = 122;
-  pub const VT_CDRG_RDOT: flatbuffers::VOffsetT = 124;
-  pub const VT_CDRG_TDOT: flatbuffers::VOffsetT = 126;
-  pub const VT_CDRG_NDOT: flatbuffers::VOffsetT = 128;
-  pub const VT_CDRG_DRG: flatbuffers::VOffsetT = 130;
-  pub const VT_CSRP_R: flatbuffers::VOffsetT = 132;
-  pub const VT_CSRP_T: flatbuffers::VOffsetT = 134;
-  pub const VT_CSRP_N: flatbuffers::VOffsetT = 136;
-  pub const VT_CSRP_RDOT: flatbuffers::VOffsetT = 138;
-  pub const VT_CSRP_TDOT: flatbuffers::VOffsetT = 140;
-  pub const VT_CSRP_NDOT: flatbuffers::VOffsetT = 142;
-  pub const VT_CSRP_DRG: flatbuffers::VOffsetT = 144;
-  pub const VT_CSRP_SRP: flatbuffers::VOffsetT = 146;
-  pub const VT_CTHR_R: flatbuffers::VOffsetT = 148;
-  pub const VT_CTHR_T: flatbuffers::VOffsetT = 150;
-  pub const VT_CTHR_N: flatbuffers::VOffsetT = 152;
-  pub const VT_CTHR_RDOT: flatbuffers::VOffsetT = 154;
-  pub const VT_CTHR_TDOT: flatbuffers::VOffsetT = 156;
-  pub const VT_CTHR_NDOT: flatbuffers::VOffsetT = 158;
-  pub const VT_CTHR_DRG: flatbuffers::VOffsetT = 160;
-  pub const VT_CTHR_SRP: flatbuffers::VOffsetT = 162;
-  pub const VT_CTHR_THR: flatbuffers::VOffsetT = 164;
+  pub const VT_COVARIANCE: flatbuffers::VOffsetT = 76;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -294,51 +250,6 @@ impl<'a> CDMObject<'a> {
     args: &'args CDMObjectArgs<'args>
   ) -> flatbuffers::WIPOffset<CDMObject<'bldr>> {
     let mut builder = CDMObjectBuilder::new(_fbb);
-    builder.add_CTHR_THR(args.CTHR_THR);
-    builder.add_CTHR_SRP(args.CTHR_SRP);
-    builder.add_CTHR_DRG(args.CTHR_DRG);
-    builder.add_CTHR_NDOT(args.CTHR_NDOT);
-    builder.add_CTHR_TDOT(args.CTHR_TDOT);
-    builder.add_CTHR_RDOT(args.CTHR_RDOT);
-    builder.add_CTHR_N(args.CTHR_N);
-    builder.add_CTHR_T(args.CTHR_T);
-    builder.add_CTHR_R(args.CTHR_R);
-    builder.add_CSRP_SRP(args.CSRP_SRP);
-    builder.add_CSRP_DRG(args.CSRP_DRG);
-    builder.add_CSRP_NDOT(args.CSRP_NDOT);
-    builder.add_CSRP_TDOT(args.CSRP_TDOT);
-    builder.add_CSRP_RDOT(args.CSRP_RDOT);
-    builder.add_CSRP_N(args.CSRP_N);
-    builder.add_CSRP_T(args.CSRP_T);
-    builder.add_CSRP_R(args.CSRP_R);
-    builder.add_CDRG_DRG(args.CDRG_DRG);
-    builder.add_CDRG_NDOT(args.CDRG_NDOT);
-    builder.add_CDRG_TDOT(args.CDRG_TDOT);
-    builder.add_CDRG_RDOT(args.CDRG_RDOT);
-    builder.add_CDRG_N(args.CDRG_N);
-    builder.add_CDRG_T(args.CDRG_T);
-    builder.add_CDRG_R(args.CDRG_R);
-    builder.add_CNDOT_NDOT(args.CNDOT_NDOT);
-    builder.add_CNDOT_TDOT(args.CNDOT_TDOT);
-    builder.add_CNDOT_RDOT(args.CNDOT_RDOT);
-    builder.add_CNDOT_N(args.CNDOT_N);
-    builder.add_CNDOT_T(args.CNDOT_T);
-    builder.add_CNDOT_R(args.CNDOT_R);
-    builder.add_CTDOT_TDOT(args.CTDOT_TDOT);
-    builder.add_CTDOT_RDOT(args.CTDOT_RDOT);
-    builder.add_CTDOT_N(args.CTDOT_N);
-    builder.add_CTDOT_T(args.CTDOT_T);
-    builder.add_CTDOT_R(args.CTDOT_R);
-    builder.add_CRDOT_RDOT(args.CRDOT_RDOT);
-    builder.add_CRDOT_N(args.CRDOT_N);
-    builder.add_CRDOT_T(args.CRDOT_T);
-    builder.add_CRDOT_R(args.CRDOT_R);
-    builder.add_CN_N(args.CN_N);
-    builder.add_CN_T(args.CN_T);
-    builder.add_CN_R(args.CN_R);
-    builder.add_CT_T(args.CT_T);
-    builder.add_CT_R(args.CT_R);
-    builder.add_CR_R(args.CR_R);
     builder.add_Z_DOT(args.Z_DOT);
     builder.add_Y_DOT(args.Y_DOT);
     builder.add_X_DOT(args.X_DOT);
@@ -355,6 +266,7 @@ impl<'a> CDMObject<'a> {
     builder.add_RESIDUALS_ACCEPTED(args.RESIDUALS_ACCEPTED);
     builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
     builder.add_RECOMMENDED_OD_SPAN(args.RECOMMENDED_OD_SPAN);
+    if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
     builder.add_TRACKS_USED(args.TRACKS_USED);
     builder.add_TRACKS_AVAILABLE(args.TRACKS_AVAILABLE);
     builder.add_OBS_USED(args.OBS_USED);
@@ -439,51 +351,9 @@ impl<'a> CDMObject<'a> {
     let X_DOT = self.X_DOT();
     let Y_DOT = self.Y_DOT();
     let Z_DOT = self.Z_DOT();
-    let CR_R = self.CR_R();
-    let CT_R = self.CT_R();
-    let CT_T = self.CT_T();
-    let CN_R = self.CN_R();
-    let CN_T = self.CN_T();
-    let CN_N = self.CN_N();
-    let CRDOT_R = self.CRDOT_R();
-    let CRDOT_T = self.CRDOT_T();
-    let CRDOT_N = self.CRDOT_N();
-    let CRDOT_RDOT = self.CRDOT_RDOT();
-    let CTDOT_R = self.CTDOT_R();
-    let CTDOT_T = self.CTDOT_T();
-    let CTDOT_N = self.CTDOT_N();
-    let CTDOT_RDOT = self.CTDOT_RDOT();
-    let CTDOT_TDOT = self.CTDOT_TDOT();
-    let CNDOT_R = self.CNDOT_R();
-    let CNDOT_T = self.CNDOT_T();
-    let CNDOT_N = self.CNDOT_N();
-    let CNDOT_RDOT = self.CNDOT_RDOT();
-    let CNDOT_TDOT = self.CNDOT_TDOT();
-    let CNDOT_NDOT = self.CNDOT_NDOT();
-    let CDRG_R = self.CDRG_R();
-    let CDRG_T = self.CDRG_T();
-    let CDRG_N = self.CDRG_N();
-    let CDRG_RDOT = self.CDRG_RDOT();
-    let CDRG_TDOT = self.CDRG_TDOT();
-    let CDRG_NDOT = self.CDRG_NDOT();
-    let CDRG_DRG = self.CDRG_DRG();
-    let CSRP_R = self.CSRP_R();
-    let CSRP_T = self.CSRP_T();
-    let CSRP_N = self.CSRP_N();
-    let CSRP_RDOT = self.CSRP_RDOT();
-    let CSRP_TDOT = self.CSRP_TDOT();
-    let CSRP_NDOT = self.CSRP_NDOT();
-    let CSRP_DRG = self.CSRP_DRG();
-    let CSRP_SRP = self.CSRP_SRP();
-    let CTHR_R = self.CTHR_R();
-    let CTHR_T = self.CTHR_T();
-    let CTHR_N = self.CTHR_N();
-    let CTHR_RDOT = self.CTHR_RDOT();
-    let CTHR_TDOT = self.CTHR_TDOT();
-    let CTHR_NDOT = self.CTHR_NDOT();
-    let CTHR_DRG = self.CTHR_DRG();
-    let CTHR_SRP = self.CTHR_SRP();
-    let CTHR_THR = self.CTHR_THR();
+    let COVARIANCE = self.COVARIANCE().map(|x| {
+      x.into_iter().collect()
+    });
     CDMObjectT {
       COMMENT,
       OBJECT,
@@ -521,51 +391,7 @@ impl<'a> CDMObject<'a> {
       X_DOT,
       Y_DOT,
       Z_DOT,
-      CR_R,
-      CT_R,
-      CT_T,
-      CN_R,
-      CN_T,
-      CN_N,
-      CRDOT_R,
-      CRDOT_T,
-      CRDOT_N,
-      CRDOT_RDOT,
-      CTDOT_R,
-      CTDOT_T,
-      CTDOT_N,
-      CTDOT_RDOT,
-      CTDOT_TDOT,
-      CNDOT_R,
-      CNDOT_T,
-      CNDOT_N,
-      CNDOT_RDOT,
-      CNDOT_TDOT,
-      CNDOT_NDOT,
-      CDRG_R,
-      CDRG_T,
-      CDRG_N,
-      CDRG_RDOT,
-      CDRG_TDOT,
-      CDRG_NDOT,
-      CDRG_DRG,
-      CSRP_R,
-      CSRP_T,
-      CSRP_N,
-      CSRP_RDOT,
-      CSRP_TDOT,
-      CSRP_NDOT,
-      CSRP_DRG,
-      CSRP_SRP,
-      CTHR_R,
-      CTHR_T,
-      CTHR_N,
-      CTHR_RDOT,
-      CTHR_TDOT,
-      CTHR_NDOT,
-      CTHR_DRG,
-      CTHR_SRP,
-      CTHR_THR,
+      COVARIANCE,
     }
   }
 
@@ -856,365 +682,19 @@ impl<'a> CDMObject<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CDMObject::VT_Z_DOT, Some(0.0)).unwrap()}
   }
-  /// Covariance Matrix component
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
   #[inline]
-  pub fn CR_R(&self) -> f64 {
+  pub fn COVARIANCE(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CR_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CT_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CT_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CT_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CT_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CN_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CN_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CN_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CN_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CN_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CN_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CRDOT_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CRDOT_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CRDOT_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CRDOT_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CRDOT_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CRDOT_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CRDOT_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CRDOT_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTDOT_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTDOT_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTDOT_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTDOT_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTDOT_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTDOT_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTDOT_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTDOT_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTDOT_TDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTDOT_TDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_TDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_TDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CNDOT_NDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CNDOT_NDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_TDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_TDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_NDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_NDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CDRG_DRG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CDRG_DRG, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_TDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_TDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_NDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_NDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_DRG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_DRG, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CSRP_SRP(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CSRP_SRP, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_R(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_R, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_T(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_T, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_N(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_N, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_RDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_RDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_TDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_TDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_NDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_NDOT, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_DRG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_DRG, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_SRP(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_SRP, Some(0.0)).unwrap()}
-  }
-  /// Covariance Matrix component
-  #[inline]
-  pub fn CTHR_THR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(CDMObject::VT_CTHR_THR, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CDMObject::VT_COVARIANCE, None)}
   }
 }
 
@@ -1261,51 +741,7 @@ impl flatbuffers::Verifiable for CDMObject<'_> {
      .visit_field::<f64>("X_DOT", Self::VT_X_DOT, false)?
      .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
      .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
-     .visit_field::<f64>("CR_R", Self::VT_CR_R, false)?
-     .visit_field::<f64>("CT_R", Self::VT_CT_R, false)?
-     .visit_field::<f64>("CT_T", Self::VT_CT_T, false)?
-     .visit_field::<f64>("CN_R", Self::VT_CN_R, false)?
-     .visit_field::<f64>("CN_T", Self::VT_CN_T, false)?
-     .visit_field::<f64>("CN_N", Self::VT_CN_N, false)?
-     .visit_field::<f64>("CRDOT_R", Self::VT_CRDOT_R, false)?
-     .visit_field::<f64>("CRDOT_T", Self::VT_CRDOT_T, false)?
-     .visit_field::<f64>("CRDOT_N", Self::VT_CRDOT_N, false)?
-     .visit_field::<f64>("CRDOT_RDOT", Self::VT_CRDOT_RDOT, false)?
-     .visit_field::<f64>("CTDOT_R", Self::VT_CTDOT_R, false)?
-     .visit_field::<f64>("CTDOT_T", Self::VT_CTDOT_T, false)?
-     .visit_field::<f64>("CTDOT_N", Self::VT_CTDOT_N, false)?
-     .visit_field::<f64>("CTDOT_RDOT", Self::VT_CTDOT_RDOT, false)?
-     .visit_field::<f64>("CTDOT_TDOT", Self::VT_CTDOT_TDOT, false)?
-     .visit_field::<f64>("CNDOT_R", Self::VT_CNDOT_R, false)?
-     .visit_field::<f64>("CNDOT_T", Self::VT_CNDOT_T, false)?
-     .visit_field::<f64>("CNDOT_N", Self::VT_CNDOT_N, false)?
-     .visit_field::<f64>("CNDOT_RDOT", Self::VT_CNDOT_RDOT, false)?
-     .visit_field::<f64>("CNDOT_TDOT", Self::VT_CNDOT_TDOT, false)?
-     .visit_field::<f64>("CNDOT_NDOT", Self::VT_CNDOT_NDOT, false)?
-     .visit_field::<f64>("CDRG_R", Self::VT_CDRG_R, false)?
-     .visit_field::<f64>("CDRG_T", Self::VT_CDRG_T, false)?
-     .visit_field::<f64>("CDRG_N", Self::VT_CDRG_N, false)?
-     .visit_field::<f64>("CDRG_RDOT", Self::VT_CDRG_RDOT, false)?
-     .visit_field::<f64>("CDRG_TDOT", Self::VT_CDRG_TDOT, false)?
-     .visit_field::<f64>("CDRG_NDOT", Self::VT_CDRG_NDOT, false)?
-     .visit_field::<f64>("CDRG_DRG", Self::VT_CDRG_DRG, false)?
-     .visit_field::<f64>("CSRP_R", Self::VT_CSRP_R, false)?
-     .visit_field::<f64>("CSRP_T", Self::VT_CSRP_T, false)?
-     .visit_field::<f64>("CSRP_N", Self::VT_CSRP_N, false)?
-     .visit_field::<f64>("CSRP_RDOT", Self::VT_CSRP_RDOT, false)?
-     .visit_field::<f64>("CSRP_TDOT", Self::VT_CSRP_TDOT, false)?
-     .visit_field::<f64>("CSRP_NDOT", Self::VT_CSRP_NDOT, false)?
-     .visit_field::<f64>("CSRP_DRG", Self::VT_CSRP_DRG, false)?
-     .visit_field::<f64>("CSRP_SRP", Self::VT_CSRP_SRP, false)?
-     .visit_field::<f64>("CTHR_R", Self::VT_CTHR_R, false)?
-     .visit_field::<f64>("CTHR_T", Self::VT_CTHR_T, false)?
-     .visit_field::<f64>("CTHR_N", Self::VT_CTHR_N, false)?
-     .visit_field::<f64>("CTHR_RDOT", Self::VT_CTHR_RDOT, false)?
-     .visit_field::<f64>("CTHR_TDOT", Self::VT_CTHR_TDOT, false)?
-     .visit_field::<f64>("CTHR_NDOT", Self::VT_CTHR_NDOT, false)?
-     .visit_field::<f64>("CTHR_DRG", Self::VT_CTHR_DRG, false)?
-     .visit_field::<f64>("CTHR_SRP", Self::VT_CTHR_SRP, false)?
-     .visit_field::<f64>("CTHR_THR", Self::VT_CTHR_THR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
      .finish();
     Ok(())
   }
@@ -1347,51 +783,7 @@ pub struct CDMObjectArgs<'a> {
     pub X_DOT: f64,
     pub Y_DOT: f64,
     pub Z_DOT: f64,
-    pub CR_R: f64,
-    pub CT_R: f64,
-    pub CT_T: f64,
-    pub CN_R: f64,
-    pub CN_T: f64,
-    pub CN_N: f64,
-    pub CRDOT_R: f64,
-    pub CRDOT_T: f64,
-    pub CRDOT_N: f64,
-    pub CRDOT_RDOT: f64,
-    pub CTDOT_R: f64,
-    pub CTDOT_T: f64,
-    pub CTDOT_N: f64,
-    pub CTDOT_RDOT: f64,
-    pub CTDOT_TDOT: f64,
-    pub CNDOT_R: f64,
-    pub CNDOT_T: f64,
-    pub CNDOT_N: f64,
-    pub CNDOT_RDOT: f64,
-    pub CNDOT_TDOT: f64,
-    pub CNDOT_NDOT: f64,
-    pub CDRG_R: f64,
-    pub CDRG_T: f64,
-    pub CDRG_N: f64,
-    pub CDRG_RDOT: f64,
-    pub CDRG_TDOT: f64,
-    pub CDRG_NDOT: f64,
-    pub CDRG_DRG: f64,
-    pub CSRP_R: f64,
-    pub CSRP_T: f64,
-    pub CSRP_N: f64,
-    pub CSRP_RDOT: f64,
-    pub CSRP_TDOT: f64,
-    pub CSRP_NDOT: f64,
-    pub CSRP_DRG: f64,
-    pub CSRP_SRP: f64,
-    pub CTHR_R: f64,
-    pub CTHR_T: f64,
-    pub CTHR_N: f64,
-    pub CTHR_RDOT: f64,
-    pub CTHR_TDOT: f64,
-    pub CTHR_NDOT: f64,
-    pub CTHR_DRG: f64,
-    pub CTHR_SRP: f64,
-    pub CTHR_THR: f64,
+    pub COVARIANCE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for CDMObjectArgs<'a> {
   #[inline]
@@ -1433,51 +825,7 @@ impl<'a> Default for CDMObjectArgs<'a> {
       X_DOT: 0.0,
       Y_DOT: 0.0,
       Z_DOT: 0.0,
-      CR_R: 0.0,
-      CT_R: 0.0,
-      CT_T: 0.0,
-      CN_R: 0.0,
-      CN_T: 0.0,
-      CN_N: 0.0,
-      CRDOT_R: 0.0,
-      CRDOT_T: 0.0,
-      CRDOT_N: 0.0,
-      CRDOT_RDOT: 0.0,
-      CTDOT_R: 0.0,
-      CTDOT_T: 0.0,
-      CTDOT_N: 0.0,
-      CTDOT_RDOT: 0.0,
-      CTDOT_TDOT: 0.0,
-      CNDOT_R: 0.0,
-      CNDOT_T: 0.0,
-      CNDOT_N: 0.0,
-      CNDOT_RDOT: 0.0,
-      CNDOT_TDOT: 0.0,
-      CNDOT_NDOT: 0.0,
-      CDRG_R: 0.0,
-      CDRG_T: 0.0,
-      CDRG_N: 0.0,
-      CDRG_RDOT: 0.0,
-      CDRG_TDOT: 0.0,
-      CDRG_NDOT: 0.0,
-      CDRG_DRG: 0.0,
-      CSRP_R: 0.0,
-      CSRP_T: 0.0,
-      CSRP_N: 0.0,
-      CSRP_RDOT: 0.0,
-      CSRP_TDOT: 0.0,
-      CSRP_NDOT: 0.0,
-      CSRP_DRG: 0.0,
-      CSRP_SRP: 0.0,
-      CTHR_R: 0.0,
-      CTHR_T: 0.0,
-      CTHR_N: 0.0,
-      CTHR_RDOT: 0.0,
-      CTHR_TDOT: 0.0,
-      CTHR_NDOT: 0.0,
-      CTHR_DRG: 0.0,
-      CTHR_SRP: 0.0,
-      CTHR_THR: 0.0,
+      COVARIANCE: None,
     }
   }
 }
@@ -1632,184 +980,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CDMObjectBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(CDMObject::VT_Z_DOT, Z_DOT, 0.0);
   }
   #[inline]
-  pub fn add_CR_R(&mut self, CR_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CR_R, CR_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CT_R(&mut self, CT_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CT_R, CT_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CT_T(&mut self, CT_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CT_T, CT_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CN_R(&mut self, CN_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CN_R, CN_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CN_T(&mut self, CN_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CN_T, CN_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CN_N(&mut self, CN_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CN_N, CN_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CRDOT_R(&mut self, CRDOT_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CRDOT_R, CRDOT_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CRDOT_T(&mut self, CRDOT_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CRDOT_T, CRDOT_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CRDOT_N(&mut self, CRDOT_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CRDOT_N, CRDOT_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CRDOT_RDOT(&mut self, CRDOT_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CRDOT_RDOT, CRDOT_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CTDOT_R(&mut self, CTDOT_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTDOT_R, CTDOT_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CTDOT_T(&mut self, CTDOT_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTDOT_T, CTDOT_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CTDOT_N(&mut self, CTDOT_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTDOT_N, CTDOT_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CTDOT_RDOT(&mut self, CTDOT_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTDOT_RDOT, CTDOT_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CTDOT_TDOT(&mut self, CTDOT_TDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTDOT_TDOT, CTDOT_TDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_R(&mut self, CNDOT_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_R, CNDOT_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_T(&mut self, CNDOT_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_T, CNDOT_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_N(&mut self, CNDOT_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_N, CNDOT_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_RDOT(&mut self, CNDOT_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_RDOT, CNDOT_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_TDOT(&mut self, CNDOT_TDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_TDOT, CNDOT_TDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CNDOT_NDOT(&mut self, CNDOT_NDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CNDOT_NDOT, CNDOT_NDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_R(&mut self, CDRG_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_R, CDRG_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_T(&mut self, CDRG_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_T, CDRG_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_N(&mut self, CDRG_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_N, CDRG_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_RDOT(&mut self, CDRG_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_RDOT, CDRG_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_TDOT(&mut self, CDRG_TDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_TDOT, CDRG_TDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_NDOT(&mut self, CDRG_NDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_NDOT, CDRG_NDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CDRG_DRG(&mut self, CDRG_DRG: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CDRG_DRG, CDRG_DRG, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_R(&mut self, CSRP_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_R, CSRP_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_T(&mut self, CSRP_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_T, CSRP_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_N(&mut self, CSRP_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_N, CSRP_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_RDOT(&mut self, CSRP_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_RDOT, CSRP_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_TDOT(&mut self, CSRP_TDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_TDOT, CSRP_TDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_NDOT(&mut self, CSRP_NDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_NDOT, CSRP_NDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_DRG(&mut self, CSRP_DRG: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_DRG, CSRP_DRG, 0.0);
-  }
-  #[inline]
-  pub fn add_CSRP_SRP(&mut self, CSRP_SRP: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CSRP_SRP, CSRP_SRP, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_R(&mut self, CTHR_R: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_R, CTHR_R, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_T(&mut self, CTHR_T: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_T, CTHR_T, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_N(&mut self, CTHR_N: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_N, CTHR_N, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_RDOT(&mut self, CTHR_RDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_RDOT, CTHR_RDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_TDOT(&mut self, CTHR_TDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_TDOT, CTHR_TDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_NDOT(&mut self, CTHR_NDOT: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_NDOT, CTHR_NDOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_DRG(&mut self, CTHR_DRG: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_DRG, CTHR_DRG, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_SRP(&mut self, CTHR_SRP: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_SRP, CTHR_SRP, 0.0);
-  }
-  #[inline]
-  pub fn add_CTHR_THR(&mut self, CTHR_THR: f64) {
-    self.fbb_.push_slot::<f64>(CDMObject::VT_CTHR_THR, CTHR_THR, 0.0);
+  pub fn add_COVARIANCE(&mut self, COVARIANCE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CDMObject::VT_COVARIANCE, COVARIANCE);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CDMObjectBuilder<'a, 'b, A> {
@@ -1865,51 +1037,7 @@ impl core::fmt::Debug for CDMObject<'_> {
       ds.field("X_DOT", &self.X_DOT());
       ds.field("Y_DOT", &self.Y_DOT());
       ds.field("Z_DOT", &self.Z_DOT());
-      ds.field("CR_R", &self.CR_R());
-      ds.field("CT_R", &self.CT_R());
-      ds.field("CT_T", &self.CT_T());
-      ds.field("CN_R", &self.CN_R());
-      ds.field("CN_T", &self.CN_T());
-      ds.field("CN_N", &self.CN_N());
-      ds.field("CRDOT_R", &self.CRDOT_R());
-      ds.field("CRDOT_T", &self.CRDOT_T());
-      ds.field("CRDOT_N", &self.CRDOT_N());
-      ds.field("CRDOT_RDOT", &self.CRDOT_RDOT());
-      ds.field("CTDOT_R", &self.CTDOT_R());
-      ds.field("CTDOT_T", &self.CTDOT_T());
-      ds.field("CTDOT_N", &self.CTDOT_N());
-      ds.field("CTDOT_RDOT", &self.CTDOT_RDOT());
-      ds.field("CTDOT_TDOT", &self.CTDOT_TDOT());
-      ds.field("CNDOT_R", &self.CNDOT_R());
-      ds.field("CNDOT_T", &self.CNDOT_T());
-      ds.field("CNDOT_N", &self.CNDOT_N());
-      ds.field("CNDOT_RDOT", &self.CNDOT_RDOT());
-      ds.field("CNDOT_TDOT", &self.CNDOT_TDOT());
-      ds.field("CNDOT_NDOT", &self.CNDOT_NDOT());
-      ds.field("CDRG_R", &self.CDRG_R());
-      ds.field("CDRG_T", &self.CDRG_T());
-      ds.field("CDRG_N", &self.CDRG_N());
-      ds.field("CDRG_RDOT", &self.CDRG_RDOT());
-      ds.field("CDRG_TDOT", &self.CDRG_TDOT());
-      ds.field("CDRG_NDOT", &self.CDRG_NDOT());
-      ds.field("CDRG_DRG", &self.CDRG_DRG());
-      ds.field("CSRP_R", &self.CSRP_R());
-      ds.field("CSRP_T", &self.CSRP_T());
-      ds.field("CSRP_N", &self.CSRP_N());
-      ds.field("CSRP_RDOT", &self.CSRP_RDOT());
-      ds.field("CSRP_TDOT", &self.CSRP_TDOT());
-      ds.field("CSRP_NDOT", &self.CSRP_NDOT());
-      ds.field("CSRP_DRG", &self.CSRP_DRG());
-      ds.field("CSRP_SRP", &self.CSRP_SRP());
-      ds.field("CTHR_R", &self.CTHR_R());
-      ds.field("CTHR_T", &self.CTHR_T());
-      ds.field("CTHR_N", &self.CTHR_N());
-      ds.field("CTHR_RDOT", &self.CTHR_RDOT());
-      ds.field("CTHR_TDOT", &self.CTHR_TDOT());
-      ds.field("CTHR_NDOT", &self.CTHR_NDOT());
-      ds.field("CTHR_DRG", &self.CTHR_DRG());
-      ds.field("CTHR_SRP", &self.CTHR_SRP());
-      ds.field("CTHR_THR", &self.CTHR_THR());
+      ds.field("COVARIANCE", &self.COVARIANCE());
       ds.finish()
   }
 }
@@ -1952,51 +1080,7 @@ pub struct CDMObjectT {
   pub X_DOT: f64,
   pub Y_DOT: f64,
   pub Z_DOT: f64,
-  pub CR_R: f64,
-  pub CT_R: f64,
-  pub CT_T: f64,
-  pub CN_R: f64,
-  pub CN_T: f64,
-  pub CN_N: f64,
-  pub CRDOT_R: f64,
-  pub CRDOT_T: f64,
-  pub CRDOT_N: f64,
-  pub CRDOT_RDOT: f64,
-  pub CTDOT_R: f64,
-  pub CTDOT_T: f64,
-  pub CTDOT_N: f64,
-  pub CTDOT_RDOT: f64,
-  pub CTDOT_TDOT: f64,
-  pub CNDOT_R: f64,
-  pub CNDOT_T: f64,
-  pub CNDOT_N: f64,
-  pub CNDOT_RDOT: f64,
-  pub CNDOT_TDOT: f64,
-  pub CNDOT_NDOT: f64,
-  pub CDRG_R: f64,
-  pub CDRG_T: f64,
-  pub CDRG_N: f64,
-  pub CDRG_RDOT: f64,
-  pub CDRG_TDOT: f64,
-  pub CDRG_NDOT: f64,
-  pub CDRG_DRG: f64,
-  pub CSRP_R: f64,
-  pub CSRP_T: f64,
-  pub CSRP_N: f64,
-  pub CSRP_RDOT: f64,
-  pub CSRP_TDOT: f64,
-  pub CSRP_NDOT: f64,
-  pub CSRP_DRG: f64,
-  pub CSRP_SRP: f64,
-  pub CTHR_R: f64,
-  pub CTHR_T: f64,
-  pub CTHR_N: f64,
-  pub CTHR_RDOT: f64,
-  pub CTHR_TDOT: f64,
-  pub CTHR_NDOT: f64,
-  pub CTHR_DRG: f64,
-  pub CTHR_SRP: f64,
-  pub CTHR_THR: f64,
+  pub COVARIANCE: Option<Vec<f64>>,
 }
 impl Default for CDMObjectT {
   fn default() -> Self {
@@ -2037,51 +1121,7 @@ impl Default for CDMObjectT {
       X_DOT: 0.0,
       Y_DOT: 0.0,
       Z_DOT: 0.0,
-      CR_R: 0.0,
-      CT_R: 0.0,
-      CT_T: 0.0,
-      CN_R: 0.0,
-      CN_T: 0.0,
-      CN_N: 0.0,
-      CRDOT_R: 0.0,
-      CRDOT_T: 0.0,
-      CRDOT_N: 0.0,
-      CRDOT_RDOT: 0.0,
-      CTDOT_R: 0.0,
-      CTDOT_T: 0.0,
-      CTDOT_N: 0.0,
-      CTDOT_RDOT: 0.0,
-      CTDOT_TDOT: 0.0,
-      CNDOT_R: 0.0,
-      CNDOT_T: 0.0,
-      CNDOT_N: 0.0,
-      CNDOT_RDOT: 0.0,
-      CNDOT_TDOT: 0.0,
-      CNDOT_NDOT: 0.0,
-      CDRG_R: 0.0,
-      CDRG_T: 0.0,
-      CDRG_N: 0.0,
-      CDRG_RDOT: 0.0,
-      CDRG_TDOT: 0.0,
-      CDRG_NDOT: 0.0,
-      CDRG_DRG: 0.0,
-      CSRP_R: 0.0,
-      CSRP_T: 0.0,
-      CSRP_N: 0.0,
-      CSRP_RDOT: 0.0,
-      CSRP_TDOT: 0.0,
-      CSRP_NDOT: 0.0,
-      CSRP_DRG: 0.0,
-      CSRP_SRP: 0.0,
-      CTHR_R: 0.0,
-      CTHR_T: 0.0,
-      CTHR_N: 0.0,
-      CTHR_RDOT: 0.0,
-      CTHR_TDOT: 0.0,
-      CTHR_NDOT: 0.0,
-      CTHR_DRG: 0.0,
-      CTHR_SRP: 0.0,
-      CTHR_THR: 0.0,
+      COVARIANCE: None,
     }
   }
 }
@@ -2150,51 +1190,9 @@ impl CDMObjectT {
     let X_DOT = self.X_DOT;
     let Y_DOT = self.Y_DOT;
     let Z_DOT = self.Z_DOT;
-    let CR_R = self.CR_R;
-    let CT_R = self.CT_R;
-    let CT_T = self.CT_T;
-    let CN_R = self.CN_R;
-    let CN_T = self.CN_T;
-    let CN_N = self.CN_N;
-    let CRDOT_R = self.CRDOT_R;
-    let CRDOT_T = self.CRDOT_T;
-    let CRDOT_N = self.CRDOT_N;
-    let CRDOT_RDOT = self.CRDOT_RDOT;
-    let CTDOT_R = self.CTDOT_R;
-    let CTDOT_T = self.CTDOT_T;
-    let CTDOT_N = self.CTDOT_N;
-    let CTDOT_RDOT = self.CTDOT_RDOT;
-    let CTDOT_TDOT = self.CTDOT_TDOT;
-    let CNDOT_R = self.CNDOT_R;
-    let CNDOT_T = self.CNDOT_T;
-    let CNDOT_N = self.CNDOT_N;
-    let CNDOT_RDOT = self.CNDOT_RDOT;
-    let CNDOT_TDOT = self.CNDOT_TDOT;
-    let CNDOT_NDOT = self.CNDOT_NDOT;
-    let CDRG_R = self.CDRG_R;
-    let CDRG_T = self.CDRG_T;
-    let CDRG_N = self.CDRG_N;
-    let CDRG_RDOT = self.CDRG_RDOT;
-    let CDRG_TDOT = self.CDRG_TDOT;
-    let CDRG_NDOT = self.CDRG_NDOT;
-    let CDRG_DRG = self.CDRG_DRG;
-    let CSRP_R = self.CSRP_R;
-    let CSRP_T = self.CSRP_T;
-    let CSRP_N = self.CSRP_N;
-    let CSRP_RDOT = self.CSRP_RDOT;
-    let CSRP_TDOT = self.CSRP_TDOT;
-    let CSRP_NDOT = self.CSRP_NDOT;
-    let CSRP_DRG = self.CSRP_DRG;
-    let CSRP_SRP = self.CSRP_SRP;
-    let CTHR_R = self.CTHR_R;
-    let CTHR_T = self.CTHR_T;
-    let CTHR_N = self.CTHR_N;
-    let CTHR_RDOT = self.CTHR_RDOT;
-    let CTHR_TDOT = self.CTHR_TDOT;
-    let CTHR_NDOT = self.CTHR_NDOT;
-    let CTHR_DRG = self.CTHR_DRG;
-    let CTHR_SRP = self.CTHR_SRP;
-    let CTHR_THR = self.CTHR_THR;
+    let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     CDMObject::create(_fbb, &CDMObjectArgs{
       COMMENT,
       OBJECT,
@@ -2232,51 +1230,7 @@ impl CDMObjectT {
       X_DOT,
       Y_DOT,
       Z_DOT,
-      CR_R,
-      CT_R,
-      CT_T,
-      CN_R,
-      CN_T,
-      CN_N,
-      CRDOT_R,
-      CRDOT_T,
-      CRDOT_N,
-      CRDOT_RDOT,
-      CTDOT_R,
-      CTDOT_T,
-      CTDOT_N,
-      CTDOT_RDOT,
-      CTDOT_TDOT,
-      CNDOT_R,
-      CNDOT_T,
-      CNDOT_N,
-      CNDOT_RDOT,
-      CNDOT_TDOT,
-      CNDOT_NDOT,
-      CDRG_R,
-      CDRG_T,
-      CDRG_N,
-      CDRG_RDOT,
-      CDRG_TDOT,
-      CDRG_NDOT,
-      CDRG_DRG,
-      CSRP_R,
-      CSRP_T,
-      CSRP_N,
-      CSRP_RDOT,
-      CSRP_TDOT,
-      CSRP_NDOT,
-      CSRP_DRG,
-      CSRP_SRP,
-      CTHR_R,
-      CTHR_T,
-      CTHR_N,
-      CTHR_RDOT,
-      CTHR_TDOT,
-      CTHR_NDOT,
-      CTHR_DRG,
-      CTHR_SRP,
-      CTHR_THR,
+      COVARIANCE,
     })
   }
 }

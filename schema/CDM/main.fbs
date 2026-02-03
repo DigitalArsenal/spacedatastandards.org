@@ -1,5 +1,5 @@
-// Hash: a1ea2fb507304e144950ef981c89a09b1ab82d0d7c19147c948b8a666b74d4d7
-// Version: 1.0.2
+// Hash: dc0df88021ffae26723fc9f74db6af59116b380e2e01a020bfaecb78c70624ac
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
@@ -89,99 +89,14 @@ table CDMObject {
   Y_DOT:double;
   /// Z-coordinate of the object's position in RTN
   Z_DOT:double;
-  
-  // (Covariance Matrix 9×9 Lower Triangular Form. All parameters of the 6×6 position/velocity submatrix must be given)
-
-  /// Covariance Matrix component
-  CR_R:double;
-  /// Covariance Matrix component
-  CT_R:double;
-  /// Covariance Matrix component
-  CT_T:double;
-  /// Covariance Matrix component
-  CN_R:double;
-  /// Covariance Matrix component
-  CN_T:double;
-  /// Covariance Matrix component
-  CN_N:double;
-  /// Covariance Matrix component
-  CRDOT_R:double;
-  /// Covariance Matrix component
-  CRDOT_T:double;
-  /// Covariance Matrix component
-  CRDOT_N:double;
-  /// Covariance Matrix component
-  CRDOT_RDOT:double;
-  /// Covariance Matrix component
-  CTDOT_R:double;
-  /// Covariance Matrix component
-  CTDOT_T:double;
-  /// Covariance Matrix component
-  CTDOT_N:double;
-  /// Covariance Matrix component
-  CTDOT_RDOT:double;
-  /// Covariance Matrix component
-  CTDOT_TDOT:double;
-  /// Covariance Matrix component
-  CNDOT_R:double;
-  /// Covariance Matrix component
-  CNDOT_T:double;
-  /// Covariance Matrix component
-  CNDOT_N:double;
-  /// Covariance Matrix component
-  CNDOT_RDOT:double;
-  /// Covariance Matrix component
-  CNDOT_TDOT:double;
-  /// Covariance Matrix component
-  CNDOT_NDOT:double;
-  /// Covariance Matrix component
-  CDRG_R:double;
-  /// Covariance Matrix component
-  CDRG_T:double;
-  /// Covariance Matrix component
-  CDRG_N:double;
-  /// Covariance Matrix component
-  CDRG_RDOT:double;
-  /// Covariance Matrix component
-  CDRG_TDOT:double;
-  /// Covariance Matrix component
-  CDRG_NDOT:double;
-  /// Covariance Matrix component
-  CDRG_DRG:double;
-  /// Covariance Matrix component
-  CSRP_R:double;
-  /// Covariance Matrix component
-  CSRP_T:double;
-  /// Covariance Matrix component
-  CSRP_N:double;
-  /// Covariance Matrix component
-  CSRP_RDOT:double;
-  /// Covariance Matrix component
-  CSRP_TDOT:double;
-  /// Covariance Matrix component
-  CSRP_NDOT:double;
-  /// Covariance Matrix component
-  CSRP_DRG:double;
-  /// Covariance Matrix component
-  CSRP_SRP:double;
-  /// Covariance Matrix component
-  CTHR_R:double;
-  /// Covariance Matrix component
-  CTHR_T:double;
-  /// Covariance Matrix component
-  CTHR_N:double;
-  /// Covariance Matrix component
-  CTHR_RDOT:double;
-  /// Covariance Matrix component
-  CTHR_TDOT:double;
-  /// Covariance Matrix component
-  CTHR_NDOT:double;
-  /// Covariance Matrix component
-  CTHR_DRG:double;
-  /// Covariance Matrix component
-  CTHR_SRP:double;
-  /// Covariance Matrix component
-  CTHR_THR:double;
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  COVARIANCE:[double];
 }
 
 /// Conjunction Data Message

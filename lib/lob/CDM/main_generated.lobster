@@ -124,148 +124,24 @@ class CDMObject : flatbuffers.handle
     /// Z-coordinate of the object's position in RTN
     def Z_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
-    /// Covariance Matrix component
-    def CR_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
-    /// Covariance Matrix component
-    def CT_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
-    /// Covariance Matrix component
-    def CT_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
-    /// Covariance Matrix component
-    def CN_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
-    /// Covariance Matrix component
-    def CN_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
-    /// Covariance Matrix component
-    def CN_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 86, 0.0)
-    /// Covariance Matrix component
-    def CRDOT_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 88, 0.0)
-    /// Covariance Matrix component
-    def CRDOT_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 90, 0.0)
-    /// Covariance Matrix component
-    def CRDOT_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
-    /// Covariance Matrix component
-    def CRDOT_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
-    /// Covariance Matrix component
-    def CTDOT_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
-    /// Covariance Matrix component
-    def CTDOT_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
-    /// Covariance Matrix component
-    def CTDOT_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 100, 0.0)
-    /// Covariance Matrix component
-    def CTDOT_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
-    /// Covariance Matrix component
-    def CTDOT_TDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 104, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 106, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 110, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 112, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_TDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 114, 0.0)
-    /// Covariance Matrix component
-    def CNDOT_NDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 116, 0.0)
-    /// Covariance Matrix component
-    def CDRG_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 118, 0.0)
-    /// Covariance Matrix component
-    def CDRG_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 120, 0.0)
-    /// Covariance Matrix component
-    def CDRG_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 122, 0.0)
-    /// Covariance Matrix component
-    def CDRG_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 124, 0.0)
-    /// Covariance Matrix component
-    def CDRG_TDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 126, 0.0)
-    /// Covariance Matrix component
-    def CDRG_NDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 128, 0.0)
-    /// Covariance Matrix component
-    def CDRG_DRG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 130, 0.0)
-    /// Covariance Matrix component
-    def CSRP_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 132, 0.0)
-    /// Covariance Matrix component
-    def CSRP_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 134, 0.0)
-    /// Covariance Matrix component
-    def CSRP_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 136, 0.0)
-    /// Covariance Matrix component
-    def CSRP_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 138, 0.0)
-    /// Covariance Matrix component
-    def CSRP_TDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 140, 0.0)
-    /// Covariance Matrix component
-    def CSRP_NDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 142, 0.0)
-    /// Covariance Matrix component
-    def CSRP_DRG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 144, 0.0)
-    /// Covariance Matrix component
-    def CSRP_SRP() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 146, 0.0)
-    /// Covariance Matrix component
-    def CTHR_R() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 148, 0.0)
-    /// Covariance Matrix component
-    def CTHR_T() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 150, 0.0)
-    /// Covariance Matrix component
-    def CTHR_N() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 152, 0.0)
-    /// Covariance Matrix component
-    def CTHR_RDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 154, 0.0)
-    /// Covariance Matrix component
-    def CTHR_TDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 156, 0.0)
-    /// Covariance Matrix component
-    def CTHR_NDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 158, 0.0)
-    /// Covariance Matrix component
-    def CTHR_DRG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 160, 0.0)
-    /// Covariance Matrix component
-    def CTHR_SRP() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 162, 0.0)
-    /// Covariance Matrix component
-    def CTHR_THR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 164, 0.0)
+    /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+    /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+    ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+    ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+    ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+    ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+    ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+    def COVARIANCE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 76) + i * 8)
+    def COVARIANCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 76)
 
 def GetRootAsCDMObject(buf:string): return CDMObject { buf, flatbuffers.indirect(buf, 0) }
 
 struct CDMObjectBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(81)
+        b_.StartObject(37)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -375,143 +251,18 @@ struct CDMObjectBuilder:
     def add_Z_DOT(Z_DOT:float):
         b_.PrependFloat64Slot(35, Z_DOT, 0.0)
         return this
-    def add_CR_R(CR_R:float):
-        b_.PrependFloat64Slot(36, CR_R, 0.0)
-        return this
-    def add_CT_R(CT_R:float):
-        b_.PrependFloat64Slot(37, CT_R, 0.0)
-        return this
-    def add_CT_T(CT_T:float):
-        b_.PrependFloat64Slot(38, CT_T, 0.0)
-        return this
-    def add_CN_R(CN_R:float):
-        b_.PrependFloat64Slot(39, CN_R, 0.0)
-        return this
-    def add_CN_T(CN_T:float):
-        b_.PrependFloat64Slot(40, CN_T, 0.0)
-        return this
-    def add_CN_N(CN_N:float):
-        b_.PrependFloat64Slot(41, CN_N, 0.0)
-        return this
-    def add_CRDOT_R(CRDOT_R:float):
-        b_.PrependFloat64Slot(42, CRDOT_R, 0.0)
-        return this
-    def add_CRDOT_T(CRDOT_T:float):
-        b_.PrependFloat64Slot(43, CRDOT_T, 0.0)
-        return this
-    def add_CRDOT_N(CRDOT_N:float):
-        b_.PrependFloat64Slot(44, CRDOT_N, 0.0)
-        return this
-    def add_CRDOT_RDOT(CRDOT_RDOT:float):
-        b_.PrependFloat64Slot(45, CRDOT_RDOT, 0.0)
-        return this
-    def add_CTDOT_R(CTDOT_R:float):
-        b_.PrependFloat64Slot(46, CTDOT_R, 0.0)
-        return this
-    def add_CTDOT_T(CTDOT_T:float):
-        b_.PrependFloat64Slot(47, CTDOT_T, 0.0)
-        return this
-    def add_CTDOT_N(CTDOT_N:float):
-        b_.PrependFloat64Slot(48, CTDOT_N, 0.0)
-        return this
-    def add_CTDOT_RDOT(CTDOT_RDOT:float):
-        b_.PrependFloat64Slot(49, CTDOT_RDOT, 0.0)
-        return this
-    def add_CTDOT_TDOT(CTDOT_TDOT:float):
-        b_.PrependFloat64Slot(50, CTDOT_TDOT, 0.0)
-        return this
-    def add_CNDOT_R(CNDOT_R:float):
-        b_.PrependFloat64Slot(51, CNDOT_R, 0.0)
-        return this
-    def add_CNDOT_T(CNDOT_T:float):
-        b_.PrependFloat64Slot(52, CNDOT_T, 0.0)
-        return this
-    def add_CNDOT_N(CNDOT_N:float):
-        b_.PrependFloat64Slot(53, CNDOT_N, 0.0)
-        return this
-    def add_CNDOT_RDOT(CNDOT_RDOT:float):
-        b_.PrependFloat64Slot(54, CNDOT_RDOT, 0.0)
-        return this
-    def add_CNDOT_TDOT(CNDOT_TDOT:float):
-        b_.PrependFloat64Slot(55, CNDOT_TDOT, 0.0)
-        return this
-    def add_CNDOT_NDOT(CNDOT_NDOT:float):
-        b_.PrependFloat64Slot(56, CNDOT_NDOT, 0.0)
-        return this
-    def add_CDRG_R(CDRG_R:float):
-        b_.PrependFloat64Slot(57, CDRG_R, 0.0)
-        return this
-    def add_CDRG_T(CDRG_T:float):
-        b_.PrependFloat64Slot(58, CDRG_T, 0.0)
-        return this
-    def add_CDRG_N(CDRG_N:float):
-        b_.PrependFloat64Slot(59, CDRG_N, 0.0)
-        return this
-    def add_CDRG_RDOT(CDRG_RDOT:float):
-        b_.PrependFloat64Slot(60, CDRG_RDOT, 0.0)
-        return this
-    def add_CDRG_TDOT(CDRG_TDOT:float):
-        b_.PrependFloat64Slot(61, CDRG_TDOT, 0.0)
-        return this
-    def add_CDRG_NDOT(CDRG_NDOT:float):
-        b_.PrependFloat64Slot(62, CDRG_NDOT, 0.0)
-        return this
-    def add_CDRG_DRG(CDRG_DRG:float):
-        b_.PrependFloat64Slot(63, CDRG_DRG, 0.0)
-        return this
-    def add_CSRP_R(CSRP_R:float):
-        b_.PrependFloat64Slot(64, CSRP_R, 0.0)
-        return this
-    def add_CSRP_T(CSRP_T:float):
-        b_.PrependFloat64Slot(65, CSRP_T, 0.0)
-        return this
-    def add_CSRP_N(CSRP_N:float):
-        b_.PrependFloat64Slot(66, CSRP_N, 0.0)
-        return this
-    def add_CSRP_RDOT(CSRP_RDOT:float):
-        b_.PrependFloat64Slot(67, CSRP_RDOT, 0.0)
-        return this
-    def add_CSRP_TDOT(CSRP_TDOT:float):
-        b_.PrependFloat64Slot(68, CSRP_TDOT, 0.0)
-        return this
-    def add_CSRP_NDOT(CSRP_NDOT:float):
-        b_.PrependFloat64Slot(69, CSRP_NDOT, 0.0)
-        return this
-    def add_CSRP_DRG(CSRP_DRG:float):
-        b_.PrependFloat64Slot(70, CSRP_DRG, 0.0)
-        return this
-    def add_CSRP_SRP(CSRP_SRP:float):
-        b_.PrependFloat64Slot(71, CSRP_SRP, 0.0)
-        return this
-    def add_CTHR_R(CTHR_R:float):
-        b_.PrependFloat64Slot(72, CTHR_R, 0.0)
-        return this
-    def add_CTHR_T(CTHR_T:float):
-        b_.PrependFloat64Slot(73, CTHR_T, 0.0)
-        return this
-    def add_CTHR_N(CTHR_N:float):
-        b_.PrependFloat64Slot(74, CTHR_N, 0.0)
-        return this
-    def add_CTHR_RDOT(CTHR_RDOT:float):
-        b_.PrependFloat64Slot(75, CTHR_RDOT, 0.0)
-        return this
-    def add_CTHR_TDOT(CTHR_TDOT:float):
-        b_.PrependFloat64Slot(76, CTHR_TDOT, 0.0)
-        return this
-    def add_CTHR_NDOT(CTHR_NDOT:float):
-        b_.PrependFloat64Slot(77, CTHR_NDOT, 0.0)
-        return this
-    def add_CTHR_DRG(CTHR_DRG:float):
-        b_.PrependFloat64Slot(78, CTHR_DRG, 0.0)
-        return this
-    def add_CTHR_SRP(CTHR_SRP:float):
-        b_.PrependFloat64Slot(79, CTHR_SRP, 0.0)
-        return this
-    def add_CTHR_THR(CTHR_THR:float):
-        b_.PrependFloat64Slot(80, CTHR_THR, 0.0)
+    def add_COVARIANCE(COVARIANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, COVARIANCE)
         return this
     def end():
         return b_.EndObject()
+
+def CDMObjectStartCOVARIANCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CDMObjectCreateCOVARIANCEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 
 /// Conjunction Data Message
 class CDM : flatbuffers.handle

@@ -74,56 +74,64 @@ public struct VCM : IFlatbufferObject
   public double GM { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public VCMAtmosphericModelData? ATMOSPHERIC_MODEL_DATA { get { int o = __p.__offset(28); return o != 0 ? (VCMAtmosphericModelData?)(new VCMAtmosphericModelData()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public propagatorConfig? PROPAGATOR_SETTINGS { get { int o = __p.__offset(30); return o != 0 ? (propagatorConfig?)(new propagatorConfig()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public VCMCovarianceMatrixLine? COVARIANCE_MATRIX(int j) { int o = __p.__offset(32); return o != 0 ? (VCMCovarianceMatrixLine?)(new VCMCovarianceMatrixLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int COVARIANCE_MATRIXLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public uvwSigmas? UVW_SIGMAS { get { int o = __p.__offset(34); return o != 0 ? (uvwSigmas?)(new uvwSigmas()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public double MASS { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SOLAR_RAD_AREA { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SOLAR_RAD_COEFF { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DRAG_AREA { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DRAG_COEFF { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public perturbationStatus SRP { get { int o = __p.__offset(46); return o != 0 ? (perturbationStatus)__p.bb.GetSbyte(o + __p.bb_pos) : perturbationStatus.OFF; } }
-  public string CLASSIFICATION_TYPE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public uvwSigmas? UVW_SIGMAS { get { int o = __p.__offset(32); return o != 0 ? (uvwSigmas?)(new uvwSigmas()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public double MASS { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double SOLAR_RAD_AREA { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double SOLAR_RAD_COEFF { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double DRAG_AREA { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double DRAG_COEFF { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public perturbationStatus SRP { get { int o = __p.__offset(44); return o != 0 ? (perturbationStatus)__p.bb.GetSbyte(o + __p.bb_pos) : perturbationStatus.OFF; } }
+  public string CLASSIFICATION_TYPE { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_span<byte>(48, 1); }
+  public Span<byte> GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_span<byte>(46, 1); }
 #else
-  public ArraySegment<byte>? GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_arraysegment(48); }
+  public ArraySegment<byte>? GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
-  public byte[] GetCLASSIFICATION_TYPEArray() { return __p.__vector_as_array<byte>(48); }
-  public uint NORAD_CAT_ID { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public uint ELEMENT_SET_NO { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public double REV_AT_EPOCH { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BSTAR { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MEAN_MOTION_DOT { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string COV_REFERENCE_FRAME { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCLASSIFICATION_TYPEArray() { return __p.__vector_as_array<byte>(46); }
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint ELEMENT_SET_NO { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public double REV_AT_EPOCH { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double BSTAR { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MEAN_MOTION_DOT { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public string COV_REFERENCE_FRAME { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOV_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+  public Span<byte> GetCOV_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetCOV_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(62); }
+  public ArraySegment<byte>? GetCOV_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetCOV_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(62); }
-  public double CX_X { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CY_X { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CZ_X { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CX_DOT_X { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public uint USER_DEFINED_BIP_0044_TYPE { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public string USER_DEFINED_OBJECT_DESIGNATOR { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOV_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(60); }
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public double COVARIANCE(int j) { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCELength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(74, 1); }
+  public Span<double> GetCOVARIANCEBytes() { return __p.__vector_as_span<double>(62, 8); }
 #else
-  public ArraySegment<byte>? GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(74); }
+  public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetUSER_DEFINED_OBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(74); }
-  public string USER_DEFINED_EARTH_MODEL { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(62); }
+  public uint USER_DEFINED_BIP_0044_TYPE { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public string USER_DEFINED_OBJECT_DESIGNATOR { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_span<byte>(76, 1); }
+  public Span<byte> GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(66, 1); }
 #else
-  public ArraySegment<byte>? GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_arraysegment(76); }
+  public ArraySegment<byte>? GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(66); }
 #endif
-  public byte[] GetUSER_DEFINED_EARTH_MODELArray() { return __p.__vector_as_array<byte>(76); }
-  public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetUSER_DEFINED_OBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(66); }
+  public string USER_DEFINED_EARTH_MODEL { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_span<byte>(68, 1); }
+#else
+  public ArraySegment<byte>? GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public byte[] GetUSER_DEFINED_EARTH_MODELArray() { return __p.__vector_as_array<byte>(68); }
+  public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<VCM> CreateVCM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS = 0.0,
@@ -140,7 +148,6 @@ public struct VCM : IFlatbufferObject
       double GM = 0.0,
       Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATAOffset = default(Offset<VCMAtmosphericModelData>),
       Offset<propagatorConfig> PROPAGATOR_SETTINGSOffset = default(Offset<propagatorConfig>),
-      VectorOffset COVARIANCE_MATRIXOffset = default(VectorOffset),
       Offset<uvwSigmas> UVW_SIGMASOffset = default(Offset<uvwSigmas>),
       double MASS = 0.0,
       double SOLAR_RAD_AREA = 0.0,
@@ -156,22 +163,15 @@ public struct VCM : IFlatbufferObject
       double MEAN_MOTION_DOT = 0.0,
       double MEAN_MOTION_DDOT = 0.0,
       StringOffset COV_REFERENCE_FRAMEOffset = default(StringOffset),
-      double CX_X = 0.0,
-      double CY_X = 0.0,
-      double CZ_X = 0.0,
-      double CX_DOT_X = 0.0,
+      VectorOffset COVARIANCEOffset = default(VectorOffset),
       uint USER_DEFINED_BIP_0044_TYPE = 0,
       StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset = default(StringOffset),
       StringOffset USER_DEFINED_EARTH_MODELOffset = default(StringOffset),
       double USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
       double USER_DEFINED_MICROSECONDS = 0.0) {
-    builder.StartTable(39);
+    builder.StartTable(35);
     VCM.AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS);
     VCM.AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP);
-    VCM.AddCX_DOT_X(builder, CX_DOT_X);
-    VCM.AddCZ_X(builder, CZ_X);
-    VCM.AddCY_X(builder, CY_X);
-    VCM.AddCX_X(builder, CX_X);
     VCM.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
     VCM.AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT);
     VCM.AddBSTAR(builder, BSTAR);
@@ -186,12 +186,12 @@ public struct VCM : IFlatbufferObject
     VCM.AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset);
     VCM.AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     VCM.AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE);
+    VCM.AddCOVARIANCE(builder, COVARIANCEOffset);
     VCM.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset);
     VCM.AddELEMENT_SET_NO(builder, ELEMENT_SET_NO);
     VCM.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     VCM.AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset);
     VCM.AddUVW_SIGMAS(builder, UVW_SIGMASOffset);
-    VCM.AddCOVARIANCE_MATRIX(builder, COVARIANCE_MATRIXOffset);
     VCM.AddPROPAGATOR_SETTINGS(builder, PROPAGATOR_SETTINGSOffset);
     VCM.AddATMOSPHERIC_MODEL_DATA(builder, ATMOSPHERIC_MODEL_DATAOffset);
     VCM.AddEQUINOCTIAL_ELEMENTS(builder, EQUINOCTIAL_ELEMENTSOffset);
@@ -208,7 +208,7 @@ public struct VCM : IFlatbufferObject
     return VCM.EndVCM(builder);
   }
 
-  public static void StartVCM(FlatBufferBuilder builder) { builder.StartTable(39); }
+  public static void StartVCM(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddCCSDS_OMM_VERS(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.AddDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -223,36 +223,32 @@ public struct VCM : IFlatbufferObject
   public static void AddGM(FlatBufferBuilder builder, double GM) { builder.AddDouble(11, GM, 0.0); }
   public static void AddATMOSPHERIC_MODEL_DATA(FlatBufferBuilder builder, Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATAOffset) { builder.AddOffset(12, ATMOSPHERIC_MODEL_DATAOffset.Value, 0); }
   public static void AddPROPAGATOR_SETTINGS(FlatBufferBuilder builder, Offset<propagatorConfig> PROPAGATOR_SETTINGSOffset) { builder.AddOffset(13, PROPAGATOR_SETTINGSOffset.Value, 0); }
-  public static void AddCOVARIANCE_MATRIX(FlatBufferBuilder builder, VectorOffset COVARIANCE_MATRIXOffset) { builder.AddOffset(14, COVARIANCE_MATRIXOffset.Value, 0); }
-  public static VectorOffset CreateCOVARIANCE_MATRIXVector(FlatBufferBuilder builder, Offset<VCMCovarianceMatrixLine>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_MATRIXVectorBlock(FlatBufferBuilder builder, Offset<VCMCovarianceMatrixLine>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_MATRIXVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<VCMCovarianceMatrixLine>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_MATRIXVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<VCMCovarianceMatrixLine>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCOVARIANCE_MATRIXVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddUVW_SIGMAS(FlatBufferBuilder builder, Offset<uvwSigmas> UVW_SIGMASOffset) { builder.AddOffset(15, UVW_SIGMASOffset.Value, 0); }
-  public static void AddMASS(FlatBufferBuilder builder, double MASS) { builder.AddDouble(16, MASS, 0.0); }
-  public static void AddSOLAR_RAD_AREA(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.AddDouble(17, SOLAR_RAD_AREA, 0.0); }
-  public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(18, SOLAR_RAD_COEFF, 0.0); }
-  public static void AddDRAG_AREA(FlatBufferBuilder builder, double DRAG_AREA) { builder.AddDouble(19, DRAG_AREA, 0.0); }
-  public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(20, DRAG_COEFF, 0.0); }
-  public static void AddSRP(FlatBufferBuilder builder, perturbationStatus SRP) { builder.AddSbyte(21, (sbyte)SRP, 0); }
-  public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, StringOffset CLASSIFICATION_TYPEOffset) { builder.AddOffset(22, CLASSIFICATION_TYPEOffset.Value, 0); }
-  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(23, NORAD_CAT_ID, 0); }
-  public static void AddELEMENT_SET_NO(FlatBufferBuilder builder, uint ELEMENT_SET_NO) { builder.AddUint(24, ELEMENT_SET_NO, 0); }
-  public static void AddREV_AT_EPOCH(FlatBufferBuilder builder, double REV_AT_EPOCH) { builder.AddDouble(25, REV_AT_EPOCH, 0.0); }
-  public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(26, BSTAR, 0.0); }
-  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(27, MEAN_MOTION_DOT, 0.0); }
-  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(28, MEAN_MOTION_DDOT, 0.0); }
-  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset COV_REFERENCE_FRAMEOffset) { builder.AddOffset(29, COV_REFERENCE_FRAMEOffset.Value, 0); }
-  public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(30, CX_X, 0.0); }
-  public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(31, CY_X, 0.0); }
-  public static void AddCZ_X(FlatBufferBuilder builder, double CZ_X) { builder.AddDouble(32, CZ_X, 0.0); }
-  public static void AddCX_DOT_X(FlatBufferBuilder builder, double CX_DOT_X) { builder.AddDouble(33, CX_DOT_X, 0.0); }
-  public static void AddUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder builder, uint USER_DEFINED_BIP_0044_TYPE) { builder.AddUint(34, USER_DEFINED_BIP_0044_TYPE, 0); }
-  public static void AddUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.AddOffset(35, USER_DEFINED_OBJECT_DESIGNATOROffset.Value, 0); }
-  public static void AddUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder builder, StringOffset USER_DEFINED_EARTH_MODELOffset) { builder.AddOffset(36, USER_DEFINED_EARTH_MODELOffset.Value, 0); }
-  public static void AddUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.AddDouble(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
-  public static void AddUSER_DEFINED_MICROSECONDS(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.AddDouble(38, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void AddUVW_SIGMAS(FlatBufferBuilder builder, Offset<uvwSigmas> UVW_SIGMASOffset) { builder.AddOffset(14, UVW_SIGMASOffset.Value, 0); }
+  public static void AddMASS(FlatBufferBuilder builder, double MASS) { builder.AddDouble(15, MASS, 0.0); }
+  public static void AddSOLAR_RAD_AREA(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.AddDouble(16, SOLAR_RAD_AREA, 0.0); }
+  public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(17, SOLAR_RAD_COEFF, 0.0); }
+  public static void AddDRAG_AREA(FlatBufferBuilder builder, double DRAG_AREA) { builder.AddDouble(18, DRAG_AREA, 0.0); }
+  public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(19, DRAG_COEFF, 0.0); }
+  public static void AddSRP(FlatBufferBuilder builder, perturbationStatus SRP) { builder.AddSbyte(20, (sbyte)SRP, 0); }
+  public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, StringOffset CLASSIFICATION_TYPEOffset) { builder.AddOffset(21, CLASSIFICATION_TYPEOffset.Value, 0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(22, NORAD_CAT_ID, 0); }
+  public static void AddELEMENT_SET_NO(FlatBufferBuilder builder, uint ELEMENT_SET_NO) { builder.AddUint(23, ELEMENT_SET_NO, 0); }
+  public static void AddREV_AT_EPOCH(FlatBufferBuilder builder, double REV_AT_EPOCH) { builder.AddDouble(24, REV_AT_EPOCH, 0.0); }
+  public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(25, BSTAR, 0.0); }
+  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(26, MEAN_MOTION_DOT, 0.0); }
+  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(27, MEAN_MOTION_DDOT, 0.0); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset COV_REFERENCE_FRAMEOffset) { builder.AddOffset(28, COV_REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddCOVARIANCE(FlatBufferBuilder builder, VectorOffset COVARIANCEOffset) { builder.AddOffset(29, COVARIANCEOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder builder, uint USER_DEFINED_BIP_0044_TYPE) { builder.AddUint(30, USER_DEFINED_BIP_0044_TYPE, 0); }
+  public static void AddUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.AddOffset(31, USER_DEFINED_OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder builder, StringOffset USER_DEFINED_EARTH_MODELOffset) { builder.AddOffset(32, USER_DEFINED_EARTH_MODELOffset.Value, 0); }
+  public static void AddUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.AddDouble(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
+  public static void AddUSER_DEFINED_MICROSECONDS(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.AddDouble(34, USER_DEFINED_MICROSECONDS, 0.0); }
   public static Offset<VCM> EndVCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<VCM>(o);
@@ -279,8 +275,6 @@ public struct VCM : IFlatbufferObject
     _o.GM = this.GM;
     _o.ATMOSPHERIC_MODEL_DATA = this.ATMOSPHERIC_MODEL_DATA.HasValue ? this.ATMOSPHERIC_MODEL_DATA.Value.UnPack() : null;
     _o.PROPAGATOR_SETTINGS = this.PROPAGATOR_SETTINGS.HasValue ? this.PROPAGATOR_SETTINGS.Value.UnPack() : null;
-    _o.COVARIANCE_MATRIX = new List<VCMCovarianceMatrixLineT>();
-    for (var _j = 0; _j < this.COVARIANCE_MATRIXLength; ++_j) {_o.COVARIANCE_MATRIX.Add(this.COVARIANCE_MATRIX(_j).HasValue ? this.COVARIANCE_MATRIX(_j).Value.UnPack() : null);}
     _o.UVW_SIGMAS = this.UVW_SIGMAS.HasValue ? this.UVW_SIGMAS.Value.UnPack() : null;
     _o.MASS = this.MASS;
     _o.SOLAR_RAD_AREA = this.SOLAR_RAD_AREA;
@@ -296,10 +290,8 @@ public struct VCM : IFlatbufferObject
     _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT;
     _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT;
     _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME;
-    _o.CX_X = this.CX_X;
-    _o.CY_X = this.CY_X;
-    _o.CZ_X = this.CZ_X;
-    _o.CX_DOT_X = this.CX_DOT_X;
+    _o.COVARIANCE = new List<double>();
+    for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
     _o.USER_DEFINED_BIP_0044_TYPE = this.USER_DEFINED_BIP_0044_TYPE;
     _o.USER_DEFINED_OBJECT_DESIGNATOR = this.USER_DEFINED_OBJECT_DESIGNATOR;
     _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL;
@@ -320,15 +312,14 @@ public struct VCM : IFlatbufferObject
     var _EQUINOCTIAL_ELEMENTS = _o.EQUINOCTIAL_ELEMENTS == null ? default(Offset<equinoctialElements>) : equinoctialElements.Pack(builder, _o.EQUINOCTIAL_ELEMENTS);
     var _ATMOSPHERIC_MODEL_DATA = _o.ATMOSPHERIC_MODEL_DATA == null ? default(Offset<VCMAtmosphericModelData>) : VCMAtmosphericModelData.Pack(builder, _o.ATMOSPHERIC_MODEL_DATA);
     var _PROPAGATOR_SETTINGS = _o.PROPAGATOR_SETTINGS == null ? default(Offset<propagatorConfig>) : propagatorConfig.Pack(builder, _o.PROPAGATOR_SETTINGS);
-    var _COVARIANCE_MATRIX = default(VectorOffset);
-    if (_o.COVARIANCE_MATRIX != null) {
-      var __COVARIANCE_MATRIX = new Offset<VCMCovarianceMatrixLine>[_o.COVARIANCE_MATRIX.Count];
-      for (var _j = 0; _j < __COVARIANCE_MATRIX.Length; ++_j) { __COVARIANCE_MATRIX[_j] = VCMCovarianceMatrixLine.Pack(builder, _o.COVARIANCE_MATRIX[_j]); }
-      _COVARIANCE_MATRIX = CreateCOVARIANCE_MATRIXVector(builder, __COVARIANCE_MATRIX);
-    }
     var _UVW_SIGMAS = _o.UVW_SIGMAS == null ? default(Offset<uvwSigmas>) : uvwSigmas.Pack(builder, _o.UVW_SIGMAS);
     var _CLASSIFICATION_TYPE = _o.CLASSIFICATION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION_TYPE);
     var _COV_REFERENCE_FRAME = _o.COV_REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.COV_REFERENCE_FRAME);
+    var _COVARIANCE = default(VectorOffset);
+    if (_o.COVARIANCE != null) {
+      var __COVARIANCE = _o.COVARIANCE.ToArray();
+      _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
+    }
     var _USER_DEFINED_OBJECT_DESIGNATOR = _o.USER_DEFINED_OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_OBJECT_DESIGNATOR);
     var _USER_DEFINED_EARTH_MODEL = _o.USER_DEFINED_EARTH_MODEL == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_EARTH_MODEL);
     return CreateVCM(
@@ -347,7 +338,6 @@ public struct VCM : IFlatbufferObject
       _o.GM,
       _ATMOSPHERIC_MODEL_DATA,
       _PROPAGATOR_SETTINGS,
-      _COVARIANCE_MATRIX,
       _UVW_SIGMAS,
       _o.MASS,
       _o.SOLAR_RAD_AREA,
@@ -363,10 +353,7 @@ public struct VCM : IFlatbufferObject
       _o.MEAN_MOTION_DOT,
       _o.MEAN_MOTION_DDOT,
       _COV_REFERENCE_FRAME,
-      _o.CX_X,
-      _o.CY_X,
-      _o.CZ_X,
-      _o.CX_DOT_X,
+      _COVARIANCE,
       _o.USER_DEFINED_BIP_0044_TYPE,
       _USER_DEFINED_OBJECT_DESIGNATOR,
       _USER_DEFINED_EARTH_MODEL,
@@ -391,7 +378,6 @@ public class VCMT
   public double GM { get; set; }
   public VCMAtmosphericModelDataT ATMOSPHERIC_MODEL_DATA { get; set; }
   public propagatorConfigT PROPAGATOR_SETTINGS { get; set; }
-  public List<VCMCovarianceMatrixLineT> COVARIANCE_MATRIX { get; set; }
   public uvwSigmasT UVW_SIGMAS { get; set; }
   public double MASS { get; set; }
   public double SOLAR_RAD_AREA { get; set; }
@@ -407,10 +393,7 @@ public class VCMT
   public double MEAN_MOTION_DOT { get; set; }
   public double MEAN_MOTION_DDOT { get; set; }
   public string COV_REFERENCE_FRAME { get; set; }
-  public double CX_X { get; set; }
-  public double CY_X { get; set; }
-  public double CZ_X { get; set; }
-  public double CX_DOT_X { get; set; }
+  public List<double> COVARIANCE { get; set; }
   public uint USER_DEFINED_BIP_0044_TYPE { get; set; }
   public string USER_DEFINED_OBJECT_DESIGNATOR { get; set; }
   public string USER_DEFINED_EARTH_MODEL { get; set; }
@@ -432,7 +415,6 @@ public class VCMT
     this.GM = 0.0;
     this.ATMOSPHERIC_MODEL_DATA = null;
     this.PROPAGATOR_SETTINGS = null;
-    this.COVARIANCE_MATRIX = null;
     this.UVW_SIGMAS = null;
     this.MASS = 0.0;
     this.SOLAR_RAD_AREA = 0.0;
@@ -448,10 +430,7 @@ public class VCMT
     this.MEAN_MOTION_DOT = 0.0;
     this.MEAN_MOTION_DDOT = 0.0;
     this.COV_REFERENCE_FRAME = null;
-    this.CX_X = 0.0;
-    this.CY_X = 0.0;
-    this.CZ_X = 0.0;
-    this.CX_DOT_X = 0.0;
+    this.COVARIANCE = null;
     this.USER_DEFINED_BIP_0044_TYPE = 0;
     this.USER_DEFINED_OBJECT_DESIGNATOR = null;
     this.USER_DEFINED_EARTH_MODEL = null;
@@ -488,31 +467,27 @@ static public class VCMVerify
       && verifier.VerifyField(tablePos, 26 /*GM*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 28 /*ATMOSPHERIC_MODEL_DATA*/, VCMAtmosphericModelDataVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 30 /*PROPAGATOR_SETTINGS*/, propagatorConfigVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 32 /*COVARIANCE_MATRIX*/, VCMCovarianceMatrixLineVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 34 /*UVW_SIGMAS*/, uvwSigmasVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 36 /*MASS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*SOLAR_RAD_AREA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*DRAG_AREA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 44 /*DRAG_COEFF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*SRP*/, 1 /*perturbationStatus*/, 1, false)
-      && verifier.VerifyString(tablePos, 48 /*CLASSIFICATION_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 50 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 52 /*ELEMENT_SET_NO*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 54 /*REV_AT_EPOCH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*BSTAR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 60 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 62 /*COV_REFERENCE_FRAME*/, false)
-      && verifier.VerifyField(tablePos, 64 /*CX_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 66 /*CY_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 68 /*CZ_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*CX_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*USER_DEFINED_BIP_0044_TYPE*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyString(tablePos, 74 /*USER_DEFINED_OBJECT_DESIGNATOR*/, false)
-      && verifier.VerifyString(tablePos, 76 /*USER_DEFINED_EARTH_MODEL*/, false)
-      && verifier.VerifyField(tablePos, 78 /*USER_DEFINED_EPOCH_TIMESTAMP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 80 /*USER_DEFINED_MICROSECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 32 /*UVW_SIGMAS*/, uvwSigmasVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 34 /*MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*SOLAR_RAD_AREA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*DRAG_AREA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*DRAG_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*SRP*/, 1 /*perturbationStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 46 /*CLASSIFICATION_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 48 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*ELEMENT_SET_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 52 /*REV_AT_EPOCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*BSTAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 60 /*COV_REFERENCE_FRAME*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 62 /*COVARIANCE*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 64 /*USER_DEFINED_BIP_0044_TYPE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 66 /*USER_DEFINED_OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 68 /*USER_DEFINED_EARTH_MODEL*/, false)
+      && verifier.VerifyField(tablePos, 70 /*USER_DEFINED_EPOCH_TIMESTAMP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*USER_DEFINED_MICROSECONDS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

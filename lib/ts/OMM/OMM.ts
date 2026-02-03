@@ -36,7 +36,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * CCSDS OMM Version 
+ * CCSDS OMM Version
  */
 CCSDS_OMM_VERS():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
@@ -44,7 +44,7 @@ CCSDS_OMM_VERS():number {
 }
 
 /**
- * Creation Date (ISO 8601 UTC format) 
+ * Creation Date (ISO 8601 UTC format)
  */
 CREATION_DATE():string|null
 CREATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -54,7 +54,7 @@ CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Originator 
+ * Originator
  */
 ORIGINATOR():string|null
 ORIGINATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -296,7 +296,7 @@ REV_AT_EPOCH():number {
 }
 
 /**
- * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+ * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
  */
 BSTAR():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -304,7 +304,7 @@ BSTAR():number {
 }
 
 /**
- * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+ * MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
  */
 MEAN_MOTION_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
@@ -312,7 +312,7 @@ MEAN_MOTION_DOT():number {
 }
 
 /**
- * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+ * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
  */
 MEAN_MOTION_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
@@ -330,178 +330,33 @@ COV_REFERENCE_FRAME(obj?:RFM):RFM|null {
 }
 
 /**
- * CX_X [km**2]
+ * Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+ * Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+ *         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+ *         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+ *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+ * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
  */
-CX_X():number {
+COVARIANCE(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-/**
- * CY_X [km**2]
- */
-CY_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+covarianceLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-/**
- * CY_Y [km**2]
- */
-CY_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_X [km**2]
- */
-CZ_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_Y [km**2]
- */
-CZ_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_Z [km**2]
- */
-CZ_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CX_DOT_X [km**2/s]
- */
-CX_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CX_DOT_Y [km**2/s]
- */
-CX_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CX_DOT_Z [km**2/s]
- */
-CX_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CX_DOT_X_DOT [km**2/s**2]
- */
-CX_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CY_DOT_X [km**2/s]
- */
-CY_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CY_DOT_Y [km**2/s]
- */
-CY_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CY_DOT_Z [km**2/s]
- */
-CY_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CY_DOT_X_DOT [km**2/s**2]
- */
-CY_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CY_DOT_Y_DOT [km**2/s**2]
- */
-CY_DOT_Y_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_X [km**2/s]
- */
-CZ_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 102);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_Y [km**2/s]
- */
-CZ_DOT_Y():number {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_Z [km**2/s]
- */
-CZ_DOT_Z():number {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_X_DOT [km**2/s**2]
- */
-CZ_DOT_X_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 108);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_Y_DOT [km**2/s**2]
- */
-CZ_DOT_Y_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 110);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * CZ_DOT_Z_DOT [km**2/s**2]
- */
-CZ_DOT_Z_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 112);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+covarianceArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 /**
  * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
  */
 USER_DEFINED_BIP_0044_TYPE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 114);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -511,7 +366,7 @@ USER_DEFINED_BIP_0044_TYPE():number {
 USER_DEFINED_OBJECT_DESIGNATOR():string|null
 USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 116);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -521,7 +376,7 @@ USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
 USER_DEFINED_EARTH_MODEL():string|null
 USER_DEFINED_EARTH_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USER_DEFINED_EARTH_MODEL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -529,7 +384,7 @@ USER_DEFINED_EARTH_MODEL(optionalEncoding?:any):string|Uint8Array|null {
  * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
  */
 USER_DEFINED_EPOCH_TIMESTAMP():number {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
+  const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -537,12 +392,12 @@ USER_DEFINED_EPOCH_TIMESTAMP():number {
  * USER_DEFINED_MICROSECONDS [O, units per ICD]
  */
 USER_DEFINED_MICROSECONDS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 static startOMM(builder:flatbuffers.Builder) {
-  builder.startObject(60);
+  builder.startObject(40);
 }
 
 static addCcsdsOmmVers(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number) {
@@ -681,108 +536,45 @@ static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffs
   builder.addFieldOffset(33, COV_REFERENCE_FRAMEOffset, 0);
 }
 
-static addCxX(builder:flatbuffers.Builder, CX_X:number) {
-  builder.addFieldFloat64(34, CX_X, 0.0);
+static addCovariance(builder:flatbuffers.Builder, COVARIANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, COVARIANCEOffset, 0);
 }
 
-static addCyX(builder:flatbuffers.Builder, CY_X:number) {
-  builder.addFieldFloat64(35, CY_X, 0.0);
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
 }
 
-static addCyY(builder:flatbuffers.Builder, CY_Y:number) {
-  builder.addFieldFloat64(36, CY_Y, 0.0);
-}
-
-static addCzX(builder:flatbuffers.Builder, CZ_X:number) {
-  builder.addFieldFloat64(37, CZ_X, 0.0);
-}
-
-static addCzY(builder:flatbuffers.Builder, CZ_Y:number) {
-  builder.addFieldFloat64(38, CZ_Y, 0.0);
-}
-
-static addCzZ(builder:flatbuffers.Builder, CZ_Z:number) {
-  builder.addFieldFloat64(39, CZ_Z, 0.0);
-}
-
-static addCxDotX(builder:flatbuffers.Builder, CX_DOT_X:number) {
-  builder.addFieldFloat64(40, CX_DOT_X, 0.0);
-}
-
-static addCxDotY(builder:flatbuffers.Builder, CX_DOT_Y:number) {
-  builder.addFieldFloat64(41, CX_DOT_Y, 0.0);
-}
-
-static addCxDotZ(builder:flatbuffers.Builder, CX_DOT_Z:number) {
-  builder.addFieldFloat64(42, CX_DOT_Z, 0.0);
-}
-
-static addCxDotXDot(builder:flatbuffers.Builder, CX_DOT_X_DOT:number) {
-  builder.addFieldFloat64(43, CX_DOT_X_DOT, 0.0);
-}
-
-static addCyDotX(builder:flatbuffers.Builder, CY_DOT_X:number) {
-  builder.addFieldFloat64(44, CY_DOT_X, 0.0);
-}
-
-static addCyDotY(builder:flatbuffers.Builder, CY_DOT_Y:number) {
-  builder.addFieldFloat64(45, CY_DOT_Y, 0.0);
-}
-
-static addCyDotZ(builder:flatbuffers.Builder, CY_DOT_Z:number) {
-  builder.addFieldFloat64(46, CY_DOT_Z, 0.0);
-}
-
-static addCyDotXDot(builder:flatbuffers.Builder, CY_DOT_X_DOT:number) {
-  builder.addFieldFloat64(47, CY_DOT_X_DOT, 0.0);
-}
-
-static addCyDotYDot(builder:flatbuffers.Builder, CY_DOT_Y_DOT:number) {
-  builder.addFieldFloat64(48, CY_DOT_Y_DOT, 0.0);
-}
-
-static addCzDotX(builder:flatbuffers.Builder, CZ_DOT_X:number) {
-  builder.addFieldFloat64(49, CZ_DOT_X, 0.0);
-}
-
-static addCzDotY(builder:flatbuffers.Builder, CZ_DOT_Y:number) {
-  builder.addFieldFloat64(50, CZ_DOT_Y, 0.0);
-}
-
-static addCzDotZ(builder:flatbuffers.Builder, CZ_DOT_Z:number) {
-  builder.addFieldFloat64(51, CZ_DOT_Z, 0.0);
-}
-
-static addCzDotXDot(builder:flatbuffers.Builder, CZ_DOT_X_DOT:number) {
-  builder.addFieldFloat64(52, CZ_DOT_X_DOT, 0.0);
-}
-
-static addCzDotYDot(builder:flatbuffers.Builder, CZ_DOT_Y_DOT:number) {
-  builder.addFieldFloat64(53, CZ_DOT_Y_DOT, 0.0);
-}
-
-static addCzDotZDot(builder:flatbuffers.Builder, CZ_DOT_Z_DOT:number) {
-  builder.addFieldFloat64(54, CZ_DOT_Z_DOT, 0.0);
+static startCovarianceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
 }
 
 static addUserDefinedBip0044Type(builder:flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE:number) {
-  builder.addFieldInt32(55, USER_DEFINED_BIP_0044_TYPE, 0);
+  builder.addFieldInt32(35, USER_DEFINED_BIP_0044_TYPE, 0);
 }
 
 static addUserDefinedObjectDesignator(builder:flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(56, USER_DEFINED_OBJECT_DESIGNATOROffset, 0);
+  builder.addFieldOffset(36, USER_DEFINED_OBJECT_DESIGNATOROffset, 0);
 }
 
 static addUserDefinedEarthModel(builder:flatbuffers.Builder, USER_DEFINED_EARTH_MODELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(57, USER_DEFINED_EARTH_MODELOffset, 0);
+  builder.addFieldOffset(37, USER_DEFINED_EARTH_MODELOffset, 0);
 }
 
 static addUserDefinedEpochTimestamp(builder:flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP:number) {
-  builder.addFieldFloat64(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+  builder.addFieldFloat64(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
 }
 
 static addUserDefinedMicroseconds(builder:flatbuffers.Builder, USER_DEFINED_MICROSECONDS:number) {
-  builder.addFieldFloat64(59, USER_DEFINED_MICROSECONDS, 0.0);
+  builder.addFieldFloat64(39, USER_DEFINED_MICROSECONDS, 0.0);
 }
 
 static endOMM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -835,27 +627,7 @@ unpack(): OMMT {
     this.MEAN_MOTION_DOT(),
     this.MEAN_MOTION_DDOT(),
     (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null),
-    this.CX_X(),
-    this.CY_X(),
-    this.CY_Y(),
-    this.CZ_X(),
-    this.CZ_Y(),
-    this.CZ_Z(),
-    this.CX_DOT_X(),
-    this.CX_DOT_Y(),
-    this.CX_DOT_Z(),
-    this.CX_DOT_X_DOT(),
-    this.CY_DOT_X(),
-    this.CY_DOT_Y(),
-    this.CY_DOT_Z(),
-    this.CY_DOT_X_DOT(),
-    this.CY_DOT_Y_DOT(),
-    this.CZ_DOT_X(),
-    this.CZ_DOT_Y(),
-    this.CZ_DOT_Z(),
-    this.CZ_DOT_X_DOT(),
-    this.CZ_DOT_Y_DOT(),
-    this.CZ_DOT_Z_DOT(),
+    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength()),
     this.USER_DEFINED_BIP_0044_TYPE(),
     this.USER_DEFINED_OBJECT_DESIGNATOR(),
     this.USER_DEFINED_EARTH_MODEL(),
@@ -900,27 +672,7 @@ unpackTo(_o: OMMT): void {
   _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT();
   _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT();
   _o.COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null);
-  _o.CX_X = this.CX_X();
-  _o.CY_X = this.CY_X();
-  _o.CY_Y = this.CY_Y();
-  _o.CZ_X = this.CZ_X();
-  _o.CZ_Y = this.CZ_Y();
-  _o.CZ_Z = this.CZ_Z();
-  _o.CX_DOT_X = this.CX_DOT_X();
-  _o.CX_DOT_Y = this.CX_DOT_Y();
-  _o.CX_DOT_Z = this.CX_DOT_Z();
-  _o.CX_DOT_X_DOT = this.CX_DOT_X_DOT();
-  _o.CY_DOT_X = this.CY_DOT_X();
-  _o.CY_DOT_Y = this.CY_DOT_Y();
-  _o.CY_DOT_Z = this.CY_DOT_Z();
-  _o.CY_DOT_X_DOT = this.CY_DOT_X_DOT();
-  _o.CY_DOT_Y_DOT = this.CY_DOT_Y_DOT();
-  _o.CZ_DOT_X = this.CZ_DOT_X();
-  _o.CZ_DOT_Y = this.CZ_DOT_Y();
-  _o.CZ_DOT_Z = this.CZ_DOT_Z();
-  _o.CZ_DOT_X_DOT = this.CZ_DOT_X_DOT();
-  _o.CZ_DOT_Y_DOT = this.CZ_DOT_Y_DOT();
-  _o.CZ_DOT_Z_DOT = this.CZ_DOT_Z_DOT();
+  _o.COVARIANCE = this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength());
   _o.USER_DEFINED_BIP_0044_TYPE = this.USER_DEFINED_BIP_0044_TYPE();
   _o.USER_DEFINED_OBJECT_DESIGNATOR = this.USER_DEFINED_OBJECT_DESIGNATOR();
   _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL();
@@ -965,27 +717,7 @@ constructor(
   public MEAN_MOTION_DOT: number = 0.0,
   public MEAN_MOTION_DDOT: number = 0.0,
   public COV_REFERENCE_FRAME: RFMT|null = null,
-  public CX_X: number = 0.0,
-  public CY_X: number = 0.0,
-  public CY_Y: number = 0.0,
-  public CZ_X: number = 0.0,
-  public CZ_Y: number = 0.0,
-  public CZ_Z: number = 0.0,
-  public CX_DOT_X: number = 0.0,
-  public CX_DOT_Y: number = 0.0,
-  public CX_DOT_Z: number = 0.0,
-  public CX_DOT_X_DOT: number = 0.0,
-  public CY_DOT_X: number = 0.0,
-  public CY_DOT_Y: number = 0.0,
-  public CY_DOT_Z: number = 0.0,
-  public CY_DOT_X_DOT: number = 0.0,
-  public CY_DOT_Y_DOT: number = 0.0,
-  public CZ_DOT_X: number = 0.0,
-  public CZ_DOT_Y: number = 0.0,
-  public CZ_DOT_Z: number = 0.0,
-  public CZ_DOT_X_DOT: number = 0.0,
-  public CZ_DOT_Y_DOT: number = 0.0,
-  public CZ_DOT_Z_DOT: number = 0.0,
+  public COVARIANCE: (number)[] = [],
   public USER_DEFINED_BIP_0044_TYPE: number = 0,
   public USER_DEFINED_OBJECT_DESIGNATOR: string|Uint8Array|null = null,
   public USER_DEFINED_EARTH_MODEL: string|Uint8Array|null = null,
@@ -1006,6 +738,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
   const CLASSIFICATION_TYPE = (this.CLASSIFICATION_TYPE !== null ? builder.createString(this.CLASSIFICATION_TYPE!) : 0);
   const COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME !== null ? this.COV_REFERENCE_FRAME!.pack(builder) : 0);
+  const COVARIANCE = OMM.createCovarianceVector(builder, this.COVARIANCE);
   const USER_DEFINED_OBJECT_DESIGNATOR = (this.USER_DEFINED_OBJECT_DESIGNATOR !== null ? builder.createString(this.USER_DEFINED_OBJECT_DESIGNATOR!) : 0);
   const USER_DEFINED_EARTH_MODEL = (this.USER_DEFINED_EARTH_MODEL !== null ? builder.createString(this.USER_DEFINED_EARTH_MODEL!) : 0);
 
@@ -1044,27 +777,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OMM.addMeanMotionDot(builder, this.MEAN_MOTION_DOT);
   OMM.addMeanMotionDdot(builder, this.MEAN_MOTION_DDOT);
   OMM.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
-  OMM.addCxX(builder, this.CX_X);
-  OMM.addCyX(builder, this.CY_X);
-  OMM.addCyY(builder, this.CY_Y);
-  OMM.addCzX(builder, this.CZ_X);
-  OMM.addCzY(builder, this.CZ_Y);
-  OMM.addCzZ(builder, this.CZ_Z);
-  OMM.addCxDotX(builder, this.CX_DOT_X);
-  OMM.addCxDotY(builder, this.CX_DOT_Y);
-  OMM.addCxDotZ(builder, this.CX_DOT_Z);
-  OMM.addCxDotXDot(builder, this.CX_DOT_X_DOT);
-  OMM.addCyDotX(builder, this.CY_DOT_X);
-  OMM.addCyDotY(builder, this.CY_DOT_Y);
-  OMM.addCyDotZ(builder, this.CY_DOT_Z);
-  OMM.addCyDotXDot(builder, this.CY_DOT_X_DOT);
-  OMM.addCyDotYDot(builder, this.CY_DOT_Y_DOT);
-  OMM.addCzDotX(builder, this.CZ_DOT_X);
-  OMM.addCzDotY(builder, this.CZ_DOT_Y);
-  OMM.addCzDotZ(builder, this.CZ_DOT_Z);
-  OMM.addCzDotXDot(builder, this.CZ_DOT_X_DOT);
-  OMM.addCzDotYDot(builder, this.CZ_DOT_Y_DOT);
-  OMM.addCzDotZDot(builder, this.CZ_DOT_Z_DOT);
+  OMM.addCovariance(builder, COVARIANCE);
   OMM.addUserDefinedBip0044Type(builder, this.USER_DEFINED_BIP_0044_TYPE);
   OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOR);
   OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODEL);

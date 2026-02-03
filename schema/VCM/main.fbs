@@ -1,5 +1,5 @@
-// Hash: 8e522b102dc43b982b77cd5964a2973ca324bc51196c64ed5532cd6a5df8074b
-// Version: 1.2.6
+// Hash: 2a5425c3cce49d6bc1b1124445ec542ce9e46155d35a1823e5136b9209237a16
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -146,14 +146,6 @@ table VCMStateVector {
   Z_DOT: double;
 }
 
-/// VCM Covariance Matrix Line
-table VCMCovarianceMatrixLine {
-  CX_X: double;
-  CY_X: double;
-  CZ_X: double;
-  CX_DOT_X: double;
-}
-
 /// Keplerian Elements
 table keplerianElements {
   SEMI_MAJOR_AXIS: double; // km
@@ -218,7 +210,6 @@ table VCM {
   ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelData;
   PROPAGATOR_SETTINGS: propagatorConfig;
 
-  COVARIANCE_MATRIX: [VCMCovarianceMatrixLine];
   UVW_SIGMAS: uvwSigmas;
 
   // Spacecraft Parameters from OMM and OCM
@@ -240,10 +231,13 @@ table VCM {
 
   // Covariance Matrix for position/velocity
   COV_REFERENCE_FRAME: string;
-  CX_X: double;
-  CY_X: double;
-  CZ_X: double;
-  CX_DOT_X: double;
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  COVARIANCE:[double];
 
   // User-defined fields
   USER_DEFINED_BIP_0044_TYPE: uint;

@@ -61,44 +61,49 @@ public final class VCM extends Table {
   public VCMAtmosphericModelData ATMOSPHERIC_MODEL_DATA(VCMAtmosphericModelData obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public propagatorConfig PROPAGATOR_SETTINGS() { return PROPAGATOR_SETTINGS(new propagatorConfig()); }
   public propagatorConfig PROPAGATOR_SETTINGS(propagatorConfig obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public VCMCovarianceMatrixLine COVARIANCE_MATRIX(int j) { return COVARIANCE_MATRIX(new VCMCovarianceMatrixLine(), j); }
-  public VCMCovarianceMatrixLine COVARIANCE_MATRIX(VCMCovarianceMatrixLine obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int COVARIANCE_MATRIXLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
-  public VCMCovarianceMatrixLine.Vector covarianceMatrixVector() { return covarianceMatrixVector(new VCMCovarianceMatrixLine.Vector()); }
-  public VCMCovarianceMatrixLine.Vector covarianceMatrixVector(VCMCovarianceMatrixLine.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public uvwSigmas UVW_SIGMAS() { return UVW_SIGMAS(new uvwSigmas()); }
-  public uvwSigmas UVW_SIGMAS(uvwSigmas obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public double MASS() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SOLAR_RAD_AREA() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SOLAR_RAD_COEFF() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DRAG_AREA() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DRAG_COEFF() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public byte SRP() { int o = __offset(46); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  public String CLASSIFICATION_TYPE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CLASSIFICATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
-  public ByteBuffer CLASSIFICATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public long NORAD_CAT_ID() { int o = __offset(50); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public long ELEMENT_SET_NO() { int o = __offset(52); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public double REV_AT_EPOCH() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BSTAR() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MEAN_MOTION_DOT() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MEAN_MOTION_DDOT() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String COV_REFERENCE_FRAME() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COV_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer COV_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public double CX_X() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CY_X() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CZ_X() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CX_DOT_X() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public long USER_DEFINED_BIP_0044_TYPE() { int o = __offset(72); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public String USER_DEFINED_OBJECT_DESIGNATOR() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
-  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
-  public String USER_DEFINED_EARTH_MODEL() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer USER_DEFINED_EARTH_MODELAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
-  public ByteBuffer USER_DEFINED_EARTH_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
-  public double USER_DEFINED_EPOCH_TIMESTAMP() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double USER_DEFINED_MICROSECONDS() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public uvwSigmas UVW_SIGMAS(uvwSigmas obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public double MASS() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SOLAR_RAD_AREA() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SOLAR_RAD_COEFF() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double DRAG_AREA() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double DRAG_COEFF() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public byte SRP() { int o = __offset(44); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public String CLASSIFICATION_TYPE() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer CLASSIFICATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  public long NORAD_CAT_ID() { int o = __offset(48); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long ELEMENT_SET_NO() { int o = __offset(50); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public double REV_AT_EPOCH() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double BSTAR() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MEAN_MOTION_DOT() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MEAN_MOTION_DDOT() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public String COV_REFERENCE_FRAME() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer COV_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+   * Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+   *         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+   *         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+   *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+   * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+   */
+  public double COVARIANCE(int j) { int o = __offset(62); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCELength() { int o = __offset(62); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceVector() { return covarianceVector(new DoubleVector()); }
+  public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(62); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(62, 8); }
+  public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 8); }
+  public long USER_DEFINED_BIP_0044_TYPE() { int o = __offset(64); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public String USER_DEFINED_OBJECT_DESIGNATOR() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  public String USER_DEFINED_EARTH_MODEL() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer USER_DEFINED_EARTH_MODELAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer USER_DEFINED_EARTH_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  public double USER_DEFINED_EPOCH_TIMESTAMP() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double USER_DEFINED_MICROSECONDS() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createVCM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS,
@@ -115,7 +120,6 @@ public final class VCM extends Table {
       double GM,
       int ATMOSPHERIC_MODEL_DATAOffset,
       int PROPAGATOR_SETTINGSOffset,
-      int COVARIANCE_MATRIXOffset,
       int UVW_SIGMASOffset,
       double MASS,
       double SOLAR_RAD_AREA,
@@ -131,22 +135,15 @@ public final class VCM extends Table {
       double MEAN_MOTION_DOT,
       double MEAN_MOTION_DDOT,
       int COV_REFERENCE_FRAMEOffset,
-      double CX_X,
-      double CY_X,
-      double CZ_X,
-      double CX_DOT_X,
+      int COVARIANCEOffset,
       long USER_DEFINED_BIP_0044_TYPE,
       int USER_DEFINED_OBJECT_DESIGNATOROffset,
       int USER_DEFINED_EARTH_MODELOffset,
       double USER_DEFINED_EPOCH_TIMESTAMP,
       double USER_DEFINED_MICROSECONDS) {
-    builder.startTable(39);
+    builder.startTable(35);
     VCM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
     VCM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
-    VCM.addCxDotX(builder, CX_DOT_X);
-    VCM.addCzX(builder, CZ_X);
-    VCM.addCyX(builder, CY_X);
-    VCM.addCxX(builder, CX_X);
     VCM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
     VCM.addMeanMotionDot(builder, MEAN_MOTION_DOT);
     VCM.addBstar(builder, BSTAR);
@@ -161,12 +158,12 @@ public final class VCM extends Table {
     VCM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODELOffset);
     VCM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     VCM.addUserDefinedBip0044Type(builder, USER_DEFINED_BIP_0044_TYPE);
+    VCM.addCovariance(builder, COVARIANCEOffset);
     VCM.addCovReferenceFrame(builder, COV_REFERENCE_FRAMEOffset);
     VCM.addElementSetNo(builder, ELEMENT_SET_NO);
     VCM.addNoradCatId(builder, NORAD_CAT_ID);
     VCM.addClassificationType(builder, CLASSIFICATION_TYPEOffset);
     VCM.addUvwSigmas(builder, UVW_SIGMASOffset);
-    VCM.addCovarianceMatrix(builder, COVARIANCE_MATRIXOffset);
     VCM.addPropagatorSettings(builder, PROPAGATOR_SETTINGSOffset);
     VCM.addAtmosphericModelData(builder, ATMOSPHERIC_MODEL_DATAOffset);
     VCM.addEquinoctialElements(builder, EQUINOCTIAL_ELEMENTSOffset);
@@ -183,7 +180,7 @@ public final class VCM extends Table {
     return VCM.endVCM(builder);
   }
 
-  public static void startVCM(FlatBufferBuilder builder) { builder.startTable(39); }
+  public static void startVCM(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addCcsdsOmmVers(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.addDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -198,33 +195,29 @@ public final class VCM extends Table {
   public static void addGm(FlatBufferBuilder builder, double GM) { builder.addDouble(11, GM, 0.0); }
   public static void addAtmosphericModelData(FlatBufferBuilder builder, int ATMOSPHERIC_MODEL_DATAOffset) { builder.addOffset(12, ATMOSPHERIC_MODEL_DATAOffset, 0); }
   public static void addPropagatorSettings(FlatBufferBuilder builder, int PROPAGATOR_SETTINGSOffset) { builder.addOffset(13, PROPAGATOR_SETTINGSOffset, 0); }
-  public static void addCovarianceMatrix(FlatBufferBuilder builder, int COVARIANCE_MATRIXOffset) { builder.addOffset(14, COVARIANCE_MATRIXOffset, 0); }
-  public static int createCovarianceMatrixVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startCovarianceMatrixVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addUvwSigmas(FlatBufferBuilder builder, int UVW_SIGMASOffset) { builder.addOffset(15, UVW_SIGMASOffset, 0); }
-  public static void addMass(FlatBufferBuilder builder, double MASS) { builder.addDouble(16, MASS, 0.0); }
-  public static void addSolarRadArea(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.addDouble(17, SOLAR_RAD_AREA, 0.0); }
-  public static void addSolarRadCoeff(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.addDouble(18, SOLAR_RAD_COEFF, 0.0); }
-  public static void addDragArea(FlatBufferBuilder builder, double DRAG_AREA) { builder.addDouble(19, DRAG_AREA, 0.0); }
-  public static void addDragCoeff(FlatBufferBuilder builder, double DRAG_COEFF) { builder.addDouble(20, DRAG_COEFF, 0.0); }
-  public static void addSrp(FlatBufferBuilder builder, byte SRP) { builder.addByte(21, SRP, 0); }
-  public static void addClassificationType(FlatBufferBuilder builder, int CLASSIFICATION_TYPEOffset) { builder.addOffset(22, CLASSIFICATION_TYPEOffset, 0); }
-  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(23, (int) NORAD_CAT_ID, (int) 0L); }
-  public static void addElementSetNo(FlatBufferBuilder builder, long ELEMENT_SET_NO) { builder.addInt(24, (int) ELEMENT_SET_NO, (int) 0L); }
-  public static void addRevAtEpoch(FlatBufferBuilder builder, double REV_AT_EPOCH) { builder.addDouble(25, REV_AT_EPOCH, 0.0); }
-  public static void addBstar(FlatBufferBuilder builder, double BSTAR) { builder.addDouble(26, BSTAR, 0.0); }
-  public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(27, MEAN_MOTION_DOT, 0.0); }
-  public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(28, MEAN_MOTION_DDOT, 0.0); }
-  public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(29, COV_REFERENCE_FRAMEOffset, 0); }
-  public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(30, CX_X, 0.0); }
-  public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(31, CY_X, 0.0); }
-  public static void addCzX(FlatBufferBuilder builder, double CZ_X) { builder.addDouble(32, CZ_X, 0.0); }
-  public static void addCxDotX(FlatBufferBuilder builder, double CX_DOT_X) { builder.addDouble(33, CX_DOT_X, 0.0); }
-  public static void addUserDefinedBip0044Type(FlatBufferBuilder builder, long USER_DEFINED_BIP_0044_TYPE) { builder.addInt(34, (int) USER_DEFINED_BIP_0044_TYPE, (int) 0L); }
-  public static void addUserDefinedObjectDesignator(FlatBufferBuilder builder, int USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.addOffset(35, USER_DEFINED_OBJECT_DESIGNATOROffset, 0); }
-  public static void addUserDefinedEarthModel(FlatBufferBuilder builder, int USER_DEFINED_EARTH_MODELOffset) { builder.addOffset(36, USER_DEFINED_EARTH_MODELOffset, 0); }
-  public static void addUserDefinedEpochTimestamp(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.addDouble(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
-  public static void addUserDefinedMicroseconds(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.addDouble(38, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void addUvwSigmas(FlatBufferBuilder builder, int UVW_SIGMASOffset) { builder.addOffset(14, UVW_SIGMASOffset, 0); }
+  public static void addMass(FlatBufferBuilder builder, double MASS) { builder.addDouble(15, MASS, 0.0); }
+  public static void addSolarRadArea(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.addDouble(16, SOLAR_RAD_AREA, 0.0); }
+  public static void addSolarRadCoeff(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.addDouble(17, SOLAR_RAD_COEFF, 0.0); }
+  public static void addDragArea(FlatBufferBuilder builder, double DRAG_AREA) { builder.addDouble(18, DRAG_AREA, 0.0); }
+  public static void addDragCoeff(FlatBufferBuilder builder, double DRAG_COEFF) { builder.addDouble(19, DRAG_COEFF, 0.0); }
+  public static void addSrp(FlatBufferBuilder builder, byte SRP) { builder.addByte(20, SRP, 0); }
+  public static void addClassificationType(FlatBufferBuilder builder, int CLASSIFICATION_TYPEOffset) { builder.addOffset(21, CLASSIFICATION_TYPEOffset, 0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(22, (int) NORAD_CAT_ID, (int) 0L); }
+  public static void addElementSetNo(FlatBufferBuilder builder, long ELEMENT_SET_NO) { builder.addInt(23, (int) ELEMENT_SET_NO, (int) 0L); }
+  public static void addRevAtEpoch(FlatBufferBuilder builder, double REV_AT_EPOCH) { builder.addDouble(24, REV_AT_EPOCH, 0.0); }
+  public static void addBstar(FlatBufferBuilder builder, double BSTAR) { builder.addDouble(25, BSTAR, 0.0); }
+  public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(26, MEAN_MOTION_DOT, 0.0); }
+  public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(27, MEAN_MOTION_DDOT, 0.0); }
+  public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(28, COV_REFERENCE_FRAMEOffset, 0); }
+  public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(29, COVARIANCEOffset, 0); }
+  public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUserDefinedBip0044Type(FlatBufferBuilder builder, long USER_DEFINED_BIP_0044_TYPE) { builder.addInt(30, (int) USER_DEFINED_BIP_0044_TYPE, (int) 0L); }
+  public static void addUserDefinedObjectDesignator(FlatBufferBuilder builder, int USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.addOffset(31, USER_DEFINED_OBJECT_DESIGNATOROffset, 0); }
+  public static void addUserDefinedEarthModel(FlatBufferBuilder builder, int USER_DEFINED_EARTH_MODELOffset) { builder.addOffset(32, USER_DEFINED_EARTH_MODELOffset, 0); }
+  public static void addUserDefinedEpochTimestamp(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.addDouble(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
+  public static void addUserDefinedMicroseconds(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.addDouble(34, USER_DEFINED_MICROSECONDS, 0.0); }
   public static int endVCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

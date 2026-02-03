@@ -113,28 +113,74 @@ func (rcv *AEMSegment) STOP_TIME() []byte {
 	return nil
 }
 
-func (rcv *AEMSegment) DATA(obj *AEMAttitudeEntry, j int) bool {
+/// Time interval between attitude states in seconds (required).
+func (rcv *AEMSegment) STEP_SIZE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return false
+	return 0.0
 }
 
-func (rcv *AEMSegment) DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+/// Time interval between attitude states in seconds (required).
+func (rcv *AEMSegment) MutateSTEP_SIZE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Number of components per attitude state.
+/// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+/// 4 = quaternion only (Q1, Q2, Q3, QC)
+func (rcv *AEMSegment) ATTITUDE_COMPONENTS() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 7
+}
+
+/// Number of components per attitude state.
+/// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+/// 4 = quaternion only (Q1, Q2, Q3, QC)
+func (rcv *AEMSegment) MutateATTITUDE_COMPONENTS(n byte) bool {
+	return rcv._tab.MutateByteSlot(24, n)
+}
+
+/// Attitude data as row-major array of doubles.
+/// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+/// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+/// Length must be divisible by ATTITUDE_COMPONENTS.
+func (rcv *AEMSegment) ATTITUDE_DATA(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *AEMSegment) ATTITUDE_DATALength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Attitude data as row-major array of doubles.
+/// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+/// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+/// Length must be divisible by ATTITUDE_COMPONENTS.
+func (rcv *AEMSegment) MutateATTITUDE_DATA(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
 func AEMSegmentStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(12)
 }
 func AEMSegmentAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -163,11 +209,17 @@ func AEMSegmentAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffer
 func AEMSegmentAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(STOP_TIME), 0)
 }
-func AEMSegmentAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DATA), 0)
+func AEMSegmentAddSTEP_SIZE(builder *flatbuffers.Builder, STEP_SIZE float64) {
+	builder.PrependFloat64Slot(9, STEP_SIZE, 0.0)
 }
-func AEMSegmentStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+func AEMSegmentAddATTITUDE_COMPONENTS(builder *flatbuffers.Builder, ATTITUDE_COMPONENTS byte) {
+	builder.PrependByteSlot(10, ATTITUDE_COMPONENTS, 7)
+}
+func AEMSegmentAddATTITUDE_DATA(builder *flatbuffers.Builder, ATTITUDE_DATA flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ATTITUDE_DATA), 0)
+}
+func AEMSegmentStartATTITUDE_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func AEMSegmentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

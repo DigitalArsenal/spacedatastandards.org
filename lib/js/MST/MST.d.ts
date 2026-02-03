@@ -55,9 +55,6 @@ export declare class MST implements flatbuffers.IUnpackableObject<MSTT> {
     TS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     AOU_RPT_TYPE(): string | null;
     AOU_RPT_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    AOU_RPT_DATA(index: number): string;
-    AOU_RPT_DATA(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    aouRptDataLength(): number;
     CONTAINMENT(): number;
     TRK_CONF(): number;
     TRK_QUAL(): number;
@@ -80,21 +77,49 @@ export declare class MST implements flatbuffers.IUnpackableObject<MSTT> {
     BURNOUT_ALT(): number;
     LAUNCH_AOU_TYPE(): string | null;
     LAUNCH_AOU_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    LAUNCH_AOU_DATA(index: number): string;
-    LAUNCH_AOU_DATA(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    launchAouDataLength(): number;
     IMPACT_TIME(): string | null;
     IMPACT_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     IMPACT_LAT(): number;
     IMPACT_LON(): number;
     IMPACT_AOU_TYPE(): string | null;
     IMPACT_AOU_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
-    IMPACT_AOU_DATA(index: number): string;
-    IMPACT_AOU_DATA(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    impactAouDataLength(): number;
-    VECTORS(index: number): string;
-    VECTORS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    /**
+     * Start time for vector data (ISO 8601 UTC format).
+     */
+    VECTOR_START_TIME(): string | null;
+    VECTOR_START_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Time interval between vector points in seconds.
+     */
+    VECTOR_STEP_SIZE(): number;
+    /**
+     * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+     */
+    VECTOR_COMPONENTS(): number;
+    /**
+     * Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+     */
+    VECTORS(index: number): number | null;
     vectorsLength(): number;
+    vectorsArray(): Float64Array | null;
+    /**
+     * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+     */
+    AOU_RPT(index: number): number | null;
+    aouRptLength(): number;
+    aouRptArray(): Float64Array | null;
+    /**
+     * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+     */
+    LAUNCH_AOU(index: number): number | null;
+    launchAouLength(): number;
+    launchAouArray(): Float64Array | null;
+    /**
+     * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+     */
+    IMPACT_AOU(index: number): number | null;
+    impactAouLength(): number;
+    impactAouArray(): Float64Array | null;
     static startMST(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addMsgType(builder: flatbuffers.Builder, MSG_TYPEOffset: flatbuffers.Offset): void;
@@ -120,9 +145,6 @@ export declare class MST implements flatbuffers.IUnpackableObject<MSTT> {
     static addMslStatus(builder: flatbuffers.Builder, MSL_STATUSOffset: flatbuffers.Offset): void;
     static addTs(builder: flatbuffers.Builder, TSOffset: flatbuffers.Offset): void;
     static addAouRptType(builder: flatbuffers.Builder, AOU_RPT_TYPEOffset: flatbuffers.Offset): void;
-    static addAouRptData(builder: flatbuffers.Builder, AOU_RPT_DATAOffset: flatbuffers.Offset): void;
-    static createAouRptDataVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startAouRptDataVector(builder: flatbuffers.Builder, numElems: number): void;
     static addContainment(builder: flatbuffers.Builder, CONTAINMENT: number): void;
     static addTrkConf(builder: flatbuffers.Builder, TRK_CONF: number): void;
     static addTrkQual(builder: flatbuffers.Builder, TRK_QUAL: number): void;
@@ -141,23 +163,45 @@ export declare class MST implements flatbuffers.IUnpackableObject<MSTT> {
     static addAzCorr(builder: flatbuffers.Builder, AZ_CORR: number): void;
     static addBurnoutAlt(builder: flatbuffers.Builder, BURNOUT_ALT: number): void;
     static addLaunchAouType(builder: flatbuffers.Builder, LAUNCH_AOU_TYPEOffset: flatbuffers.Offset): void;
-    static addLaunchAouData(builder: flatbuffers.Builder, LAUNCH_AOU_DATAOffset: flatbuffers.Offset): void;
-    static createLaunchAouDataVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLaunchAouDataVector(builder: flatbuffers.Builder, numElems: number): void;
     static addImpactTime(builder: flatbuffers.Builder, IMPACT_TIMEOffset: flatbuffers.Offset): void;
     static addImpactLat(builder: flatbuffers.Builder, IMPACT_LAT: number): void;
     static addImpactLon(builder: flatbuffers.Builder, IMPACT_LON: number): void;
     static addImpactAouType(builder: flatbuffers.Builder, IMPACT_AOU_TYPEOffset: flatbuffers.Offset): void;
-    static addImpactAouData(builder: flatbuffers.Builder, IMPACT_AOU_DATAOffset: flatbuffers.Offset): void;
-    static createImpactAouDataVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startImpactAouDataVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addVectorStartTime(builder: flatbuffers.Builder, VECTOR_START_TIMEOffset: flatbuffers.Offset): void;
+    static addVectorStepSize(builder: flatbuffers.Builder, VECTOR_STEP_SIZE: number): void;
+    static addVectorComponents(builder: flatbuffers.Builder, VECTOR_COMPONENTS: number): void;
     static addVectors(builder: flatbuffers.Builder, VECTORSOffset: flatbuffers.Offset): void;
-    static createVectorsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static createVectorsVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createVectorsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startVectorsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addAouRpt(builder: flatbuffers.Builder, AOU_RPTOffset: flatbuffers.Offset): void;
+    static createAouRptVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createAouRptVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startAouRptVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addLaunchAou(builder: flatbuffers.Builder, LAUNCH_AOUOffset: flatbuffers.Offset): void;
+    static createLaunchAouVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createLaunchAouVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startLaunchAouVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addImpactAou(builder: flatbuffers.Builder, IMPACT_AOUOffset: flatbuffers.Offset): void;
+    static createImpactAouVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createImpactAouVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startImpactAouVector(builder: flatbuffers.Builder, numElems: number): void;
     static endMST(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishMSTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedMSTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createMST(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, MSG_TYPEOffset: flatbuffers.Offset, MSG_SUB_TYPEOffset: flatbuffers.Offset, MSG_CREATE_DATEOffset: flatbuffers.Offset, ENVIRONMENTOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_TYPE_CONF: number, OBJ_PLATOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, SPACE_AMPOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, SPACE_SPEC_TYPEOffset: flatbuffers.Offset, ACFT_SUB_TYPEOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, LOST_TRK_IND: boolean, TRACK_IDOffset: flatbuffers.Offset, PARENT_TRACK_IDOffset: flatbuffers.Offset, MUID_SRC_TRKOffset: flatbuffers.Offset, MUID_SRCOffset: flatbuffers.Offset, ALERTOffset: flatbuffers.Offset, MSL_STATUSOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, AOU_RPT_TYPEOffset: flatbuffers.Offset, AOU_RPT_DATAOffset: flatbuffers.Offset, CONTAINMENT: number, TRK_CONF: number, TRK_QUAL: number, ANG_ELEV: number, SEN_MODEOffset: flatbuffers.Offset, INFO_SOURCEOffset: flatbuffers.Offset, BOOSTING: boolean, POLAR_SING_LOC_LAT: number, POLAR_SING_LOC_LON: number, EMG_IND: boolean, DROP_PT_IND: boolean, SPACE_AMP_CONF: number, LAUNCH_TIMEOffset: flatbuffers.Offset, LAUNCH_LAT: number, LAUNCH_LON: number, AZ_CORR: number, BURNOUT_ALT: number, LAUNCH_AOU_TYPEOffset: flatbuffers.Offset, LAUNCH_AOU_DATAOffset: flatbuffers.Offset, IMPACT_TIMEOffset: flatbuffers.Offset, IMPACT_LAT: number, IMPACT_LON: number, IMPACT_AOU_TYPEOffset: flatbuffers.Offset, IMPACT_AOU_DATAOffset: flatbuffers.Offset, VECTORSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createMST(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, MSG_TYPEOffset: flatbuffers.Offset, MSG_SUB_TYPEOffset: flatbuffers.Offset, MSG_CREATE_DATEOffset: flatbuffers.Offset, ENVIRONMENTOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_TYPE_CONF: number, OBJ_PLATOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, SPACE_AMPOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, SPACE_SPEC_TYPEOffset: flatbuffers.Offset, ACFT_SUB_TYPEOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, LOST_TRK_IND: boolean, TRACK_IDOffset: flatbuffers.Offset, PARENT_TRACK_IDOffset: flatbuffers.Offset, MUID_SRC_TRKOffset: flatbuffers.Offset, MUID_SRCOffset: flatbuffers.Offset, ALERTOffset: flatbuffers.Offset, MSL_STATUSOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, AOU_RPT_TYPEOffset: flatbuffers.Offset, CONTAINMENT: number, TRK_CONF: number, TRK_QUAL: number, ANG_ELEV: number, SEN_MODEOffset: flatbuffers.Offset, INFO_SOURCEOffset: flatbuffers.Offset, BOOSTING: boolean, POLAR_SING_LOC_LAT: number, POLAR_SING_LOC_LON: number, EMG_IND: boolean, DROP_PT_IND: boolean, SPACE_AMP_CONF: number, LAUNCH_TIMEOffset: flatbuffers.Offset, LAUNCH_LAT: number, LAUNCH_LON: number, AZ_CORR: number, BURNOUT_ALT: number, LAUNCH_AOU_TYPEOffset: flatbuffers.Offset, IMPACT_TIMEOffset: flatbuffers.Offset, IMPACT_LAT: number, IMPACT_LON: number, IMPACT_AOU_TYPEOffset: flatbuffers.Offset, VECTOR_START_TIMEOffset: flatbuffers.Offset, VECTOR_STEP_SIZE: number, VECTOR_COMPONENTS: number, VECTORSOffset: flatbuffers.Offset, AOU_RPTOffset: flatbuffers.Offset, LAUNCH_AOUOffset: flatbuffers.Offset, IMPACT_AOUOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): MSTT;
     unpackTo(_o: MSTT): void;
 }
@@ -186,7 +230,6 @@ export declare class MSTT implements flatbuffers.IGeneratedObject {
     MSL_STATUS: string | Uint8Array | null;
     TS: string | Uint8Array | null;
     AOU_RPT_TYPE: string | Uint8Array | null;
-    AOU_RPT_DATA: (string)[];
     CONTAINMENT: number;
     TRK_CONF: number;
     TRK_QUAL: number;
@@ -205,14 +248,18 @@ export declare class MSTT implements flatbuffers.IGeneratedObject {
     AZ_CORR: number;
     BURNOUT_ALT: number;
     LAUNCH_AOU_TYPE: string | Uint8Array | null;
-    LAUNCH_AOU_DATA: (string)[];
     IMPACT_TIME: string | Uint8Array | null;
     IMPACT_LAT: number;
     IMPACT_LON: number;
     IMPACT_AOU_TYPE: string | Uint8Array | null;
-    IMPACT_AOU_DATA: (string)[];
-    VECTORS: (string)[];
-    constructor(ID?: string | Uint8Array | null, MSG_TYPE?: string | Uint8Array | null, MSG_SUB_TYPE?: string | Uint8Array | null, MSG_CREATE_DATE?: string | Uint8Array | null, ENVIRONMENT?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_TYPE_CONF?: number, OBJ_PLAT?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, SPACE_AMP?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, SPACE_SPEC_TYPE?: string | Uint8Array | null, ACFT_SUB_TYPE?: string | Uint8Array | null, NAME?: string | Uint8Array | null, CALL_SIGN?: string | Uint8Array | null, LOST_TRK_IND?: boolean, TRACK_ID?: string | Uint8Array | null, PARENT_TRACK_ID?: string | Uint8Array | null, MUID_SRC_TRK?: string | Uint8Array | null, MUID_SRC?: string | Uint8Array | null, ALERT?: string | Uint8Array | null, MSL_STATUS?: string | Uint8Array | null, TS?: string | Uint8Array | null, AOU_RPT_TYPE?: string | Uint8Array | null, AOU_RPT_DATA?: (string)[], CONTAINMENT?: number, TRK_CONF?: number, TRK_QUAL?: number, ANG_ELEV?: number, SEN_MODE?: string | Uint8Array | null, INFO_SOURCE?: string | Uint8Array | null, BOOSTING?: boolean, POLAR_SING_LOC_LAT?: number, POLAR_SING_LOC_LON?: number, EMG_IND?: boolean, DROP_PT_IND?: boolean, SPACE_AMP_CONF?: number, LAUNCH_TIME?: string | Uint8Array | null, LAUNCH_LAT?: number, LAUNCH_LON?: number, AZ_CORR?: number, BURNOUT_ALT?: number, LAUNCH_AOU_TYPE?: string | Uint8Array | null, LAUNCH_AOU_DATA?: (string)[], IMPACT_TIME?: string | Uint8Array | null, IMPACT_LAT?: number, IMPACT_LON?: number, IMPACT_AOU_TYPE?: string | Uint8Array | null, IMPACT_AOU_DATA?: (string)[], VECTORS?: (string)[]);
+    VECTOR_START_TIME: string | Uint8Array | null;
+    VECTOR_STEP_SIZE: number;
+    VECTOR_COMPONENTS: number;
+    VECTORS: (number)[];
+    AOU_RPT: (number)[];
+    LAUNCH_AOU: (number)[];
+    IMPACT_AOU: (number)[];
+    constructor(ID?: string | Uint8Array | null, MSG_TYPE?: string | Uint8Array | null, MSG_SUB_TYPE?: string | Uint8Array | null, MSG_CREATE_DATE?: string | Uint8Array | null, ENVIRONMENT?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_TYPE_CONF?: number, OBJ_PLAT?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, SPACE_AMP?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, SPACE_SPEC_TYPE?: string | Uint8Array | null, ACFT_SUB_TYPE?: string | Uint8Array | null, NAME?: string | Uint8Array | null, CALL_SIGN?: string | Uint8Array | null, LOST_TRK_IND?: boolean, TRACK_ID?: string | Uint8Array | null, PARENT_TRACK_ID?: string | Uint8Array | null, MUID_SRC_TRK?: string | Uint8Array | null, MUID_SRC?: string | Uint8Array | null, ALERT?: string | Uint8Array | null, MSL_STATUS?: string | Uint8Array | null, TS?: string | Uint8Array | null, AOU_RPT_TYPE?: string | Uint8Array | null, CONTAINMENT?: number, TRK_CONF?: number, TRK_QUAL?: number, ANG_ELEV?: number, SEN_MODE?: string | Uint8Array | null, INFO_SOURCE?: string | Uint8Array | null, BOOSTING?: boolean, POLAR_SING_LOC_LAT?: number, POLAR_SING_LOC_LON?: number, EMG_IND?: boolean, DROP_PT_IND?: boolean, SPACE_AMP_CONF?: number, LAUNCH_TIME?: string | Uint8Array | null, LAUNCH_LAT?: number, LAUNCH_LON?: number, AZ_CORR?: number, BURNOUT_ALT?: number, LAUNCH_AOU_TYPE?: string | Uint8Array | null, IMPACT_TIME?: string | Uint8Array | null, IMPACT_LAT?: number, IMPACT_LON?: number, IMPACT_AOU_TYPE?: string | Uint8Array | null, VECTOR_START_TIME?: string | Uint8Array | null, VECTOR_STEP_SIZE?: number, VECTOR_COMPONENTS?: number, VECTORS?: (number)[], AOU_RPT?: (number)[], LAUNCH_AOU?: (number)[], IMPACT_AOU?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=MST.d.ts.map

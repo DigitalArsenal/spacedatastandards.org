@@ -4494,13 +4494,15 @@ impl<'a> OCM<'a> {
   pub const VT_HEADER: flatbuffers::VOffsetT = 4;
   pub const VT_METADATA: flatbuffers::VOffsetT = 6;
   pub const VT_TRAJ_TYPE: flatbuffers::VOffsetT = 8;
-  pub const VT_STATE_DATA: flatbuffers::VOffsetT = 10;
-  pub const VT_PHYSICAL_PROPERTIES: flatbuffers::VOffsetT = 12;
-  pub const VT_COVARIANCE_DATA: flatbuffers::VOffsetT = 14;
-  pub const VT_MANEUVER_DATA: flatbuffers::VOffsetT = 16;
-  pub const VT_PERTURBATIONS: flatbuffers::VOffsetT = 18;
-  pub const VT_ORBIT_DETERMINATION: flatbuffers::VOffsetT = 20;
-  pub const VT_USER_DEFINED_PARAMETERS: flatbuffers::VOffsetT = 22;
+  pub const VT_STATE_STEP_SIZE: flatbuffers::VOffsetT = 10;
+  pub const VT_STATE_VECTOR_SIZE: flatbuffers::VOffsetT = 12;
+  pub const VT_STATE_DATA: flatbuffers::VOffsetT = 14;
+  pub const VT_COVARIANCE_DATA: flatbuffers::VOffsetT = 16;
+  pub const VT_PHYSICAL_PROPERTIES: flatbuffers::VOffsetT = 18;
+  pub const VT_MANEUVER_DATA: flatbuffers::VOffsetT = 20;
+  pub const VT_PERTURBATIONS: flatbuffers::VOffsetT = 22;
+  pub const VT_ORBIT_DETERMINATION: flatbuffers::VOffsetT = 24;
+  pub const VT_USER_DEFINED_PARAMETERS: flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -4512,16 +4514,18 @@ impl<'a> OCM<'a> {
     args: &'args OCMArgs<'args>
   ) -> flatbuffers::WIPOffset<OCM<'bldr>> {
     let mut builder = OCMBuilder::new(_fbb);
+    builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
     if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
     if let Some(x) = args.ORBIT_DETERMINATION { builder.add_ORBIT_DETERMINATION(x); }
     if let Some(x) = args.PERTURBATIONS { builder.add_PERTURBATIONS(x); }
     if let Some(x) = args.MANEUVER_DATA { builder.add_MANEUVER_DATA(x); }
-    if let Some(x) = args.COVARIANCE_DATA { builder.add_COVARIANCE_DATA(x); }
     if let Some(x) = args.PHYSICAL_PROPERTIES { builder.add_PHYSICAL_PROPERTIES(x); }
+    if let Some(x) = args.COVARIANCE_DATA { builder.add_COVARIANCE_DATA(x); }
     if let Some(x) = args.STATE_DATA { builder.add_STATE_DATA(x); }
     if let Some(x) = args.TRAJ_TYPE { builder.add_TRAJ_TYPE(x); }
     if let Some(x) = args.METADATA { builder.add_METADATA(x); }
     if let Some(x) = args.HEADER { builder.add_HEADER(x); }
+    builder.add_STATE_VECTOR_SIZE(args.STATE_VECTOR_SIZE);
     builder.finish()
   }
 
@@ -4535,14 +4539,16 @@ impl<'a> OCM<'a> {
     let TRAJ_TYPE = self.TRAJ_TYPE().map(|x| {
       x.to_string()
     });
+    let STATE_STEP_SIZE = self.STATE_STEP_SIZE();
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE();
     let STATE_DATA = self.STATE_DATA().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
+      x.into_iter().collect()
+    });
+    let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
+      x.into_iter().collect()
     });
     let PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES().map(|x| {
       Box::new(x.unpack())
-    });
-    let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
     });
     let MANEUVER_DATA = self.MANEUVER_DATA().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
@@ -4560,9 +4566,11 @@ impl<'a> OCM<'a> {
       HEADER,
       METADATA,
       TRAJ_TYPE,
+      STATE_STEP_SIZE,
+      STATE_VECTOR_SIZE,
       STATE_DATA,
-      PHYSICAL_PROPERTIES,
       COVARIANCE_DATA,
+      PHYSICAL_PROPERTIES,
       MANEUVER_DATA,
       PERTURBATIONS,
       ORBIT_DETERMINATION,
@@ -4594,13 +4602,43 @@ impl<'a> OCM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OCM::VT_TRAJ_TYPE, None)}
   }
-  /// State vector data.
+  /// Time interval between state vectors in seconds (required for time-series data).
   #[inline]
-  pub fn STATE_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector<'a>>>> {
+  pub fn STATE_STEP_SIZE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector>>>>(OCM::VT_STATE_DATA, None)}
+    unsafe { self._tab.get::<f64>(OCM::VT_STATE_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Number of components per state vector.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  #[inline]
+  pub fn STATE_VECTOR_SIZE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(OCM::VT_STATE_VECTOR_SIZE, Some(6)).unwrap()}
+  }
+  /// State data as row-major array of doubles.
+  /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  #[inline]
+  pub fn STATE_DATA(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OCM::VT_STATE_DATA, None)}
+  }
+  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  /// Time alignment matches STATE_DATA epochs.
+  #[inline]
+  pub fn COVARIANCE_DATA(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OCM::VT_COVARIANCE_DATA, None)}
   }
   /// Physical properties of the space object.
   #[inline]
@@ -4609,14 +4647,6 @@ impl<'a> OCM<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<PhysicalProperties>>(OCM::VT_PHYSICAL_PROPERTIES, None)}
-  }
-  /// Covariance data associated with the state vectors.
-  #[inline]
-  pub fn COVARIANCE_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector>>>>(OCM::VT_COVARIANCE_DATA, None)}
   }
   /// Maneuver data.
   #[inline]
@@ -4662,9 +4692,11 @@ impl flatbuffers::Verifiable for OCM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<Header>>("HEADER", Self::VT_HEADER, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<Metadata>>("METADATA", Self::VT_METADATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRAJ_TYPE", Self::VT_TRAJ_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<StateVector>>>>("STATE_DATA", Self::VT_STATE_DATA, false)?
+     .visit_field::<f64>("STATE_STEP_SIZE", Self::VT_STATE_STEP_SIZE, false)?
+     .visit_field::<u8>("STATE_VECTOR_SIZE", Self::VT_STATE_VECTOR_SIZE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("STATE_DATA", Self::VT_STATE_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COVARIANCE_DATA", Self::VT_COVARIANCE_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<PhysicalProperties>>("PHYSICAL_PROPERTIES", Self::VT_PHYSICAL_PROPERTIES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<StateVector>>>>("COVARIANCE_DATA", Self::VT_COVARIANCE_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<Maneuver>>>>("MANEUVER_DATA", Self::VT_MANEUVER_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<Perturbations>>("PERTURBATIONS", Self::VT_PERTURBATIONS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<OrbitDetermination>>("ORBIT_DETERMINATION", Self::VT_ORBIT_DETERMINATION, false)?
@@ -4677,9 +4709,11 @@ pub struct OCMArgs<'a> {
     pub HEADER: Option<flatbuffers::WIPOffset<Header<'a>>>,
     pub METADATA: Option<flatbuffers::WIPOffset<Metadata<'a>>>,
     pub TRAJ_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STATE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector<'a>>>>>,
+    pub STATE_STEP_SIZE: f64,
+    pub STATE_VECTOR_SIZE: u8,
+    pub STATE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub COVARIANCE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub PHYSICAL_PROPERTIES: Option<flatbuffers::WIPOffset<PhysicalProperties<'a>>>,
-    pub COVARIANCE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<StateVector<'a>>>>>,
     pub MANEUVER_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<Maneuver<'a>>>>>,
     pub PERTURBATIONS: Option<flatbuffers::WIPOffset<Perturbations<'a>>>,
     pub ORBIT_DETERMINATION: Option<flatbuffers::WIPOffset<OrbitDetermination<'a>>>,
@@ -4692,9 +4726,11 @@ impl<'a> Default for OCMArgs<'a> {
       HEADER: None,
       METADATA: None,
       TRAJ_TYPE: None,
+      STATE_STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
       STATE_DATA: None,
-      PHYSICAL_PROPERTIES: None,
       COVARIANCE_DATA: None,
+      PHYSICAL_PROPERTIES: None,
       MANEUVER_DATA: None,
       PERTURBATIONS: None,
       ORBIT_DETERMINATION: None,
@@ -4721,16 +4757,24 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OCM::VT_TRAJ_TYPE, TRAJ_TYPE);
   }
   #[inline]
-  pub fn add_STATE_DATA(&mut self, STATE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<StateVector<'b >>>>) {
+  pub fn add_STATE_STEP_SIZE(&mut self, STATE_STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(OCM::VT_STATE_STEP_SIZE, STATE_STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_STATE_VECTOR_SIZE(&mut self, STATE_VECTOR_SIZE: u8) {
+    self.fbb_.push_slot::<u8>(OCM::VT_STATE_VECTOR_SIZE, STATE_VECTOR_SIZE, 6);
+  }
+  #[inline]
+  pub fn add_STATE_DATA(&mut self, STATE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OCM::VT_STATE_DATA, STATE_DATA);
+  }
+  #[inline]
+  pub fn add_COVARIANCE_DATA(&mut self, COVARIANCE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OCM::VT_COVARIANCE_DATA, COVARIANCE_DATA);
   }
   #[inline]
   pub fn add_PHYSICAL_PROPERTIES(&mut self, PHYSICAL_PROPERTIES: flatbuffers::WIPOffset<PhysicalProperties<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<PhysicalProperties>>(OCM::VT_PHYSICAL_PROPERTIES, PHYSICAL_PROPERTIES);
-  }
-  #[inline]
-  pub fn add_COVARIANCE_DATA(&mut self, COVARIANCE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<StateVector<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OCM::VT_COVARIANCE_DATA, COVARIANCE_DATA);
   }
   #[inline]
   pub fn add_MANEUVER_DATA(&mut self, MANEUVER_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<Maneuver<'b >>>>) {
@@ -4769,9 +4813,11 @@ impl core::fmt::Debug for OCM<'_> {
       ds.field("HEADER", &self.HEADER());
       ds.field("METADATA", &self.METADATA());
       ds.field("TRAJ_TYPE", &self.TRAJ_TYPE());
+      ds.field("STATE_STEP_SIZE", &self.STATE_STEP_SIZE());
+      ds.field("STATE_VECTOR_SIZE", &self.STATE_VECTOR_SIZE());
       ds.field("STATE_DATA", &self.STATE_DATA());
-      ds.field("PHYSICAL_PROPERTIES", &self.PHYSICAL_PROPERTIES());
       ds.field("COVARIANCE_DATA", &self.COVARIANCE_DATA());
+      ds.field("PHYSICAL_PROPERTIES", &self.PHYSICAL_PROPERTIES());
       ds.field("MANEUVER_DATA", &self.MANEUVER_DATA());
       ds.field("PERTURBATIONS", &self.PERTURBATIONS());
       ds.field("ORBIT_DETERMINATION", &self.ORBIT_DETERMINATION());
@@ -4785,9 +4831,11 @@ pub struct OCMT {
   pub HEADER: Option<Box<HeaderT>>,
   pub METADATA: Option<Box<MetadataT>>,
   pub TRAJ_TYPE: Option<String>,
-  pub STATE_DATA: Option<Vec<StateVectorT>>,
+  pub STATE_STEP_SIZE: f64,
+  pub STATE_VECTOR_SIZE: u8,
+  pub STATE_DATA: Option<Vec<f64>>,
+  pub COVARIANCE_DATA: Option<Vec<f64>>,
   pub PHYSICAL_PROPERTIES: Option<Box<PhysicalPropertiesT>>,
-  pub COVARIANCE_DATA: Option<Vec<StateVectorT>>,
   pub MANEUVER_DATA: Option<Vec<ManeuverT>>,
   pub PERTURBATIONS: Option<Box<PerturbationsT>>,
   pub ORBIT_DETERMINATION: Option<Box<OrbitDeterminationT>>,
@@ -4799,9 +4847,11 @@ impl Default for OCMT {
       HEADER: None,
       METADATA: None,
       TRAJ_TYPE: None,
+      STATE_STEP_SIZE: 0.0,
+      STATE_VECTOR_SIZE: 6,
       STATE_DATA: None,
-      PHYSICAL_PROPERTIES: None,
       COVARIANCE_DATA: None,
+      PHYSICAL_PROPERTIES: None,
       MANEUVER_DATA: None,
       PERTURBATIONS: None,
       ORBIT_DETERMINATION: None,
@@ -4823,14 +4873,16 @@ impl OCMT {
     let TRAJ_TYPE = self.TRAJ_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let STATE_STEP_SIZE = self.STATE_STEP_SIZE;
+    let STATE_VECTOR_SIZE = self.STATE_VECTOR_SIZE;
     let STATE_DATA = self.STATE_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
+    });
+    let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     let PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES.as_ref().map(|x|{
       x.pack(_fbb)
-    });
-    let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let MANEUVER_DATA = self.MANEUVER_DATA.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
@@ -4848,9 +4900,11 @@ impl OCMT {
       HEADER,
       METADATA,
       TRAJ_TYPE,
+      STATE_STEP_SIZE,
+      STATE_VECTOR_SIZE,
       STATE_DATA,
-      PHYSICAL_PROPERTIES,
       COVARIANCE_DATA,
+      PHYSICAL_PROPERTIES,
       MANEUVER_DATA,
       PERTURBATIONS,
       ORBIT_DETERMINATION,

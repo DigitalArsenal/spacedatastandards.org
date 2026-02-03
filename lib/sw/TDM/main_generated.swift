@@ -27,55 +27,57 @@ public struct TDM: FlatBufferObject, Verifiable {
     case OBSERVER_POSITION_REFERENCE_FRAME = 18
     case OBS_REFERENCE_FRAME = 20
     case EPOCH = 22
-    case CCSDS_TDM_VERS = 24
-    case COMMENT = 26
-    case CREATION_DATE = 28
-    case ORIGINATOR = 30
-    case META_START = 32
-    case TIME_SYSTEM = 34
-    case START_TIME = 36
-    case STOP_TIME = 38
-    case PARTICIPANT_1 = 40
-    case PARTICIPANT_2 = 42
-    case PARTICIPANT_3 = 44
-    case PARTICIPANT_4 = 46
-    case PARTICIPANT_5 = 48
-    case MODE = 50
-    case PATH_1 = 52
-    case PATH_2 = 54
-    case TRANSMIT_BAND = 56
-    case RECEIVE_BAND = 58
-    case INTEGRATION_INTERVAL = 60
-    case INTEGRATION_REF = 62
-    case RECEIVE_DELAY_2 = 64
-    case RECEIVE_DELAY_3 = 66
-    case DATA_QUALITY = 68
-    case META_STOP = 70
-    case DATA_START = 72
-    case TRANSMIT_FREQ_1 = 74
-    case RECEIVE_FREQ = 76
-    case DATA_STOP = 78
-    case TIMETAG_REF = 80
-    case ANGLE_TYPE = 82
-    case ANGLE_1 = 84
-    case ANGLE_2 = 86
-    case ANGLE_UNCERTAINTY_1 = 88
-    case ANGLE_UNCERTAINTY_2 = 90
-    case RANGE_RATE = 92
-    case RANGE_UNCERTAINTY = 94
-    case RANGE_MODE = 96
-    case RANGE_MODULUS = 98
-    case CORRECTION_ANGLE_1 = 100
-    case CORRECTION_ANGLE_2 = 102
-    case CORRECTIONS_APPLIED = 104
-    case TROPO_DRY = 106
-    case TROPO_WET = 108
-    case STEC = 110
-    case PRESSURE = 112
-    case RHUMIDITY = 114
-    case TEMPERATURE = 116
-    case CLOCK_BIAS = 118
-    case CLOCK_DRIFT = 120
+    case OBSERVATION_STEP_SIZE = 24
+    case OBSERVATION_START_TIME = 26
+    case CCSDS_TDM_VERS = 28
+    case COMMENT = 30
+    case CREATION_DATE = 32
+    case ORIGINATOR = 34
+    case META_START = 36
+    case TIME_SYSTEM = 38
+    case START_TIME = 40
+    case STOP_TIME = 42
+    case PARTICIPANT_1 = 44
+    case PARTICIPANT_2 = 46
+    case PARTICIPANT_3 = 48
+    case PARTICIPANT_4 = 50
+    case PARTICIPANT_5 = 52
+    case MODE = 54
+    case PATH_1 = 56
+    case PATH_2 = 58
+    case TRANSMIT_BAND = 60
+    case RECEIVE_BAND = 62
+    case INTEGRATION_INTERVAL = 64
+    case INTEGRATION_REF = 66
+    case RECEIVE_DELAY_2 = 68
+    case RECEIVE_DELAY_3 = 70
+    case DATA_QUALITY = 72
+    case META_STOP = 74
+    case DATA_START = 76
+    case TRANSMIT_FREQ_1 = 78
+    case RECEIVE_FREQ = 80
+    case DATA_STOP = 82
+    case TIMETAG_REF = 84
+    case ANGLE_TYPE = 86
+    case ANGLE_1 = 88
+    case ANGLE_2 = 90
+    case ANGLE_UNCERTAINTY_1 = 92
+    case ANGLE_UNCERTAINTY_2 = 94
+    case RANGE_RATE = 96
+    case RANGE_UNCERTAINTY = 98
+    case RANGE_MODE = 100
+    case RANGE_MODULUS = 102
+    case CORRECTION_ANGLE_1 = 104
+    case CORRECTION_ANGLE_2 = 106
+    case CORRECTIONS_APPLIED = 108
+    case TROPO_DRY = 110
+    case TROPO_WET = 112
+    case STEC = 114
+    case PRESSURE = 116
+    case RHUMIDITY = 118
+    case TEMPERATURE = 120
+    case CLOCK_BIAS = 122
+    case CLOCK_DRIFT = 124
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -102,6 +104,12 @@ public struct TDM: FlatBufferObject, Verifiable {
   ///  Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  ///  Time interval between observations in seconds (required).
+  ///  Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+  public var OBSERVATION_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Start time for observation time reconstruction (ISO 8601 UTC format).
+  public var OBSERVATION_START_TIME: String? { let o = _accessor.offset(VTOFFSET.OBSERVATION_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVATION_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATION_START_TIME.v) }
   ///  TDM version number -  CCSDS 503.0-B-1, Page D-9
   public var CCSDS_TDM_VERS: String? { let o = _accessor.offset(VTOFFSET.CCSDS_TDM_VERS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CCSDS_TDM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CCSDS_TDM_VERS.v) }
@@ -261,7 +269,7 @@ public struct TDM: FlatBufferObject, Verifiable {
   public var CLOCK_DRIFTCount: Int32 { let o = _accessor.offset(VTOFFSET.CLOCK_DRIFT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func CLOCK_DRIFT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.CLOCK_DRIFT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
   public var CLOCK_DRIFT: [Double] { return _accessor.getVector(at: VTOFFSET.CLOCK_DRIFT.v) ?? [] }
-  public static func startTDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  public static func startTDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 61) }
   public static func add(OBSERVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_ID, at: VTOFFSET.OBSERVER_ID.p) }
   public static func add(OBSERVER_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_X, def: 0.0, at: VTOFFSET.OBSERVER_X.p) }
   public static func add(OBSERVER_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVER_Y, def: 0.0, at: VTOFFSET.OBSERVER_Y.p) }
@@ -272,6 +280,8 @@ public struct TDM: FlatBufferObject, Verifiable {
   public static func add(OBSERVER_POSITION_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER_POSITION_REFERENCE_FRAME, at: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p) }
   public static func add(OBS_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_REFERENCE_FRAME, at: VTOFFSET.OBS_REFERENCE_FRAME.p) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
+  public static func add(OBSERVATION_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATION_STEP_SIZE, def: 0.0, at: VTOFFSET.OBSERVATION_STEP_SIZE.p) }
+  public static func add(OBSERVATION_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATION_START_TIME, at: VTOFFSET.OBSERVATION_START_TIME.p) }
   public static func add(CCSDS_TDM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_TDM_VERS, at: VTOFFSET.CCSDS_TDM_VERS.p) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
@@ -334,6 +344,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     OBSERVER_POSITION_REFERENCE_FRAMEOffset OBSERVER_POSITION_REFERENCE_FRAME: Offset = Offset(),
     OBS_REFERENCE_FRAMEOffset OBS_REFERENCE_FRAME: Offset = Offset(),
     EPOCHOffset EPOCH: Offset = Offset(),
+    OBSERVATION_STEP_SIZE: Double = 0.0,
+    OBSERVATION_START_TIMEOffset OBSERVATION_START_TIME: Offset = Offset(),
     CCSDS_TDM_VERSOffset CCSDS_TDM_VERS: Offset = Offset(),
     COMMENTVectorOffset COMMENT: Offset = Offset(),
     CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
@@ -395,6 +407,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     TDM.add(OBSERVER_POSITION_REFERENCE_FRAME: OBSERVER_POSITION_REFERENCE_FRAME, &fbb)
     TDM.add(OBS_REFERENCE_FRAME: OBS_REFERENCE_FRAME, &fbb)
     TDM.add(EPOCH: EPOCH, &fbb)
+    TDM.add(OBSERVATION_STEP_SIZE: OBSERVATION_STEP_SIZE, &fbb)
+    TDM.add(OBSERVATION_START_TIME: OBSERVATION_START_TIME, &fbb)
     TDM.add(CCSDS_TDM_VERS: CCSDS_TDM_VERS, &fbb)
     TDM.addVectorOf(COMMENT: COMMENT, &fbb)
     TDM.add(CREATION_DATE: CREATION_DATE, &fbb)
@@ -459,6 +473,8 @@ public struct TDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OBSERVER_POSITION_REFERENCE_FRAME.p, fieldName: "OBSERVER_POSITION_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.OBS_REFERENCE_FRAME.p, fieldName: "OBS_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBSERVATION_STEP_SIZE.p, fieldName: "OBSERVATION_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.OBSERVATION_START_TIME.p, fieldName: "OBSERVATION_START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CCSDS_TDM_VERS.p, fieldName: "CCSDS_TDM_VERS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)

@@ -201,25 +201,6 @@
       },
       "additionalProperties" : false
     },
-    "VCMCovarianceMatrixLine" : {
-      "type" : "object",
-      "description" : "VCM Covariance Matrix Line",
-      "properties" : {
-        "CX_X" : {
-                "type" : "number"
-              },
-        "CY_X" : {
-                "type" : "number"
-              },
-        "CZ_X" : {
-                "type" : "number"
-              },
-        "CX_DOT_X" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
     "keplerianElements" : {
       "type" : "object",
       "description" : "Keplerian Elements",
@@ -375,9 +356,6 @@
         "PROPAGATOR_SETTINGS" : {
                 "$ref" : "#/definitions/propagatorConfig"
               },
-        "COVARIANCE_MATRIX" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/VCMCovarianceMatrixLine"}
-              },
         "UVW_SIGMAS" : {
                 "$ref" : "#/definitions/uvwSigmas"
               },
@@ -423,17 +401,9 @@
         "COV_REFERENCE_FRAME" : {
                 "type" : "string"
               },
-        "CX_X" : {
-                "type" : "number"
-              },
-        "CY_X" : {
-                "type" : "number"
-              },
-        "CZ_X" : {
-                "type" : "number"
-              },
-        "CX_DOT_X" : {
-                "type" : "number"
+        "COVARIANCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
               },
         "USER_DEFINED_BIP_0044_TYPE" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295

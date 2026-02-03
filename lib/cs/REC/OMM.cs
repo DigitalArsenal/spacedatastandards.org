@@ -19,9 +19,9 @@ public struct OMM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// CCSDS OMM Version 
+  /// CCSDS OMM Version
   public double CCSDS_OMM_VERS { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Creation Date (ISO 8601 UTC format) 
+  /// Creation Date (ISO 8601 UTC format)
   public string CREATION_DATE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -29,7 +29,7 @@ public struct OMM : IFlatbufferObject
   public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(6); }
-  /// Originator 
+  /// Originator
   public string ORIGINATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -135,80 +135,52 @@ public struct OMM : IFlatbufferObject
   public uint ELEMENT_SET_NO { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// REV_AT_EPOCH [O if SGP/SGP4]
   public double REV_AT_EPOCH { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
   public double BSTAR { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public double MEAN_MOTION_DOT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
   /// Typically RSW
   public RFM? COV_REFERENCE_FRAME { get { int o = __p.__offset(70); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// CX_X [km**2]
-  public double CX_X { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_X [km**2]
-  public double CY_X { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_Y [km**2]
-  public double CY_Y { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_X [km**2]
-  public double CZ_X { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_Y [km**2]
-  public double CZ_Y { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_Z [km**2]
-  public double CZ_Z { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CX_DOT_X [km**2/s]
-  public double CX_DOT_X { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CX_DOT_Y [km**2/s]
-  public double CX_DOT_Y { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CX_DOT_Z [km**2/s]
-  public double CX_DOT_Z { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CX_DOT_X_DOT [km**2/s**2]
-  public double CX_DOT_X_DOT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_DOT_X [km**2/s]
-  public double CY_DOT_X { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_DOT_Y [km**2/s]
-  public double CY_DOT_Y { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_DOT_Z [km**2/s]
-  public double CY_DOT_Z { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_DOT_X_DOT [km**2/s**2]
-  public double CY_DOT_X_DOT { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CY_DOT_Y_DOT [km**2/s**2]
-  public double CY_DOT_Y_DOT { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_X [km**2/s]
-  public double CZ_DOT_X { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_Y [km**2/s]
-  public double CZ_DOT_Y { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_Z [km**2/s]
-  public double CZ_DOT_Z { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_X_DOT [km**2/s**2]
-  public double CZ_DOT_X_DOT { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_Y_DOT [km**2/s**2]
-  public double CZ_DOT_Y_DOT { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// CZ_DOT_Z_DOT [km**2/s**2]
-  public double CZ_DOT_Z_DOT { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public double COVARIANCE(int j) { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCELength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetCOVARIANCEBytes() { return __p.__vector_as_span<double>(72, 8); }
+#else
+  public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(72); }
   /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
-  public uint USER_DEFINED_BIP_0044_TYPE { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint USER_DEFINED_BIP_0044_TYPE { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
-  public string USER_DEFINED_OBJECT_DESIGNATOR { get { int o = __p.__offset(116); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string USER_DEFINED_OBJECT_DESIGNATOR { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(116, 1); }
+  public Span<byte> GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(76, 1); }
 #else
-  public ArraySegment<byte>? GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(116); }
+  public ArraySegment<byte>? GetUSER_DEFINED_OBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public byte[] GetUSER_DEFINED_OBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(116); }
+  public byte[] GetUSER_DEFINED_OBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(76); }
   /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
-  public string USER_DEFINED_EARTH_MODEL { get { int o = __p.__offset(118); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string USER_DEFINED_EARTH_MODEL { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_span<byte>(118, 1); }
+  public Span<byte> GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_span<byte>(78, 1); }
 #else
-  public ArraySegment<byte>? GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_arraysegment(118); }
+  public ArraySegment<byte>? GetUSER_DEFINED_EARTH_MODELBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
-  public byte[] GetUSER_DEFINED_EARTH_MODELArray() { return __p.__vector_as_array<byte>(118); }
+  public byte[] GetUSER_DEFINED_EARTH_MODELArray() { return __p.__vector_as_array<byte>(78); }
   /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
-  public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// USER_DEFINED_MICROSECONDS [O, units per ICD]
-  public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<OMM> CreateOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS = 0.0,
@@ -245,56 +217,15 @@ public struct OMM : IFlatbufferObject
       double MEAN_MOTION_DOT = 0.0,
       double MEAN_MOTION_DDOT = 0.0,
       Offset<RFM> COV_REFERENCE_FRAMEOffset = default(Offset<RFM>),
-      double CX_X = 0.0,
-      double CY_X = 0.0,
-      double CY_Y = 0.0,
-      double CZ_X = 0.0,
-      double CZ_Y = 0.0,
-      double CZ_Z = 0.0,
-      double CX_DOT_X = 0.0,
-      double CX_DOT_Y = 0.0,
-      double CX_DOT_Z = 0.0,
-      double CX_DOT_X_DOT = 0.0,
-      double CY_DOT_X = 0.0,
-      double CY_DOT_Y = 0.0,
-      double CY_DOT_Z = 0.0,
-      double CY_DOT_X_DOT = 0.0,
-      double CY_DOT_Y_DOT = 0.0,
-      double CZ_DOT_X = 0.0,
-      double CZ_DOT_Y = 0.0,
-      double CZ_DOT_Z = 0.0,
-      double CZ_DOT_X_DOT = 0.0,
-      double CZ_DOT_Y_DOT = 0.0,
-      double CZ_DOT_Z_DOT = 0.0,
+      VectorOffset COVARIANCEOffset = default(VectorOffset),
       uint USER_DEFINED_BIP_0044_TYPE = 0,
       StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset = default(StringOffset),
       StringOffset USER_DEFINED_EARTH_MODELOffset = default(StringOffset),
       double USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
       double USER_DEFINED_MICROSECONDS = 0.0) {
-    builder.StartTable(60);
+    builder.StartTable(40);
     OMM.AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS);
     OMM.AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP);
-    OMM.AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT);
-    OMM.AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT);
-    OMM.AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT);
-    OMM.AddCZ_DOT_Z(builder, CZ_DOT_Z);
-    OMM.AddCZ_DOT_Y(builder, CZ_DOT_Y);
-    OMM.AddCZ_DOT_X(builder, CZ_DOT_X);
-    OMM.AddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT);
-    OMM.AddCY_DOT_X_DOT(builder, CY_DOT_X_DOT);
-    OMM.AddCY_DOT_Z(builder, CY_DOT_Z);
-    OMM.AddCY_DOT_Y(builder, CY_DOT_Y);
-    OMM.AddCY_DOT_X(builder, CY_DOT_X);
-    OMM.AddCX_DOT_X_DOT(builder, CX_DOT_X_DOT);
-    OMM.AddCX_DOT_Z(builder, CX_DOT_Z);
-    OMM.AddCX_DOT_Y(builder, CX_DOT_Y);
-    OMM.AddCX_DOT_X(builder, CX_DOT_X);
-    OMM.AddCZ_Z(builder, CZ_Z);
-    OMM.AddCZ_Y(builder, CZ_Y);
-    OMM.AddCZ_X(builder, CZ_X);
-    OMM.AddCY_Y(builder, CY_Y);
-    OMM.AddCY_X(builder, CY_X);
-    OMM.AddCX_X(builder, CX_X);
     OMM.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
     OMM.AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT);
     OMM.AddBSTAR(builder, BSTAR);
@@ -316,6 +247,7 @@ public struct OMM : IFlatbufferObject
     OMM.AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE);
+    OMM.AddCOVARIANCE(builder, COVARIANCEOffset);
     OMM.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset);
     OMM.AddELEMENT_SET_NO(builder, ELEMENT_SET_NO);
     OMM.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
@@ -335,7 +267,7 @@ public struct OMM : IFlatbufferObject
     return OMM.EndOMM(builder);
   }
 
-  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(60); }
+  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(40); }
   public static void AddCCSDS_OMM_VERS(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.AddDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -370,32 +302,17 @@ public struct OMM : IFlatbufferObject
   public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(31, MEAN_MOTION_DOT, 0.0); }
   public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(32, MEAN_MOTION_DDOT, 0.0); }
   public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REFERENCE_FRAMEOffset) { builder.AddOffset(33, COV_REFERENCE_FRAMEOffset.Value, 0); }
-  public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(34, CX_X, 0.0); }
-  public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(35, CY_X, 0.0); }
-  public static void AddCY_Y(FlatBufferBuilder builder, double CY_Y) { builder.AddDouble(36, CY_Y, 0.0); }
-  public static void AddCZ_X(FlatBufferBuilder builder, double CZ_X) { builder.AddDouble(37, CZ_X, 0.0); }
-  public static void AddCZ_Y(FlatBufferBuilder builder, double CZ_Y) { builder.AddDouble(38, CZ_Y, 0.0); }
-  public static void AddCZ_Z(FlatBufferBuilder builder, double CZ_Z) { builder.AddDouble(39, CZ_Z, 0.0); }
-  public static void AddCX_DOT_X(FlatBufferBuilder builder, double CX_DOT_X) { builder.AddDouble(40, CX_DOT_X, 0.0); }
-  public static void AddCX_DOT_Y(FlatBufferBuilder builder, double CX_DOT_Y) { builder.AddDouble(41, CX_DOT_Y, 0.0); }
-  public static void AddCX_DOT_Z(FlatBufferBuilder builder, double CX_DOT_Z) { builder.AddDouble(42, CX_DOT_Z, 0.0); }
-  public static void AddCX_DOT_X_DOT(FlatBufferBuilder builder, double CX_DOT_X_DOT) { builder.AddDouble(43, CX_DOT_X_DOT, 0.0); }
-  public static void AddCY_DOT_X(FlatBufferBuilder builder, double CY_DOT_X) { builder.AddDouble(44, CY_DOT_X, 0.0); }
-  public static void AddCY_DOT_Y(FlatBufferBuilder builder, double CY_DOT_Y) { builder.AddDouble(45, CY_DOT_Y, 0.0); }
-  public static void AddCY_DOT_Z(FlatBufferBuilder builder, double CY_DOT_Z) { builder.AddDouble(46, CY_DOT_Z, 0.0); }
-  public static void AddCY_DOT_X_DOT(FlatBufferBuilder builder, double CY_DOT_X_DOT) { builder.AddDouble(47, CY_DOT_X_DOT, 0.0); }
-  public static void AddCY_DOT_Y_DOT(FlatBufferBuilder builder, double CY_DOT_Y_DOT) { builder.AddDouble(48, CY_DOT_Y_DOT, 0.0); }
-  public static void AddCZ_DOT_X(FlatBufferBuilder builder, double CZ_DOT_X) { builder.AddDouble(49, CZ_DOT_X, 0.0); }
-  public static void AddCZ_DOT_Y(FlatBufferBuilder builder, double CZ_DOT_Y) { builder.AddDouble(50, CZ_DOT_Y, 0.0); }
-  public static void AddCZ_DOT_Z(FlatBufferBuilder builder, double CZ_DOT_Z) { builder.AddDouble(51, CZ_DOT_Z, 0.0); }
-  public static void AddCZ_DOT_X_DOT(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.AddDouble(52, CZ_DOT_X_DOT, 0.0); }
-  public static void AddCZ_DOT_Y_DOT(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.AddDouble(53, CZ_DOT_Y_DOT, 0.0); }
-  public static void AddCZ_DOT_Z_DOT(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.AddDouble(54, CZ_DOT_Z_DOT, 0.0); }
-  public static void AddUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder builder, uint USER_DEFINED_BIP_0044_TYPE) { builder.AddUint(55, USER_DEFINED_BIP_0044_TYPE, 0); }
-  public static void AddUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.AddOffset(56, USER_DEFINED_OBJECT_DESIGNATOROffset.Value, 0); }
-  public static void AddUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder builder, StringOffset USER_DEFINED_EARTH_MODELOffset) { builder.AddOffset(57, USER_DEFINED_EARTH_MODELOffset.Value, 0); }
-  public static void AddUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.AddDouble(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
-  public static void AddUSER_DEFINED_MICROSECONDS(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.AddDouble(59, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void AddCOVARIANCE(FlatBufferBuilder builder, VectorOffset COVARIANCEOffset) { builder.AddOffset(34, COVARIANCEOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUSER_DEFINED_BIP_0044_TYPE(FlatBufferBuilder builder, uint USER_DEFINED_BIP_0044_TYPE) { builder.AddUint(35, USER_DEFINED_BIP_0044_TYPE, 0); }
+  public static void AddUSER_DEFINED_OBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset) { builder.AddOffset(36, USER_DEFINED_OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder builder, StringOffset USER_DEFINED_EARTH_MODELOffset) { builder.AddOffset(37, USER_DEFINED_EARTH_MODELOffset.Value, 0); }
+  public static void AddUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.AddDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
+  public static void AddUSER_DEFINED_MICROSECONDS(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.AddDouble(39, USER_DEFINED_MICROSECONDS, 0.0); }
   public static Offset<OMM> EndOMM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OMM>(o);
@@ -442,27 +359,8 @@ public struct OMM : IFlatbufferObject
     _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT;
     _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT;
     _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME.HasValue ? this.COV_REFERENCE_FRAME.Value.UnPack() : null;
-    _o.CX_X = this.CX_X;
-    _o.CY_X = this.CY_X;
-    _o.CY_Y = this.CY_Y;
-    _o.CZ_X = this.CZ_X;
-    _o.CZ_Y = this.CZ_Y;
-    _o.CZ_Z = this.CZ_Z;
-    _o.CX_DOT_X = this.CX_DOT_X;
-    _o.CX_DOT_Y = this.CX_DOT_Y;
-    _o.CX_DOT_Z = this.CX_DOT_Z;
-    _o.CX_DOT_X_DOT = this.CX_DOT_X_DOT;
-    _o.CY_DOT_X = this.CY_DOT_X;
-    _o.CY_DOT_Y = this.CY_DOT_Y;
-    _o.CY_DOT_Z = this.CY_DOT_Z;
-    _o.CY_DOT_X_DOT = this.CY_DOT_X_DOT;
-    _o.CY_DOT_Y_DOT = this.CY_DOT_Y_DOT;
-    _o.CZ_DOT_X = this.CZ_DOT_X;
-    _o.CZ_DOT_Y = this.CZ_DOT_Y;
-    _o.CZ_DOT_Z = this.CZ_DOT_Z;
-    _o.CZ_DOT_X_DOT = this.CZ_DOT_X_DOT;
-    _o.CZ_DOT_Y_DOT = this.CZ_DOT_Y_DOT;
-    _o.CZ_DOT_Z_DOT = this.CZ_DOT_Z_DOT;
+    _o.COVARIANCE = new List<double>();
+    for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
     _o.USER_DEFINED_BIP_0044_TYPE = this.USER_DEFINED_BIP_0044_TYPE;
     _o.USER_DEFINED_OBJECT_DESIGNATOR = this.USER_DEFINED_OBJECT_DESIGNATOR;
     _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL;
@@ -482,6 +380,11 @@ public struct OMM : IFlatbufferObject
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     var _CLASSIFICATION_TYPE = _o.CLASSIFICATION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION_TYPE);
     var _COV_REFERENCE_FRAME = _o.COV_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REFERENCE_FRAME);
+    var _COVARIANCE = default(VectorOffset);
+    if (_o.COVARIANCE != null) {
+      var __COVARIANCE = _o.COVARIANCE.ToArray();
+      _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
+    }
     var _USER_DEFINED_OBJECT_DESIGNATOR = _o.USER_DEFINED_OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_OBJECT_DESIGNATOR);
     var _USER_DEFINED_EARTH_MODEL = _o.USER_DEFINED_EARTH_MODEL == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_EARTH_MODEL);
     return CreateOMM(
@@ -520,27 +423,7 @@ public struct OMM : IFlatbufferObject
       _o.MEAN_MOTION_DOT,
       _o.MEAN_MOTION_DDOT,
       _COV_REFERENCE_FRAME,
-      _o.CX_X,
-      _o.CY_X,
-      _o.CY_Y,
-      _o.CZ_X,
-      _o.CZ_Y,
-      _o.CZ_Z,
-      _o.CX_DOT_X,
-      _o.CX_DOT_Y,
-      _o.CX_DOT_Z,
-      _o.CX_DOT_X_DOT,
-      _o.CY_DOT_X,
-      _o.CY_DOT_Y,
-      _o.CY_DOT_Z,
-      _o.CY_DOT_X_DOT,
-      _o.CY_DOT_Y_DOT,
-      _o.CZ_DOT_X,
-      _o.CZ_DOT_Y,
-      _o.CZ_DOT_Z,
-      _o.CZ_DOT_X_DOT,
-      _o.CZ_DOT_Y_DOT,
-      _o.CZ_DOT_Z_DOT,
+      _COVARIANCE,
       _o.USER_DEFINED_BIP_0044_TYPE,
       _USER_DEFINED_OBJECT_DESIGNATOR,
       _USER_DEFINED_EARTH_MODEL,
@@ -585,27 +468,7 @@ public class OMMT
   public double MEAN_MOTION_DOT { get; set; }
   public double MEAN_MOTION_DDOT { get; set; }
   public RFMT COV_REFERENCE_FRAME { get; set; }
-  public double CX_X { get; set; }
-  public double CY_X { get; set; }
-  public double CY_Y { get; set; }
-  public double CZ_X { get; set; }
-  public double CZ_Y { get; set; }
-  public double CZ_Z { get; set; }
-  public double CX_DOT_X { get; set; }
-  public double CX_DOT_Y { get; set; }
-  public double CX_DOT_Z { get; set; }
-  public double CX_DOT_X_DOT { get; set; }
-  public double CY_DOT_X { get; set; }
-  public double CY_DOT_Y { get; set; }
-  public double CY_DOT_Z { get; set; }
-  public double CY_DOT_X_DOT { get; set; }
-  public double CY_DOT_Y_DOT { get; set; }
-  public double CZ_DOT_X { get; set; }
-  public double CZ_DOT_Y { get; set; }
-  public double CZ_DOT_Z { get; set; }
-  public double CZ_DOT_X_DOT { get; set; }
-  public double CZ_DOT_Y_DOT { get; set; }
-  public double CZ_DOT_Z_DOT { get; set; }
+  public List<double> COVARIANCE { get; set; }
   public uint USER_DEFINED_BIP_0044_TYPE { get; set; }
   public string USER_DEFINED_OBJECT_DESIGNATOR { get; set; }
   public string USER_DEFINED_EARTH_MODEL { get; set; }
@@ -647,27 +510,7 @@ public class OMMT
     this.MEAN_MOTION_DOT = 0.0;
     this.MEAN_MOTION_DDOT = 0.0;
     this.COV_REFERENCE_FRAME = null;
-    this.CX_X = 0.0;
-    this.CY_X = 0.0;
-    this.CY_Y = 0.0;
-    this.CZ_X = 0.0;
-    this.CZ_Y = 0.0;
-    this.CZ_Z = 0.0;
-    this.CX_DOT_X = 0.0;
-    this.CX_DOT_Y = 0.0;
-    this.CX_DOT_Z = 0.0;
-    this.CX_DOT_X_DOT = 0.0;
-    this.CY_DOT_X = 0.0;
-    this.CY_DOT_Y = 0.0;
-    this.CY_DOT_Z = 0.0;
-    this.CY_DOT_X_DOT = 0.0;
-    this.CY_DOT_Y_DOT = 0.0;
-    this.CZ_DOT_X = 0.0;
-    this.CZ_DOT_Y = 0.0;
-    this.CZ_DOT_Z = 0.0;
-    this.CZ_DOT_X_DOT = 0.0;
-    this.CZ_DOT_Y_DOT = 0.0;
-    this.CZ_DOT_Z_DOT = 0.0;
+    this.COVARIANCE = null;
     this.USER_DEFINED_BIP_0044_TYPE = 0;
     this.USER_DEFINED_OBJECT_DESIGNATOR = null;
     this.USER_DEFINED_EARTH_MODEL = null;
@@ -724,32 +567,12 @@ static public class OMMVerify
       && verifier.VerifyField(tablePos, 66 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 68 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 70 /*COV_REFERENCE_FRAME*/, RFMVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 72 /*CX_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 74 /*CY_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 76 /*CY_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 78 /*CZ_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 80 /*CZ_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 82 /*CZ_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 84 /*CX_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 86 /*CX_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 88 /*CX_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 90 /*CX_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 92 /*CY_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 94 /*CY_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 96 /*CY_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 98 /*CY_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 100 /*CY_DOT_Y_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 102 /*CZ_DOT_X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 104 /*CZ_DOT_Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 106 /*CZ_DOT_Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 108 /*CZ_DOT_X_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 110 /*CZ_DOT_Y_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 112 /*CZ_DOT_Z_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 114 /*USER_DEFINED_BIP_0044_TYPE*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyString(tablePos, 116 /*USER_DEFINED_OBJECT_DESIGNATOR*/, false)
-      && verifier.VerifyString(tablePos, 118 /*USER_DEFINED_EARTH_MODEL*/, false)
-      && verifier.VerifyField(tablePos, 120 /*USER_DEFINED_EPOCH_TIMESTAMP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 122 /*USER_DEFINED_MICROSECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 72 /*COVARIANCE*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 74 /*USER_DEFINED_BIP_0044_TYPE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 76 /*USER_DEFINED_OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 78 /*USER_DEFINED_EARTH_MODEL*/, false)
+      && verifier.VerifyField(tablePos, 80 /*USER_DEFINED_EPOCH_TIMESTAMP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*USER_DEFINED_MICROSECONDS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

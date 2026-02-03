@@ -306,59 +306,8 @@ func (rcv *TRK) MutateTRK_CONF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *TRK) ECEF_POS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) ECEF_POSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) ECEF_VEL(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) ECEF_VELLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) ECEF_ACC(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) ECEF_ACCLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
 func (rcv *TRK) LAT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -366,11 +315,11 @@ func (rcv *TRK) LAT() float64 {
 }
 
 func (rcv *TRK) MutateLAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(68, n)
+	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
 func (rcv *TRK) LON() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -378,11 +327,11 @@ func (rcv *TRK) LON() float64 {
 }
 
 func (rcv *TRK) MutateLON(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(70, n)
+	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
 func (rcv *TRK) ALT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -390,11 +339,11 @@ func (rcv *TRK) ALT() float64 {
 }
 
 func (rcv *TRK) MutateALT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(72, n)
+	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
 func (rcv *TRK) SPD() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -402,11 +351,11 @@ func (rcv *TRK) SPD() float64 {
 }
 
 func (rcv *TRK) MutateSPD(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(74, n)
+	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
 func (rcv *TRK) HDNG() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -414,11 +363,11 @@ func (rcv *TRK) HDNG() float64 {
 }
 
 func (rcv *TRK) MutateHDNG(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(76, n)
+	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
 func (rcv *TRK) COURSE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -426,164 +375,11 @@ func (rcv *TRK) COURSE() float64 {
 }
 
 func (rcv *TRK) MutateCOURSE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(78, n)
-}
-
-func (rcv *TRK) LCO(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) LCOLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) LCS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) LCSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) LC_POS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) LC_POSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) LC_VEL(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) LC_VELLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) LC_ACC(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) LC_ACCLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) E_NUVEL(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) E_NUVELLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) E_NUPOS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) E_NUPOSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) COV(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) COVLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *TRK) ERR_ELLP(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *TRK) ERR_ELLPLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
+	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
 func (rcv *TRK) SRC_TYPS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -592,7 +388,7 @@ func (rcv *TRK) SRC_TYPS(j int) []byte {
 }
 
 func (rcv *TRK) SRC_TYPSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -600,7 +396,7 @@ func (rcv *TRK) SRC_TYPSLength() int {
 }
 
 func (rcv *TRK) SRC_IDS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -609,7 +405,7 @@ func (rcv *TRK) SRC_IDS(j int) []byte {
 }
 
 func (rcv *TRK) SRC_IDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -617,7 +413,7 @@ func (rcv *TRK) SRC_IDSLength() int {
 }
 
 func (rcv *TRK) CALL_SIGN() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -625,7 +421,7 @@ func (rcv *TRK) CALL_SIGN() []byte {
 }
 
 func (rcv *TRK) MULTI_SOURCE() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -633,11 +429,11 @@ func (rcv *TRK) MULTI_SOURCE() bool {
 }
 
 func (rcv *TRK) MutateMULTI_SOURCE(n bool) bool {
-	return rcv._tab.MutateBoolSlot(104, n)
+	return rcv._tab.MutateBoolSlot(80, n)
 }
 
 func (rcv *TRK) J_SERIES() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -645,7 +441,7 @@ func (rcv *TRK) J_SERIES() []byte {
 }
 
 func (rcv *TRK) STRENGTH() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -653,11 +449,11 @@ func (rcv *TRK) STRENGTH() int32 {
 }
 
 func (rcv *TRK) MutateSTRENGTH(n int32) bool {
-	return rcv._tab.MutateInt32Slot(108, n)
+	return rcv._tab.MutateInt32Slot(84, n)
 }
 
 func (rcv *TRK) M1() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -665,11 +461,11 @@ func (rcv *TRK) M1() int32 {
 }
 
 func (rcv *TRK) MutateM1(n int32) bool {
-	return rcv._tab.MutateInt32Slot(110, n)
+	return rcv._tab.MutateInt32Slot(86, n)
 }
 
 func (rcv *TRK) M1V() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -677,11 +473,11 @@ func (rcv *TRK) M1V() int32 {
 }
 
 func (rcv *TRK) MutateM1V(n int32) bool {
-	return rcv._tab.MutateInt32Slot(112, n)
+	return rcv._tab.MutateInt32Slot(88, n)
 }
 
 func (rcv *TRK) M2() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -689,11 +485,11 @@ func (rcv *TRK) M2() int32 {
 }
 
 func (rcv *TRK) MutateM2(n int32) bool {
-	return rcv._tab.MutateInt32Slot(114, n)
+	return rcv._tab.MutateInt32Slot(90, n)
 }
 
 func (rcv *TRK) M2V() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -701,11 +497,11 @@ func (rcv *TRK) M2V() int32 {
 }
 
 func (rcv *TRK) MutateM2V(n int32) bool {
-	return rcv._tab.MutateInt32Slot(116, n)
+	return rcv._tab.MutateInt32Slot(92, n)
 }
 
 func (rcv *TRK) M3A() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -713,11 +509,11 @@ func (rcv *TRK) M3A() int32 {
 }
 
 func (rcv *TRK) MutateM3A(n int32) bool {
-	return rcv._tab.MutateInt32Slot(118, n)
+	return rcv._tab.MutateInt32Slot(94, n)
 }
 
 func (rcv *TRK) M3AV() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -725,11 +521,11 @@ func (rcv *TRK) M3AV() int32 {
 }
 
 func (rcv *TRK) MutateM3AV(n int32) bool {
-	return rcv._tab.MutateInt32Slot(120, n)
+	return rcv._tab.MutateInt32Slot(96, n)
 }
 
 func (rcv *TRK) TAGS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -738,15 +534,277 @@ func (rcv *TRK) TAGS(j int) []byte {
 }
 
 func (rcv *TRK) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Start time for track data (ISO 8601 UTC format).
+func (rcv *TRK) TRACK_START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Start time for track data (ISO 8601 UTC format).
+/// Time interval between track points in seconds.
+func (rcv *TRK) TRACK_STEP_SIZE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Time interval between track points in seconds.
+func (rcv *TRK) MutateTRACK_STEP_SIZE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(102, n)
+}
+
+/// Number of components per point (default 3 for X, Y, Z).
+func (rcv *TRK) TRACK_COMPONENTS() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 3
+}
+
+/// Number of components per point (default 3 for X, Y, Z).
+func (rcv *TRK) MutateTRACK_COMPONENTS(n byte) bool {
+	return rcv._tab.MutateByteSlot(104, n)
+}
+
+/// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+func (rcv *TRK) ECEF_POS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) ECEF_POSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+func (rcv *TRK) MutateECEF_POS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+func (rcv *TRK) ECEF_VEL(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) ECEF_VELLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+func (rcv *TRK) MutateECEF_VEL(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+func (rcv *TRK) ECEF_ACC(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) ECEF_ACCLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+func (rcv *TRK) MutateECEF_ACC(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Local coordinate position as flat array
+func (rcv *TRK) LC_POS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) LC_POSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Local coordinate position as flat array
+func (rcv *TRK) MutateLC_POS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Local coordinate velocity as flat array
+func (rcv *TRK) LC_VEL(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) LC_VELLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Local coordinate velocity as flat array
+func (rcv *TRK) MutateLC_VEL(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Local coordinate acceleration as flat array
+func (rcv *TRK) LC_ACC(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) LC_ACCLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Local coordinate acceleration as flat array
+func (rcv *TRK) MutateLC_ACC(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Covariance data (21 elements per point for 6x6 lower triangular)
+func (rcv *TRK) COV(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) COVLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Covariance data (21 elements per point for 6x6 lower triangular)
+func (rcv *TRK) MutateCOV(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Error ellipse data (6 elements per point)
+func (rcv *TRK) ERR_ELLP(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TRK) ERR_ELLPLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Error ellipse data (6 elements per point)
+func (rcv *TRK) MutateERR_ELLP(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
 func TRKStart(builder *flatbuffers.Builder) {
-	builder.StartObject(60)
+	builder.StartObject(59)
 }
 func TRKAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -835,143 +893,128 @@ func TRKAddENVIRONMENT_CONF(builder *flatbuffers.Builder, ENVIRONMENT_CONF float
 func TRKAddTRK_CONF(builder *flatbuffers.Builder, TRK_CONF float64) {
 	builder.PrependFloat64Slot(28, TRK_CONF, 0.0)
 }
-func TRKAddECEF_POS(builder *flatbuffers.Builder, ECEF_POS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(ECEF_POS), 0)
-}
-func TRKStartECEF_POSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddECEF_VEL(builder *flatbuffers.Builder, ECEF_VEL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(ECEF_VEL), 0)
-}
-func TRKStartECEF_VELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddECEF_ACC(builder *flatbuffers.Builder, ECEF_ACC flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(ECEF_ACC), 0)
-}
-func TRKStartECEF_ACCVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
 func TRKAddLAT(builder *flatbuffers.Builder, LAT float64) {
-	builder.PrependFloat64Slot(32, LAT, 0.0)
+	builder.PrependFloat64Slot(29, LAT, 0.0)
 }
 func TRKAddLON(builder *flatbuffers.Builder, LON float64) {
-	builder.PrependFloat64Slot(33, LON, 0.0)
+	builder.PrependFloat64Slot(30, LON, 0.0)
 }
 func TRKAddALT(builder *flatbuffers.Builder, ALT float64) {
-	builder.PrependFloat64Slot(34, ALT, 0.0)
+	builder.PrependFloat64Slot(31, ALT, 0.0)
 }
 func TRKAddSPD(builder *flatbuffers.Builder, SPD float64) {
-	builder.PrependFloat64Slot(35, SPD, 0.0)
+	builder.PrependFloat64Slot(32, SPD, 0.0)
 }
 func TRKAddHDNG(builder *flatbuffers.Builder, HDNG float64) {
-	builder.PrependFloat64Slot(36, HDNG, 0.0)
+	builder.PrependFloat64Slot(33, HDNG, 0.0)
 }
 func TRKAddCOURSE(builder *flatbuffers.Builder, COURSE float64) {
-	builder.PrependFloat64Slot(37, COURSE, 0.0)
-}
-func TRKAddLCO(builder *flatbuffers.Builder, LCO flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(LCO), 0)
-}
-func TRKStartLCOVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddLCS(builder *flatbuffers.Builder, LCS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(LCS), 0)
-}
-func TRKStartLCSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddLC_POS(builder *flatbuffers.Builder, LC_POS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(LC_POS), 0)
-}
-func TRKStartLC_POSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddLC_VEL(builder *flatbuffers.Builder, LC_VEL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(LC_VEL), 0)
-}
-func TRKStartLC_VELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddLC_ACC(builder *flatbuffers.Builder, LC_ACC flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(LC_ACC), 0)
-}
-func TRKStartLC_ACCVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddE_NUVEL(builder *flatbuffers.Builder, E_NUVEL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(E_NUVEL), 0)
-}
-func TRKStartE_NUVELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddE_NUPOS(builder *flatbuffers.Builder, E_NUPOS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(E_NUPOS), 0)
-}
-func TRKStartE_NUPOSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddCOV(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(COV), 0)
-}
-func TRKStartCOVVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func TRKAddERR_ELLP(builder *flatbuffers.Builder, ERR_ELLP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(ERR_ELLP), 0)
-}
-func TRKStartERR_ELLPVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	builder.PrependFloat64Slot(34, COURSE, 0.0)
 }
 func TRKAddSRC_TYPS(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(SRC_TYPS), 0)
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(SRC_TYPS), 0)
 }
 func TRKStartSRC_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func TRKAddSRC_IDS(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(SRC_IDS), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(SRC_IDS), 0)
 }
 func TRKStartSRC_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func TRKAddCALL_SIGN(builder *flatbuffers.Builder, CALL_SIGN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(CALL_SIGN), 0)
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(CALL_SIGN), 0)
 }
 func TRKAddMULTI_SOURCE(builder *flatbuffers.Builder, MULTI_SOURCE bool) {
-	builder.PrependBoolSlot(50, MULTI_SOURCE, false)
+	builder.PrependBoolSlot(38, MULTI_SOURCE, false)
 }
 func TRKAddJ_SERIES(builder *flatbuffers.Builder, J_SERIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(J_SERIES), 0)
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(J_SERIES), 0)
 }
 func TRKAddSTRENGTH(builder *flatbuffers.Builder, STRENGTH int32) {
-	builder.PrependInt32Slot(52, STRENGTH, 0)
+	builder.PrependInt32Slot(40, STRENGTH, 0)
 }
 func TRKAddM1(builder *flatbuffers.Builder, M1 int32) {
-	builder.PrependInt32Slot(53, M1, 0)
+	builder.PrependInt32Slot(41, M1, 0)
 }
 func TRKAddM1V(builder *flatbuffers.Builder, M1V int32) {
-	builder.PrependInt32Slot(54, M1V, 0)
+	builder.PrependInt32Slot(42, M1V, 0)
 }
 func TRKAddM2(builder *flatbuffers.Builder, M2 int32) {
-	builder.PrependInt32Slot(55, M2, 0)
+	builder.PrependInt32Slot(43, M2, 0)
 }
 func TRKAddM2V(builder *flatbuffers.Builder, M2V int32) {
-	builder.PrependInt32Slot(56, M2V, 0)
+	builder.PrependInt32Slot(44, M2V, 0)
 }
 func TRKAddM3A(builder *flatbuffers.Builder, M3A int32) {
-	builder.PrependInt32Slot(57, M3A, 0)
+	builder.PrependInt32Slot(45, M3A, 0)
 }
 func TRKAddM3AV(builder *flatbuffers.Builder, M3AV int32) {
-	builder.PrependInt32Slot(58, M3AV, 0)
+	builder.PrependInt32Slot(46, M3AV, 0)
 }
 func TRKAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(TAGS), 0)
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(TAGS), 0)
 }
 func TRKStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func TRKAddTRACK_START_TIME(builder *flatbuffers.Builder, TRACK_START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(TRACK_START_TIME), 0)
+}
+func TRKAddTRACK_STEP_SIZE(builder *flatbuffers.Builder, TRACK_STEP_SIZE float64) {
+	builder.PrependFloat64Slot(49, TRACK_STEP_SIZE, 0.0)
+}
+func TRKAddTRACK_COMPONENTS(builder *flatbuffers.Builder, TRACK_COMPONENTS byte) {
+	builder.PrependByteSlot(50, TRACK_COMPONENTS, 3)
+}
+func TRKAddECEF_POS(builder *flatbuffers.Builder, ECEF_POS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(ECEF_POS), 0)
+}
+func TRKStartECEF_POSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddECEF_VEL(builder *flatbuffers.Builder, ECEF_VEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(ECEF_VEL), 0)
+}
+func TRKStartECEF_VELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddECEF_ACC(builder *flatbuffers.Builder, ECEF_ACC flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(ECEF_ACC), 0)
+}
+func TRKStartECEF_ACCVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddLC_POS(builder *flatbuffers.Builder, LC_POS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(LC_POS), 0)
+}
+func TRKStartLC_POSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddLC_VEL(builder *flatbuffers.Builder, LC_VEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(LC_VEL), 0)
+}
+func TRKStartLC_VELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddLC_ACC(builder *flatbuffers.Builder, LC_ACC flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(LC_ACC), 0)
+}
+func TRKStartLC_ACCVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddCOV(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(COV), 0)
+}
+func TRKStartCOVVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TRKAddERR_ELLP(builder *flatbuffers.Builder, ERR_ELLP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(ERR_ELLP), 0)
+}
+func TRKStartERR_ELLPVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func TRKEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

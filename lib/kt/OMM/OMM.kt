@@ -30,7 +30,7 @@ class OMM : Table() {
         return this
     }
     /**
-     * CCSDS OMM Version 
+     * CCSDS OMM Version
      */
     val CCSDS_OMM_VERS : Double
         get() {
@@ -38,7 +38,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Creation Date (ISO 8601 UTC format) 
+     * Creation Date (ISO 8601 UTC format)
      */
     val CREATION_DATE : String?
         get() {
@@ -52,7 +52,7 @@ class OMM : Table() {
     val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Originator 
+     * Originator
      */
     val ORIGINATOR : String?
         get() {
@@ -330,7 +330,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+     * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
      */
     val BSTAR : Double
         get() {
@@ -338,7 +338,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+     * MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
      */
     val MEAN_MOTION_DOT : Double
         get() {
@@ -346,7 +346,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+     * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
      */
     val MEAN_MOTION_DDOT : Double
         get() {
@@ -368,179 +368,33 @@ class OMM : Table() {
         }
     }
     /**
-     * CX_X [km**2]
+     * Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+     * Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+     *         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+     *         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+     *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+     * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
      */
-    val CX_X : Double
-        get() {
-            val o = __offset(72)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+    fun COVARIANCE(j: Int) : Double {
+        val o = __offset(72)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
         }
-    /**
-     * CY_X [km**2]
-     */
-    val CY_X : Double
+    }
+    val COVARIANCELength : Int
         get() {
-            val o = __offset(74)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
-    /**
-     * CY_Y [km**2]
-     */
-    val CY_Y : Double
-        get() {
-            val o = __offset(76)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_X [km**2]
-     */
-    val CZ_X : Double
-        get() {
-            val o = __offset(78)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_Y [km**2]
-     */
-    val CZ_Y : Double
-        get() {
-            val o = __offset(80)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_Z [km**2]
-     */
-    val CZ_Z : Double
-        get() {
-            val o = __offset(82)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CX_DOT_X [km**2/s]
-     */
-    val CX_DOT_X : Double
-        get() {
-            val o = __offset(84)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CX_DOT_Y [km**2/s]
-     */
-    val CX_DOT_Y : Double
-        get() {
-            val o = __offset(86)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CX_DOT_Z [km**2/s]
-     */
-    val CX_DOT_Z : Double
-        get() {
-            val o = __offset(88)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CX_DOT_X_DOT [km**2/s**2]
-     */
-    val CX_DOT_X_DOT : Double
-        get() {
-            val o = __offset(90)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CY_DOT_X [km**2/s]
-     */
-    val CY_DOT_X : Double
-        get() {
-            val o = __offset(92)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CY_DOT_Y [km**2/s]
-     */
-    val CY_DOT_Y : Double
-        get() {
-            val o = __offset(94)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CY_DOT_Z [km**2/s]
-     */
-    val CY_DOT_Z : Double
-        get() {
-            val o = __offset(96)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CY_DOT_X_DOT [km**2/s**2]
-     */
-    val CY_DOT_X_DOT : Double
-        get() {
-            val o = __offset(98)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CY_DOT_Y_DOT [km**2/s**2]
-     */
-    val CY_DOT_Y_DOT : Double
-        get() {
-            val o = __offset(100)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_X [km**2/s]
-     */
-    val CZ_DOT_X : Double
-        get() {
-            val o = __offset(102)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_Y [km**2/s]
-     */
-    val CZ_DOT_Y : Double
-        get() {
-            val o = __offset(104)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_Z [km**2/s]
-     */
-    val CZ_DOT_Z : Double
-        get() {
-            val o = __offset(106)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_X_DOT [km**2/s**2]
-     */
-    val CZ_DOT_X_DOT : Double
-        get() {
-            val o = __offset(108)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_Y_DOT [km**2/s**2]
-     */
-    val CZ_DOT_Y_DOT : Double
-        get() {
-            val o = __offset(110)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * CZ_DOT_Z_DOT [km**2/s**2]
-     */
-    val CZ_DOT_Z_DOT : Double
-        get() {
-            val o = __offset(112)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
+    val COVARIANCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 8)
+    fun COVARIANCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 8)
     /**
      * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
      */
     val USER_DEFINED_BIP_0044_TYPE : UInt
         get() {
-            val o = __offset(114)
+            val o = __offset(74)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
@@ -548,35 +402,35 @@ class OMM : Table() {
      */
     val USER_DEFINED_OBJECT_DESIGNATOR : String?
         get() {
-            val o = __offset(116)
+            val o = __offset(76)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 1)
-    fun USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 1)
+    val USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
+    fun USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
     /**
      * USER_DEFINED_EARTH_MODEL [O, units per ICD]
      */
     val USER_DEFINED_EARTH_MODEL : String?
         get() {
-            val o = __offset(118)
+            val o = __offset(78)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val USER_DEFINED_EARTH_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(118, 1)
-    fun USER_DEFINED_EARTH_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 118, 1)
+    val USER_DEFINED_EARTH_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
+    fun USER_DEFINED_EARTH_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
     /**
      * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
      */
     val USER_DEFINED_EPOCH_TIMESTAMP : Double
         get() {
-            val o = __offset(120)
+            val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -584,7 +438,7 @@ class OMM : Table() {
      */
     val USER_DEFINED_MICROSECONDS : Double
         get() {
-            val o = __offset(122)
+            val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
@@ -595,31 +449,10 @@ class OMM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
-        fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REFERENCE_FRAMEOffset: Int, CX_X: Double, CY_X: Double, CY_Y: Double, CZ_X: Double, CZ_Y: Double, CZ_Z: Double, CX_DOT_X: Double, CX_DOT_Y: Double, CX_DOT_Z: Double, CX_DOT_X_DOT: Double, CY_DOT_X: Double, CY_DOT_Y: Double, CY_DOT_Z: Double, CY_DOT_X_DOT: Double, CY_DOT_Y_DOT: Double, CZ_DOT_X: Double, CZ_DOT_Y: Double, CZ_DOT_Z: Double, CZ_DOT_X_DOT: Double, CZ_DOT_Y_DOT: Double, CZ_DOT_Z_DOT: Double, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
-            builder.startTable(60)
+        fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REFERENCE_FRAMEOffset: Int, COVARIANCEOffset: Int, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
+            builder.startTable(40)
             addUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
             addUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
-            addCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
-            addCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
-            addCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
-            addCZ_DOT_Z(builder, CZ_DOT_Z)
-            addCZ_DOT_Y(builder, CZ_DOT_Y)
-            addCZ_DOT_X(builder, CZ_DOT_X)
-            addCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
-            addCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
-            addCY_DOT_Z(builder, CY_DOT_Z)
-            addCY_DOT_Y(builder, CY_DOT_Y)
-            addCY_DOT_X(builder, CY_DOT_X)
-            addCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
-            addCX_DOT_Z(builder, CX_DOT_Z)
-            addCX_DOT_Y(builder, CX_DOT_Y)
-            addCX_DOT_X(builder, CX_DOT_X)
-            addCZ_Z(builder, CZ_Z)
-            addCZ_Y(builder, CZ_Y)
-            addCZ_X(builder, CZ_X)
-            addCY_Y(builder, CY_Y)
-            addCY_X(builder, CY_X)
-            addCX_X(builder, CX_X)
             addMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
             addMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
             addBSTAR(builder, BSTAR)
@@ -641,6 +474,7 @@ class OMM : Table() {
             addUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset)
             addUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset)
             addUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
+            addCOVARIANCE(builder, COVARIANCEOffset)
             addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset)
             addELEMENT_SET_NO(builder, ELEMENT_SET_NO)
             addNORAD_CAT_ID(builder, NORAD_CAT_ID)
@@ -659,7 +493,7 @@ class OMM : Table() {
             addTIME_SYSTEM(builder, TIME_SYSTEM)
             return endOMM(builder)
         }
-        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(60)
+        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(40)
         fun addCCSDS_OMM_VERS(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double) = builder.addDouble(0, CCSDS_OMM_VERS, 0.0)
         fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
@@ -694,32 +528,20 @@ class OMM : Table() {
         fun addMEAN_MOTION_DOT(builder: FlatBufferBuilder, MEAN_MOTION_DOT: Double) = builder.addDouble(31, MEAN_MOTION_DOT, 0.0)
         fun addMEAN_MOTION_DDOT(builder: FlatBufferBuilder, MEAN_MOTION_DDOT: Double) = builder.addDouble(32, MEAN_MOTION_DDOT, 0.0)
         fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Int) = builder.addOffset(33, COV_REFERENCE_FRAME, 0)
-        fun addCX_X(builder: FlatBufferBuilder, CX_X: Double) = builder.addDouble(34, CX_X, 0.0)
-        fun addCY_X(builder: FlatBufferBuilder, CY_X: Double) = builder.addDouble(35, CY_X, 0.0)
-        fun addCY_Y(builder: FlatBufferBuilder, CY_Y: Double) = builder.addDouble(36, CY_Y, 0.0)
-        fun addCZ_X(builder: FlatBufferBuilder, CZ_X: Double) = builder.addDouble(37, CZ_X, 0.0)
-        fun addCZ_Y(builder: FlatBufferBuilder, CZ_Y: Double) = builder.addDouble(38, CZ_Y, 0.0)
-        fun addCZ_Z(builder: FlatBufferBuilder, CZ_Z: Double) = builder.addDouble(39, CZ_Z, 0.0)
-        fun addCX_DOT_X(builder: FlatBufferBuilder, CX_DOT_X: Double) = builder.addDouble(40, CX_DOT_X, 0.0)
-        fun addCX_DOT_Y(builder: FlatBufferBuilder, CX_DOT_Y: Double) = builder.addDouble(41, CX_DOT_Y, 0.0)
-        fun addCX_DOT_Z(builder: FlatBufferBuilder, CX_DOT_Z: Double) = builder.addDouble(42, CX_DOT_Z, 0.0)
-        fun addCX_DOT_X_DOT(builder: FlatBufferBuilder, CX_DOT_X_DOT: Double) = builder.addDouble(43, CX_DOT_X_DOT, 0.0)
-        fun addCY_DOT_X(builder: FlatBufferBuilder, CY_DOT_X: Double) = builder.addDouble(44, CY_DOT_X, 0.0)
-        fun addCY_DOT_Y(builder: FlatBufferBuilder, CY_DOT_Y: Double) = builder.addDouble(45, CY_DOT_Y, 0.0)
-        fun addCY_DOT_Z(builder: FlatBufferBuilder, CY_DOT_Z: Double) = builder.addDouble(46, CY_DOT_Z, 0.0)
-        fun addCY_DOT_X_DOT(builder: FlatBufferBuilder, CY_DOT_X_DOT: Double) = builder.addDouble(47, CY_DOT_X_DOT, 0.0)
-        fun addCY_DOT_Y_DOT(builder: FlatBufferBuilder, CY_DOT_Y_DOT: Double) = builder.addDouble(48, CY_DOT_Y_DOT, 0.0)
-        fun addCZ_DOT_X(builder: FlatBufferBuilder, CZ_DOT_X: Double) = builder.addDouble(49, CZ_DOT_X, 0.0)
-        fun addCZ_DOT_Y(builder: FlatBufferBuilder, CZ_DOT_Y: Double) = builder.addDouble(50, CZ_DOT_Y, 0.0)
-        fun addCZ_DOT_Z(builder: FlatBufferBuilder, CZ_DOT_Z: Double) = builder.addDouble(51, CZ_DOT_Z, 0.0)
-        fun addCZ_DOT_X_DOT(builder: FlatBufferBuilder, CZ_DOT_X_DOT: Double) = builder.addDouble(52, CZ_DOT_X_DOT, 0.0)
-        fun addCZ_DOT_Y_DOT(builder: FlatBufferBuilder, CZ_DOT_Y_DOT: Double) = builder.addDouble(53, CZ_DOT_Y_DOT, 0.0)
-        fun addCZ_DOT_Z_DOT(builder: FlatBufferBuilder, CZ_DOT_Z_DOT: Double) = builder.addDouble(54, CZ_DOT_Z_DOT, 0.0)
-        fun addUSER_DEFINED_BIP_0044_TYPE(builder: FlatBufferBuilder, USER_DEFINED_BIP_0044_TYPE: UInt) = builder.addInt(55, USER_DEFINED_BIP_0044_TYPE.toInt(), 0)
-        fun addUSER_DEFINED_OBJECT_DESIGNATOR(builder: FlatBufferBuilder, USER_DEFINED_OBJECT_DESIGNATOR: Int) = builder.addOffset(56, USER_DEFINED_OBJECT_DESIGNATOR, 0)
-        fun addUSER_DEFINED_EARTH_MODEL(builder: FlatBufferBuilder, USER_DEFINED_EARTH_MODEL: Int) = builder.addOffset(57, USER_DEFINED_EARTH_MODEL, 0)
-        fun addUSER_DEFINED_EPOCH_TIMESTAMP(builder: FlatBufferBuilder, USER_DEFINED_EPOCH_TIMESTAMP: Double) = builder.addDouble(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
-        fun addUSER_DEFINED_MICROSECONDS(builder: FlatBufferBuilder, USER_DEFINED_MICROSECONDS: Double) = builder.addDouble(59, USER_DEFINED_MICROSECONDS, 0.0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, COVARIANCE: Int) = builder.addOffset(34, COVARIANCE, 0)
+        fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUSER_DEFINED_BIP_0044_TYPE(builder: FlatBufferBuilder, USER_DEFINED_BIP_0044_TYPE: UInt) = builder.addInt(35, USER_DEFINED_BIP_0044_TYPE.toInt(), 0)
+        fun addUSER_DEFINED_OBJECT_DESIGNATOR(builder: FlatBufferBuilder, USER_DEFINED_OBJECT_DESIGNATOR: Int) = builder.addOffset(36, USER_DEFINED_OBJECT_DESIGNATOR, 0)
+        fun addUSER_DEFINED_EARTH_MODEL(builder: FlatBufferBuilder, USER_DEFINED_EARTH_MODEL: Int) = builder.addOffset(37, USER_DEFINED_EARTH_MODEL, 0)
+        fun addUSER_DEFINED_EPOCH_TIMESTAMP(builder: FlatBufferBuilder, USER_DEFINED_EPOCH_TIMESTAMP: Double) = builder.addDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+        fun addUSER_DEFINED_MICROSECONDS(builder: FlatBufferBuilder, USER_DEFINED_MICROSECONDS: Double) = builder.addDouble(39, USER_DEFINED_MICROSECONDS, 0.0)
         fun endOMM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

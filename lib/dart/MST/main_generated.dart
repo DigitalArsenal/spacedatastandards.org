@@ -42,36 +42,46 @@ class MST {
   String? get MSL_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
   String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
   String? get AOU_RPT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  List<String>? get AOU_RPT_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 52);
-  double get CONTAINMENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  int get TRK_QUAL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, 0);
-  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  String? get SEN_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  String? get INFO_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
-  bool get BOOSTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
-  double get POLAR_SING_LOC_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get POLAR_SING_LOC_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  bool get EMG_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
-  bool get DROP_PT_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
-  int get SPACE_AMP_CONF => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 76, 0);
-  String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
-  double get LAUNCH_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  double get LAUNCH_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  double get AZ_CORR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  double get BURNOUT_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  String? get LAUNCH_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
-  List<String>? get LAUNCH_AOU_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 90);
-  String? get IMPACT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
-  double get IMPACT_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  double get IMPACT_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  String? get IMPACT_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
-  List<String>? get IMPACT_AOU_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 100);
-  List<String>? get VECTORS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 102);
+  double get CONTAINMENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  int get TRK_QUAL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 56, 0);
+  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  String? get SEN_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get INFO_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  bool get BOOSTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
+  double get POLAR_SING_LOC_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get POLAR_SING_LOC_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  bool get EMG_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
+  bool get DROP_PT_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
+  int get SPACE_AMP_CONF => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  double get LAUNCH_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  double get LAUNCH_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
+  double get AZ_CORR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
+  double get BURNOUT_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  String? get LAUNCH_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get IMPACT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  double get IMPACT_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  double get IMPACT_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  String? get IMPACT_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  ///  Start time for vector data (ISO 8601 UTC format).
+  String? get VECTOR_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  ///  Time interval between vector points in seconds.
+  double get VECTOR_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
+  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  int get VECTOR_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 100, 6);
+  ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+  List<double>? get VECTORS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 102);
+  ///  AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  List<double>? get AOU_RPT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 104);
+  ///  Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  List<double>? get LAUNCH_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
+  ///  Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  List<double>? get IMPACT_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 108);
 
   @override
   String toString() {
-    return 'MST{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, MSG_SUB_TYPE: ${MSG_SUB_TYPE}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, ENVIRONMENT: ${ENVIRONMENT}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_TYPE_CONF: ${OBJ_TYPE_CONF}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_IDENT: ${OBJ_IDENT}, SPACE_AMP: ${SPACE_AMP}, OBJ_ACT: ${OBJ_ACT}, SPACE_SPEC_TYPE: ${SPACE_SPEC_TYPE}, ACFT_SUB_TYPE: ${ACFT_SUB_TYPE}, NAME: ${NAME}, CALL_SIGN: ${CALL_SIGN}, LOST_TRK_IND: ${LOST_TRK_IND}, TRACK_ID: ${TRACK_ID}, PARENT_TRACK_ID: ${PARENT_TRACK_ID}, MUID_SRC_TRK: ${MUID_SRC_TRK}, MUID_SRC: ${MUID_SRC}, ALERT: ${ALERT}, MSL_STATUS: ${MSL_STATUS}, TS: ${TS}, AOU_RPT_TYPE: ${AOU_RPT_TYPE}, AOU_RPT_DATA: ${AOU_RPT_DATA}, CONTAINMENT: ${CONTAINMENT}, TRK_CONF: ${TRK_CONF}, TRK_QUAL: ${TRK_QUAL}, ANG_ELEV: ${ANG_ELEV}, SEN_MODE: ${SEN_MODE}, INFO_SOURCE: ${INFO_SOURCE}, BOOSTING: ${BOOSTING}, POLAR_SING_LOC_LAT: ${POLAR_SING_LOC_LAT}, POLAR_SING_LOC_LON: ${POLAR_SING_LOC_LON}, EMG_IND: ${EMG_IND}, DROP_PT_IND: ${DROP_PT_IND}, SPACE_AMP_CONF: ${SPACE_AMP_CONF}, LAUNCH_TIME: ${LAUNCH_TIME}, LAUNCH_LAT: ${LAUNCH_LAT}, LAUNCH_LON: ${LAUNCH_LON}, AZ_CORR: ${AZ_CORR}, BURNOUT_ALT: ${BURNOUT_ALT}, LAUNCH_AOU_TYPE: ${LAUNCH_AOU_TYPE}, LAUNCH_AOU_DATA: ${LAUNCH_AOU_DATA}, IMPACT_TIME: ${IMPACT_TIME}, IMPACT_LAT: ${IMPACT_LAT}, IMPACT_LON: ${IMPACT_LON}, IMPACT_AOU_TYPE: ${IMPACT_AOU_TYPE}, IMPACT_AOU_DATA: ${IMPACT_AOU_DATA}, VECTORS: ${VECTORS}}';
+    return 'MST{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, MSG_SUB_TYPE: ${MSG_SUB_TYPE}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, ENVIRONMENT: ${ENVIRONMENT}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_TYPE_CONF: ${OBJ_TYPE_CONF}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_IDENT: ${OBJ_IDENT}, SPACE_AMP: ${SPACE_AMP}, OBJ_ACT: ${OBJ_ACT}, SPACE_SPEC_TYPE: ${SPACE_SPEC_TYPE}, ACFT_SUB_TYPE: ${ACFT_SUB_TYPE}, NAME: ${NAME}, CALL_SIGN: ${CALL_SIGN}, LOST_TRK_IND: ${LOST_TRK_IND}, TRACK_ID: ${TRACK_ID}, PARENT_TRACK_ID: ${PARENT_TRACK_ID}, MUID_SRC_TRK: ${MUID_SRC_TRK}, MUID_SRC: ${MUID_SRC}, ALERT: ${ALERT}, MSL_STATUS: ${MSL_STATUS}, TS: ${TS}, AOU_RPT_TYPE: ${AOU_RPT_TYPE}, CONTAINMENT: ${CONTAINMENT}, TRK_CONF: ${TRK_CONF}, TRK_QUAL: ${TRK_QUAL}, ANG_ELEV: ${ANG_ELEV}, SEN_MODE: ${SEN_MODE}, INFO_SOURCE: ${INFO_SOURCE}, BOOSTING: ${BOOSTING}, POLAR_SING_LOC_LAT: ${POLAR_SING_LOC_LAT}, POLAR_SING_LOC_LON: ${POLAR_SING_LOC_LON}, EMG_IND: ${EMG_IND}, DROP_PT_IND: ${DROP_PT_IND}, SPACE_AMP_CONF: ${SPACE_AMP_CONF}, LAUNCH_TIME: ${LAUNCH_TIME}, LAUNCH_LAT: ${LAUNCH_LAT}, LAUNCH_LON: ${LAUNCH_LON}, AZ_CORR: ${AZ_CORR}, BURNOUT_ALT: ${BURNOUT_ALT}, LAUNCH_AOU_TYPE: ${LAUNCH_AOU_TYPE}, IMPACT_TIME: ${IMPACT_TIME}, IMPACT_LAT: ${IMPACT_LAT}, IMPACT_LON: ${IMPACT_LON}, IMPACT_AOU_TYPE: ${IMPACT_AOU_TYPE}, VECTOR_START_TIME: ${VECTOR_START_TIME}, VECTOR_STEP_SIZE: ${VECTOR_STEP_SIZE}, VECTOR_COMPONENTS: ${VECTOR_COMPONENTS}, VECTORS: ${VECTORS}, AOU_RPT: ${AOU_RPT}, LAUNCH_AOU: ${LAUNCH_AOU}, IMPACT_AOU: ${IMPACT_AOU}}';
   }
 }
 
@@ -89,7 +99,7 @@ class MSTBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(53);
   }
 
   int addIdOffset(int? offset) {
@@ -188,108 +198,120 @@ class MSTBuilder {
     fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
-  int addAouRptDataOffset(int? offset) {
-    fbBuilder.addOffset(24, offset);
-    return fbBuilder.offset;
-  }
   int addContainment(double? CONTAINMENT) {
-    fbBuilder.addFloat64(25, CONTAINMENT);
+    fbBuilder.addFloat64(24, CONTAINMENT);
     return fbBuilder.offset;
   }
   int addTrkConf(double? TRK_CONF) {
-    fbBuilder.addFloat64(26, TRK_CONF);
+    fbBuilder.addFloat64(25, TRK_CONF);
     return fbBuilder.offset;
   }
   int addTrkQual(int? TRK_QUAL) {
-    fbBuilder.addInt32(27, TRK_QUAL);
+    fbBuilder.addInt32(26, TRK_QUAL);
     return fbBuilder.offset;
   }
   int addAngElev(double? ANG_ELEV) {
-    fbBuilder.addFloat64(28, ANG_ELEV);
+    fbBuilder.addFloat64(27, ANG_ELEV);
     return fbBuilder.offset;
   }
   int addSenModeOffset(int? offset) {
-    fbBuilder.addOffset(29, offset);
+    fbBuilder.addOffset(28, offset);
     return fbBuilder.offset;
   }
   int addInfoSourceOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
+    fbBuilder.addOffset(29, offset);
     return fbBuilder.offset;
   }
   int addBoosting(bool? BOOSTING) {
-    fbBuilder.addBool(31, BOOSTING);
+    fbBuilder.addBool(30, BOOSTING);
     return fbBuilder.offset;
   }
   int addPolarSingLocLat(double? POLAR_SING_LOC_LAT) {
-    fbBuilder.addFloat64(32, POLAR_SING_LOC_LAT);
+    fbBuilder.addFloat64(31, POLAR_SING_LOC_LAT);
     return fbBuilder.offset;
   }
   int addPolarSingLocLon(double? POLAR_SING_LOC_LON) {
-    fbBuilder.addFloat64(33, POLAR_SING_LOC_LON);
+    fbBuilder.addFloat64(32, POLAR_SING_LOC_LON);
     return fbBuilder.offset;
   }
   int addEmgInd(bool? EMG_IND) {
-    fbBuilder.addBool(34, EMG_IND);
+    fbBuilder.addBool(33, EMG_IND);
     return fbBuilder.offset;
   }
   int addDropPtInd(bool? DROP_PT_IND) {
-    fbBuilder.addBool(35, DROP_PT_IND);
+    fbBuilder.addBool(34, DROP_PT_IND);
     return fbBuilder.offset;
   }
   int addSpaceAmpConf(int? SPACE_AMP_CONF) {
-    fbBuilder.addInt32(36, SPACE_AMP_CONF);
+    fbBuilder.addInt32(35, SPACE_AMP_CONF);
     return fbBuilder.offset;
   }
   int addLaunchTimeOffset(int? offset) {
-    fbBuilder.addOffset(37, offset);
+    fbBuilder.addOffset(36, offset);
     return fbBuilder.offset;
   }
   int addLaunchLat(double? LAUNCH_LAT) {
-    fbBuilder.addFloat64(38, LAUNCH_LAT);
+    fbBuilder.addFloat64(37, LAUNCH_LAT);
     return fbBuilder.offset;
   }
   int addLaunchLon(double? LAUNCH_LON) {
-    fbBuilder.addFloat64(39, LAUNCH_LON);
+    fbBuilder.addFloat64(38, LAUNCH_LON);
     return fbBuilder.offset;
   }
   int addAzCorr(double? AZ_CORR) {
-    fbBuilder.addFloat64(40, AZ_CORR);
+    fbBuilder.addFloat64(39, AZ_CORR);
     return fbBuilder.offset;
   }
   int addBurnoutAlt(double? BURNOUT_ALT) {
-    fbBuilder.addFloat64(41, BURNOUT_ALT);
+    fbBuilder.addFloat64(40, BURNOUT_ALT);
     return fbBuilder.offset;
   }
   int addLaunchAouTypeOffset(int? offset) {
-    fbBuilder.addOffset(42, offset);
-    return fbBuilder.offset;
-  }
-  int addLaunchAouDataOffset(int? offset) {
-    fbBuilder.addOffset(43, offset);
+    fbBuilder.addOffset(41, offset);
     return fbBuilder.offset;
   }
   int addImpactTimeOffset(int? offset) {
-    fbBuilder.addOffset(44, offset);
+    fbBuilder.addOffset(42, offset);
     return fbBuilder.offset;
   }
   int addImpactLat(double? IMPACT_LAT) {
-    fbBuilder.addFloat64(45, IMPACT_LAT);
+    fbBuilder.addFloat64(43, IMPACT_LAT);
     return fbBuilder.offset;
   }
   int addImpactLon(double? IMPACT_LON) {
-    fbBuilder.addFloat64(46, IMPACT_LON);
+    fbBuilder.addFloat64(44, IMPACT_LON);
     return fbBuilder.offset;
   }
   int addImpactAouTypeOffset(int? offset) {
-    fbBuilder.addOffset(47, offset);
+    fbBuilder.addOffset(45, offset);
     return fbBuilder.offset;
   }
-  int addImpactAouDataOffset(int? offset) {
-    fbBuilder.addOffset(48, offset);
+  int addVectorStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(46, offset);
+    return fbBuilder.offset;
+  }
+  int addVectorStepSize(double? VECTOR_STEP_SIZE) {
+    fbBuilder.addFloat64(47, VECTOR_STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addVectorComponents(int? VECTOR_COMPONENTS) {
+    fbBuilder.addUint8(48, VECTOR_COMPONENTS);
     return fbBuilder.offset;
   }
   int addVectorsOffset(int? offset) {
     fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addAouRptOffset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchAouOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactAouOffset(int? offset) {
+    fbBuilder.addOffset(52, offset);
     return fbBuilder.offset;
   }
 
@@ -323,7 +345,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
   final String? _MSL_STATUS;
   final String? _TS;
   final String? _AOU_RPT_TYPE;
-  final List<String>? _AOU_RPT_DATA;
   final double? _CONTAINMENT;
   final double? _TRK_CONF;
   final int? _TRK_QUAL;
@@ -342,13 +363,17 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
   final double? _AZ_CORR;
   final double? _BURNOUT_ALT;
   final String? _LAUNCH_AOU_TYPE;
-  final List<String>? _LAUNCH_AOU_DATA;
   final String? _IMPACT_TIME;
   final double? _IMPACT_LAT;
   final double? _IMPACT_LON;
   final String? _IMPACT_AOU_TYPE;
-  final List<String>? _IMPACT_AOU_DATA;
-  final List<String>? _VECTORS;
+  final String? _VECTOR_START_TIME;
+  final double? _VECTOR_STEP_SIZE;
+  final int? _VECTOR_COMPONENTS;
+  final List<double>? _VECTORS;
+  final List<double>? _AOU_RPT;
+  final List<double>? _LAUNCH_AOU;
+  final List<double>? _IMPACT_AOU;
 
   MSTObjectBuilder({
     String? ID,
@@ -375,7 +400,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     String? MSL_STATUS,
     String? TS,
     String? AOU_RPT_TYPE,
-    List<String>? AOU_RPT_DATA,
     double? CONTAINMENT,
     double? TRK_CONF,
     int? TRK_QUAL,
@@ -394,13 +418,17 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     double? AZ_CORR,
     double? BURNOUT_ALT,
     String? LAUNCH_AOU_TYPE,
-    List<String>? LAUNCH_AOU_DATA,
     String? IMPACT_TIME,
     double? IMPACT_LAT,
     double? IMPACT_LON,
     String? IMPACT_AOU_TYPE,
-    List<String>? IMPACT_AOU_DATA,
-    List<String>? VECTORS,
+    String? VECTOR_START_TIME,
+    double? VECTOR_STEP_SIZE,
+    int? VECTOR_COMPONENTS,
+    List<double>? VECTORS,
+    List<double>? AOU_RPT,
+    List<double>? LAUNCH_AOU,
+    List<double>? IMPACT_AOU,
   })
       : _ID = ID,
         _MSG_TYPE = MSG_TYPE,
@@ -426,7 +454,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         _MSL_STATUS = MSL_STATUS,
         _TS = TS,
         _AOU_RPT_TYPE = AOU_RPT_TYPE,
-        _AOU_RPT_DATA = AOU_RPT_DATA,
         _CONTAINMENT = CONTAINMENT,
         _TRK_CONF = TRK_CONF,
         _TRK_QUAL = TRK_QUAL,
@@ -445,13 +472,17 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         _AZ_CORR = AZ_CORR,
         _BURNOUT_ALT = BURNOUT_ALT,
         _LAUNCH_AOU_TYPE = LAUNCH_AOU_TYPE,
-        _LAUNCH_AOU_DATA = LAUNCH_AOU_DATA,
         _IMPACT_TIME = IMPACT_TIME,
         _IMPACT_LAT = IMPACT_LAT,
         _IMPACT_LON = IMPACT_LON,
         _IMPACT_AOU_TYPE = IMPACT_AOU_TYPE,
-        _IMPACT_AOU_DATA = IMPACT_AOU_DATA,
-        _VECTORS = VECTORS;
+        _VECTOR_START_TIME = VECTOR_START_TIME,
+        _VECTOR_STEP_SIZE = VECTOR_STEP_SIZE,
+        _VECTOR_COMPONENTS = VECTOR_COMPONENTS,
+        _VECTORS = VECTORS,
+        _AOU_RPT = AOU_RPT,
+        _LAUNCH_AOU = LAUNCH_AOU,
+        _IMPACT_AOU = IMPACT_AOU;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -500,8 +531,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TS!);
     final int? AOU_RPT_TYPEOffset = _AOU_RPT_TYPE == null ? null
         : fbBuilder.writeString(_AOU_RPT_TYPE!);
-    final int? AOU_RPT_DATAOffset = _AOU_RPT_DATA == null ? null
-        : fbBuilder.writeList(_AOU_RPT_DATA!.map(fbBuilder.writeString).toList());
     final int? SEN_MODEOffset = _SEN_MODE == null ? null
         : fbBuilder.writeString(_SEN_MODE!);
     final int? INFO_SOURCEOffset = _INFO_SOURCE == null ? null
@@ -510,17 +539,21 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LAUNCH_TIME!);
     final int? LAUNCH_AOU_TYPEOffset = _LAUNCH_AOU_TYPE == null ? null
         : fbBuilder.writeString(_LAUNCH_AOU_TYPE!);
-    final int? LAUNCH_AOU_DATAOffset = _LAUNCH_AOU_DATA == null ? null
-        : fbBuilder.writeList(_LAUNCH_AOU_DATA!.map(fbBuilder.writeString).toList());
     final int? IMPACT_TIMEOffset = _IMPACT_TIME == null ? null
         : fbBuilder.writeString(_IMPACT_TIME!);
     final int? IMPACT_AOU_TYPEOffset = _IMPACT_AOU_TYPE == null ? null
         : fbBuilder.writeString(_IMPACT_AOU_TYPE!);
-    final int? IMPACT_AOU_DATAOffset = _IMPACT_AOU_DATA == null ? null
-        : fbBuilder.writeList(_IMPACT_AOU_DATA!.map(fbBuilder.writeString).toList());
+    final int? VECTOR_START_TIMEOffset = _VECTOR_START_TIME == null ? null
+        : fbBuilder.writeString(_VECTOR_START_TIME!);
     final int? VECTORSOffset = _VECTORS == null ? null
-        : fbBuilder.writeList(_VECTORS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(50);
+        : fbBuilder.writeListFloat64(_VECTORS!);
+    final int? AOU_RPTOffset = _AOU_RPT == null ? null
+        : fbBuilder.writeListFloat64(_AOU_RPT!);
+    final int? LAUNCH_AOUOffset = _LAUNCH_AOU == null ? null
+        : fbBuilder.writeListFloat64(_LAUNCH_AOU!);
+    final int? IMPACT_AOUOffset = _IMPACT_AOU == null ? null
+        : fbBuilder.writeListFloat64(_IMPACT_AOU!);
+    fbBuilder.startTable(53);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, MSG_TYPEOffset);
     fbBuilder.addOffset(2, MSG_SUB_TYPEOffset);
@@ -545,32 +578,35 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(21, MSL_STATUSOffset);
     fbBuilder.addOffset(22, TSOffset);
     fbBuilder.addOffset(23, AOU_RPT_TYPEOffset);
-    fbBuilder.addOffset(24, AOU_RPT_DATAOffset);
-    fbBuilder.addFloat64(25, _CONTAINMENT);
-    fbBuilder.addFloat64(26, _TRK_CONF);
-    fbBuilder.addInt32(27, _TRK_QUAL);
-    fbBuilder.addFloat64(28, _ANG_ELEV);
-    fbBuilder.addOffset(29, SEN_MODEOffset);
-    fbBuilder.addOffset(30, INFO_SOURCEOffset);
-    fbBuilder.addBool(31, _BOOSTING);
-    fbBuilder.addFloat64(32, _POLAR_SING_LOC_LAT);
-    fbBuilder.addFloat64(33, _POLAR_SING_LOC_LON);
-    fbBuilder.addBool(34, _EMG_IND);
-    fbBuilder.addBool(35, _DROP_PT_IND);
-    fbBuilder.addInt32(36, _SPACE_AMP_CONF);
-    fbBuilder.addOffset(37, LAUNCH_TIMEOffset);
-    fbBuilder.addFloat64(38, _LAUNCH_LAT);
-    fbBuilder.addFloat64(39, _LAUNCH_LON);
-    fbBuilder.addFloat64(40, _AZ_CORR);
-    fbBuilder.addFloat64(41, _BURNOUT_ALT);
-    fbBuilder.addOffset(42, LAUNCH_AOU_TYPEOffset);
-    fbBuilder.addOffset(43, LAUNCH_AOU_DATAOffset);
-    fbBuilder.addOffset(44, IMPACT_TIMEOffset);
-    fbBuilder.addFloat64(45, _IMPACT_LAT);
-    fbBuilder.addFloat64(46, _IMPACT_LON);
-    fbBuilder.addOffset(47, IMPACT_AOU_TYPEOffset);
-    fbBuilder.addOffset(48, IMPACT_AOU_DATAOffset);
+    fbBuilder.addFloat64(24, _CONTAINMENT);
+    fbBuilder.addFloat64(25, _TRK_CONF);
+    fbBuilder.addInt32(26, _TRK_QUAL);
+    fbBuilder.addFloat64(27, _ANG_ELEV);
+    fbBuilder.addOffset(28, SEN_MODEOffset);
+    fbBuilder.addOffset(29, INFO_SOURCEOffset);
+    fbBuilder.addBool(30, _BOOSTING);
+    fbBuilder.addFloat64(31, _POLAR_SING_LOC_LAT);
+    fbBuilder.addFloat64(32, _POLAR_SING_LOC_LON);
+    fbBuilder.addBool(33, _EMG_IND);
+    fbBuilder.addBool(34, _DROP_PT_IND);
+    fbBuilder.addInt32(35, _SPACE_AMP_CONF);
+    fbBuilder.addOffset(36, LAUNCH_TIMEOffset);
+    fbBuilder.addFloat64(37, _LAUNCH_LAT);
+    fbBuilder.addFloat64(38, _LAUNCH_LON);
+    fbBuilder.addFloat64(39, _AZ_CORR);
+    fbBuilder.addFloat64(40, _BURNOUT_ALT);
+    fbBuilder.addOffset(41, LAUNCH_AOU_TYPEOffset);
+    fbBuilder.addOffset(42, IMPACT_TIMEOffset);
+    fbBuilder.addFloat64(43, _IMPACT_LAT);
+    fbBuilder.addFloat64(44, _IMPACT_LON);
+    fbBuilder.addOffset(45, IMPACT_AOU_TYPEOffset);
+    fbBuilder.addOffset(46, VECTOR_START_TIMEOffset);
+    fbBuilder.addFloat64(47, _VECTOR_STEP_SIZE);
+    fbBuilder.addUint8(48, _VECTOR_COMPONENTS);
     fbBuilder.addOffset(49, VECTORSOffset);
+    fbBuilder.addOffset(50, AOU_RPTOffset);
+    fbBuilder.addOffset(51, LAUNCH_AOUOffset);
+    fbBuilder.addOffset(52, IMPACT_AOUOffset);
     return fbBuilder.endTable();
   }
 

@@ -1,5 +1,5 @@
-// Hash: 939aeb971b2f8607b47715329571e5b944b29aec40e473a3d16d5d4cffdcf6cf
-// Version: 0.0.2
+// Hash: 152f6e237a93b3d9b168a88b98883505ddd7a7ccebfc3533e52512230b95e163
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 /// Track
 table TRK {
@@ -32,24 +32,12 @@ table TRK {
   ENVIRONMENT:string;
   ENVIRONMENT_CONF:double;
   TRK_CONF:double;
-  ECEF_POS:[string];
-  ECEF_VEL:[string];
-  ECEF_ACC:[string];
   LAT:double;
   LON:double;
   ALT:double;
   SPD:double;
   HDNG:double;
   COURSE:double;
-  LCO:[string];
-  LCS:[string];
-  LC_POS:[string];
-  LC_VEL:[string];
-  LC_ACC:[string];
-  E_NUVEL:[string];
-  E_NUPOS:[string];
-  COV:[string];
-  ERR_ELLP:[string];
   SRC_TYPS:[string];
   SRC_IDS:[string];
   CALL_SIGN:string;
@@ -63,6 +51,39 @@ table TRK {
   M3A:int;
   M3AV:int;
   TAGS:[string];
+
+  /// Start time for track data (ISO 8601 UTC format).
+  TRACK_START_TIME:string;
+
+  /// Time interval between track points in seconds.
+  TRACK_STEP_SIZE:double;
+
+  /// Number of components per point (default 3 for X, Y, Z).
+  TRACK_COMPONENTS:uint8 = 3;
+
+  /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  ECEF_POS:[double];
+
+  /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  ECEF_VEL:[double];
+
+  /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  ECEF_ACC:[double];
+
+  /// Local coordinate position as flat array
+  LC_POS:[double];
+
+  /// Local coordinate velocity as flat array
+  LC_VEL:[double];
+
+  /// Local coordinate acceleration as flat array
+  LC_ACC:[double];
+
+  /// Covariance data (21 elements per point for 6x6 lower triangular)
+  COV:[double];
+
+  /// Error ellipse data (6 elements per point)
+  ERR_ELLP:[double];
 }
 
 root_type TRK;

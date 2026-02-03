@@ -54,7 +54,7 @@ func (rcv *OMM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// CCSDS OMM Version 
+/// CCSDS OMM Version
 func (rcv *OMM) CCSDS_OMM_VERS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -63,12 +63,12 @@ func (rcv *OMM) CCSDS_OMM_VERS() float64 {
 	return 0.0
 }
 
-/// CCSDS OMM Version 
+/// CCSDS OMM Version
 func (rcv *OMM) MutateCCSDS_OMM_VERS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
 
-/// Creation Date (ISO 8601 UTC format) 
+/// Creation Date (ISO 8601 UTC format)
 func (rcv *OMM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -77,8 +77,8 @@ func (rcv *OMM) CREATION_DATE() []byte {
 	return nil
 }
 
-/// Creation Date (ISO 8601 UTC format) 
-/// Originator 
+/// Creation Date (ISO 8601 UTC format)
+/// Originator
 func (rcv *OMM) ORIGINATOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -87,7 +87,7 @@ func (rcv *OMM) ORIGINATOR() []byte {
 	return nil
 }
 
-/// Originator 
+/// Originator
 /// Satellite Name(s)
 func (rcv *OMM) OBJECT_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -443,7 +443,7 @@ func (rcv *OMM) MutateREV_AT_EPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
-/// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+/// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
 func (rcv *OMM) BSTAR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -452,12 +452,12 @@ func (rcv *OMM) BSTAR() float64 {
 	return 0.0
 }
 
-/// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+/// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
 func (rcv *OMM) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
-/// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+/// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
 func (rcv *OMM) MEAN_MOTION_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -466,12 +466,12 @@ func (rcv *OMM) MEAN_MOTION_DOT() float64 {
 	return 0.0
 }
 
-/// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+/// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
 func (rcv *OMM) MutateMEAN_MOTION_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-/// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
 func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -480,7 +480,7 @@ func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	return 0.0
 }
 
-/// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
 func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
@@ -504,303 +504,47 @@ func (rcv *OMM) COV_REFERENCE_FRAME(obj *RFM) *RFM {
 /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
 /// COV_REF_FRAME reference frame for covariance [C if covariance given]
 /// Typically RSW
-/// CX_X [km**2]
-func (rcv *OMM) CX_X() float64 {
+/// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+/// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+/// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+func (rcv *OMM) COVARIANCE(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return 0.0
+	return 0
 }
 
-/// CX_X [km**2]
-func (rcv *OMM) MutateCX_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(72, n)
-}
-
-/// CY_X [km**2]
-func (rcv *OMM) CY_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+func (rcv *OMM) COVARIANCELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.VectorLen(o)
 	}
-	return 0.0
+	return 0
 }
 
-/// CY_X [km**2]
-func (rcv *OMM) MutateCY_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(74, n)
-}
-
-/// CY_Y [km**2]
-func (rcv *OMM) CY_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+/// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+/// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+/// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+func (rcv *OMM) MutateCOVARIANCE(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return 0.0
-}
-
-/// CY_Y [km**2]
-func (rcv *OMM) MutateCY_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(76, n)
-}
-
-/// CZ_X [km**2]
-func (rcv *OMM) CZ_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_X [km**2]
-func (rcv *OMM) MutateCZ_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(78, n)
-}
-
-/// CZ_Y [km**2]
-func (rcv *OMM) CZ_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_Y [km**2]
-func (rcv *OMM) MutateCZ_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(80, n)
-}
-
-/// CZ_Z [km**2]
-func (rcv *OMM) CZ_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_Z [km**2]
-func (rcv *OMM) MutateCZ_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(82, n)
-}
-
-/// CX_DOT_X [km**2/s]
-func (rcv *OMM) CX_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CX_DOT_X [km**2/s]
-func (rcv *OMM) MutateCX_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(84, n)
-}
-
-/// CX_DOT_Y [km**2/s]
-func (rcv *OMM) CX_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CX_DOT_Y [km**2/s]
-func (rcv *OMM) MutateCX_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(86, n)
-}
-
-/// CX_DOT_Z [km**2/s]
-func (rcv *OMM) CX_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CX_DOT_Z [km**2/s]
-func (rcv *OMM) MutateCX_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(88, n)
-}
-
-/// CX_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) CX_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CX_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) MutateCX_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(90, n)
-}
-
-/// CY_DOT_X [km**2/s]
-func (rcv *OMM) CY_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CY_DOT_X [km**2/s]
-func (rcv *OMM) MutateCY_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(92, n)
-}
-
-/// CY_DOT_Y [km**2/s]
-func (rcv *OMM) CY_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CY_DOT_Y [km**2/s]
-func (rcv *OMM) MutateCY_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(94, n)
-}
-
-/// CY_DOT_Z [km**2/s]
-func (rcv *OMM) CY_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CY_DOT_Z [km**2/s]
-func (rcv *OMM) MutateCY_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(96, n)
-}
-
-/// CY_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) CY_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CY_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) MutateCY_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(98, n)
-}
-
-/// CY_DOT_Y_DOT [km**2/s**2]
-func (rcv *OMM) CY_DOT_Y_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CY_DOT_Y_DOT [km**2/s**2]
-func (rcv *OMM) MutateCY_DOT_Y_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(100, n)
-}
-
-/// CZ_DOT_X [km**2/s]
-func (rcv *OMM) CZ_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_X [km**2/s]
-func (rcv *OMM) MutateCZ_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(102, n)
-}
-
-/// CZ_DOT_Y [km**2/s]
-func (rcv *OMM) CZ_DOT_Y() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_Y [km**2/s]
-func (rcv *OMM) MutateCZ_DOT_Y(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(104, n)
-}
-
-/// CZ_DOT_Z [km**2/s]
-func (rcv *OMM) CZ_DOT_Z() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_Z [km**2/s]
-func (rcv *OMM) MutateCZ_DOT_Z(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(106, n)
-}
-
-/// CZ_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) CZ_DOT_X_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_X_DOT [km**2/s**2]
-func (rcv *OMM) MutateCZ_DOT_X_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(108, n)
-}
-
-/// CZ_DOT_Y_DOT [km**2/s**2]
-func (rcv *OMM) CZ_DOT_Y_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_Y_DOT [km**2/s**2]
-func (rcv *OMM) MutateCZ_DOT_Y_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(110, n)
-}
-
-/// CZ_DOT_Z_DOT [km**2/s**2]
-func (rcv *OMM) CZ_DOT_Z_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-/// CZ_DOT_Z_DOT [km**2/s**2]
-func (rcv *OMM) MutateCZ_DOT_Z_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(112, n)
+	return false
 }
 
 /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -809,12 +553,12 @@ func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 
 /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_BIP_0044_TYPE(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(114, n)
+	return rcv._tab.MutateUint32Slot(74, n)
 }
 
 /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -824,7 +568,7 @@ func (rcv *OMM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
 /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
 /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_EARTH_MODEL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -834,7 +578,7 @@ func (rcv *OMM) USER_DEFINED_EARTH_MODEL() []byte {
 /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
 /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -843,12 +587,12 @@ func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
 
 /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_EPOCH_TIMESTAMP(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(120, n)
+	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
 /// USER_DEFINED_MICROSECONDS [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_MICROSECONDS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -857,11 +601,11 @@ func (rcv *OMM) USER_DEFINED_MICROSECONDS() float64 {
 
 /// USER_DEFINED_MICROSECONDS [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_MICROSECONDS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(122, n)
+	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
 func OMMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(60)
+	builder.StartObject(40)
 }
 func OMMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -965,83 +709,26 @@ func OMMAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float
 func OMMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
 }
-func OMMAddCX_X(builder *flatbuffers.Builder, CX_X float64) {
-	builder.PrependFloat64Slot(34, CX_X, 0.0)
+func OMMAddCOVARIANCE(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(COVARIANCE), 0)
 }
-func OMMAddCY_X(builder *flatbuffers.Builder, CY_X float64) {
-	builder.PrependFloat64Slot(35, CY_X, 0.0)
-}
-func OMMAddCY_Y(builder *flatbuffers.Builder, CY_Y float64) {
-	builder.PrependFloat64Slot(36, CY_Y, 0.0)
-}
-func OMMAddCZ_X(builder *flatbuffers.Builder, CZ_X float64) {
-	builder.PrependFloat64Slot(37, CZ_X, 0.0)
-}
-func OMMAddCZ_Y(builder *flatbuffers.Builder, CZ_Y float64) {
-	builder.PrependFloat64Slot(38, CZ_Y, 0.0)
-}
-func OMMAddCZ_Z(builder *flatbuffers.Builder, CZ_Z float64) {
-	builder.PrependFloat64Slot(39, CZ_Z, 0.0)
-}
-func OMMAddCX_DOT_X(builder *flatbuffers.Builder, CX_DOT_X float64) {
-	builder.PrependFloat64Slot(40, CX_DOT_X, 0.0)
-}
-func OMMAddCX_DOT_Y(builder *flatbuffers.Builder, CX_DOT_Y float64) {
-	builder.PrependFloat64Slot(41, CX_DOT_Y, 0.0)
-}
-func OMMAddCX_DOT_Z(builder *flatbuffers.Builder, CX_DOT_Z float64) {
-	builder.PrependFloat64Slot(42, CX_DOT_Z, 0.0)
-}
-func OMMAddCX_DOT_X_DOT(builder *flatbuffers.Builder, CX_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(43, CX_DOT_X_DOT, 0.0)
-}
-func OMMAddCY_DOT_X(builder *flatbuffers.Builder, CY_DOT_X float64) {
-	builder.PrependFloat64Slot(44, CY_DOT_X, 0.0)
-}
-func OMMAddCY_DOT_Y(builder *flatbuffers.Builder, CY_DOT_Y float64) {
-	builder.PrependFloat64Slot(45, CY_DOT_Y, 0.0)
-}
-func OMMAddCY_DOT_Z(builder *flatbuffers.Builder, CY_DOT_Z float64) {
-	builder.PrependFloat64Slot(46, CY_DOT_Z, 0.0)
-}
-func OMMAddCY_DOT_X_DOT(builder *flatbuffers.Builder, CY_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(47, CY_DOT_X_DOT, 0.0)
-}
-func OMMAddCY_DOT_Y_DOT(builder *flatbuffers.Builder, CY_DOT_Y_DOT float64) {
-	builder.PrependFloat64Slot(48, CY_DOT_Y_DOT, 0.0)
-}
-func OMMAddCZ_DOT_X(builder *flatbuffers.Builder, CZ_DOT_X float64) {
-	builder.PrependFloat64Slot(49, CZ_DOT_X, 0.0)
-}
-func OMMAddCZ_DOT_Y(builder *flatbuffers.Builder, CZ_DOT_Y float64) {
-	builder.PrependFloat64Slot(50, CZ_DOT_Y, 0.0)
-}
-func OMMAddCZ_DOT_Z(builder *flatbuffers.Builder, CZ_DOT_Z float64) {
-	builder.PrependFloat64Slot(51, CZ_DOT_Z, 0.0)
-}
-func OMMAddCZ_DOT_X_DOT(builder *flatbuffers.Builder, CZ_DOT_X_DOT float64) {
-	builder.PrependFloat64Slot(52, CZ_DOT_X_DOT, 0.0)
-}
-func OMMAddCZ_DOT_Y_DOT(builder *flatbuffers.Builder, CZ_DOT_Y_DOT float64) {
-	builder.PrependFloat64Slot(53, CZ_DOT_Y_DOT, 0.0)
-}
-func OMMAddCZ_DOT_Z_DOT(builder *flatbuffers.Builder, CZ_DOT_Z_DOT float64) {
-	builder.PrependFloat64Slot(54, CZ_DOT_Z_DOT, 0.0)
+func OMMStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func OMMAddUSER_DEFINED_BIP_0044_TYPE(builder *flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE uint32) {
-	builder.PrependUint32Slot(55, USER_DEFINED_BIP_0044_TYPE, 0)
+	builder.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)
 }
 func OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder *flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(USER_DEFINED_OBJECT_DESIGNATOR), 0)
 }
 func OMMAddUSER_DEFINED_EARTH_MODEL(builder *flatbuffers.Builder, USER_DEFINED_EARTH_MODEL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(USER_DEFINED_EARTH_MODEL), 0)
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(USER_DEFINED_EARTH_MODEL), 0)
 }
 func OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder *flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP float64) {
-	builder.PrependFloat64Slot(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+	builder.PrependFloat64Slot(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
 }
 func OMMAddUSER_DEFINED_MICROSECONDS(builder *flatbuffers.Builder, USER_DEFINED_MICROSECONDS float64) {
-	builder.PrependFloat64Slot(59, USER_DEFINED_MICROSECONDS, 0.0)
+	builder.PrependFloat64Slot(39, USER_DEFINED_MICROSECONDS, 0.0)
 }
 func OMMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

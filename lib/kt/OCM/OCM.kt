@@ -68,27 +68,67 @@ class OCM : Table() {
     val TRAJ_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun TRAJ_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * State vector data.
+     * Time interval between state vectors in seconds (required for time-series data).
      */
-    fun STATE_DATA(j: Int) : StateVector? = STATE_DATA(StateVector(), j)
-    fun STATE_DATA(obj: StateVector, j: Int) : StateVector? {
-        val o = __offset(10)
+    val STATE_STEP_SIZE : Double
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of components per state vector.
+     * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+     * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+     */
+    val STATE_VECTOR_SIZE : UByte
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
+        }
+    /**
+     * State data as row-major array of doubles.
+     * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+     * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+     * Length must be divisible by STATE_VECTOR_SIZE.
+     */
+    fun STATE_DATA(j: Int) : Double {
+        val o = __offset(14)
         return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val STATE_DATALength : Int
         get() {
-            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
+    val STATE_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 8)
+    fun STATE_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 8)
+    /**
+     * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+     * Time alignment matches STATE_DATA epochs.
+     */
+    fun COVARIANCE_DATA(j: Int) : Double {
+        val o = __offset(16)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val COVARIANCE_DATALength : Int
+        get() {
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+        }
+    val COVARIANCE_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
+    fun COVARIANCE_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
     /**
      * Physical properties of the space object.
      */
     val PHYSICAL_PROPERTIES : PhysicalProperties? get() = PHYSICAL_PROPERTIES(PhysicalProperties())
     fun PHYSICAL_PROPERTIES(obj: PhysicalProperties) : PhysicalProperties? {
-        val o = __offset(12)
+        val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -96,27 +136,11 @@ class OCM : Table() {
         }
     }
     /**
-     * Covariance data associated with the state vectors.
-     */
-    fun COVARIANCE_DATA(j: Int) : StateVector? = COVARIANCE_DATA(StateVector(), j)
-    fun COVARIANCE_DATA(obj: StateVector, j: Int) : StateVector? {
-        val o = __offset(14)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val COVARIANCE_DATALength : Int
-        get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
-        }
-    /**
      * Maneuver data.
      */
     fun MANEUVER_DATA(j: Int) : Maneuver? = MANEUVER_DATA(Maneuver(), j)
     fun MANEUVER_DATA(obj: Maneuver, j: Int) : Maneuver? {
-        val o = __offset(16)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -125,14 +149,14 @@ class OCM : Table() {
     }
     val MANEUVER_DATALength : Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Perturbations parameters used.
      */
     val PERTURBATIONS : Perturbations? get() = PERTURBATIONS(Perturbations())
     fun PERTURBATIONS(obj: Perturbations) : Perturbations? {
-        val o = __offset(18)
+        val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -144,7 +168,7 @@ class OCM : Table() {
      */
     val ORBIT_DETERMINATION : OrbitDetermination? get() = ORBIT_DETERMINATION(OrbitDetermination())
     fun ORBIT_DETERMINATION(obj: OrbitDetermination) : OrbitDetermination? {
-        val o = __offset(20)
+        val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -156,7 +180,7 @@ class OCM : Table() {
      */
     fun USER_DEFINED_PARAMETERS(j: Int) : UserDefinedParameters? = USER_DEFINED_PARAMETERS(UserDefinedParameters(), j)
     fun USER_DEFINED_PARAMETERS(obj: UserDefinedParameters, j: Int) : UserDefinedParameters? {
-        val o = __offset(22)
+        val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -165,7 +189,7 @@ class OCM : Table() {
     }
     val USER_DEFINED_PARAMETERSLength : Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -175,44 +199,48 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, HEADEROffset: Int, METADATAOffset: Int, TRAJ_TYPEOffset: Int, STATE_DATAOffset: Int, PHYSICAL_PROPERTIESOffset: Int, COVARIANCE_DATAOffset: Int, MANEUVER_DATAOffset: Int, PERTURBATIONSOffset: Int, ORBIT_DETERMINATIONOffset: Int, USER_DEFINED_PARAMETERSOffset: Int) : Int {
-            builder.startTable(10)
+        fun createOCM(builder: FlatBufferBuilder, HEADEROffset: Int, METADATAOffset: Int, TRAJ_TYPEOffset: Int, STATE_STEP_SIZE: Double, STATE_VECTOR_SIZE: UByte, STATE_DATAOffset: Int, COVARIANCE_DATAOffset: Int, PHYSICAL_PROPERTIESOffset: Int, MANEUVER_DATAOffset: Int, PERTURBATIONSOffset: Int, ORBIT_DETERMINATIONOffset: Int, USER_DEFINED_PARAMETERSOffset: Int) : Int {
+            builder.startTable(12)
+            addSTATE_STEP_SIZE(builder, STATE_STEP_SIZE)
             addUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset)
             addORBIT_DETERMINATION(builder, ORBIT_DETERMINATIONOffset)
             addPERTURBATIONS(builder, PERTURBATIONSOffset)
             addMANEUVER_DATA(builder, MANEUVER_DATAOffset)
-            addCOVARIANCE_DATA(builder, COVARIANCE_DATAOffset)
             addPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIESOffset)
+            addCOVARIANCE_DATA(builder, COVARIANCE_DATAOffset)
             addSTATE_DATA(builder, STATE_DATAOffset)
             addTRAJ_TYPE(builder, TRAJ_TYPEOffset)
             addMETADATA(builder, METADATAOffset)
             addHEADER(builder, HEADEROffset)
+            addSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addHEADER(builder: FlatBufferBuilder, HEADER: Int) = builder.addOffset(0, HEADER, 0)
         fun addMETADATA(builder: FlatBufferBuilder, METADATA: Int) = builder.addOffset(1, METADATA, 0)
         fun addTRAJ_TYPE(builder: FlatBufferBuilder, TRAJ_TYPE: Int) = builder.addOffset(2, TRAJ_TYPE, 0)
-        fun addSTATE_DATA(builder: FlatBufferBuilder, STATE_DATA: Int) = builder.addOffset(3, STATE_DATA, 0)
-        fun createStateDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addSTATE_STEP_SIZE(builder: FlatBufferBuilder, STATE_STEP_SIZE: Double) = builder.addDouble(3, STATE_STEP_SIZE, 0.0)
+        fun addSTATE_VECTOR_SIZE(builder: FlatBufferBuilder, STATE_VECTOR_SIZE: UByte) = builder.addByte(4, STATE_VECTOR_SIZE.toByte(), 6)
+        fun addSTATE_DATA(builder: FlatBufferBuilder, STATE_DATA: Int) = builder.addOffset(5, STATE_DATA, 0)
+        fun createStateDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startStateDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPHYSICAL_PROPERTIES(builder: FlatBufferBuilder, PHYSICAL_PROPERTIES: Int) = builder.addOffset(4, PHYSICAL_PROPERTIES, 0)
-        fun addCOVARIANCE_DATA(builder: FlatBufferBuilder, COVARIANCE_DATA: Int) = builder.addOffset(5, COVARIANCE_DATA, 0)
-        fun createCovarianceDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startStateDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addCOVARIANCE_DATA(builder: FlatBufferBuilder, COVARIANCE_DATA: Int) = builder.addOffset(6, COVARIANCE_DATA, 0)
+        fun createCovarianceDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startCovarianceDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMANEUVER_DATA(builder: FlatBufferBuilder, MANEUVER_DATA: Int) = builder.addOffset(6, MANEUVER_DATA, 0)
+        fun startCovarianceDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addPHYSICAL_PROPERTIES(builder: FlatBufferBuilder, PHYSICAL_PROPERTIES: Int) = builder.addOffset(7, PHYSICAL_PROPERTIES, 0)
+        fun addMANEUVER_DATA(builder: FlatBufferBuilder, MANEUVER_DATA: Int) = builder.addOffset(8, MANEUVER_DATA, 0)
         fun createManeuverDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -221,9 +249,9 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startManeuverDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPERTURBATIONS(builder: FlatBufferBuilder, PERTURBATIONS: Int) = builder.addOffset(7, PERTURBATIONS, 0)
-        fun addORBIT_DETERMINATION(builder: FlatBufferBuilder, ORBIT_DETERMINATION: Int) = builder.addOffset(8, ORBIT_DETERMINATION, 0)
-        fun addUSER_DEFINED_PARAMETERS(builder: FlatBufferBuilder, USER_DEFINED_PARAMETERS: Int) = builder.addOffset(9, USER_DEFINED_PARAMETERS, 0)
+        fun addPERTURBATIONS(builder: FlatBufferBuilder, PERTURBATIONS: Int) = builder.addOffset(9, PERTURBATIONS, 0)
+        fun addORBIT_DETERMINATION(builder: FlatBufferBuilder, ORBIT_DETERMINATION: Int) = builder.addOffset(10, ORBIT_DETERMINATION, 0)
+        fun addUSER_DEFINED_PARAMETERS(builder: FlatBufferBuilder, USER_DEFINED_PARAMETERS: Int) = builder.addOffset(11, USER_DEFINED_PARAMETERS, 0)
         fun createUserDefinedParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

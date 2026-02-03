@@ -187,28 +187,8 @@ func (rcv *VCM) PROPAGATOR_SETTINGS(obj *propagatorConfig) *propagatorConfig {
 	return nil
 }
 
-func (rcv *VCM) COVARIANCE_MATRIX(obj *VCMCovarianceMatrixLine, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *VCM) COVARIANCE_MATRIXLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
 func (rcv *VCM) UVW_SIGMAS(obj *uvwSigmas) *uvwSigmas {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -221,7 +201,7 @@ func (rcv *VCM) UVW_SIGMAS(obj *uvwSigmas) *uvwSigmas {
 }
 
 func (rcv *VCM) MASS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -229,11 +209,11 @@ func (rcv *VCM) MASS() float64 {
 }
 
 func (rcv *VCM) MutateMASS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
+	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
 func (rcv *VCM) SOLAR_RAD_AREA() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -241,11 +221,11 @@ func (rcv *VCM) SOLAR_RAD_AREA() float64 {
 }
 
 func (rcv *VCM) MutateSOLAR_RAD_AREA(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(38, n)
+	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
 func (rcv *VCM) SOLAR_RAD_COEFF() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -253,11 +233,11 @@ func (rcv *VCM) SOLAR_RAD_COEFF() float64 {
 }
 
 func (rcv *VCM) MutateSOLAR_RAD_COEFF(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(40, n)
+	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
 func (rcv *VCM) DRAG_AREA() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -265,11 +245,11 @@ func (rcv *VCM) DRAG_AREA() float64 {
 }
 
 func (rcv *VCM) MutateDRAG_AREA(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(42, n)
+	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
 func (rcv *VCM) DRAG_COEFF() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -277,11 +257,11 @@ func (rcv *VCM) DRAG_COEFF() float64 {
 }
 
 func (rcv *VCM) MutateDRAG_COEFF(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(44, n)
+	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
 func (rcv *VCM) SRP() perturbationStatus {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return perturbationStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
@@ -289,11 +269,11 @@ func (rcv *VCM) SRP() perturbationStatus {
 }
 
 func (rcv *VCM) MutateSRP(n perturbationStatus) bool {
-	return rcv._tab.MutateInt8Slot(46, int8(n))
+	return rcv._tab.MutateInt8Slot(44, int8(n))
 }
 
 func (rcv *VCM) CLASSIFICATION_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -301,7 +281,7 @@ func (rcv *VCM) CLASSIFICATION_TYPE() []byte {
 }
 
 func (rcv *VCM) NORAD_CAT_ID() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -309,11 +289,11 @@ func (rcv *VCM) NORAD_CAT_ID() uint32 {
 }
 
 func (rcv *VCM) MutateNORAD_CAT_ID(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(50, n)
+	return rcv._tab.MutateUint32Slot(48, n)
 }
 
 func (rcv *VCM) ELEMENT_SET_NO() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -321,11 +301,11 @@ func (rcv *VCM) ELEMENT_SET_NO() uint32 {
 }
 
 func (rcv *VCM) MutateELEMENT_SET_NO(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(52, n)
+	return rcv._tab.MutateUint32Slot(50, n)
 }
 
 func (rcv *VCM) REV_AT_EPOCH() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -333,11 +313,11 @@ func (rcv *VCM) REV_AT_EPOCH() float64 {
 }
 
 func (rcv *VCM) MutateREV_AT_EPOCH(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(54, n)
+	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
 func (rcv *VCM) BSTAR() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -345,11 +325,11 @@ func (rcv *VCM) BSTAR() float64 {
 }
 
 func (rcv *VCM) MutateBSTAR(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(56, n)
+	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
 func (rcv *VCM) MEAN_MOTION_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -357,11 +337,11 @@ func (rcv *VCM) MEAN_MOTION_DOT() float64 {
 }
 
 func (rcv *VCM) MutateMEAN_MOTION_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(58, n)
+	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
 func (rcv *VCM) MEAN_MOTION_DDOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -369,67 +349,57 @@ func (rcv *VCM) MEAN_MOTION_DDOT() float64 {
 }
 
 func (rcv *VCM) MutateMEAN_MOTION_DDOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(60, n)
+	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
 func (rcv *VCM) COV_REFERENCE_FRAME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *VCM) CX_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+/// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+/// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+/// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+func (rcv *VCM) COVARIANCE(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *VCM) MutateCX_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(64, n)
-}
-
-func (rcv *VCM) CY_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+func (rcv *VCM) COVARIANCELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.VectorLen(o)
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *VCM) MutateCY_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(66, n)
-}
-
-func (rcv *VCM) CZ_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+/// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+/// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+/// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+func (rcv *VCM) MutateCOVARIANCE(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return 0.0
-}
-
-func (rcv *VCM) MutateCZ_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(68, n)
-}
-
-func (rcv *VCM) CX_DOT_X() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *VCM) MutateCX_DOT_X(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(70, n)
+	return false
 }
 
 func (rcv *VCM) USER_DEFINED_BIP_0044_TYPE() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -437,11 +407,11 @@ func (rcv *VCM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 }
 
 func (rcv *VCM) MutateUSER_DEFINED_BIP_0044_TYPE(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(72, n)
+	return rcv._tab.MutateUint32Slot(64, n)
 }
 
 func (rcv *VCM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -449,7 +419,7 @@ func (rcv *VCM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
 }
 
 func (rcv *VCM) USER_DEFINED_EARTH_MODEL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -457,7 +427,7 @@ func (rcv *VCM) USER_DEFINED_EARTH_MODEL() []byte {
 }
 
 func (rcv *VCM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -465,11 +435,11 @@ func (rcv *VCM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
 }
 
 func (rcv *VCM) MutateUSER_DEFINED_EPOCH_TIMESTAMP(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(78, n)
+	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
 func (rcv *VCM) USER_DEFINED_MICROSECONDS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -477,11 +447,11 @@ func (rcv *VCM) USER_DEFINED_MICROSECONDS() float64 {
 }
 
 func (rcv *VCM) MutateUSER_DEFINED_MICROSECONDS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(80, n)
+	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
 func VCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(39)
+	builder.StartObject(35)
 }
 func VCMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -525,83 +495,71 @@ func VCMAddATMOSPHERIC_MODEL_DATA(builder *flatbuffers.Builder, ATMOSPHERIC_MODE
 func VCMAddPROPAGATOR_SETTINGS(builder *flatbuffers.Builder, PROPAGATOR_SETTINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PROPAGATOR_SETTINGS), 0)
 }
-func VCMAddCOVARIANCE_MATRIX(builder *flatbuffers.Builder, COVARIANCE_MATRIX flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(COVARIANCE_MATRIX), 0)
-}
-func VCMStartCOVARIANCE_MATRIXVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
 func VCMAddUVW_SIGMAS(builder *flatbuffers.Builder, UVW_SIGMAS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(UVW_SIGMAS), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(UVW_SIGMAS), 0)
 }
 func VCMAddMASS(builder *flatbuffers.Builder, MASS float64) {
-	builder.PrependFloat64Slot(16, MASS, 0.0)
+	builder.PrependFloat64Slot(15, MASS, 0.0)
 }
 func VCMAddSOLAR_RAD_AREA(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
-	builder.PrependFloat64Slot(17, SOLAR_RAD_AREA, 0.0)
+	builder.PrependFloat64Slot(16, SOLAR_RAD_AREA, 0.0)
 }
 func VCMAddSOLAR_RAD_COEFF(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
-	builder.PrependFloat64Slot(18, SOLAR_RAD_COEFF, 0.0)
+	builder.PrependFloat64Slot(17, SOLAR_RAD_COEFF, 0.0)
 }
 func VCMAddDRAG_AREA(builder *flatbuffers.Builder, DRAG_AREA float64) {
-	builder.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+	builder.PrependFloat64Slot(18, DRAG_AREA, 0.0)
 }
 func VCMAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
-	builder.PrependFloat64Slot(20, DRAG_COEFF, 0.0)
+	builder.PrependFloat64Slot(19, DRAG_COEFF, 0.0)
 }
 func VCMAddSRP(builder *flatbuffers.Builder, SRP perturbationStatus) {
-	builder.PrependInt8Slot(21, int8(SRP), 0)
+	builder.PrependInt8Slot(20, int8(SRP), 0)
 }
 func VCMAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
 }
 func VCMAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
-	builder.PrependUint32Slot(23, NORAD_CAT_ID, 0)
+	builder.PrependUint32Slot(22, NORAD_CAT_ID, 0)
 }
 func VCMAddELEMENT_SET_NO(builder *flatbuffers.Builder, ELEMENT_SET_NO uint32) {
-	builder.PrependUint32Slot(24, ELEMENT_SET_NO, 0)
+	builder.PrependUint32Slot(23, ELEMENT_SET_NO, 0)
 }
 func VCMAddREV_AT_EPOCH(builder *flatbuffers.Builder, REV_AT_EPOCH float64) {
-	builder.PrependFloat64Slot(25, REV_AT_EPOCH, 0.0)
+	builder.PrependFloat64Slot(24, REV_AT_EPOCH, 0.0)
 }
 func VCMAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
-	builder.PrependFloat64Slot(26, BSTAR, 0.0)
+	builder.PrependFloat64Slot(25, BSTAR, 0.0)
 }
 func VCMAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
-	builder.PrependFloat64Slot(27, MEAN_MOTION_DOT, 0.0)
+	builder.PrependFloat64Slot(26, MEAN_MOTION_DOT, 0.0)
 }
 func VCMAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
-	builder.PrependFloat64Slot(28, MEAN_MOTION_DDOT, 0.0)
+	builder.PrependFloat64Slot(27, MEAN_MOTION_DDOT, 0.0)
 }
 func VCMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
 }
-func VCMAddCX_X(builder *flatbuffers.Builder, CX_X float64) {
-	builder.PrependFloat64Slot(30, CX_X, 0.0)
+func VCMAddCOVARIANCE(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(COVARIANCE), 0)
 }
-func VCMAddCY_X(builder *flatbuffers.Builder, CY_X float64) {
-	builder.PrependFloat64Slot(31, CY_X, 0.0)
-}
-func VCMAddCZ_X(builder *flatbuffers.Builder, CZ_X float64) {
-	builder.PrependFloat64Slot(32, CZ_X, 0.0)
-}
-func VCMAddCX_DOT_X(builder *flatbuffers.Builder, CX_DOT_X float64) {
-	builder.PrependFloat64Slot(33, CX_DOT_X, 0.0)
+func VCMStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func VCMAddUSER_DEFINED_BIP_0044_TYPE(builder *flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE uint32) {
-	builder.PrependUint32Slot(34, USER_DEFINED_BIP_0044_TYPE, 0)
+	builder.PrependUint32Slot(30, USER_DEFINED_BIP_0044_TYPE, 0)
 }
 func VCMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder *flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(USER_DEFINED_OBJECT_DESIGNATOR), 0)
 }
 func VCMAddUSER_DEFINED_EARTH_MODEL(builder *flatbuffers.Builder, USER_DEFINED_EARTH_MODEL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(USER_DEFINED_EARTH_MODEL), 0)
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(USER_DEFINED_EARTH_MODEL), 0)
 }
 func VCMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder *flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP float64) {
-	builder.PrependFloat64Slot(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+	builder.PrependFloat64Slot(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
 }
 func VCMAddUSER_DEFINED_MICROSECONDS(builder *flatbuffers.Builder, USER_DEFINED_MICROSECONDS float64) {
-	builder.PrependFloat64Slot(38, USER_DEFINED_MICROSECONDS, 0.0)
+	builder.PrependFloat64Slot(34, USER_DEFINED_MICROSECONDS, 0.0)
 }
 func VCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

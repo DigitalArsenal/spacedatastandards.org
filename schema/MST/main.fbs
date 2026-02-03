@@ -1,5 +1,5 @@
-// Hash: 15370c3702ae49a726b51dc843d2aef12ecac61a6ad0faa1d86ab087e2a0c053
-// Version: 0.0.2
+// Hash: ebc718afa20fc09836e9675021b1f8eb8d3b40d6038a91dff7011784c4e1b755
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 /// Missile Track
 table MST {
@@ -27,7 +27,6 @@ table MST {
   MSL_STATUS:string;
   TS:string;
   AOU_RPT_TYPE:string;
-  AOU_RPT_DATA:[string];
   CONTAINMENT:double;
   TRK_CONF:double;
   TRK_QUAL:int;
@@ -46,13 +45,31 @@ table MST {
   AZ_CORR:double;
   BURNOUT_ALT:double;
   LAUNCH_AOU_TYPE:string;
-  LAUNCH_AOU_DATA:[string];
   IMPACT_TIME:string;
   IMPACT_LAT:double;
   IMPACT_LON:double;
   IMPACT_AOU_TYPE:string;
-  IMPACT_AOU_DATA:[string];
-  VECTORS:[string];
+
+  /// Start time for vector data (ISO 8601 UTC format).
+  VECTOR_START_TIME:string;
+
+  /// Time interval between vector points in seconds.
+  VECTOR_STEP_SIZE:double;
+
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  VECTOR_COMPONENTS:uint8 = 6;
+
+  /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+  VECTORS:[double];
+
+  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  AOU_RPT:[double];
+
+  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  LAUNCH_AOU:[double];
+
+  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  IMPACT_AOU:[double];
 }
 
 root_type MST;

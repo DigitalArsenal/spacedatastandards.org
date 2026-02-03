@@ -9,297 +9,6 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
-pub enum AEMAttitudeEntryOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct AEMAttitudeEntry<'a> {
-  pub _tab: flatbuffers::Table<'a>,
-}
-
-impl<'a> flatbuffers::Follow<'a> for AEMAttitudeEntry<'a> {
-  type Inner = AEMAttitudeEntry<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: flatbuffers::Table::new(buf, loc) }
-  }
-}
-
-impl<'a> AEMAttitudeEntry<'a> {
-  pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
-  pub const VT_Q1: flatbuffers::VOffsetT = 6;
-  pub const VT_Q2: flatbuffers::VOffsetT = 8;
-  pub const VT_Q3: flatbuffers::VOffsetT = 10;
-  pub const VT_QC: flatbuffers::VOffsetT = 12;
-  pub const VT_RATE_X: flatbuffers::VOffsetT = 14;
-  pub const VT_RATE_Y: flatbuffers::VOffsetT = 16;
-  pub const VT_RATE_Z: flatbuffers::VOffsetT = 18;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
-    AEMAttitudeEntry { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args AEMAttitudeEntryArgs<'args>
-  ) -> flatbuffers::WIPOffset<AEMAttitudeEntry<'bldr>> {
-    let mut builder = AEMAttitudeEntryBuilder::new(_fbb);
-    builder.add_RATE_Z(args.RATE_Z);
-    builder.add_RATE_Y(args.RATE_Y);
-    builder.add_RATE_X(args.RATE_X);
-    builder.add_QC(args.QC);
-    builder.add_Q3(args.Q3);
-    builder.add_Q2(args.Q2);
-    builder.add_Q1(args.Q1);
-    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> AEMAttitudeEntryT {
-    let EPOCH = self.EPOCH().map(|x| {
-      x.to_string()
-    });
-    let Q1 = self.Q1();
-    let Q2 = self.Q2();
-    let Q3 = self.Q3();
-    let QC = self.QC();
-    let RATE_X = self.RATE_X();
-    let RATE_Y = self.RATE_Y();
-    let RATE_Z = self.RATE_Z();
-    AEMAttitudeEntryT {
-      EPOCH,
-      Q1,
-      Q2,
-      Q3,
-      QC,
-      RATE_X,
-      RATE_Y,
-      RATE_Z,
-    }
-  }
-
-  #[inline]
-  pub fn EPOCH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(AEMAttitudeEntry::VT_EPOCH, None)}
-  }
-  #[inline]
-  pub fn Q1(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_Q1, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Q2(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_Q2, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Q3(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_Q3, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn QC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_QC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RATE_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_RATE_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RATE_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_RATE_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RATE_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(AEMAttitudeEntry::VT_RATE_Z, Some(0.0)).unwrap()}
-  }
-}
-
-impl flatbuffers::Verifiable for AEMAttitudeEntry<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut flatbuffers::Verifier, pos: usize
-  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
-    use self::flatbuffers::Verifiable;
-    v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
-     .visit_field::<f64>("Q1", Self::VT_Q1, false)?
-     .visit_field::<f64>("Q2", Self::VT_Q2, false)?
-     .visit_field::<f64>("Q3", Self::VT_Q3, false)?
-     .visit_field::<f64>("QC", Self::VT_QC, false)?
-     .visit_field::<f64>("RATE_X", Self::VT_RATE_X, false)?
-     .visit_field::<f64>("RATE_Y", Self::VT_RATE_Y, false)?
-     .visit_field::<f64>("RATE_Z", Self::VT_RATE_Z, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct AEMAttitudeEntryArgs<'a> {
-    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub Q1: f64,
-    pub Q2: f64,
-    pub Q3: f64,
-    pub QC: f64,
-    pub RATE_X: f64,
-    pub RATE_Y: f64,
-    pub RATE_Z: f64,
-}
-impl<'a> Default for AEMAttitudeEntryArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    AEMAttitudeEntryArgs {
-      EPOCH: None,
-      Q1: 0.0,
-      Q2: 0.0,
-      Q3: 0.0,
-      QC: 0.0,
-      RATE_X: 0.0,
-      RATE_Y: 0.0,
-      RATE_Z: 0.0,
-    }
-  }
-}
-
-pub struct AEMAttitudeEntryBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> AEMAttitudeEntryBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(AEMAttitudeEntry::VT_EPOCH, EPOCH);
-  }
-  #[inline]
-  pub fn add_Q1(&mut self, Q1: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_Q1, Q1, 0.0);
-  }
-  #[inline]
-  pub fn add_Q2(&mut self, Q2: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_Q2, Q2, 0.0);
-  }
-  #[inline]
-  pub fn add_Q3(&mut self, Q3: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_Q3, Q3, 0.0);
-  }
-  #[inline]
-  pub fn add_QC(&mut self, QC: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_QC, QC, 0.0);
-  }
-  #[inline]
-  pub fn add_RATE_X(&mut self, RATE_X: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_RATE_X, RATE_X, 0.0);
-  }
-  #[inline]
-  pub fn add_RATE_Y(&mut self, RATE_Y: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_RATE_Y, RATE_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_RATE_Z(&mut self, RATE_Z: f64) {
-    self.fbb_.push_slot::<f64>(AEMAttitudeEntry::VT_RATE_Z, RATE_Z, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> AEMAttitudeEntryBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    AEMAttitudeEntryBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> flatbuffers::WIPOffset<AEMAttitudeEntry<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl core::fmt::Debug for AEMAttitudeEntry<'_> {
-  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-    let mut ds = f.debug_struct("AEMAttitudeEntry");
-      ds.field("EPOCH", &self.EPOCH());
-      ds.field("Q1", &self.Q1());
-      ds.field("Q2", &self.Q2());
-      ds.field("Q3", &self.Q3());
-      ds.field("QC", &self.QC());
-      ds.field("RATE_X", &self.RATE_X());
-      ds.field("RATE_Y", &self.RATE_Y());
-      ds.field("RATE_Z", &self.RATE_Z());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct AEMAttitudeEntryT {
-  pub EPOCH: Option<String>,
-  pub Q1: f64,
-  pub Q2: f64,
-  pub Q3: f64,
-  pub QC: f64,
-  pub RATE_X: f64,
-  pub RATE_Y: f64,
-  pub RATE_Z: f64,
-}
-impl Default for AEMAttitudeEntryT {
-  fn default() -> Self {
-    Self {
-      EPOCH: None,
-      Q1: 0.0,
-      Q2: 0.0,
-      Q3: 0.0,
-      QC: 0.0,
-      RATE_X: 0.0,
-      RATE_Y: 0.0,
-      RATE_Z: 0.0,
-    }
-  }
-}
-impl AEMAttitudeEntryT {
-  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> flatbuffers::WIPOffset<AEMAttitudeEntry<'b>> {
-    let EPOCH = self.EPOCH.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let Q1 = self.Q1;
-    let Q2 = self.Q2;
-    let Q3 = self.Q3;
-    let QC = self.QC;
-    let RATE_X = self.RATE_X;
-    let RATE_Y = self.RATE_Y;
-    let RATE_Z = self.RATE_Z;
-    AEMAttitudeEntry::create(_fbb, &AEMAttitudeEntryArgs{
-      EPOCH,
-      Q1,
-      Q2,
-      Q3,
-      QC,
-      RATE_X,
-      RATE_Y,
-      RATE_Z,
-    })
-  }
-}
 pub enum AEMSegmentOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -325,7 +34,9 @@ impl<'a> AEMSegment<'a> {
   pub const VT_ATTITUDE_TYPE: flatbuffers::VOffsetT = 16;
   pub const VT_START_TIME: flatbuffers::VOffsetT = 18;
   pub const VT_STOP_TIME: flatbuffers::VOffsetT = 20;
-  pub const VT_DATA: flatbuffers::VOffsetT = 22;
+  pub const VT_STEP_SIZE: flatbuffers::VOffsetT = 22;
+  pub const VT_ATTITUDE_COMPONENTS: flatbuffers::VOffsetT = 24;
+  pub const VT_ATTITUDE_DATA: flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -337,7 +48,8 @@ impl<'a> AEMSegment<'a> {
     args: &'args AEMSegmentArgs<'args>
   ) -> flatbuffers::WIPOffset<AEMSegment<'bldr>> {
     let mut builder = AEMSegmentBuilder::new(_fbb);
-    if let Some(x) = args.DATA { builder.add_DATA(x); }
+    builder.add_STEP_SIZE(args.STEP_SIZE);
+    if let Some(x) = args.ATTITUDE_DATA { builder.add_ATTITUDE_DATA(x); }
     if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
     if let Some(x) = args.ATTITUDE_TYPE { builder.add_ATTITUDE_TYPE(x); }
@@ -347,6 +59,7 @@ impl<'a> AEMSegment<'a> {
     if let Some(x) = args.REF_FRAME_A { builder.add_REF_FRAME_A(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    builder.add_ATTITUDE_COMPONENTS(args.ATTITUDE_COMPONENTS);
     builder.finish()
   }
 
@@ -378,8 +91,10 @@ impl<'a> AEMSegment<'a> {
     let STOP_TIME = self.STOP_TIME().map(|x| {
       x.to_string()
     });
-    let DATA = self.DATA().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
+    let STEP_SIZE = self.STEP_SIZE();
+    let ATTITUDE_COMPONENTS = self.ATTITUDE_COMPONENTS();
+    let ATTITUDE_DATA = self.ATTITUDE_DATA().map(|x| {
+      x.into_iter().collect()
     });
     AEMSegmentT {
       OBJECT_NAME,
@@ -391,7 +106,9 @@ impl<'a> AEMSegment<'a> {
       ATTITUDE_TYPE,
       START_TIME,
       STOP_TIME,
-      DATA,
+      STEP_SIZE,
+      ATTITUDE_COMPONENTS,
+      ATTITUDE_DATA,
     }
   }
 
@@ -458,12 +175,34 @@ impl<'a> AEMSegment<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(AEMSegment::VT_STOP_TIME, None)}
   }
+  /// Time interval between attitude states in seconds (required).
   #[inline]
-  pub fn DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<AEMAttitudeEntry<'a>>>> {
+  pub fn STEP_SIZE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<AEMAttitudeEntry>>>>(AEMSegment::VT_DATA, None)}
+    unsafe { self._tab.get::<f64>(AEMSegment::VT_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Number of components per attitude state.
+  /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  /// 4 = quaternion only (Q1, Q2, Q3, QC)
+  #[inline]
+  pub fn ATTITUDE_COMPONENTS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(AEMSegment::VT_ATTITUDE_COMPONENTS, Some(7)).unwrap()}
+  }
+  /// Attitude data as row-major array of doubles.
+  /// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  /// Length must be divisible by ATTITUDE_COMPONENTS.
+  #[inline]
+  pub fn ATTITUDE_DATA(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(AEMSegment::VT_ATTITUDE_DATA, None)}
   }
 }
 
@@ -483,7 +222,9 @@ impl flatbuffers::Verifiable for AEMSegment<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATTITUDE_TYPE", Self::VT_ATTITUDE_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<AEMAttitudeEntry>>>>("DATA", Self::VT_DATA, false)?
+     .visit_field::<f64>("STEP_SIZE", Self::VT_STEP_SIZE, false)?
+     .visit_field::<u8>("ATTITUDE_COMPONENTS", Self::VT_ATTITUDE_COMPONENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ATTITUDE_DATA", Self::VT_ATTITUDE_DATA, false)?
      .finish();
     Ok(())
   }
@@ -498,7 +239,9 @@ pub struct AEMSegmentArgs<'a> {
     pub ATTITUDE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<AEMAttitudeEntry<'a>>>>>,
+    pub STEP_SIZE: f64,
+    pub ATTITUDE_COMPONENTS: u8,
+    pub ATTITUDE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for AEMSegmentArgs<'a> {
   #[inline]
@@ -513,7 +256,9 @@ impl<'a> Default for AEMSegmentArgs<'a> {
       ATTITUDE_TYPE: None,
       START_TIME: None,
       STOP_TIME: None,
-      DATA: None,
+      STEP_SIZE: 0.0,
+      ATTITUDE_COMPONENTS: 7,
+      ATTITUDE_DATA: None,
     }
   }
 }
@@ -560,8 +305,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> AEMSegmentBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(AEMSegment::VT_STOP_TIME, STOP_TIME);
   }
   #[inline]
-  pub fn add_DATA(&mut self, DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<AEMAttitudeEntry<'b >>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(AEMSegment::VT_DATA, DATA);
+  pub fn add_STEP_SIZE(&mut self, STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(AEMSegment::VT_STEP_SIZE, STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_ATTITUDE_COMPONENTS(&mut self, ATTITUDE_COMPONENTS: u8) {
+    self.fbb_.push_slot::<u8>(AEMSegment::VT_ATTITUDE_COMPONENTS, ATTITUDE_COMPONENTS, 7);
+  }
+  #[inline]
+  pub fn add_ATTITUDE_DATA(&mut self, ATTITUDE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(AEMSegment::VT_ATTITUDE_DATA, ATTITUDE_DATA);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> AEMSegmentBuilder<'a, 'b, A> {
@@ -590,7 +343,9 @@ impl core::fmt::Debug for AEMSegment<'_> {
       ds.field("ATTITUDE_TYPE", &self.ATTITUDE_TYPE());
       ds.field("START_TIME", &self.START_TIME());
       ds.field("STOP_TIME", &self.STOP_TIME());
-      ds.field("DATA", &self.DATA());
+      ds.field("STEP_SIZE", &self.STEP_SIZE());
+      ds.field("ATTITUDE_COMPONENTS", &self.ATTITUDE_COMPONENTS());
+      ds.field("ATTITUDE_DATA", &self.ATTITUDE_DATA());
       ds.finish()
   }
 }
@@ -606,7 +361,9 @@ pub struct AEMSegmentT {
   pub ATTITUDE_TYPE: Option<String>,
   pub START_TIME: Option<String>,
   pub STOP_TIME: Option<String>,
-  pub DATA: Option<Vec<AEMAttitudeEntryT>>,
+  pub STEP_SIZE: f64,
+  pub ATTITUDE_COMPONENTS: u8,
+  pub ATTITUDE_DATA: Option<Vec<f64>>,
 }
 impl Default for AEMSegmentT {
   fn default() -> Self {
@@ -620,7 +377,9 @@ impl Default for AEMSegmentT {
       ATTITUDE_TYPE: None,
       START_TIME: None,
       STOP_TIME: None,
-      DATA: None,
+      STEP_SIZE: 0.0,
+      ATTITUDE_COMPONENTS: 7,
+      ATTITUDE_DATA: None,
     }
   }
 }
@@ -656,8 +415,10 @@ impl AEMSegmentT {
     let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DATA = self.DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    let STEP_SIZE = self.STEP_SIZE;
+    let ATTITUDE_COMPONENTS = self.ATTITUDE_COMPONENTS;
+    let ATTITUDE_DATA = self.ATTITUDE_DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     AEMSegment::create(_fbb, &AEMSegmentArgs{
       OBJECT_NAME,
@@ -669,7 +430,9 @@ impl AEMSegmentT {
       ATTITUDE_TYPE,
       START_TIME,
       STOP_TIME,
-      DATA,
+      STEP_SIZE,
+      ATTITUDE_COMPONENTS,
+      ATTITUDE_DATA,
     })
   }
 }

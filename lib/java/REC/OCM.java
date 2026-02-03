@@ -46,95 +46,117 @@ public final class OCM extends Table {
   public ByteBuffer TRAJ_TYPEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer TRAJ_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * State vector data.
+   * Time interval between state vectors in seconds (required for time-series data).
    */
-  public StateVector STATE_DATA(int j) { return STATE_DATA(new StateVector(), j); }
-  public StateVector STATE_DATA(StateVector obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int STATE_DATALength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
-  public StateVector.Vector stateDataVector() { return stateDataVector(new StateVector.Vector()); }
-  public StateVector.Vector stateDataVector(StateVector.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public double STATE_STEP_SIZE() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of components per state vector.
+   * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+   * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+   */
+  public int STATE_VECTOR_SIZE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
+  /**
+   * State data as row-major array of doubles.
+   * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+   * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+   * Length must be divisible by STATE_VECTOR_SIZE.
+   */
+  public double STATE_DATA(int j) { int o = __offset(14); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int STATE_DATALength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector stateDataVector() { return stateDataVector(new DoubleVector()); }
+  public DoubleVector stateDataVector(DoubleVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer STATE_DATAAsByteBuffer() { return __vector_as_bytebuffer(14, 8); }
+  public ByteBuffer STATE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 8); }
+  /**
+   * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+   * Time alignment matches STATE_DATA epochs.
+   */
+  public double COVARIANCE_DATA(int j) { int o = __offset(16); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCE_DATALength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceDataVector() { return covarianceDataVector(new DoubleVector()); }
+  public DoubleVector covarianceDataVector(DoubleVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCE_DATAAsByteBuffer() { return __vector_as_bytebuffer(16, 8); }
+  public ByteBuffer COVARIANCE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 8); }
   /**
    * Physical properties of the space object.
    */
   public PhysicalProperties PHYSICAL_PROPERTIES() { return PHYSICAL_PROPERTIES(new PhysicalProperties()); }
-  public PhysicalProperties PHYSICAL_PROPERTIES(PhysicalProperties obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  /**
-   * Covariance data associated with the state vectors.
-   */
-  public StateVector COVARIANCE_DATA(int j) { return COVARIANCE_DATA(new StateVector(), j); }
-  public StateVector COVARIANCE_DATA(StateVector obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int COVARIANCE_DATALength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public StateVector.Vector covarianceDataVector() { return covarianceDataVector(new StateVector.Vector()); }
-  public StateVector.Vector covarianceDataVector(StateVector.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public PhysicalProperties PHYSICAL_PROPERTIES(PhysicalProperties obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Maneuver data.
    */
   public Maneuver MANEUVER_DATA(int j) { return MANEUVER_DATA(new Maneuver(), j); }
-  public Maneuver MANEUVER_DATA(Maneuver obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int MANEUVER_DATALength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public Maneuver MANEUVER_DATA(Maneuver obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MANEUVER_DATALength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public Maneuver.Vector maneuverDataVector() { return maneuverDataVector(new Maneuver.Vector()); }
-  public Maneuver.Vector maneuverDataVector(Maneuver.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public Maneuver.Vector maneuverDataVector(Maneuver.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Perturbations parameters used.
    */
   public Perturbations PERTURBATIONS() { return PERTURBATIONS(new Perturbations()); }
-  public Perturbations PERTURBATIONS(Perturbations obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public Perturbations PERTURBATIONS(Perturbations obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Orbit determination data.
    */
   public OrbitDetermination ORBIT_DETERMINATION() { return ORBIT_DETERMINATION(new OrbitDetermination()); }
-  public OrbitDetermination ORBIT_DETERMINATION(OrbitDetermination obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public OrbitDetermination ORBIT_DETERMINATION(OrbitDetermination obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * User-defined parameters and supplemental comments.
    */
   public UserDefinedParameters USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new UserDefinedParameters(), j); }
-  public UserDefinedParameters USER_DEFINED_PARAMETERS(UserDefinedParameters obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public UserDefinedParameters USER_DEFINED_PARAMETERS(UserDefinedParameters obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public UserDefinedParameters.Vector userDefinedParametersVector() { return userDefinedParametersVector(new UserDefinedParameters.Vector()); }
-  public UserDefinedParameters.Vector userDefinedParametersVector(UserDefinedParameters.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public UserDefinedParameters.Vector userDefinedParametersVector(UserDefinedParameters.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
       int METADATAOffset,
       int TRAJ_TYPEOffset,
+      double STATE_STEP_SIZE,
+      int STATE_VECTOR_SIZE,
       int STATE_DATAOffset,
-      int PHYSICAL_PROPERTIESOffset,
       int COVARIANCE_DATAOffset,
+      int PHYSICAL_PROPERTIESOffset,
       int MANEUVER_DATAOffset,
       int PERTURBATIONSOffset,
       int ORBIT_DETERMINATIONOffset,
       int USER_DEFINED_PARAMETERSOffset) {
-    builder.startTable(10);
+    builder.startTable(12);
+    OCM.addStateStepSize(builder, STATE_STEP_SIZE);
     OCM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
     OCM.addOrbitDetermination(builder, ORBIT_DETERMINATIONOffset);
     OCM.addPerturbations(builder, PERTURBATIONSOffset);
     OCM.addManeuverData(builder, MANEUVER_DATAOffset);
-    OCM.addCovarianceData(builder, COVARIANCE_DATAOffset);
     OCM.addPhysicalProperties(builder, PHYSICAL_PROPERTIESOffset);
+    OCM.addCovarianceData(builder, COVARIANCE_DATAOffset);
     OCM.addStateData(builder, STATE_DATAOffset);
     OCM.addTrajType(builder, TRAJ_TYPEOffset);
     OCM.addMetadata(builder, METADATAOffset);
     OCM.addHeader(builder, HEADEROffset);
+    OCM.addStateVectorSize(builder, STATE_VECTOR_SIZE);
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, int TRAJ_TYPEOffset) { builder.addOffset(2, TRAJ_TYPEOffset, 0); }
-  public static void addStateData(FlatBufferBuilder builder, int STATE_DATAOffset) { builder.addOffset(3, STATE_DATAOffset, 0); }
-  public static int createStateDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startStateDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addPhysicalProperties(FlatBufferBuilder builder, int PHYSICAL_PROPERTIESOffset) { builder.addOffset(4, PHYSICAL_PROPERTIESOffset, 0); }
-  public static void addCovarianceData(FlatBufferBuilder builder, int COVARIANCE_DATAOffset) { builder.addOffset(5, COVARIANCE_DATAOffset, 0); }
-  public static int createCovarianceDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startCovarianceDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addManeuverData(FlatBufferBuilder builder, int MANEUVER_DATAOffset) { builder.addOffset(6, MANEUVER_DATAOffset, 0); }
+  public static void addStateStepSize(FlatBufferBuilder builder, double STATE_STEP_SIZE) { builder.addDouble(3, STATE_STEP_SIZE, 0.0); }
+  public static void addStateVectorSize(FlatBufferBuilder builder, int STATE_VECTOR_SIZE) { builder.addByte(4, (byte) STATE_VECTOR_SIZE, (byte) 6); }
+  public static void addStateData(FlatBufferBuilder builder, int STATE_DATAOffset) { builder.addOffset(5, STATE_DATAOffset, 0); }
+  public static int createStateDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startStateDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addCovarianceData(FlatBufferBuilder builder, int COVARIANCE_DATAOffset) { builder.addOffset(6, COVARIANCE_DATAOffset, 0); }
+  public static int createCovarianceDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addPhysicalProperties(FlatBufferBuilder builder, int PHYSICAL_PROPERTIESOffset) { builder.addOffset(7, PHYSICAL_PROPERTIESOffset, 0); }
+  public static void addManeuverData(FlatBufferBuilder builder, int MANEUVER_DATAOffset) { builder.addOffset(8, MANEUVER_DATAOffset, 0); }
   public static int createManeuverDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startManeuverDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addPerturbations(FlatBufferBuilder builder, int PERTURBATIONSOffset) { builder.addOffset(7, PERTURBATIONSOffset, 0); }
-  public static void addOrbitDetermination(FlatBufferBuilder builder, int ORBIT_DETERMINATIONOffset) { builder.addOffset(8, ORBIT_DETERMINATIONOffset, 0); }
-  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(9, USER_DEFINED_PARAMETERSOffset, 0); }
+  public static void addPerturbations(FlatBufferBuilder builder, int PERTURBATIONSOffset) { builder.addOffset(9, PERTURBATIONSOffset, 0); }
+  public static void addOrbitDetermination(FlatBufferBuilder builder, int ORBIT_DETERMINATIONOffset) { builder.addOffset(10, ORBIT_DETERMINATIONOffset, 0); }
+  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(11, USER_DEFINED_PARAMETERSOffset, 0); }
   public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCM(FlatBufferBuilder builder) {

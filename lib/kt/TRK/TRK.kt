@@ -318,182 +318,38 @@ class TRK : Table() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    fun ECEF_POS(j: Int) : String? {
-        val o = __offset(62)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val ECEF_POSLength : Int
-        get() {
-            val o = __offset(62); return if (o != 0) __vector_len(o) else 0
-        }
-    fun ECEF_VEL(j: Int) : String? {
-        val o = __offset(64)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val ECEF_VELLength : Int
-        get() {
-            val o = __offset(64); return if (o != 0) __vector_len(o) else 0
-        }
-    fun ECEF_ACC(j: Int) : String? {
-        val o = __offset(66)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val ECEF_ACCLength : Int
-        get() {
-            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
-        }
     val LAT : Double
         get() {
-            val o = __offset(68)
+            val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     val LON : Double
         get() {
-            val o = __offset(70)
+            val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     val ALT : Double
         get() {
-            val o = __offset(72)
+            val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     val SPD : Double
         get() {
-            val o = __offset(74)
+            val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     val HDNG : Double
         get() {
-            val o = __offset(76)
+            val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     val COURSE : Double
         get() {
-            val o = __offset(78)
+            val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    fun LCO(j: Int) : String? {
-        val o = __offset(80)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val LCOLength : Int
-        get() {
-            val o = __offset(80); return if (o != 0) __vector_len(o) else 0
-        }
-    fun LCS(j: Int) : String? {
-        val o = __offset(82)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val LCSLength : Int
-        get() {
-            val o = __offset(82); return if (o != 0) __vector_len(o) else 0
-        }
-    fun LC_POS(j: Int) : String? {
-        val o = __offset(84)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val LC_POSLength : Int
-        get() {
-            val o = __offset(84); return if (o != 0) __vector_len(o) else 0
-        }
-    fun LC_VEL(j: Int) : String? {
-        val o = __offset(86)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val LC_VELLength : Int
-        get() {
-            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
-        }
-    fun LC_ACC(j: Int) : String? {
-        val o = __offset(88)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val LC_ACCLength : Int
-        get() {
-            val o = __offset(88); return if (o != 0) __vector_len(o) else 0
-        }
-    fun E_NUVEL(j: Int) : String? {
-        val o = __offset(90)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val E_NUVELLength : Int
-        get() {
-            val o = __offset(90); return if (o != 0) __vector_len(o) else 0
-        }
-    fun E_NUPOS(j: Int) : String? {
-        val o = __offset(92)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val E_NUPOSLength : Int
-        get() {
-            val o = __offset(92); return if (o != 0) __vector_len(o) else 0
-        }
-    fun COV(j: Int) : String? {
-        val o = __offset(94)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val COVLength : Int
-        get() {
-            val o = __offset(94); return if (o != 0) __vector_len(o) else 0
-        }
-    fun ERR_ELLP(j: Int) : String? {
-        val o = __offset(96)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val ERR_ELLPLength : Int
-        get() {
-            val o = __offset(96); return if (o != 0) __vector_len(o) else 0
-        }
     fun SRC_TYPS(j: Int) : String? {
-        val o = __offset(98)
+        val o = __offset(74)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -502,10 +358,10 @@ class TRK : Table() {
     }
     val SRC_TYPSLength : Int
         get() {
-            val o = __offset(98); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
     fun SRC_IDS(j: Int) : String? {
-        val o = __offset(100)
+        val o = __offset(76)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -514,72 +370,72 @@ class TRK : Table() {
     }
     val SRC_IDSLength : Int
         get() {
-            val o = __offset(100); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
     val CALL_SIGN : String?
         get() {
-            val o = __offset(102)
+            val o = __offset(78)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(102, 1)
-    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 102, 1)
+    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
+    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
     val MULTI_SOURCE : Boolean
         get() {
-            val o = __offset(104)
+            val o = __offset(80)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     val J_SERIES : String?
         get() {
-            val o = __offset(106)
+            val o = __offset(82)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val J_SERIESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(106, 1)
-    fun J_SERIESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 106, 1)
+    val J_SERIESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
+    fun J_SERIESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
     val STRENGTH : Int
         get() {
-            val o = __offset(108)
+            val o = __offset(84)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M1 : Int
         get() {
-            val o = __offset(110)
+            val o = __offset(86)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M1V : Int
         get() {
-            val o = __offset(112)
+            val o = __offset(88)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M2 : Int
         get() {
-            val o = __offset(114)
+            val o = __offset(90)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M2V : Int
         get() {
-            val o = __offset(116)
+            val o = __offset(92)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M3A : Int
         get() {
-            val o = __offset(118)
+            val o = __offset(94)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val M3AV : Int
         get() {
-            val o = __offset(120)
+            val o = __offset(96)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     fun TAGS(j: Int) : String? {
-        val o = __offset(122)
+        val o = __offset(98)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -588,8 +444,174 @@ class TRK : Table() {
     }
     val TAGSLength : Int
         get() {
-            val o = __offset(122); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(98); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Start time for track data (ISO 8601 UTC format).
+     */
+    val TRACK_START_TIME : String?
+        get() {
+            val o = __offset(100)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TRACK_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(100, 1)
+    fun TRACK_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 100, 1)
+    /**
+     * Time interval between track points in seconds.
+     */
+    val TRACK_STEP_SIZE : Double
+        get() {
+            val o = __offset(102)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of components per point (default 3 for X, Y, Z).
+     */
+    val TRACK_COMPONENTS : UByte
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 3u
+        }
+    /**
+     * ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+     */
+    fun ECEF_POS(j: Int) : Double {
+        val o = __offset(106)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val ECEF_POSLength : Int
+        get() {
+            val o = __offset(106); return if (o != 0) __vector_len(o) else 0
+        }
+    val ECEF_POSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(106, 8)
+    fun ECEF_POSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 106, 8)
+    /**
+     * ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+     */
+    fun ECEF_VEL(j: Int) : Double {
+        val o = __offset(108)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val ECEF_VELLength : Int
+        get() {
+            val o = __offset(108); return if (o != 0) __vector_len(o) else 0
+        }
+    val ECEF_VELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(108, 8)
+    fun ECEF_VELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 108, 8)
+    /**
+     * ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+     */
+    fun ECEF_ACC(j: Int) : Double {
+        val o = __offset(110)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val ECEF_ACCLength : Int
+        get() {
+            val o = __offset(110); return if (o != 0) __vector_len(o) else 0
+        }
+    val ECEF_ACCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(110, 8)
+    fun ECEF_ACCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 110, 8)
+    /**
+     * Local coordinate position as flat array
+     */
+    fun LC_POS(j: Int) : Double {
+        val o = __offset(112)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val LC_POSLength : Int
+        get() {
+            val o = __offset(112); return if (o != 0) __vector_len(o) else 0
+        }
+    val LC_POSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(112, 8)
+    fun LC_POSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 112, 8)
+    /**
+     * Local coordinate velocity as flat array
+     */
+    fun LC_VEL(j: Int) : Double {
+        val o = __offset(114)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val LC_VELLength : Int
+        get() {
+            val o = __offset(114); return if (o != 0) __vector_len(o) else 0
+        }
+    val LC_VELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(114, 8)
+    fun LC_VELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 114, 8)
+    /**
+     * Local coordinate acceleration as flat array
+     */
+    fun LC_ACC(j: Int) : Double {
+        val o = __offset(116)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val LC_ACCLength : Int
+        get() {
+            val o = __offset(116); return if (o != 0) __vector_len(o) else 0
+        }
+    val LC_ACCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 8)
+    fun LC_ACCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 8)
+    /**
+     * Covariance data (21 elements per point for 6x6 lower triangular)
+     */
+    fun COV(j: Int) : Double {
+        val o = __offset(118)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val COVLength : Int
+        get() {
+            val o = __offset(118); return if (o != 0) __vector_len(o) else 0
+        }
+    val COVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(118, 8)
+    fun COVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 118, 8)
+    /**
+     * Error ellipse data (6 elements per point)
+     */
+    fun ERR_ELLP(j: Int) : Double {
+        val o = __offset(120)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val ERR_ELLPLength : Int
+        get() {
+            val o = __offset(120); return if (o != 0) __vector_len(o) else 0
+        }
+    val ERR_ELLPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(120, 8)
+    fun ERR_ELLPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 120, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsTRK(_bb: ByteBuffer): TRK = getRootAsTRK(_bb, TRK())
@@ -598,8 +620,9 @@ class TRK : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TRKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRK")
-        fun createTRK(builder: FlatBufferBuilder, IDOffset: Int, CNTCTOffset: Int, MSG_TSOffset: Int, MSN_IDOffset: Int, ASSET_NATOffset: Int, ASSETOffset: Int, SENOffset: Int, SEN_QUALOffset: Int, TRK_IDOffset: Int, TRK_NUMOffset: Int, TRK_STATOffset: Int, OBJ_NATOffset: Int, OBJ_IDOffset: Int, OBJ_TYPEOffset: Int, OBJ_SPECOffset: Int, OBJ_PLATOffset: Int, OBJ_ACTOffset: Int, MOD_TYPEOffset: Int, TRK_ITM_IDOffset: Int, TSOffset: Int, TRK_QUAL: Int, TRK_PT_TYPEOffset: Int, OBJ_IDENTOffset: Int, IDENT_CRED: Int, IDENT_REL: Int, IDENT_AMPOffset: Int, ENVIRONMENTOffset: Int, ENVIRONMENT_CONF: Double, TRK_CONF: Double, ECEF_POSOffset: Int, ECEF_VELOffset: Int, ECEF_ACCOffset: Int, LAT: Double, LON: Double, ALT: Double, SPD: Double, HDNG: Double, COURSE: Double, LCOOffset: Int, LCSOffset: Int, LC_POSOffset: Int, LC_VELOffset: Int, LC_ACCOffset: Int, E_NUVELOffset: Int, E_NUPOSOffset: Int, COVOffset: Int, ERR_ELLPOffset: Int, SRC_TYPSOffset: Int, SRC_IDSOffset: Int, CALL_SIGNOffset: Int, MULTI_SOURCE: Boolean, J_SERIESOffset: Int, STRENGTH: Int, M1: Int, M1V: Int, M2: Int, M2V: Int, M3A: Int, M3AV: Int, TAGSOffset: Int) : Int {
-            builder.startTable(60)
+        fun createTRK(builder: FlatBufferBuilder, IDOffset: Int, CNTCTOffset: Int, MSG_TSOffset: Int, MSN_IDOffset: Int, ASSET_NATOffset: Int, ASSETOffset: Int, SENOffset: Int, SEN_QUALOffset: Int, TRK_IDOffset: Int, TRK_NUMOffset: Int, TRK_STATOffset: Int, OBJ_NATOffset: Int, OBJ_IDOffset: Int, OBJ_TYPEOffset: Int, OBJ_SPECOffset: Int, OBJ_PLATOffset: Int, OBJ_ACTOffset: Int, MOD_TYPEOffset: Int, TRK_ITM_IDOffset: Int, TSOffset: Int, TRK_QUAL: Int, TRK_PT_TYPEOffset: Int, OBJ_IDENTOffset: Int, IDENT_CRED: Int, IDENT_REL: Int, IDENT_AMPOffset: Int, ENVIRONMENTOffset: Int, ENVIRONMENT_CONF: Double, TRK_CONF: Double, LAT: Double, LON: Double, ALT: Double, SPD: Double, HDNG: Double, COURSE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int, CALL_SIGNOffset: Int, MULTI_SOURCE: Boolean, J_SERIESOffset: Int, STRENGTH: Int, M1: Int, M1V: Int, M2: Int, M2V: Int, M3A: Int, M3AV: Int, TAGSOffset: Int, TRACK_START_TIMEOffset: Int, TRACK_STEP_SIZE: Double, TRACK_COMPONENTS: UByte, ECEF_POSOffset: Int, ECEF_VELOffset: Int, ECEF_ACCOffset: Int, LC_POSOffset: Int, LC_VELOffset: Int, LC_ACCOffset: Int, COVOffset: Int, ERR_ELLPOffset: Int) : Int {
+            builder.startTable(59)
+            addTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE)
             addCOURSE(builder, COURSE)
             addHDNG(builder, HDNG)
             addSPD(builder, SPD)
@@ -608,6 +631,15 @@ class TRK : Table() {
             addLAT(builder, LAT)
             addTRK_CONF(builder, TRK_CONF)
             addENVIRONMENT_CONF(builder, ENVIRONMENT_CONF)
+            addERR_ELLP(builder, ERR_ELLPOffset)
+            addCOV(builder, COVOffset)
+            addLC_ACC(builder, LC_ACCOffset)
+            addLC_VEL(builder, LC_VELOffset)
+            addLC_POS(builder, LC_POSOffset)
+            addECEF_ACC(builder, ECEF_ACCOffset)
+            addECEF_VEL(builder, ECEF_VELOffset)
+            addECEF_POS(builder, ECEF_POSOffset)
+            addTRACK_START_TIME(builder, TRACK_START_TIMEOffset)
             addTAGS(builder, TAGSOffset)
             addM3AV(builder, M3AV)
             addM3A(builder, M3A)
@@ -620,18 +652,6 @@ class TRK : Table() {
             addCALL_SIGN(builder, CALL_SIGNOffset)
             addSRC_IDS(builder, SRC_IDSOffset)
             addSRC_TYPS(builder, SRC_TYPSOffset)
-            addERR_ELLP(builder, ERR_ELLPOffset)
-            addCOV(builder, COVOffset)
-            addE_NUPOS(builder, E_NUPOSOffset)
-            addE_NUVEL(builder, E_NUVELOffset)
-            addLC_ACC(builder, LC_ACCOffset)
-            addLC_VEL(builder, LC_VELOffset)
-            addLC_POS(builder, LC_POSOffset)
-            addLCS(builder, LCSOffset)
-            addLCO(builder, LCOOffset)
-            addECEF_ACC(builder, ECEF_ACCOffset)
-            addECEF_VEL(builder, ECEF_VELOffset)
-            addECEF_POS(builder, ECEF_POSOffset)
             addENVIRONMENT(builder, ENVIRONMENTOffset)
             addIDENT_AMP(builder, IDENT_AMPOffset)
             addIDENT_REL(builder, IDENT_REL)
@@ -659,10 +679,11 @@ class TRK : Table() {
             addMSG_TS(builder, MSG_TSOffset)
             addCNTCT(builder, CNTCTOffset)
             addID(builder, IDOffset)
+            addTRACK_COMPONENTS(builder, TRACK_COMPONENTS)
             addMULTI_SOURCE(builder, MULTI_SOURCE)
             return endTRK(builder)
         }
-        fun startTRK(builder: FlatBufferBuilder) = builder.startTable(60)
+        fun startTRK(builder: FlatBufferBuilder) = builder.startTable(59)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addCNTCT(builder: FlatBufferBuilder, CNTCT: Int) = builder.addOffset(1, CNTCT, 0)
         fun addMSG_TS(builder: FlatBufferBuilder, MSG_TS: Int) = builder.addOffset(2, MSG_TS, 0)
@@ -692,121 +713,13 @@ class TRK : Table() {
         fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Int) = builder.addOffset(26, ENVIRONMENT, 0)
         fun addENVIRONMENT_CONF(builder: FlatBufferBuilder, ENVIRONMENT_CONF: Double) = builder.addDouble(27, ENVIRONMENT_CONF, 0.0)
         fun addTRK_CONF(builder: FlatBufferBuilder, TRK_CONF: Double) = builder.addDouble(28, TRK_CONF, 0.0)
-        fun addECEF_POS(builder: FlatBufferBuilder, ECEF_POS: Int) = builder.addOffset(29, ECEF_POS, 0)
-        fun createEcefPosVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startEcefPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addECEF_VEL(builder: FlatBufferBuilder, ECEF_VEL: Int) = builder.addOffset(30, ECEF_VEL, 0)
-        fun createEcefVelVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startEcefVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addECEF_ACC(builder: FlatBufferBuilder, ECEF_ACC: Int) = builder.addOffset(31, ECEF_ACC, 0)
-        fun createEcefAccVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startEcefAccVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(32, LAT, 0.0)
-        fun addLON(builder: FlatBufferBuilder, LON: Double) = builder.addDouble(33, LON, 0.0)
-        fun addALT(builder: FlatBufferBuilder, ALT: Double) = builder.addDouble(34, ALT, 0.0)
-        fun addSPD(builder: FlatBufferBuilder, SPD: Double) = builder.addDouble(35, SPD, 0.0)
-        fun addHDNG(builder: FlatBufferBuilder, HDNG: Double) = builder.addDouble(36, HDNG, 0.0)
-        fun addCOURSE(builder: FlatBufferBuilder, COURSE: Double) = builder.addDouble(37, COURSE, 0.0)
-        fun addLCO(builder: FlatBufferBuilder, LCO: Int) = builder.addOffset(38, LCO, 0)
-        fun createLcoVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLcoVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLCS(builder: FlatBufferBuilder, LCS: Int) = builder.addOffset(39, LCS, 0)
-        fun createLcsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLcsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLC_POS(builder: FlatBufferBuilder, LC_POS: Int) = builder.addOffset(40, LC_POS, 0)
-        fun createLcPosVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLcPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLC_VEL(builder: FlatBufferBuilder, LC_VEL: Int) = builder.addOffset(41, LC_VEL, 0)
-        fun createLcVelVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLcVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLC_ACC(builder: FlatBufferBuilder, LC_ACC: Int) = builder.addOffset(42, LC_ACC, 0)
-        fun createLcAccVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLcAccVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addE_NUVEL(builder: FlatBufferBuilder, E_NUVEL: Int) = builder.addOffset(43, E_NUVEL, 0)
-        fun createENuvelVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startENuvelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addE_NUPOS(builder: FlatBufferBuilder, E_NUPOS: Int) = builder.addOffset(44, E_NUPOS, 0)
-        fun createENuposVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startENuposVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOV(builder: FlatBufferBuilder, COV: Int) = builder.addOffset(45, COV, 0)
-        fun createCovVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startCovVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addERR_ELLP(builder: FlatBufferBuilder, ERR_ELLP: Int) = builder.addOffset(46, ERR_ELLP, 0)
-        fun createErrEllpVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startErrEllpVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(47, SRC_TYPS, 0)
+        fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(29, LAT, 0.0)
+        fun addLON(builder: FlatBufferBuilder, LON: Double) = builder.addDouble(30, LON, 0.0)
+        fun addALT(builder: FlatBufferBuilder, ALT: Double) = builder.addDouble(31, ALT, 0.0)
+        fun addSPD(builder: FlatBufferBuilder, SPD: Double) = builder.addDouble(32, SPD, 0.0)
+        fun addHDNG(builder: FlatBufferBuilder, HDNG: Double) = builder.addDouble(33, HDNG, 0.0)
+        fun addCOURSE(builder: FlatBufferBuilder, COURSE: Double) = builder.addDouble(34, COURSE, 0.0)
+        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(35, SRC_TYPS, 0)
         fun createSrcTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -815,7 +728,7 @@ class TRK : Table() {
             return builder.endVector()
         }
         fun startSrcTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(48, SRC_IDS, 0)
+        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(36, SRC_IDS, 0)
         fun createSrcIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -824,17 +737,17 @@ class TRK : Table() {
             return builder.endVector()
         }
         fun startSrcIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(49, CALL_SIGN, 0)
-        fun addMULTI_SOURCE(builder: FlatBufferBuilder, MULTI_SOURCE: Boolean) = builder.addBoolean(50, MULTI_SOURCE, false)
-        fun addJ_SERIES(builder: FlatBufferBuilder, J_SERIES: Int) = builder.addOffset(51, J_SERIES, 0)
-        fun addSTRENGTH(builder: FlatBufferBuilder, STRENGTH: Int) = builder.addInt(52, STRENGTH, 0)
-        fun addM1(builder: FlatBufferBuilder, M1: Int) = builder.addInt(53, M1, 0)
-        fun addM1V(builder: FlatBufferBuilder, M1V: Int) = builder.addInt(54, M1V, 0)
-        fun addM2(builder: FlatBufferBuilder, M2: Int) = builder.addInt(55, M2, 0)
-        fun addM2V(builder: FlatBufferBuilder, M2V: Int) = builder.addInt(56, M2V, 0)
-        fun addM3A(builder: FlatBufferBuilder, M3A: Int) = builder.addInt(57, M3A, 0)
-        fun addM3AV(builder: FlatBufferBuilder, M3AV: Int) = builder.addInt(58, M3AV, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(59, TAGS, 0)
+        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(37, CALL_SIGN, 0)
+        fun addMULTI_SOURCE(builder: FlatBufferBuilder, MULTI_SOURCE: Boolean) = builder.addBoolean(38, MULTI_SOURCE, false)
+        fun addJ_SERIES(builder: FlatBufferBuilder, J_SERIES: Int) = builder.addOffset(39, J_SERIES, 0)
+        fun addSTRENGTH(builder: FlatBufferBuilder, STRENGTH: Int) = builder.addInt(40, STRENGTH, 0)
+        fun addM1(builder: FlatBufferBuilder, M1: Int) = builder.addInt(41, M1, 0)
+        fun addM1V(builder: FlatBufferBuilder, M1V: Int) = builder.addInt(42, M1V, 0)
+        fun addM2(builder: FlatBufferBuilder, M2: Int) = builder.addInt(43, M2, 0)
+        fun addM2V(builder: FlatBufferBuilder, M2V: Int) = builder.addInt(44, M2V, 0)
+        fun addM3A(builder: FlatBufferBuilder, M3A: Int) = builder.addInt(45, M3A, 0)
+        fun addM3AV(builder: FlatBufferBuilder, M3AV: Int) = builder.addInt(46, M3AV, 0)
+        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(47, TAGS, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -843,6 +756,81 @@ class TRK : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTRACK_START_TIME(builder: FlatBufferBuilder, TRACK_START_TIME: Int) = builder.addOffset(48, TRACK_START_TIME, 0)
+        fun addTRACK_STEP_SIZE(builder: FlatBufferBuilder, TRACK_STEP_SIZE: Double) = builder.addDouble(49, TRACK_STEP_SIZE, 0.0)
+        fun addTRACK_COMPONENTS(builder: FlatBufferBuilder, TRACK_COMPONENTS: UByte) = builder.addByte(50, TRACK_COMPONENTS.toByte(), 3)
+        fun addECEF_POS(builder: FlatBufferBuilder, ECEF_POS: Int) = builder.addOffset(51, ECEF_POS, 0)
+        fun createEcefPosVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEcefPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addECEF_VEL(builder: FlatBufferBuilder, ECEF_VEL: Int) = builder.addOffset(52, ECEF_VEL, 0)
+        fun createEcefVelVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEcefVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addECEF_ACC(builder: FlatBufferBuilder, ECEF_ACC: Int) = builder.addOffset(53, ECEF_ACC, 0)
+        fun createEcefAccVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEcefAccVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addLC_POS(builder: FlatBufferBuilder, LC_POS: Int) = builder.addOffset(54, LC_POS, 0)
+        fun createLcPosVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startLcPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addLC_VEL(builder: FlatBufferBuilder, LC_VEL: Int) = builder.addOffset(55, LC_VEL, 0)
+        fun createLcVelVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startLcVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addLC_ACC(builder: FlatBufferBuilder, LC_ACC: Int) = builder.addOffset(56, LC_ACC, 0)
+        fun createLcAccVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startLcAccVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addCOV(builder: FlatBufferBuilder, COV: Int) = builder.addOffset(57, COV, 0)
+        fun createCovVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addERR_ELLP(builder: FlatBufferBuilder, ERR_ELLP: Int) = builder.addOffset(58, ERR_ELLP, 0)
+        fun createErrEllpVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startErrEllpVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endTRK(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

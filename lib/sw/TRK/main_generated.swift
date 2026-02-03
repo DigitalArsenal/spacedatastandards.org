@@ -46,37 +46,36 @@ public struct TRK: FlatBufferObject, Verifiable {
     case ENVIRONMENT = 56
     case ENVIRONMENT_CONF = 58
     case TRK_CONF = 60
-    case ECEF_POS = 62
-    case ECEF_VEL = 64
-    case ECEF_ACC = 66
-    case LAT = 68
-    case LON = 70
-    case ALT = 72
-    case SPD = 74
-    case HDNG = 76
-    case COURSE = 78
-    case LCO = 80
-    case LCS = 82
-    case LC_POS = 84
-    case LC_VEL = 86
-    case LC_ACC = 88
-    case E_NUVEL = 90
-    case E_NUPOS = 92
-    case COV = 94
-    case ERR_ELLP = 96
-    case SRC_TYPS = 98
-    case SRC_IDS = 100
-    case CALL_SIGN = 102
-    case MULTI_SOURCE = 104
-    case J_SERIES = 106
-    case STRENGTH = 108
-    case M1 = 110
-    case M1V = 112
-    case M2 = 114
-    case M2V = 116
-    case M3A = 118
-    case M3AV = 120
-    case TAGS = 122
+    case LAT = 62
+    case LON = 64
+    case ALT = 66
+    case SPD = 68
+    case HDNG = 70
+    case COURSE = 72
+    case SRC_TYPS = 74
+    case SRC_IDS = 76
+    case CALL_SIGN = 78
+    case MULTI_SOURCE = 80
+    case J_SERIES = 82
+    case STRENGTH = 84
+    case M1 = 86
+    case M1V = 88
+    case M2 = 90
+    case M2V = 92
+    case M3A = 94
+    case M3AV = 96
+    case TAGS = 98
+    case TRACK_START_TIME = 100
+    case TRACK_STEP_SIZE = 102
+    case TRACK_COMPONENTS = 104
+    case ECEF_POS = 106
+    case ECEF_VEL = 108
+    case ECEF_ACC = 110
+    case LC_POS = 112
+    case LC_VEL = 114
+    case LC_ACC = 116
+    case COV = 118
+    case ERR_ELLP = 120
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -134,48 +133,12 @@ public struct TRK: FlatBufferObject, Verifiable {
   public var ENVIRONMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENVIRONMENT.v) }
   public var ENVIRONMENT_CONF: Double { let o = _accessor.offset(VTOFFSET.ENVIRONMENT_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var TRK_CONF: Double { let o = _accessor.offset(VTOFFSET.TRK_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var hasEcefPos: Bool { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? false : true }
-  public var ECEF_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_POS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasEcefVel: Bool { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? false : true }
-  public var ECEF_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_VEL(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasEcefAcc: Bool { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? false : true }
-  public var ECEF_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_ACC(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
   public var LAT: Double { let o = _accessor.offset(VTOFFSET.LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var LON: Double { let o = _accessor.offset(VTOFFSET.LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var ALT: Double { let o = _accessor.offset(VTOFFSET.ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var SPD: Double { let o = _accessor.offset(VTOFFSET.SPD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var HDNG: Double { let o = _accessor.offset(VTOFFSET.HDNG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var COURSE: Double { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var hasLco: Bool { let o = _accessor.offset(VTOFFSET.LCO.v); return o == 0 ? false : true }
-  public var LCOCount: Int32 { let o = _accessor.offset(VTOFFSET.LCO.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LCO(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LCO.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasLcs: Bool { let o = _accessor.offset(VTOFFSET.LCS.v); return o == 0 ? false : true }
-  public var LCSCount: Int32 { let o = _accessor.offset(VTOFFSET.LCS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LCS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LCS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasLcPos: Bool { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? false : true }
-  public var LC_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_POS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasLcVel: Bool { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? false : true }
-  public var LC_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_VEL(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasLcAcc: Bool { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? false : true }
-  public var LC_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_ACC(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasENuvel: Bool { let o = _accessor.offset(VTOFFSET.E_NUVEL.v); return o == 0 ? false : true }
-  public var E_NUVELCount: Int32 { let o = _accessor.offset(VTOFFSET.E_NUVEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func E_NUVEL(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.E_NUVEL.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasENupos: Bool { let o = _accessor.offset(VTOFFSET.E_NUPOS.v); return o == 0 ? false : true }
-  public var E_NUPOSCount: Int32 { let o = _accessor.offset(VTOFFSET.E_NUPOS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func E_NUPOS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.E_NUPOS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasCov: Bool { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? false : true }
-  public var COVCount: Int32 { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COV(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasErrEllp: Bool { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? false : true }
-  public var ERR_ELLPCount: Int32 { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ERR_ELLP(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
   public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
   public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
@@ -197,7 +160,54 @@ public struct TRK: FlatBufferObject, Verifiable {
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startTRK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 60) }
+  ///  Start time for track data (ISO 8601 UTC format).
+  public var TRACK_START_TIME: String? { let o = _accessor.offset(VTOFFSET.TRACK_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_START_TIME.v) }
+  ///  Time interval between track points in seconds.
+  public var TRACK_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.TRACK_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of components per point (default 3 for X, Y, Z).
+  public var TRACK_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.TRACK_COMPONENTS.v); return o == 0 ? 3 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  public var hasEcefPos: Bool { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? false : true }
+  public var ECEF_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ECEF_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var ECEF_POS: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_POS.v) ?? [] }
+  ///  ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  public var hasEcefVel: Bool { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? false : true }
+  public var ECEF_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ECEF_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var ECEF_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_VEL.v) ?? [] }
+  ///  ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  public var hasEcefAcc: Bool { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? false : true }
+  public var ECEF_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ECEF_ACC(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var ECEF_ACC: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_ACC.v) ?? [] }
+  ///  Local coordinate position as flat array
+  public var hasLcPos: Bool { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? false : true }
+  public var LC_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func LC_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var LC_POS: [Double] { return _accessor.getVector(at: VTOFFSET.LC_POS.v) ?? [] }
+  ///  Local coordinate velocity as flat array
+  public var hasLcVel: Bool { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? false : true }
+  public var LC_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func LC_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var LC_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.LC_VEL.v) ?? [] }
+  ///  Local coordinate acceleration as flat array
+  public var hasLcAcc: Bool { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? false : true }
+  public var LC_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func LC_ACC(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var LC_ACC: [Double] { return _accessor.getVector(at: VTOFFSET.LC_ACC.v) ?? [] }
+  ///  Covariance data (21 elements per point for 6x6 lower triangular)
+  public var hasCov: Bool { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? false : true }
+  public var COVCount: Int32 { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func COV(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var COV: [Double] { return _accessor.getVector(at: VTOFFSET.COV.v) ?? [] }
+  ///  Error ellipse data (6 elements per point)
+  public var hasErrEllp: Bool { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? false : true }
+  public var ERR_ELLPCount: Int32 { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ERR_ELLP(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var ERR_ELLP: [Double] { return _accessor.getVector(at: VTOFFSET.ERR_ELLP.v) ?? [] }
+  public static func startTRK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(CNTCT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CNTCT, at: VTOFFSET.CNTCT.p) }
   public static func add(MSG_TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TS, at: VTOFFSET.MSG_TS.p) }
@@ -227,24 +237,12 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(ENVIRONMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT, at: VTOFFSET.ENVIRONMENT.p) }
   public static func add(ENVIRONMENT_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT_CONF, def: 0.0, at: VTOFFSET.ENVIRONMENT_CONF.p) }
   public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VTOFFSET.TRK_CONF.p) }
-  public static func addVectorOf(ECEF_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_POS, at: VTOFFSET.ECEF_POS.p) }
-  public static func addVectorOf(ECEF_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_VEL, at: VTOFFSET.ECEF_VEL.p) }
-  public static func addVectorOf(ECEF_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_ACC, at: VTOFFSET.ECEF_ACC.p) }
   public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VTOFFSET.LAT.p) }
   public static func add(LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LON, def: 0.0, at: VTOFFSET.LON.p) }
   public static func add(ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALT, def: 0.0, at: VTOFFSET.ALT.p) }
   public static func add(SPD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPD, def: 0.0, at: VTOFFSET.SPD.p) }
   public static func add(HDNG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HDNG, def: 0.0, at: VTOFFSET.HDNG.p) }
   public static func add(COURSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COURSE, def: 0.0, at: VTOFFSET.COURSE.p) }
-  public static func addVectorOf(LCO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LCO, at: VTOFFSET.LCO.p) }
-  public static func addVectorOf(LCS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LCS, at: VTOFFSET.LCS.p) }
-  public static func addVectorOf(LC_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_POS, at: VTOFFSET.LC_POS.p) }
-  public static func addVectorOf(LC_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_VEL, at: VTOFFSET.LC_VEL.p) }
-  public static func addVectorOf(LC_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_ACC, at: VTOFFSET.LC_ACC.p) }
-  public static func addVectorOf(E_NUVEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: E_NUVEL, at: VTOFFSET.E_NUVEL.p) }
-  public static func addVectorOf(E_NUPOS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: E_NUPOS, at: VTOFFSET.E_NUPOS.p) }
-  public static func addVectorOf(COV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV, at: VTOFFSET.COV.p) }
-  public static func addVectorOf(ERR_ELLP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERR_ELLP, at: VTOFFSET.ERR_ELLP.p) }
   public static func addVectorOf(SRC_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_TYPS, at: VTOFFSET.SRC_TYPS.p) }
   public static func addVectorOf(SRC_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRC_IDS, at: VTOFFSET.SRC_IDS.p) }
   public static func add(CALL_SIGN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALL_SIGN, at: VTOFFSET.CALL_SIGN.p) }
@@ -259,6 +257,17 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(M3A: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3A, def: 0, at: VTOFFSET.M3A.p) }
   public static func add(M3AV: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3AV, def: 0, at: VTOFFSET.M3AV.p) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
+  public static func add(TRACK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_START_TIME, at: VTOFFSET.TRACK_START_TIME.p) }
+  public static func add(TRACK_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_STEP_SIZE, def: 0.0, at: VTOFFSET.TRACK_STEP_SIZE.p) }
+  public static func add(TRACK_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_COMPONENTS, def: 3, at: VTOFFSET.TRACK_COMPONENTS.p) }
+  public static func addVectorOf(ECEF_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_POS, at: VTOFFSET.ECEF_POS.p) }
+  public static func addVectorOf(ECEF_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_VEL, at: VTOFFSET.ECEF_VEL.p) }
+  public static func addVectorOf(ECEF_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECEF_ACC, at: VTOFFSET.ECEF_ACC.p) }
+  public static func addVectorOf(LC_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_POS, at: VTOFFSET.LC_POS.p) }
+  public static func addVectorOf(LC_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_VEL, at: VTOFFSET.LC_VEL.p) }
+  public static func addVectorOf(LC_ACC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LC_ACC, at: VTOFFSET.LC_ACC.p) }
+  public static func addVectorOf(COV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV, at: VTOFFSET.COV.p) }
+  public static func addVectorOf(ERR_ELLP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERR_ELLP, at: VTOFFSET.ERR_ELLP.p) }
   public static func endTRK(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTRK(
     _ fbb: inout FlatBufferBuilder,
@@ -291,24 +300,12 @@ public struct TRK: FlatBufferObject, Verifiable {
     ENVIRONMENTOffset ENVIRONMENT: Offset = Offset(),
     ENVIRONMENT_CONF: Double = 0.0,
     TRK_CONF: Double = 0.0,
-    ECEF_POSVectorOffset ECEF_POS: Offset = Offset(),
-    ECEF_VELVectorOffset ECEF_VEL: Offset = Offset(),
-    ECEF_ACCVectorOffset ECEF_ACC: Offset = Offset(),
     LAT: Double = 0.0,
     LON: Double = 0.0,
     ALT: Double = 0.0,
     SPD: Double = 0.0,
     HDNG: Double = 0.0,
     COURSE: Double = 0.0,
-    LCOVectorOffset LCO: Offset = Offset(),
-    LCSVectorOffset LCS: Offset = Offset(),
-    LC_POSVectorOffset LC_POS: Offset = Offset(),
-    LC_VELVectorOffset LC_VEL: Offset = Offset(),
-    LC_ACCVectorOffset LC_ACC: Offset = Offset(),
-    E_NUVELVectorOffset E_NUVEL: Offset = Offset(),
-    E_NUPOSVectorOffset E_NUPOS: Offset = Offset(),
-    COVVectorOffset COV: Offset = Offset(),
-    ERR_ELLPVectorOffset ERR_ELLP: Offset = Offset(),
     SRC_TYPSVectorOffset SRC_TYPS: Offset = Offset(),
     SRC_IDSVectorOffset SRC_IDS: Offset = Offset(),
     CALL_SIGNOffset CALL_SIGN: Offset = Offset(),
@@ -321,7 +318,18 @@ public struct TRK: FlatBufferObject, Verifiable {
     M2V: Int32 = 0,
     M3A: Int32 = 0,
     M3AV: Int32 = 0,
-    TAGSVectorOffset TAGS: Offset = Offset()
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    TRACK_START_TIMEOffset TRACK_START_TIME: Offset = Offset(),
+    TRACK_STEP_SIZE: Double = 0.0,
+    TRACK_COMPONENTS: UInt8 = 3,
+    ECEF_POSVectorOffset ECEF_POS: Offset = Offset(),
+    ECEF_VELVectorOffset ECEF_VEL: Offset = Offset(),
+    ECEF_ACCVectorOffset ECEF_ACC: Offset = Offset(),
+    LC_POSVectorOffset LC_POS: Offset = Offset(),
+    LC_VELVectorOffset LC_VEL: Offset = Offset(),
+    LC_ACCVectorOffset LC_ACC: Offset = Offset(),
+    COVVectorOffset COV: Offset = Offset(),
+    ERR_ELLPVectorOffset ERR_ELLP: Offset = Offset()
   ) -> Offset {
     let __start = TRK.startTRK(&fbb)
     TRK.add(ID: ID, &fbb)
@@ -353,24 +361,12 @@ public struct TRK: FlatBufferObject, Verifiable {
     TRK.add(ENVIRONMENT: ENVIRONMENT, &fbb)
     TRK.add(ENVIRONMENT_CONF: ENVIRONMENT_CONF, &fbb)
     TRK.add(TRK_CONF: TRK_CONF, &fbb)
-    TRK.addVectorOf(ECEF_POS: ECEF_POS, &fbb)
-    TRK.addVectorOf(ECEF_VEL: ECEF_VEL, &fbb)
-    TRK.addVectorOf(ECEF_ACC: ECEF_ACC, &fbb)
     TRK.add(LAT: LAT, &fbb)
     TRK.add(LON: LON, &fbb)
     TRK.add(ALT: ALT, &fbb)
     TRK.add(SPD: SPD, &fbb)
     TRK.add(HDNG: HDNG, &fbb)
     TRK.add(COURSE: COURSE, &fbb)
-    TRK.addVectorOf(LCO: LCO, &fbb)
-    TRK.addVectorOf(LCS: LCS, &fbb)
-    TRK.addVectorOf(LC_POS: LC_POS, &fbb)
-    TRK.addVectorOf(LC_VEL: LC_VEL, &fbb)
-    TRK.addVectorOf(LC_ACC: LC_ACC, &fbb)
-    TRK.addVectorOf(E_NUVEL: E_NUVEL, &fbb)
-    TRK.addVectorOf(E_NUPOS: E_NUPOS, &fbb)
-    TRK.addVectorOf(COV: COV, &fbb)
-    TRK.addVectorOf(ERR_ELLP: ERR_ELLP, &fbb)
     TRK.addVectorOf(SRC_TYPS: SRC_TYPS, &fbb)
     TRK.addVectorOf(SRC_IDS: SRC_IDS, &fbb)
     TRK.add(CALL_SIGN: CALL_SIGN, &fbb)
@@ -384,6 +380,17 @@ public struct TRK: FlatBufferObject, Verifiable {
     TRK.add(M3A: M3A, &fbb)
     TRK.add(M3AV: M3AV, &fbb)
     TRK.addVectorOf(TAGS: TAGS, &fbb)
+    TRK.add(TRACK_START_TIME: TRACK_START_TIME, &fbb)
+    TRK.add(TRACK_STEP_SIZE: TRACK_STEP_SIZE, &fbb)
+    TRK.add(TRACK_COMPONENTS: TRACK_COMPONENTS, &fbb)
+    TRK.addVectorOf(ECEF_POS: ECEF_POS, &fbb)
+    TRK.addVectorOf(ECEF_VEL: ECEF_VEL, &fbb)
+    TRK.addVectorOf(ECEF_ACC: ECEF_ACC, &fbb)
+    TRK.addVectorOf(LC_POS: LC_POS, &fbb)
+    TRK.addVectorOf(LC_VEL: LC_VEL, &fbb)
+    TRK.addVectorOf(LC_ACC: LC_ACC, &fbb)
+    TRK.addVectorOf(COV: COV, &fbb)
+    TRK.addVectorOf(ERR_ELLP: ERR_ELLP, &fbb)
     return TRK.endTRK(&fbb, start: __start)
   }
 
@@ -418,24 +425,12 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ENVIRONMENT.p, fieldName: "ENVIRONMENT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ENVIRONMENT_CONF.p, fieldName: "ENVIRONMENT_CONF", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TRK_CONF.p, fieldName: "TRK_CONF", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.ECEF_POS.p, fieldName: "ECEF_POS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ECEF_VEL.p, fieldName: "ECEF_VEL", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ECEF_ACC.p, fieldName: "ECEF_ACC", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.LAT.p, fieldName: "LAT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LON.p, fieldName: "LON", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ALT.p, fieldName: "ALT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SPD.p, fieldName: "SPD", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.HDNG.p, fieldName: "HDNG", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.COURSE.p, fieldName: "COURSE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LCO.p, fieldName: "LCO", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LCS.p, fieldName: "LCS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LC_POS.p, fieldName: "LC_POS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LC_VEL.p, fieldName: "LC_VEL", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.LC_ACC.p, fieldName: "LC_ACC", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.E_NUVEL.p, fieldName: "E_NUVEL", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.E_NUPOS.p, fieldName: "E_NUPOS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COV.p, fieldName: "COV", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ERR_ELLP.p, fieldName: "ERR_ELLP", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.SRC_TYPS.p, fieldName: "SRC_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.SRC_IDS.p, fieldName: "SRC_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.CALL_SIGN.p, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
@@ -449,6 +444,17 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.M3A.p, fieldName: "M3A", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.M3AV.p, fieldName: "M3AV", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.TRACK_START_TIME.p, fieldName: "TRACK_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRACK_STEP_SIZE.p, fieldName: "TRACK_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TRACK_COMPONENTS.p, fieldName: "TRACK_COMPONENTS", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.ECEF_POS.p, fieldName: "ECEF_POS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.ECEF_VEL.p, fieldName: "ECEF_VEL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.ECEF_ACC.p, fieldName: "ECEF_ACC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.LC_POS.p, fieldName: "LC_POS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.LC_VEL.p, fieldName: "LC_VEL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.LC_ACC.p, fieldName: "LC_ACC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COV.p, fieldName: "COV", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.ERR_ELLP.p, fieldName: "ERR_ELLP", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

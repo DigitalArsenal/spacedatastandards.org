@@ -16,7 +16,6 @@ export { SpacecraftFrameWrapper, SpacecraftFrameWrapperT } from './SpacecraftFra
 export { TIM, TIMT } from './TIM.js';
 export { VCM, VCMT } from './VCM.js';
 export { VCMAtmosphericModelData, VCMAtmosphericModelDataT } from './VCMAtmosphericModelData.js';
-export { VCMCovarianceMatrixLine, VCMCovarianceMatrixLineT } from './VCMCovarianceMatrixLine.js';
 export { VCMStateVector, VCMStateVectorT } from './VCMStateVector.js';
 export { anomalyType } from './anomalyType.js';
 export { atmosphericModel } from './atmosphericModel.js';

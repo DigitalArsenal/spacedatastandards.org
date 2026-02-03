@@ -37,55 +37,57 @@ impl<'a> TDM<'a> {
   pub const VT_OBSERVER_POSITION_REFERENCE_FRAME: flatbuffers::VOffsetT = 18;
   pub const VT_OBS_REFERENCE_FRAME: flatbuffers::VOffsetT = 20;
   pub const VT_EPOCH: flatbuffers::VOffsetT = 22;
-  pub const VT_CCSDS_TDM_VERS: flatbuffers::VOffsetT = 24;
-  pub const VT_COMMENT: flatbuffers::VOffsetT = 26;
-  pub const VT_CREATION_DATE: flatbuffers::VOffsetT = 28;
-  pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 30;
-  pub const VT_META_START: flatbuffers::VOffsetT = 32;
-  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 34;
-  pub const VT_START_TIME: flatbuffers::VOffsetT = 36;
-  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 38;
-  pub const VT_PARTICIPANT_1: flatbuffers::VOffsetT = 40;
-  pub const VT_PARTICIPANT_2: flatbuffers::VOffsetT = 42;
-  pub const VT_PARTICIPANT_3: flatbuffers::VOffsetT = 44;
-  pub const VT_PARTICIPANT_4: flatbuffers::VOffsetT = 46;
-  pub const VT_PARTICIPANT_5: flatbuffers::VOffsetT = 48;
-  pub const VT_MODE: flatbuffers::VOffsetT = 50;
-  pub const VT_PATH_1: flatbuffers::VOffsetT = 52;
-  pub const VT_PATH_2: flatbuffers::VOffsetT = 54;
-  pub const VT_TRANSMIT_BAND: flatbuffers::VOffsetT = 56;
-  pub const VT_RECEIVE_BAND: flatbuffers::VOffsetT = 58;
-  pub const VT_INTEGRATION_INTERVAL: flatbuffers::VOffsetT = 60;
-  pub const VT_INTEGRATION_REF: flatbuffers::VOffsetT = 62;
-  pub const VT_RECEIVE_DELAY_2: flatbuffers::VOffsetT = 64;
-  pub const VT_RECEIVE_DELAY_3: flatbuffers::VOffsetT = 66;
-  pub const VT_DATA_QUALITY: flatbuffers::VOffsetT = 68;
-  pub const VT_META_STOP: flatbuffers::VOffsetT = 70;
-  pub const VT_DATA_START: flatbuffers::VOffsetT = 72;
-  pub const VT_TRANSMIT_FREQ_1: flatbuffers::VOffsetT = 74;
-  pub const VT_RECEIVE_FREQ: flatbuffers::VOffsetT = 76;
-  pub const VT_DATA_STOP: flatbuffers::VOffsetT = 78;
-  pub const VT_TIMETAG_REF: flatbuffers::VOffsetT = 80;
-  pub const VT_ANGLE_TYPE: flatbuffers::VOffsetT = 82;
-  pub const VT_ANGLE_1: flatbuffers::VOffsetT = 84;
-  pub const VT_ANGLE_2: flatbuffers::VOffsetT = 86;
-  pub const VT_ANGLE_UNCERTAINTY_1: flatbuffers::VOffsetT = 88;
-  pub const VT_ANGLE_UNCERTAINTY_2: flatbuffers::VOffsetT = 90;
-  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 92;
-  pub const VT_RANGE_UNCERTAINTY: flatbuffers::VOffsetT = 94;
-  pub const VT_RANGE_MODE: flatbuffers::VOffsetT = 96;
-  pub const VT_RANGE_MODULUS: flatbuffers::VOffsetT = 98;
-  pub const VT_CORRECTION_ANGLE_1: flatbuffers::VOffsetT = 100;
-  pub const VT_CORRECTION_ANGLE_2: flatbuffers::VOffsetT = 102;
-  pub const VT_CORRECTIONS_APPLIED: flatbuffers::VOffsetT = 104;
-  pub const VT_TROPO_DRY: flatbuffers::VOffsetT = 106;
-  pub const VT_TROPO_WET: flatbuffers::VOffsetT = 108;
-  pub const VT_STEC: flatbuffers::VOffsetT = 110;
-  pub const VT_PRESSURE: flatbuffers::VOffsetT = 112;
-  pub const VT_RHUMIDITY: flatbuffers::VOffsetT = 114;
-  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 116;
-  pub const VT_CLOCK_BIAS: flatbuffers::VOffsetT = 118;
-  pub const VT_CLOCK_DRIFT: flatbuffers::VOffsetT = 120;
+  pub const VT_OBSERVATION_STEP_SIZE: flatbuffers::VOffsetT = 24;
+  pub const VT_OBSERVATION_START_TIME: flatbuffers::VOffsetT = 26;
+  pub const VT_CCSDS_TDM_VERS: flatbuffers::VOffsetT = 28;
+  pub const VT_COMMENT: flatbuffers::VOffsetT = 30;
+  pub const VT_CREATION_DATE: flatbuffers::VOffsetT = 32;
+  pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 34;
+  pub const VT_META_START: flatbuffers::VOffsetT = 36;
+  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 38;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 40;
+  pub const VT_STOP_TIME: flatbuffers::VOffsetT = 42;
+  pub const VT_PARTICIPANT_1: flatbuffers::VOffsetT = 44;
+  pub const VT_PARTICIPANT_2: flatbuffers::VOffsetT = 46;
+  pub const VT_PARTICIPANT_3: flatbuffers::VOffsetT = 48;
+  pub const VT_PARTICIPANT_4: flatbuffers::VOffsetT = 50;
+  pub const VT_PARTICIPANT_5: flatbuffers::VOffsetT = 52;
+  pub const VT_MODE: flatbuffers::VOffsetT = 54;
+  pub const VT_PATH_1: flatbuffers::VOffsetT = 56;
+  pub const VT_PATH_2: flatbuffers::VOffsetT = 58;
+  pub const VT_TRANSMIT_BAND: flatbuffers::VOffsetT = 60;
+  pub const VT_RECEIVE_BAND: flatbuffers::VOffsetT = 62;
+  pub const VT_INTEGRATION_INTERVAL: flatbuffers::VOffsetT = 64;
+  pub const VT_INTEGRATION_REF: flatbuffers::VOffsetT = 66;
+  pub const VT_RECEIVE_DELAY_2: flatbuffers::VOffsetT = 68;
+  pub const VT_RECEIVE_DELAY_3: flatbuffers::VOffsetT = 70;
+  pub const VT_DATA_QUALITY: flatbuffers::VOffsetT = 72;
+  pub const VT_META_STOP: flatbuffers::VOffsetT = 74;
+  pub const VT_DATA_START: flatbuffers::VOffsetT = 76;
+  pub const VT_TRANSMIT_FREQ_1: flatbuffers::VOffsetT = 78;
+  pub const VT_RECEIVE_FREQ: flatbuffers::VOffsetT = 80;
+  pub const VT_DATA_STOP: flatbuffers::VOffsetT = 82;
+  pub const VT_TIMETAG_REF: flatbuffers::VOffsetT = 84;
+  pub const VT_ANGLE_TYPE: flatbuffers::VOffsetT = 86;
+  pub const VT_ANGLE_1: flatbuffers::VOffsetT = 88;
+  pub const VT_ANGLE_2: flatbuffers::VOffsetT = 90;
+  pub const VT_ANGLE_UNCERTAINTY_1: flatbuffers::VOffsetT = 92;
+  pub const VT_ANGLE_UNCERTAINTY_2: flatbuffers::VOffsetT = 94;
+  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 96;
+  pub const VT_RANGE_UNCERTAINTY: flatbuffers::VOffsetT = 98;
+  pub const VT_RANGE_MODE: flatbuffers::VOffsetT = 100;
+  pub const VT_RANGE_MODULUS: flatbuffers::VOffsetT = 102;
+  pub const VT_CORRECTION_ANGLE_1: flatbuffers::VOffsetT = 104;
+  pub const VT_CORRECTION_ANGLE_2: flatbuffers::VOffsetT = 106;
+  pub const VT_CORRECTIONS_APPLIED: flatbuffers::VOffsetT = 108;
+  pub const VT_TROPO_DRY: flatbuffers::VOffsetT = 110;
+  pub const VT_TROPO_WET: flatbuffers::VOffsetT = 112;
+  pub const VT_STEC: flatbuffers::VOffsetT = 114;
+  pub const VT_PRESSURE: flatbuffers::VOffsetT = 116;
+  pub const VT_RHUMIDITY: flatbuffers::VOffsetT = 118;
+  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 120;
+  pub const VT_CLOCK_BIAS: flatbuffers::VOffsetT = 122;
+  pub const VT_CLOCK_DRIFT: flatbuffers::VOffsetT = 124;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -103,6 +105,7 @@ impl<'a> TDM<'a> {
     builder.add_TRANSMIT_FREQ_1(args.TRANSMIT_FREQ_1);
     builder.add_RECEIVE_DELAY_3(args.RECEIVE_DELAY_3);
     builder.add_RECEIVE_DELAY_2(args.RECEIVE_DELAY_2);
+    builder.add_OBSERVATION_STEP_SIZE(args.OBSERVATION_STEP_SIZE);
     builder.add_OBSERVER_VZ(args.OBSERVER_VZ);
     builder.add_OBSERVER_VY(args.OBSERVER_VY);
     builder.add_OBSERVER_VX(args.OBSERVER_VX);
@@ -150,6 +153,7 @@ impl<'a> TDM<'a> {
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
     if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
     if let Some(x) = args.CCSDS_TDM_VERS { builder.add_CCSDS_TDM_VERS(x); }
+    if let Some(x) = args.OBSERVATION_START_TIME { builder.add_OBSERVATION_START_TIME(x); }
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.OBS_REFERENCE_FRAME { builder.add_OBS_REFERENCE_FRAME(x); }
     if let Some(x) = args.OBSERVER_POSITION_REFERENCE_FRAME { builder.add_OBSERVER_POSITION_REFERENCE_FRAME(x); }
@@ -176,6 +180,10 @@ impl<'a> TDM<'a> {
       Box::new(x.unpack())
     });
     let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let OBSERVATION_STEP_SIZE = self.OBSERVATION_STEP_SIZE();
+    let OBSERVATION_START_TIME = self.OBSERVATION_START_TIME().map(|x| {
       x.to_string()
     });
     let CCSDS_TDM_VERS = self.CCSDS_TDM_VERS().map(|x| {
@@ -310,6 +318,8 @@ impl<'a> TDM<'a> {
       OBSERVER_POSITION_REFERENCE_FRAME,
       OBS_REFERENCE_FRAME,
       EPOCH,
+      OBSERVATION_STEP_SIZE,
+      OBSERVATION_START_TIME,
       CCSDS_TDM_VERS,
       COMMENT,
       CREATION_DATE,
@@ -441,6 +451,23 @@ impl<'a> TDM<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_EPOCH, None)}
+  }
+  /// Time interval between observations in seconds (required).
+  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+  #[inline]
+  pub fn OBSERVATION_STEP_SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDM::VT_OBSERVATION_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Start time for observation time reconstruction (ISO 8601 UTC format).
+  #[inline]
+  pub fn OBSERVATION_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TDM::VT_OBSERVATION_START_TIME, None)}
   }
   /// TDM version number -  CCSDS 503.0-B-1, Page D-9
   #[inline]
@@ -855,6 +882,8 @@ impl flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("OBSERVER_POSITION_REFERENCE_FRAME", Self::VT_OBSERVER_POSITION_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("OBS_REFERENCE_FRAME", Self::VT_OBS_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("OBSERVATION_STEP_SIZE", Self::VT_OBSERVATION_STEP_SIZE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBSERVATION_START_TIME", Self::VT_OBSERVATION_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CCSDS_TDM_VERS", Self::VT_CCSDS_TDM_VERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
@@ -919,6 +948,8 @@ pub struct TDMArgs<'a> {
     pub OBSERVER_POSITION_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub OBS_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
     pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBSERVATION_STEP_SIZE: f64,
+    pub OBSERVATION_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CCSDS_TDM_VERS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COMMENT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub CREATION_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -983,6 +1014,8 @@ impl<'a> Default for TDMArgs<'a> {
       OBSERVER_POSITION_REFERENCE_FRAME: None,
       OBS_REFERENCE_FRAME: None,
       EPOCH: None,
+      OBSERVATION_STEP_SIZE: 0.0,
+      OBSERVATION_START_TIME: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
       CREATION_DATE: None,
@@ -1080,6 +1113,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_OBSERVATION_STEP_SIZE(&mut self, OBSERVATION_STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(TDM::VT_OBSERVATION_STEP_SIZE, OBSERVATION_STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_OBSERVATION_START_TIME(&mut self, OBSERVATION_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TDM::VT_OBSERVATION_START_TIME, OBSERVATION_START_TIME);
   }
   #[inline]
   pub fn add_CCSDS_TDM_VERS(&mut self, CCSDS_TDM_VERS: flatbuffers::WIPOffset<&'b  str>) {
@@ -1305,6 +1346,8 @@ impl core::fmt::Debug for TDM<'_> {
       ds.field("OBSERVER_POSITION_REFERENCE_FRAME", &self.OBSERVER_POSITION_REFERENCE_FRAME());
       ds.field("OBS_REFERENCE_FRAME", &self.OBS_REFERENCE_FRAME());
       ds.field("EPOCH", &self.EPOCH());
+      ds.field("OBSERVATION_STEP_SIZE", &self.OBSERVATION_STEP_SIZE());
+      ds.field("OBSERVATION_START_TIME", &self.OBSERVATION_START_TIME());
       ds.field("CCSDS_TDM_VERS", &self.CCSDS_TDM_VERS());
       ds.field("COMMENT", &self.COMMENT());
       ds.field("CREATION_DATE", &self.CREATION_DATE());
@@ -1370,6 +1413,8 @@ pub struct TDMT {
   pub OBSERVER_POSITION_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub OBS_REFERENCE_FRAME: Option<Box<RFMT>>,
   pub EPOCH: Option<String>,
+  pub OBSERVATION_STEP_SIZE: f64,
+  pub OBSERVATION_START_TIME: Option<String>,
   pub CCSDS_TDM_VERS: Option<String>,
   pub COMMENT: Option<Vec<String>>,
   pub CREATION_DATE: Option<String>,
@@ -1433,6 +1478,8 @@ impl Default for TDMT {
       OBSERVER_POSITION_REFERENCE_FRAME: None,
       OBS_REFERENCE_FRAME: None,
       EPOCH: None,
+      OBSERVATION_STEP_SIZE: 0.0,
+      OBSERVATION_START_TIME: None,
       CCSDS_TDM_VERS: None,
       COMMENT: None,
       CREATION_DATE: None,
@@ -1506,6 +1553,10 @@ impl TDMT {
       x.pack(_fbb)
     });
     let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBSERVATION_STEP_SIZE = self.OBSERVATION_STEP_SIZE;
+    let OBSERVATION_START_TIME = self.OBSERVATION_START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let CCSDS_TDM_VERS = self.CCSDS_TDM_VERS.as_ref().map(|x|{
@@ -1640,6 +1691,8 @@ impl TDMT {
       OBSERVER_POSITION_REFERENCE_FRAME,
       OBS_REFERENCE_FRAME,
       EPOCH,
+      OBSERVATION_STEP_SIZE,
+      OBSERVATION_START_TIME,
       CCSDS_TDM_VERS,
       COMMENT,
       CREATION_DATE,

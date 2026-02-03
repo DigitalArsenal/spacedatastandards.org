@@ -97,56 +97,90 @@ public final class MST extends Table {
   public String AOU_RPT_TYPE() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer AOU_RPT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
   public ByteBuffer AOU_RPT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
-  public String AOU_RPT_DATA(int j) { int o = __offset(52); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int AOU_RPT_DATALength() { int o = __offset(52); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector aouRptDataVector() { return aouRptDataVector(new StringVector()); }
-  public StringVector aouRptDataVector(StringVector obj) { int o = __offset(52); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public double CONTAINMENT() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TRK_CONF() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int TRK_QUAL() { int o = __offset(58); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public double ANG_ELEV() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String SEN_MODE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_MODEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer SEN_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public String INFO_SOURCE() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INFO_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
-  public ByteBuffer INFO_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
-  public boolean BOOSTING() { int o = __offset(66); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public double POLAR_SING_LOC_LAT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POLAR_SING_LOC_LON() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean EMG_IND() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean DROP_PT_IND() { int o = __offset(74); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public int SPACE_AMP_CONF() { int o = __offset(76); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String LAUNCH_TIME() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
-  public ByteBuffer LAUNCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
-  public double LAUNCH_LAT() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LAUNCH_LON() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AZ_CORR() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BURNOUT_ALT() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String LAUNCH_AOU_TYPE() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
-  public ByteBuffer LAUNCH_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
-  public String LAUNCH_AOU_DATA(int j) { int o = __offset(90); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LAUNCH_AOU_DATALength() { int o = __offset(90); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector launchAouDataVector() { return launchAouDataVector(new StringVector()); }
-  public StringVector launchAouDataVector(StringVector obj) { int o = __offset(90); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String IMPACT_TIME() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IMPACT_TIMEAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
-  public ByteBuffer IMPACT_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
-  public double IMPACT_LAT() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double IMPACT_LON() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String IMPACT_AOU_TYPE() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IMPACT_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
-  public ByteBuffer IMPACT_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
-  public String IMPACT_AOU_DATA(int j) { int o = __offset(100); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int IMPACT_AOU_DATALength() { int o = __offset(100); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector impactAouDataVector() { return impactAouDataVector(new StringVector()); }
-  public StringVector impactAouDataVector(StringVector obj) { int o = __offset(100); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String VECTORS(int j) { int o = __offset(102); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public double CONTAINMENT() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double TRK_CONF() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public int TRK_QUAL() { int o = __offset(56); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public double ANG_ELEV() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public String SEN_MODE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SEN_MODEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer SEN_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  public String INFO_SOURCE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INFO_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer INFO_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  public boolean BOOSTING() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public double POLAR_SING_LOC_LAT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double POLAR_SING_LOC_LON() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public boolean EMG_IND() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean DROP_PT_IND() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public int SPACE_AMP_CONF() { int o = __offset(74); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String LAUNCH_TIME() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer LAUNCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  public double LAUNCH_LAT() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double LAUNCH_LON() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double AZ_CORR() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double BURNOUT_ALT() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public String LAUNCH_AOU_TYPE() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer LAUNCH_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  public String IMPACT_TIME() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_TIMEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer IMPACT_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  public double IMPACT_LAT() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double IMPACT_LON() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public String IMPACT_AOU_TYPE() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer IMPACT_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * Start time for vector data (ISO 8601 UTC format).
+   */
+  public String VECTOR_START_TIME() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VECTOR_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
+  public ByteBuffer VECTOR_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
+  /**
+   * Time interval between vector points in seconds.
+   */
+  public double VECTOR_STEP_SIZE() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+   */
+  public int VECTOR_COMPONENTS() { int o = __offset(100); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
+  /**
+   * Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+   */
+  public double VECTORS(int j) { int o = __offset(102); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int VECTORSLength() { int o = __offset(102); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector vectorsVector() { return vectorsVector(new StringVector()); }
-  public StringVector vectorsVector(StringVector obj) { int o = __offset(102); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public DoubleVector vectorsVector() { return vectorsVector(new DoubleVector()); }
+  public DoubleVector vectorsVector(DoubleVector obj) { int o = __offset(102); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer VECTORSAsByteBuffer() { return __vector_as_bytebuffer(102, 8); }
+  public ByteBuffer VECTORSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 8); }
+  /**
+   * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+   */
+  public double AOU_RPT(int j) { int o = __offset(104); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int AOU_RPTLength() { int o = __offset(104); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector aouRptVector() { return aouRptVector(new DoubleVector()); }
+  public DoubleVector aouRptVector(DoubleVector obj) { int o = __offset(104); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer AOU_RPTAsByteBuffer() { return __vector_as_bytebuffer(104, 8); }
+  public ByteBuffer AOU_RPTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 8); }
+  /**
+   * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+   */
+  public double LAUNCH_AOU(int j) { int o = __offset(106); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int LAUNCH_AOULength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector launchAouVector() { return launchAouVector(new DoubleVector()); }
+  public DoubleVector launchAouVector(DoubleVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer LAUNCH_AOUAsByteBuffer() { return __vector_as_bytebuffer(106, 8); }
+  public ByteBuffer LAUNCH_AOUInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 8); }
+  /**
+   * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+   */
+  public double IMPACT_AOU(int j) { int o = __offset(108); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int IMPACT_AOULength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector impactAouVector() { return impactAouVector(new DoubleVector()); }
+  public DoubleVector impactAouVector(DoubleVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer IMPACT_AOUAsByteBuffer() { return __vector_as_bytebuffer(108, 8); }
+  public ByteBuffer IMPACT_AOUInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 8); }
 
   public static int createMST(FlatBufferBuilder builder,
       int IDOffset,
@@ -173,7 +207,6 @@ public final class MST extends Table {
       int MSL_STATUSOffset,
       int TSOffset,
       int AOU_RPT_TYPEOffset,
-      int AOU_RPT_DATAOffset,
       double CONTAINMENT,
       double TRK_CONF,
       int TRK_QUAL,
@@ -192,14 +225,19 @@ public final class MST extends Table {
       double AZ_CORR,
       double BURNOUT_ALT,
       int LAUNCH_AOU_TYPEOffset,
-      int LAUNCH_AOU_DATAOffset,
       int IMPACT_TIMEOffset,
       double IMPACT_LAT,
       double IMPACT_LON,
       int IMPACT_AOU_TYPEOffset,
-      int IMPACT_AOU_DATAOffset,
-      int VECTORSOffset) {
-    builder.startTable(50);
+      int VECTOR_START_TIMEOffset,
+      double VECTOR_STEP_SIZE,
+      int VECTOR_COMPONENTS,
+      int VECTORSOffset,
+      int AOU_RPTOffset,
+      int LAUNCH_AOUOffset,
+      int IMPACT_AOUOffset) {
+    builder.startTable(53);
+    MST.addVectorStepSize(builder, VECTOR_STEP_SIZE);
     MST.addImpactLon(builder, IMPACT_LON);
     MST.addImpactLat(builder, IMPACT_LAT);
     MST.addBurnoutAlt(builder, BURNOUT_ALT);
@@ -211,18 +249,19 @@ public final class MST extends Table {
     MST.addAngElev(builder, ANG_ELEV);
     MST.addTrkConf(builder, TRK_CONF);
     MST.addContainment(builder, CONTAINMENT);
+    MST.addImpactAou(builder, IMPACT_AOUOffset);
+    MST.addLaunchAou(builder, LAUNCH_AOUOffset);
+    MST.addAouRpt(builder, AOU_RPTOffset);
     MST.addVectors(builder, VECTORSOffset);
-    MST.addImpactAouData(builder, IMPACT_AOU_DATAOffset);
+    MST.addVectorStartTime(builder, VECTOR_START_TIMEOffset);
     MST.addImpactAouType(builder, IMPACT_AOU_TYPEOffset);
     MST.addImpactTime(builder, IMPACT_TIMEOffset);
-    MST.addLaunchAouData(builder, LAUNCH_AOU_DATAOffset);
     MST.addLaunchAouType(builder, LAUNCH_AOU_TYPEOffset);
     MST.addLaunchTime(builder, LAUNCH_TIMEOffset);
     MST.addSpaceAmpConf(builder, SPACE_AMP_CONF);
     MST.addInfoSource(builder, INFO_SOURCEOffset);
     MST.addSenMode(builder, SEN_MODEOffset);
     MST.addTrkQual(builder, TRK_QUAL);
-    MST.addAouRptData(builder, AOU_RPT_DATAOffset);
     MST.addAouRptType(builder, AOU_RPT_TYPEOffset);
     MST.addTs(builder, TSOffset);
     MST.addMslStatus(builder, MSL_STATUSOffset);
@@ -246,6 +285,7 @@ public final class MST extends Table {
     MST.addMsgSubType(builder, MSG_SUB_TYPEOffset);
     MST.addMsgType(builder, MSG_TYPEOffset);
     MST.addId(builder, IDOffset);
+    MST.addVectorComponents(builder, VECTOR_COMPONENTS);
     MST.addDropPtInd(builder, DROP_PT_IND);
     MST.addEmgInd(builder, EMG_IND);
     MST.addBoosting(builder, BOOSTING);
@@ -253,7 +293,7 @@ public final class MST extends Table {
     return MST.endMST(builder);
   }
 
-  public static void startMST(FlatBufferBuilder builder) { builder.startTable(50); }
+  public static void startMST(FlatBufferBuilder builder) { builder.startTable(53); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addMsgType(FlatBufferBuilder builder, int MSG_TYPEOffset) { builder.addOffset(1, MSG_TYPEOffset, 0); }
   public static void addMsgSubType(FlatBufferBuilder builder, int MSG_SUB_TYPEOffset) { builder.addOffset(2, MSG_SUB_TYPEOffset, 0); }
@@ -278,40 +318,43 @@ public final class MST extends Table {
   public static void addMslStatus(FlatBufferBuilder builder, int MSL_STATUSOffset) { builder.addOffset(21, MSL_STATUSOffset, 0); }
   public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(22, TSOffset, 0); }
   public static void addAouRptType(FlatBufferBuilder builder, int AOU_RPT_TYPEOffset) { builder.addOffset(23, AOU_RPT_TYPEOffset, 0); }
-  public static void addAouRptData(FlatBufferBuilder builder, int AOU_RPT_DATAOffset) { builder.addOffset(24, AOU_RPT_DATAOffset, 0); }
-  public static int createAouRptDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startAouRptDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addContainment(FlatBufferBuilder builder, double CONTAINMENT) { builder.addDouble(25, CONTAINMENT, 0.0); }
-  public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(26, TRK_CONF, 0.0); }
-  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addInt(27, TRK_QUAL, 0); }
-  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(28, ANG_ELEV, 0.0); }
-  public static void addSenMode(FlatBufferBuilder builder, int SEN_MODEOffset) { builder.addOffset(29, SEN_MODEOffset, 0); }
-  public static void addInfoSource(FlatBufferBuilder builder, int INFO_SOURCEOffset) { builder.addOffset(30, INFO_SOURCEOffset, 0); }
-  public static void addBoosting(FlatBufferBuilder builder, boolean BOOSTING) { builder.addBoolean(31, BOOSTING, false); }
-  public static void addPolarSingLocLat(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.addDouble(32, POLAR_SING_LOC_LAT, 0.0); }
-  public static void addPolarSingLocLon(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.addDouble(33, POLAR_SING_LOC_LON, 0.0); }
-  public static void addEmgInd(FlatBufferBuilder builder, boolean EMG_IND) { builder.addBoolean(34, EMG_IND, false); }
-  public static void addDropPtInd(FlatBufferBuilder builder, boolean DROP_PT_IND) { builder.addBoolean(35, DROP_PT_IND, false); }
-  public static void addSpaceAmpConf(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.addInt(36, SPACE_AMP_CONF, 0); }
-  public static void addLaunchTime(FlatBufferBuilder builder, int LAUNCH_TIMEOffset) { builder.addOffset(37, LAUNCH_TIMEOffset, 0); }
-  public static void addLaunchLat(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.addDouble(38, LAUNCH_LAT, 0.0); }
-  public static void addLaunchLon(FlatBufferBuilder builder, double LAUNCH_LON) { builder.addDouble(39, LAUNCH_LON, 0.0); }
-  public static void addAzCorr(FlatBufferBuilder builder, double AZ_CORR) { builder.addDouble(40, AZ_CORR, 0.0); }
-  public static void addBurnoutAlt(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.addDouble(41, BURNOUT_ALT, 0.0); }
-  public static void addLaunchAouType(FlatBufferBuilder builder, int LAUNCH_AOU_TYPEOffset) { builder.addOffset(42, LAUNCH_AOU_TYPEOffset, 0); }
-  public static void addLaunchAouData(FlatBufferBuilder builder, int LAUNCH_AOU_DATAOffset) { builder.addOffset(43, LAUNCH_AOU_DATAOffset, 0); }
-  public static int createLaunchAouDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLaunchAouDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addImpactTime(FlatBufferBuilder builder, int IMPACT_TIMEOffset) { builder.addOffset(44, IMPACT_TIMEOffset, 0); }
-  public static void addImpactLat(FlatBufferBuilder builder, double IMPACT_LAT) { builder.addDouble(45, IMPACT_LAT, 0.0); }
-  public static void addImpactLon(FlatBufferBuilder builder, double IMPACT_LON) { builder.addDouble(46, IMPACT_LON, 0.0); }
-  public static void addImpactAouType(FlatBufferBuilder builder, int IMPACT_AOU_TYPEOffset) { builder.addOffset(47, IMPACT_AOU_TYPEOffset, 0); }
-  public static void addImpactAouData(FlatBufferBuilder builder, int IMPACT_AOU_DATAOffset) { builder.addOffset(48, IMPACT_AOU_DATAOffset, 0); }
-  public static int createImpactAouDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startImpactAouDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addContainment(FlatBufferBuilder builder, double CONTAINMENT) { builder.addDouble(24, CONTAINMENT, 0.0); }
+  public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(25, TRK_CONF, 0.0); }
+  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addInt(26, TRK_QUAL, 0); }
+  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(27, ANG_ELEV, 0.0); }
+  public static void addSenMode(FlatBufferBuilder builder, int SEN_MODEOffset) { builder.addOffset(28, SEN_MODEOffset, 0); }
+  public static void addInfoSource(FlatBufferBuilder builder, int INFO_SOURCEOffset) { builder.addOffset(29, INFO_SOURCEOffset, 0); }
+  public static void addBoosting(FlatBufferBuilder builder, boolean BOOSTING) { builder.addBoolean(30, BOOSTING, false); }
+  public static void addPolarSingLocLat(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.addDouble(31, POLAR_SING_LOC_LAT, 0.0); }
+  public static void addPolarSingLocLon(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.addDouble(32, POLAR_SING_LOC_LON, 0.0); }
+  public static void addEmgInd(FlatBufferBuilder builder, boolean EMG_IND) { builder.addBoolean(33, EMG_IND, false); }
+  public static void addDropPtInd(FlatBufferBuilder builder, boolean DROP_PT_IND) { builder.addBoolean(34, DROP_PT_IND, false); }
+  public static void addSpaceAmpConf(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.addInt(35, SPACE_AMP_CONF, 0); }
+  public static void addLaunchTime(FlatBufferBuilder builder, int LAUNCH_TIMEOffset) { builder.addOffset(36, LAUNCH_TIMEOffset, 0); }
+  public static void addLaunchLat(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.addDouble(37, LAUNCH_LAT, 0.0); }
+  public static void addLaunchLon(FlatBufferBuilder builder, double LAUNCH_LON) { builder.addDouble(38, LAUNCH_LON, 0.0); }
+  public static void addAzCorr(FlatBufferBuilder builder, double AZ_CORR) { builder.addDouble(39, AZ_CORR, 0.0); }
+  public static void addBurnoutAlt(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.addDouble(40, BURNOUT_ALT, 0.0); }
+  public static void addLaunchAouType(FlatBufferBuilder builder, int LAUNCH_AOU_TYPEOffset) { builder.addOffset(41, LAUNCH_AOU_TYPEOffset, 0); }
+  public static void addImpactTime(FlatBufferBuilder builder, int IMPACT_TIMEOffset) { builder.addOffset(42, IMPACT_TIMEOffset, 0); }
+  public static void addImpactLat(FlatBufferBuilder builder, double IMPACT_LAT) { builder.addDouble(43, IMPACT_LAT, 0.0); }
+  public static void addImpactLon(FlatBufferBuilder builder, double IMPACT_LON) { builder.addDouble(44, IMPACT_LON, 0.0); }
+  public static void addImpactAouType(FlatBufferBuilder builder, int IMPACT_AOU_TYPEOffset) { builder.addOffset(45, IMPACT_AOU_TYPEOffset, 0); }
+  public static void addVectorStartTime(FlatBufferBuilder builder, int VECTOR_START_TIMEOffset) { builder.addOffset(46, VECTOR_START_TIMEOffset, 0); }
+  public static void addVectorStepSize(FlatBufferBuilder builder, double VECTOR_STEP_SIZE) { builder.addDouble(47, VECTOR_STEP_SIZE, 0.0); }
+  public static void addVectorComponents(FlatBufferBuilder builder, int VECTOR_COMPONENTS) { builder.addByte(48, (byte) VECTOR_COMPONENTS, (byte) 6); }
   public static void addVectors(FlatBufferBuilder builder, int VECTORSOffset) { builder.addOffset(49, VECTORSOffset, 0); }
-  public static int createVectorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startVectorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createVectorsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startVectorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addAouRpt(FlatBufferBuilder builder, int AOU_RPTOffset) { builder.addOffset(50, AOU_RPTOffset, 0); }
+  public static int createAouRptVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAouRptVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addLaunchAou(FlatBufferBuilder builder, int LAUNCH_AOUOffset) { builder.addOffset(51, LAUNCH_AOUOffset, 0); }
+  public static int createLaunchAouVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startLaunchAouVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addImpactAou(FlatBufferBuilder builder, int IMPACT_AOUOffset) { builder.addOffset(52, IMPACT_AOUOffset, 0); }
+  public static int createImpactAouVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startImpactAouVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endMST(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

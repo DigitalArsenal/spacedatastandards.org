@@ -192,30 +192,11 @@ class MST extends Table
     }
 
     /**
-     * @param int offset
-     * @return string
-     */
-    public function getAOU_RPT_DATA($j)
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAOU_RPT_DATALength()
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
      * @return double
      */
     public function getCONTAINMENT()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -224,7 +205,7 @@ class MST extends Table
      */
     public function getTRK_CONF()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -233,7 +214,7 @@ class MST extends Table
      */
     public function getTRK_QUAL()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -242,19 +223,19 @@ class MST extends Table
      */
     public function getANG_ELEV()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     public function getSEN_MODE()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     public function getINFO_SOURCE()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -263,7 +244,7 @@ class MST extends Table
      */
     public function getBOOSTING()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -272,7 +253,7 @@ class MST extends Table
      */
     public function getPOLAR_SING_LOC_LAT()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -281,7 +262,7 @@ class MST extends Table
      */
     public function getPOLAR_SING_LOC_LON()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -290,7 +271,7 @@ class MST extends Table
      */
     public function getEMG_IND()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -299,7 +280,7 @@ class MST extends Table
      */
     public function getDROP_PT_IND()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
@@ -308,13 +289,13 @@ class MST extends Table
      */
     public function getSPACE_AMP_CONF()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
     public function getLAUNCH_TIME()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -323,7 +304,7 @@ class MST extends Table
      */
     public function getLAUNCH_LAT()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -332,7 +313,7 @@ class MST extends Table
      */
     public function getLAUNCH_LON()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -341,7 +322,7 @@ class MST extends Table
      */
     public function getAZ_CORR()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -350,38 +331,19 @@ class MST extends Table
      */
     public function getBURNOUT_ALT()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     public function getLAUNCH_AOU_TYPE()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLAUNCH_AOU_DATA($j)
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLAUNCH_AOU_DATALength()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     public function getIMPACT_TIME()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -390,7 +352,7 @@ class MST extends Table
      */
     public function getIMPACT_LAT()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -399,43 +361,52 @@ class MST extends Table
      */
     public function getIMPACT_LON()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     public function getIMPACT_AOU_TYPE()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getIMPACT_AOU_DATA($j)
+    /// Start time for vector data (ISO 8601 UTC format).
+    public function getVECTOR_START_TIME()
     {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time interval between vector points in seconds.
     /**
-     * @return int
+     * @return double
      */
-    public function getIMPACT_AOU_DATALength()
+    public function getVECTOR_STEP_SIZE()
     {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->__vector_len($o) : 0;
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+    /**
+     * @return byte
+     */
+    public function getVECTOR_COMPONENTS()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 6;
+    }
+
+    /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getVECTORS($j)
     {
         $o = $this->__offset(102);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -447,22 +418,82 @@ class MST extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getAOU_RPT($j)
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAOU_RPTLength()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getLAUNCH_AOU($j)
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLAUNCH_AOULength()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getIMPACT_AOU($j)
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIMPACT_AOULength()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMST(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(50);
+        $builder->StartObject(53);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MST
      */
-    public static function createMST(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $MSG_SUB_TYPE, $MSG_CREATE_DATE, $ENVIRONMENT, $OBJ_TYPE, $OBJ_TYPE_CONF, $OBJ_PLAT, $OBJ_IDENT, $SPACE_AMP, $OBJ_ACT, $SPACE_SPEC_TYPE, $ACFT_SUB_TYPE, $NAME, $CALL_SIGN, $LOST_TRK_IND, $TRACK_ID, $PARENT_TRACK_ID, $MUID_SRC_TRK, $MUID_SRC, $ALERT, $MSL_STATUS, $TS, $AOU_RPT_TYPE, $AOU_RPT_DATA, $CONTAINMENT, $TRK_CONF, $TRK_QUAL, $ANG_ELEV, $SEN_MODE, $INFO_SOURCE, $BOOSTING, $POLAR_SING_LOC_LAT, $POLAR_SING_LOC_LON, $EMG_IND, $DROP_PT_IND, $SPACE_AMP_CONF, $LAUNCH_TIME, $LAUNCH_LAT, $LAUNCH_LON, $AZ_CORR, $BURNOUT_ALT, $LAUNCH_AOU_TYPE, $LAUNCH_AOU_DATA, $IMPACT_TIME, $IMPACT_LAT, $IMPACT_LON, $IMPACT_AOU_TYPE, $IMPACT_AOU_DATA, $VECTORS)
+    public static function createMST(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $MSG_SUB_TYPE, $MSG_CREATE_DATE, $ENVIRONMENT, $OBJ_TYPE, $OBJ_TYPE_CONF, $OBJ_PLAT, $OBJ_IDENT, $SPACE_AMP, $OBJ_ACT, $SPACE_SPEC_TYPE, $ACFT_SUB_TYPE, $NAME, $CALL_SIGN, $LOST_TRK_IND, $TRACK_ID, $PARENT_TRACK_ID, $MUID_SRC_TRK, $MUID_SRC, $ALERT, $MSL_STATUS, $TS, $AOU_RPT_TYPE, $CONTAINMENT, $TRK_CONF, $TRK_QUAL, $ANG_ELEV, $SEN_MODE, $INFO_SOURCE, $BOOSTING, $POLAR_SING_LOC_LAT, $POLAR_SING_LOC_LON, $EMG_IND, $DROP_PT_IND, $SPACE_AMP_CONF, $LAUNCH_TIME, $LAUNCH_LAT, $LAUNCH_LON, $AZ_CORR, $BURNOUT_ALT, $LAUNCH_AOU_TYPE, $IMPACT_TIME, $IMPACT_LAT, $IMPACT_LON, $IMPACT_AOU_TYPE, $VECTOR_START_TIME, $VECTOR_STEP_SIZE, $VECTOR_COMPONENTS, $VECTORS, $AOU_RPT, $LAUNCH_AOU, $IMPACT_AOU)
     {
-        $builder->startObject(50);
+        $builder->startObject(53);
         self::addID($builder, $ID);
         self::addMSG_TYPE($builder, $MSG_TYPE);
         self::addMSG_SUB_TYPE($builder, $MSG_SUB_TYPE);
@@ -487,7 +518,6 @@ class MST extends Table
         self::addMSL_STATUS($builder, $MSL_STATUS);
         self::addTS($builder, $TS);
         self::addAOU_RPT_TYPE($builder, $AOU_RPT_TYPE);
-        self::addAOU_RPT_DATA($builder, $AOU_RPT_DATA);
         self::addCONTAINMENT($builder, $CONTAINMENT);
         self::addTRK_CONF($builder, $TRK_CONF);
         self::addTRK_QUAL($builder, $TRK_QUAL);
@@ -506,13 +536,17 @@ class MST extends Table
         self::addAZ_CORR($builder, $AZ_CORR);
         self::addBURNOUT_ALT($builder, $BURNOUT_ALT);
         self::addLAUNCH_AOU_TYPE($builder, $LAUNCH_AOU_TYPE);
-        self::addLAUNCH_AOU_DATA($builder, $LAUNCH_AOU_DATA);
         self::addIMPACT_TIME($builder, $IMPACT_TIME);
         self::addIMPACT_LAT($builder, $IMPACT_LAT);
         self::addIMPACT_LON($builder, $IMPACT_LON);
         self::addIMPACT_AOU_TYPE($builder, $IMPACT_AOU_TYPE);
-        self::addIMPACT_AOU_DATA($builder, $IMPACT_AOU_DATA);
+        self::addVECTOR_START_TIME($builder, $VECTOR_START_TIME);
+        self::addVECTOR_STEP_SIZE($builder, $VECTOR_STEP_SIZE);
+        self::addVECTOR_COMPONENTS($builder, $VECTOR_COMPONENTS);
         self::addVECTORS($builder, $VECTORS);
+        self::addAOU_RPT($builder, $AOU_RPT);
+        self::addLAUNCH_AOU($builder, $LAUNCH_AOU);
+        self::addIMPACT_AOU($builder, $IMPACT_AOU);
         $o = $builder->endObject();
         return $o;
     }
@@ -759,46 +793,12 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addAOU_RPT_DATA(FlatBufferBuilder $builder, $AOU_RPT_DATA)
-    {
-        $builder->addOffsetX(24, $AOU_RPT_DATA, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createAOU_RPT_DATAVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startAOU_RPT_DATAVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addCONTAINMENT(FlatBufferBuilder $builder, $CONTAINMENT)
     {
-        $builder->addDoubleX(25, $CONTAINMENT, 0.0);
+        $builder->addDoubleX(24, $CONTAINMENT, 0.0);
     }
 
     /**
@@ -808,7 +808,7 @@ class MST extends Table
      */
     public static function addTRK_CONF(FlatBufferBuilder $builder, $TRK_CONF)
     {
-        $builder->addDoubleX(26, $TRK_CONF, 0.0);
+        $builder->addDoubleX(25, $TRK_CONF, 0.0);
     }
 
     /**
@@ -818,7 +818,7 @@ class MST extends Table
      */
     public static function addTRK_QUAL(FlatBufferBuilder $builder, $TRK_QUAL)
     {
-        $builder->addIntX(27, $TRK_QUAL, 0);
+        $builder->addIntX(26, $TRK_QUAL, 0);
     }
 
     /**
@@ -828,7 +828,7 @@ class MST extends Table
      */
     public static function addANG_ELEV(FlatBufferBuilder $builder, $ANG_ELEV)
     {
-        $builder->addDoubleX(28, $ANG_ELEV, 0.0);
+        $builder->addDoubleX(27, $ANG_ELEV, 0.0);
     }
 
     /**
@@ -838,7 +838,7 @@ class MST extends Table
      */
     public static function addSEN_MODE(FlatBufferBuilder $builder, $SEN_MODE)
     {
-        $builder->addOffsetX(29, $SEN_MODE, 0);
+        $builder->addOffsetX(28, $SEN_MODE, 0);
     }
 
     /**
@@ -848,7 +848,7 @@ class MST extends Table
      */
     public static function addINFO_SOURCE(FlatBufferBuilder $builder, $INFO_SOURCE)
     {
-        $builder->addOffsetX(30, $INFO_SOURCE, 0);
+        $builder->addOffsetX(29, $INFO_SOURCE, 0);
     }
 
     /**
@@ -858,7 +858,7 @@ class MST extends Table
      */
     public static function addBOOSTING(FlatBufferBuilder $builder, $BOOSTING)
     {
-        $builder->addBoolX(31, $BOOSTING, false);
+        $builder->addBoolX(30, $BOOSTING, false);
     }
 
     /**
@@ -868,7 +868,7 @@ class MST extends Table
      */
     public static function addPOLAR_SING_LOC_LAT(FlatBufferBuilder $builder, $POLAR_SING_LOC_LAT)
     {
-        $builder->addDoubleX(32, $POLAR_SING_LOC_LAT, 0.0);
+        $builder->addDoubleX(31, $POLAR_SING_LOC_LAT, 0.0);
     }
 
     /**
@@ -878,7 +878,7 @@ class MST extends Table
      */
     public static function addPOLAR_SING_LOC_LON(FlatBufferBuilder $builder, $POLAR_SING_LOC_LON)
     {
-        $builder->addDoubleX(33, $POLAR_SING_LOC_LON, 0.0);
+        $builder->addDoubleX(32, $POLAR_SING_LOC_LON, 0.0);
     }
 
     /**
@@ -888,7 +888,7 @@ class MST extends Table
      */
     public static function addEMG_IND(FlatBufferBuilder $builder, $EMG_IND)
     {
-        $builder->addBoolX(34, $EMG_IND, false);
+        $builder->addBoolX(33, $EMG_IND, false);
     }
 
     /**
@@ -898,7 +898,7 @@ class MST extends Table
      */
     public static function addDROP_PT_IND(FlatBufferBuilder $builder, $DROP_PT_IND)
     {
-        $builder->addBoolX(35, $DROP_PT_IND, false);
+        $builder->addBoolX(34, $DROP_PT_IND, false);
     }
 
     /**
@@ -908,7 +908,7 @@ class MST extends Table
      */
     public static function addSPACE_AMP_CONF(FlatBufferBuilder $builder, $SPACE_AMP_CONF)
     {
-        $builder->addIntX(36, $SPACE_AMP_CONF, 0);
+        $builder->addIntX(35, $SPACE_AMP_CONF, 0);
     }
 
     /**
@@ -918,7 +918,7 @@ class MST extends Table
      */
     public static function addLAUNCH_TIME(FlatBufferBuilder $builder, $LAUNCH_TIME)
     {
-        $builder->addOffsetX(37, $LAUNCH_TIME, 0);
+        $builder->addOffsetX(36, $LAUNCH_TIME, 0);
     }
 
     /**
@@ -928,7 +928,7 @@ class MST extends Table
      */
     public static function addLAUNCH_LAT(FlatBufferBuilder $builder, $LAUNCH_LAT)
     {
-        $builder->addDoubleX(38, $LAUNCH_LAT, 0.0);
+        $builder->addDoubleX(37, $LAUNCH_LAT, 0.0);
     }
 
     /**
@@ -938,7 +938,7 @@ class MST extends Table
      */
     public static function addLAUNCH_LON(FlatBufferBuilder $builder, $LAUNCH_LON)
     {
-        $builder->addDoubleX(39, $LAUNCH_LON, 0.0);
+        $builder->addDoubleX(38, $LAUNCH_LON, 0.0);
     }
 
     /**
@@ -948,7 +948,7 @@ class MST extends Table
      */
     public static function addAZ_CORR(FlatBufferBuilder $builder, $AZ_CORR)
     {
-        $builder->addDoubleX(40, $AZ_CORR, 0.0);
+        $builder->addDoubleX(39, $AZ_CORR, 0.0);
     }
 
     /**
@@ -958,7 +958,7 @@ class MST extends Table
      */
     public static function addBURNOUT_ALT(FlatBufferBuilder $builder, $BURNOUT_ALT)
     {
-        $builder->addDoubleX(41, $BURNOUT_ALT, 0.0);
+        $builder->addDoubleX(40, $BURNOUT_ALT, 0.0);
     }
 
     /**
@@ -968,41 +968,7 @@ class MST extends Table
      */
     public static function addLAUNCH_AOU_TYPE(FlatBufferBuilder $builder, $LAUNCH_AOU_TYPE)
     {
-        $builder->addOffsetX(42, $LAUNCH_AOU_TYPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLAUNCH_AOU_DATA(FlatBufferBuilder $builder, $LAUNCH_AOU_DATA)
-    {
-        $builder->addOffsetX(43, $LAUNCH_AOU_DATA, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLAUNCH_AOU_DATAVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLAUNCH_AOU_DATAVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
+        $builder->addOffsetX(41, $LAUNCH_AOU_TYPE, 0);
     }
 
     /**
@@ -1012,7 +978,7 @@ class MST extends Table
      */
     public static function addIMPACT_TIME(FlatBufferBuilder $builder, $IMPACT_TIME)
     {
-        $builder->addOffsetX(44, $IMPACT_TIME, 0);
+        $builder->addOffsetX(42, $IMPACT_TIME, 0);
     }
 
     /**
@@ -1022,7 +988,7 @@ class MST extends Table
      */
     public static function addIMPACT_LAT(FlatBufferBuilder $builder, $IMPACT_LAT)
     {
-        $builder->addDoubleX(45, $IMPACT_LAT, 0.0);
+        $builder->addDoubleX(43, $IMPACT_LAT, 0.0);
     }
 
     /**
@@ -1032,7 +998,7 @@ class MST extends Table
      */
     public static function addIMPACT_LON(FlatBufferBuilder $builder, $IMPACT_LON)
     {
-        $builder->addDoubleX(46, $IMPACT_LON, 0.0);
+        $builder->addDoubleX(44, $IMPACT_LON, 0.0);
     }
 
     /**
@@ -1042,41 +1008,37 @@ class MST extends Table
      */
     public static function addIMPACT_AOU_TYPE(FlatBufferBuilder $builder, $IMPACT_AOU_TYPE)
     {
-        $builder->addOffsetX(47, $IMPACT_AOU_TYPE, 0);
+        $builder->addOffsetX(45, $IMPACT_AOU_TYPE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
+     * @param StringOffset
      * @return void
      */
-    public static function addIMPACT_AOU_DATA(FlatBufferBuilder $builder, $IMPACT_AOU_DATA)
+    public static function addVECTOR_START_TIME(FlatBufferBuilder $builder, $VECTOR_START_TIME)
     {
-        $builder->addOffsetX(48, $IMPACT_AOU_DATA, 0);
+        $builder->addOffsetX(46, $VECTOR_START_TIME, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createIMPACT_AOU_DATAVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
+     * @param double
      * @return void
      */
-    public static function startIMPACT_AOU_DATAVector(FlatBufferBuilder $builder, $numElems)
+    public static function addVECTOR_STEP_SIZE(FlatBufferBuilder $builder, $VECTOR_STEP_SIZE)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->addDoubleX(47, $VECTOR_STEP_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addVECTOR_COMPONENTS(FlatBufferBuilder $builder, $VECTOR_COMPONENTS)
+    {
+        $builder->addByteX(48, $VECTOR_COMPONENTS, 6);
     }
 
     /**
@@ -1096,9 +1058,9 @@ class MST extends Table
      */
     public static function createVECTORSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -1110,7 +1072,109 @@ class MST extends Table
      */
     public static function startVECTORSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addAOU_RPT(FlatBufferBuilder $builder, $AOU_RPT)
+    {
+        $builder->addOffsetX(50, $AOU_RPT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createAOU_RPTVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startAOU_RPTVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLAUNCH_AOU(FlatBufferBuilder $builder, $LAUNCH_AOU)
+    {
+        $builder->addOffsetX(51, $LAUNCH_AOU, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLAUNCH_AOUVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLAUNCH_AOUVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addIMPACT_AOU(FlatBufferBuilder $builder, $IMPACT_AOU)
+    {
+        $builder->addOffsetX(52, $IMPACT_AOU, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createIMPACT_AOUVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startIMPACT_AOUVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

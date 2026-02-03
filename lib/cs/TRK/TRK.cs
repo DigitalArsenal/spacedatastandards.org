@@ -192,64 +192,124 @@ public struct TRK : IFlatbufferObject
   public byte[] GetENVIRONMENTArray() { return __p.__vector_as_array<byte>(56); }
   public double ENVIRONMENT_CONF { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double TRK_CONF { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ECEF_POS(int j) { int o = __p.__offset(62); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ECEF_POSLength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ECEF_VEL(int j) { int o = __p.__offset(64); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ECEF_VELLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ECEF_ACC(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ECEF_ACCLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public double LAT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LON { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ALT { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SPD { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double HDNG { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double COURSE { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string LCO(int j) { int o = __p.__offset(80); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LCOLength { get { int o = __p.__offset(80); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string LCS(int j) { int o = __p.__offset(82); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LCSLength { get { int o = __p.__offset(82); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string LC_POS(int j) { int o = __p.__offset(84); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LC_POSLength { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string LC_VEL(int j) { int o = __p.__offset(86); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LC_VELLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string LC_ACC(int j) { int o = __p.__offset(88); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LC_ACCLength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string E_NUVEL(int j) { int o = __p.__offset(90); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int E_NUVELLength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string E_NUPOS(int j) { int o = __p.__offset(92); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int E_NUPOSLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string COV(int j) { int o = __p.__offset(94); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int COVLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ERR_ELLP(int j) { int o = __p.__offset(96); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ERR_ELLPLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SRC_TYPS(int j) { int o = __p.__offset(98); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_TYPSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SRC_IDS(int j) { int o = __p.__offset(100); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_IDSLength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string CALL_SIGN { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public double LAT { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double LON { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ALT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double SPD { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double HDNG { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double COURSE { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public string SRC_TYPS(int j) { int o = __p.__offset(74); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_TYPSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string SRC_IDS(int j) { int o = __p.__offset(76); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_IDSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string CALL_SIGN { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCALL_SIGNBytes() { return __p.__vector_as_span<byte>(102, 1); }
+  public Span<byte> GetCALL_SIGNBytes() { return __p.__vector_as_span<byte>(78, 1); }
 #else
-  public ArraySegment<byte>? GetCALL_SIGNBytes() { return __p.__vector_as_arraysegment(102); }
+  public ArraySegment<byte>? GetCALL_SIGNBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
-  public byte[] GetCALL_SIGNArray() { return __p.__vector_as_array<byte>(102); }
-  public bool MULTI_SOURCE { get { int o = __p.__offset(104); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string J_SERIES { get { int o = __p.__offset(106); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCALL_SIGNArray() { return __p.__vector_as_array<byte>(78); }
+  public bool MULTI_SOURCE { get { int o = __p.__offset(80); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public string J_SERIES { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetJ_SERIESBytes() { return __p.__vector_as_span<byte>(106, 1); }
+  public Span<byte> GetJ_SERIESBytes() { return __p.__vector_as_span<byte>(82, 1); }
 #else
-  public ArraySegment<byte>? GetJ_SERIESBytes() { return __p.__vector_as_arraysegment(106); }
+  public ArraySegment<byte>? GetJ_SERIESBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
-  public byte[] GetJ_SERIESArray() { return __p.__vector_as_array<byte>(106); }
-  public int STRENGTH { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M1 { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M1V { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M2 { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M2V { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M3A { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M3AV { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string TAGS(int j) { int o = __p.__offset(122); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(122); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetJ_SERIESArray() { return __p.__vector_as_array<byte>(82); }
+  public int STRENGTH { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M1 { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M1V { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M2 { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M2V { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M3A { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public int M3AV { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string TAGS(int j) { int o = __p.__offset(98); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Start time for track data (ISO 8601 UTC format).
+  public string TRACK_START_TIME { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTRACK_START_TIMEBytes() { return __p.__vector_as_span<byte>(100, 1); }
+#else
+  public ArraySegment<byte>? GetTRACK_START_TIMEBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public byte[] GetTRACK_START_TIMEArray() { return __p.__vector_as_array<byte>(100); }
+  /// Time interval between track points in seconds.
+  public double TRACK_STEP_SIZE { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of components per point (default 3 for X, Y, Z).
+  public byte TRACK_COMPONENTS { get { int o = __p.__offset(104); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)3; } }
+  /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  public double ECEF_POS(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ECEF_POSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetECEF_POSBytes() { return __p.__vector_as_span<double>(106, 8); }
+#else
+  public ArraySegment<byte>? GetECEF_POSBytes() { return __p.__vector_as_arraysegment(106); }
+#endif
+  public double[] GetECEF_POSArray() { return __p.__vector_as_array<double>(106); }
+  /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  public double ECEF_VEL(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ECEF_VELLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetECEF_VELBytes() { return __p.__vector_as_span<double>(108, 8); }
+#else
+  public ArraySegment<byte>? GetECEF_VELBytes() { return __p.__vector_as_arraysegment(108); }
+#endif
+  public double[] GetECEF_VELArray() { return __p.__vector_as_array<double>(108); }
+  /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  public double ECEF_ACC(int j) { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ECEF_ACCLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetECEF_ACCBytes() { return __p.__vector_as_span<double>(110, 8); }
+#else
+  public ArraySegment<byte>? GetECEF_ACCBytes() { return __p.__vector_as_arraysegment(110); }
+#endif
+  public double[] GetECEF_ACCArray() { return __p.__vector_as_array<double>(110); }
+  /// Local coordinate position as flat array
+  public double LC_POS(int j) { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int LC_POSLength { get { int o = __p.__offset(112); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetLC_POSBytes() { return __p.__vector_as_span<double>(112, 8); }
+#else
+  public ArraySegment<byte>? GetLC_POSBytes() { return __p.__vector_as_arraysegment(112); }
+#endif
+  public double[] GetLC_POSArray() { return __p.__vector_as_array<double>(112); }
+  /// Local coordinate velocity as flat array
+  public double LC_VEL(int j) { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int LC_VELLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetLC_VELBytes() { return __p.__vector_as_span<double>(114, 8); }
+#else
+  public ArraySegment<byte>? GetLC_VELBytes() { return __p.__vector_as_arraysegment(114); }
+#endif
+  public double[] GetLC_VELArray() { return __p.__vector_as_array<double>(114); }
+  /// Local coordinate acceleration as flat array
+  public double LC_ACC(int j) { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int LC_ACCLength { get { int o = __p.__offset(116); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetLC_ACCBytes() { return __p.__vector_as_span<double>(116, 8); }
+#else
+  public ArraySegment<byte>? GetLC_ACCBytes() { return __p.__vector_as_arraysegment(116); }
+#endif
+  public double[] GetLC_ACCArray() { return __p.__vector_as_array<double>(116); }
+  /// Covariance data (21 elements per point for 6x6 lower triangular)
+  public double COV(int j) { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetCOVBytes() { return __p.__vector_as_span<double>(118, 8); }
+#else
+  public ArraySegment<byte>? GetCOVBytes() { return __p.__vector_as_arraysegment(118); }
+#endif
+  public double[] GetCOVArray() { return __p.__vector_as_array<double>(118); }
+  /// Error ellipse data (6 elements per point)
+  public double ERR_ELLP(int j) { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ERR_ELLPLength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetERR_ELLPBytes() { return __p.__vector_as_span<double>(120, 8); }
+#else
+  public ArraySegment<byte>? GetERR_ELLPBytes() { return __p.__vector_as_arraysegment(120); }
+#endif
+  public double[] GetERR_ELLPArray() { return __p.__vector_as_array<double>(120); }
 
   public static Offset<TRK> CreateTRK(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -281,24 +341,12 @@ public struct TRK : IFlatbufferObject
       StringOffset ENVIRONMENTOffset = default(StringOffset),
       double ENVIRONMENT_CONF = 0.0,
       double TRK_CONF = 0.0,
-      VectorOffset ECEF_POSOffset = default(VectorOffset),
-      VectorOffset ECEF_VELOffset = default(VectorOffset),
-      VectorOffset ECEF_ACCOffset = default(VectorOffset),
       double LAT = 0.0,
       double LON = 0.0,
       double ALT = 0.0,
       double SPD = 0.0,
       double HDNG = 0.0,
       double COURSE = 0.0,
-      VectorOffset LCOOffset = default(VectorOffset),
-      VectorOffset LCSOffset = default(VectorOffset),
-      VectorOffset LC_POSOffset = default(VectorOffset),
-      VectorOffset LC_VELOffset = default(VectorOffset),
-      VectorOffset LC_ACCOffset = default(VectorOffset),
-      VectorOffset E_NUVELOffset = default(VectorOffset),
-      VectorOffset E_NUPOSOffset = default(VectorOffset),
-      VectorOffset COVOffset = default(VectorOffset),
-      VectorOffset ERR_ELLPOffset = default(VectorOffset),
       VectorOffset SRC_TYPSOffset = default(VectorOffset),
       VectorOffset SRC_IDSOffset = default(VectorOffset),
       StringOffset CALL_SIGNOffset = default(StringOffset),
@@ -311,8 +359,20 @@ public struct TRK : IFlatbufferObject
       int M2V = 0,
       int M3A = 0,
       int M3AV = 0,
-      VectorOffset TAGSOffset = default(VectorOffset)) {
-    builder.StartTable(60);
+      VectorOffset TAGSOffset = default(VectorOffset),
+      StringOffset TRACK_START_TIMEOffset = default(StringOffset),
+      double TRACK_STEP_SIZE = 0.0,
+      byte TRACK_COMPONENTS = 3,
+      VectorOffset ECEF_POSOffset = default(VectorOffset),
+      VectorOffset ECEF_VELOffset = default(VectorOffset),
+      VectorOffset ECEF_ACCOffset = default(VectorOffset),
+      VectorOffset LC_POSOffset = default(VectorOffset),
+      VectorOffset LC_VELOffset = default(VectorOffset),
+      VectorOffset LC_ACCOffset = default(VectorOffset),
+      VectorOffset COVOffset = default(VectorOffset),
+      VectorOffset ERR_ELLPOffset = default(VectorOffset)) {
+    builder.StartTable(59);
+    TRK.AddTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE);
     TRK.AddCOURSE(builder, COURSE);
     TRK.AddHDNG(builder, HDNG);
     TRK.AddSPD(builder, SPD);
@@ -321,6 +381,15 @@ public struct TRK : IFlatbufferObject
     TRK.AddLAT(builder, LAT);
     TRK.AddTRK_CONF(builder, TRK_CONF);
     TRK.AddENVIRONMENT_CONF(builder, ENVIRONMENT_CONF);
+    TRK.AddERR_ELLP(builder, ERR_ELLPOffset);
+    TRK.AddCOV(builder, COVOffset);
+    TRK.AddLC_ACC(builder, LC_ACCOffset);
+    TRK.AddLC_VEL(builder, LC_VELOffset);
+    TRK.AddLC_POS(builder, LC_POSOffset);
+    TRK.AddECEF_ACC(builder, ECEF_ACCOffset);
+    TRK.AddECEF_VEL(builder, ECEF_VELOffset);
+    TRK.AddECEF_POS(builder, ECEF_POSOffset);
+    TRK.AddTRACK_START_TIME(builder, TRACK_START_TIMEOffset);
     TRK.AddTAGS(builder, TAGSOffset);
     TRK.AddM3AV(builder, M3AV);
     TRK.AddM3A(builder, M3A);
@@ -333,18 +402,6 @@ public struct TRK : IFlatbufferObject
     TRK.AddCALL_SIGN(builder, CALL_SIGNOffset);
     TRK.AddSRC_IDS(builder, SRC_IDSOffset);
     TRK.AddSRC_TYPS(builder, SRC_TYPSOffset);
-    TRK.AddERR_ELLP(builder, ERR_ELLPOffset);
-    TRK.AddCOV(builder, COVOffset);
-    TRK.AddE_NUPOS(builder, E_NUPOSOffset);
-    TRK.AddE_NUVEL(builder, E_NUVELOffset);
-    TRK.AddLC_ACC(builder, LC_ACCOffset);
-    TRK.AddLC_VEL(builder, LC_VELOffset);
-    TRK.AddLC_POS(builder, LC_POSOffset);
-    TRK.AddLCS(builder, LCSOffset);
-    TRK.AddLCO(builder, LCOOffset);
-    TRK.AddECEF_ACC(builder, ECEF_ACCOffset);
-    TRK.AddECEF_VEL(builder, ECEF_VELOffset);
-    TRK.AddECEF_POS(builder, ECEF_POSOffset);
     TRK.AddENVIRONMENT(builder, ENVIRONMENTOffset);
     TRK.AddIDENT_AMP(builder, IDENT_AMPOffset);
     TRK.AddIDENT_REL(builder, IDENT_REL);
@@ -372,11 +429,12 @@ public struct TRK : IFlatbufferObject
     TRK.AddMSG_TS(builder, MSG_TSOffset);
     TRK.AddCNTCT(builder, CNTCTOffset);
     TRK.AddID(builder, IDOffset);
+    TRK.AddTRACK_COMPONENTS(builder, TRACK_COMPONENTS);
     TRK.AddMULTI_SOURCE(builder, MULTI_SOURCE);
     return TRK.EndTRK(builder);
   }
 
-  public static void StartTRK(FlatBufferBuilder builder) { builder.StartTable(60); }
+  public static void StartTRK(FlatBufferBuilder builder) { builder.StartTable(59); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCNTCT(FlatBufferBuilder builder, StringOffset CNTCTOffset) { builder.AddOffset(1, CNTCTOffset.Value, 0); }
   public static void AddMSG_TS(FlatBufferBuilder builder, StringOffset MSG_TSOffset) { builder.AddOffset(2, MSG_TSOffset.Value, 0); }
@@ -406,112 +464,91 @@ public struct TRK : IFlatbufferObject
   public static void AddENVIRONMENT(FlatBufferBuilder builder, StringOffset ENVIRONMENTOffset) { builder.AddOffset(26, ENVIRONMENTOffset.Value, 0); }
   public static void AddENVIRONMENT_CONF(FlatBufferBuilder builder, double ENVIRONMENT_CONF) { builder.AddDouble(27, ENVIRONMENT_CONF, 0.0); }
   public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(28, TRK_CONF, 0.0); }
-  public static void AddECEF_POS(FlatBufferBuilder builder, VectorOffset ECEF_POSOffset) { builder.AddOffset(29, ECEF_POSOffset.Value, 0); }
-  public static VectorOffset CreateECEF_POSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartECEF_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddECEF_VEL(FlatBufferBuilder builder, VectorOffset ECEF_VELOffset) { builder.AddOffset(30, ECEF_VELOffset.Value, 0); }
-  public static VectorOffset CreateECEF_VELVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartECEF_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddECEF_ACC(FlatBufferBuilder builder, VectorOffset ECEF_ACCOffset) { builder.AddOffset(31, ECEF_ACCOffset.Value, 0); }
-  public static VectorOffset CreateECEF_ACCVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartECEF_ACCVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLAT(FlatBufferBuilder builder, double LAT) { builder.AddDouble(32, LAT, 0.0); }
-  public static void AddLON(FlatBufferBuilder builder, double LON) { builder.AddDouble(33, LON, 0.0); }
-  public static void AddALT(FlatBufferBuilder builder, double ALT) { builder.AddDouble(34, ALT, 0.0); }
-  public static void AddSPD(FlatBufferBuilder builder, double SPD) { builder.AddDouble(35, SPD, 0.0); }
-  public static void AddHDNG(FlatBufferBuilder builder, double HDNG) { builder.AddDouble(36, HDNG, 0.0); }
-  public static void AddCOURSE(FlatBufferBuilder builder, double COURSE) { builder.AddDouble(37, COURSE, 0.0); }
-  public static void AddLCO(FlatBufferBuilder builder, VectorOffset LCOOffset) { builder.AddOffset(38, LCOOffset.Value, 0); }
-  public static VectorOffset CreateLCOVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLCOVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLCOVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLCOVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLCOVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLCS(FlatBufferBuilder builder, VectorOffset LCSOffset) { builder.AddOffset(39, LCSOffset.Value, 0); }
-  public static VectorOffset CreateLCSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLCSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLCSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLCSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLCSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLC_POS(FlatBufferBuilder builder, VectorOffset LC_POSOffset) { builder.AddOffset(40, LC_POSOffset.Value, 0); }
-  public static VectorOffset CreateLC_POSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLC_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLC_VEL(FlatBufferBuilder builder, VectorOffset LC_VELOffset) { builder.AddOffset(41, LC_VELOffset.Value, 0); }
-  public static VectorOffset CreateLC_VELVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLC_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLC_ACC(FlatBufferBuilder builder, VectorOffset LC_ACCOffset) { builder.AddOffset(42, LC_ACCOffset.Value, 0); }
-  public static VectorOffset CreateLC_ACCVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLC_ACCVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddE_NUVEL(FlatBufferBuilder builder, VectorOffset E_NUVELOffset) { builder.AddOffset(43, E_NUVELOffset.Value, 0); }
-  public static VectorOffset CreateE_NUVELVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUVELVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUVELVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUVELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartE_NUVELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddE_NUPOS(FlatBufferBuilder builder, VectorOffset E_NUPOSOffset) { builder.AddOffset(44, E_NUPOSOffset.Value, 0); }
-  public static VectorOffset CreateE_NUPOSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUPOSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUPOSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateE_NUPOSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartE_NUPOSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCOV(FlatBufferBuilder builder, VectorOffset COVOffset) { builder.AddOffset(45, COVOffset.Value, 0); }
-  public static VectorOffset CreateCOVVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCOVVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddERR_ELLP(FlatBufferBuilder builder, VectorOffset ERR_ELLPOffset) { builder.AddOffset(46, ERR_ELLPOffset.Value, 0); }
-  public static VectorOffset CreateERR_ELLPVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartERR_ELLPVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(47, SRC_TYPSOffset.Value, 0); }
+  public static void AddLAT(FlatBufferBuilder builder, double LAT) { builder.AddDouble(29, LAT, 0.0); }
+  public static void AddLON(FlatBufferBuilder builder, double LON) { builder.AddDouble(30, LON, 0.0); }
+  public static void AddALT(FlatBufferBuilder builder, double ALT) { builder.AddDouble(31, ALT, 0.0); }
+  public static void AddSPD(FlatBufferBuilder builder, double SPD) { builder.AddDouble(32, SPD, 0.0); }
+  public static void AddHDNG(FlatBufferBuilder builder, double HDNG) { builder.AddDouble(33, HDNG, 0.0); }
+  public static void AddCOURSE(FlatBufferBuilder builder, double COURSE) { builder.AddDouble(34, COURSE, 0.0); }
+  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(35, SRC_TYPSOffset.Value, 0); }
   public static VectorOffset CreateSRC_TYPSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSRC_TYPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(48, SRC_IDSOffset.Value, 0); }
+  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(36, SRC_IDSOffset.Value, 0); }
   public static VectorOffset CreateSRC_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSRC_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCALL_SIGN(FlatBufferBuilder builder, StringOffset CALL_SIGNOffset) { builder.AddOffset(49, CALL_SIGNOffset.Value, 0); }
-  public static void AddMULTI_SOURCE(FlatBufferBuilder builder, bool MULTI_SOURCE) { builder.AddBool(50, MULTI_SOURCE, false); }
-  public static void AddJ_SERIES(FlatBufferBuilder builder, StringOffset J_SERIESOffset) { builder.AddOffset(51, J_SERIESOffset.Value, 0); }
-  public static void AddSTRENGTH(FlatBufferBuilder builder, int STRENGTH) { builder.AddInt(52, STRENGTH, 0); }
-  public static void AddM1(FlatBufferBuilder builder, int M1) { builder.AddInt(53, M1, 0); }
-  public static void AddM1V(FlatBufferBuilder builder, int M1V) { builder.AddInt(54, M1V, 0); }
-  public static void AddM2(FlatBufferBuilder builder, int M2) { builder.AddInt(55, M2, 0); }
-  public static void AddM2V(FlatBufferBuilder builder, int M2V) { builder.AddInt(56, M2V, 0); }
-  public static void AddM3A(FlatBufferBuilder builder, int M3A) { builder.AddInt(57, M3A, 0); }
-  public static void AddM3AV(FlatBufferBuilder builder, int M3AV) { builder.AddInt(58, M3AV, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(59, TAGSOffset.Value, 0); }
+  public static void AddCALL_SIGN(FlatBufferBuilder builder, StringOffset CALL_SIGNOffset) { builder.AddOffset(37, CALL_SIGNOffset.Value, 0); }
+  public static void AddMULTI_SOURCE(FlatBufferBuilder builder, bool MULTI_SOURCE) { builder.AddBool(38, MULTI_SOURCE, false); }
+  public static void AddJ_SERIES(FlatBufferBuilder builder, StringOffset J_SERIESOffset) { builder.AddOffset(39, J_SERIESOffset.Value, 0); }
+  public static void AddSTRENGTH(FlatBufferBuilder builder, int STRENGTH) { builder.AddInt(40, STRENGTH, 0); }
+  public static void AddM1(FlatBufferBuilder builder, int M1) { builder.AddInt(41, M1, 0); }
+  public static void AddM1V(FlatBufferBuilder builder, int M1V) { builder.AddInt(42, M1V, 0); }
+  public static void AddM2(FlatBufferBuilder builder, int M2) { builder.AddInt(43, M2, 0); }
+  public static void AddM2V(FlatBufferBuilder builder, int M2V) { builder.AddInt(44, M2V, 0); }
+  public static void AddM3A(FlatBufferBuilder builder, int M3A) { builder.AddInt(45, M3A, 0); }
+  public static void AddM3AV(FlatBufferBuilder builder, int M3AV) { builder.AddInt(46, M3AV, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(47, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTRACK_START_TIME(FlatBufferBuilder builder, StringOffset TRACK_START_TIMEOffset) { builder.AddOffset(48, TRACK_START_TIMEOffset.Value, 0); }
+  public static void AddTRACK_STEP_SIZE(FlatBufferBuilder builder, double TRACK_STEP_SIZE) { builder.AddDouble(49, TRACK_STEP_SIZE, 0.0); }
+  public static void AddTRACK_COMPONENTS(FlatBufferBuilder builder, byte TRACK_COMPONENTS) { builder.AddByte(50, TRACK_COMPONENTS, 3); }
+  public static void AddECEF_POS(FlatBufferBuilder builder, VectorOffset ECEF_POSOffset) { builder.AddOffset(51, ECEF_POSOffset.Value, 0); }
+  public static VectorOffset CreateECEF_POSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartECEF_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddECEF_VEL(FlatBufferBuilder builder, VectorOffset ECEF_VELOffset) { builder.AddOffset(52, ECEF_VELOffset.Value, 0); }
+  public static VectorOffset CreateECEF_VELVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartECEF_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddECEF_ACC(FlatBufferBuilder builder, VectorOffset ECEF_ACCOffset) { builder.AddOffset(53, ECEF_ACCOffset.Value, 0); }
+  public static VectorOffset CreateECEF_ACCVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateECEF_ACCVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartECEF_ACCVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddLC_POS(FlatBufferBuilder builder, VectorOffset LC_POSOffset) { builder.AddOffset(54, LC_POSOffset.Value, 0); }
+  public static VectorOffset CreateLC_POSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLC_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddLC_VEL(FlatBufferBuilder builder, VectorOffset LC_VELOffset) { builder.AddOffset(55, LC_VELOffset.Value, 0); }
+  public static VectorOffset CreateLC_VELVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLC_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddLC_ACC(FlatBufferBuilder builder, VectorOffset LC_ACCOffset) { builder.AddOffset(56, LC_ACCOffset.Value, 0); }
+  public static VectorOffset CreateLC_ACCVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLC_ACCVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLC_ACCVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddCOV(FlatBufferBuilder builder, VectorOffset COVOffset) { builder.AddOffset(57, COVOffset.Value, 0); }
+  public static VectorOffset CreateCOVVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddERR_ELLP(FlatBufferBuilder builder, VectorOffset ERR_ELLPOffset) { builder.AddOffset(58, ERR_ELLPOffset.Value, 0); }
+  public static VectorOffset CreateERR_ELLPVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateERR_ELLPVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartERR_ELLPVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<TRK> EndTRK(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TRK>(o);
@@ -553,36 +590,12 @@ public struct TRK : IFlatbufferObject
     _o.ENVIRONMENT = this.ENVIRONMENT;
     _o.ENVIRONMENT_CONF = this.ENVIRONMENT_CONF;
     _o.TRK_CONF = this.TRK_CONF;
-    _o.ECEF_POS = new List<string>();
-    for (var _j = 0; _j < this.ECEF_POSLength; ++_j) {_o.ECEF_POS.Add(this.ECEF_POS(_j));}
-    _o.ECEF_VEL = new List<string>();
-    for (var _j = 0; _j < this.ECEF_VELLength; ++_j) {_o.ECEF_VEL.Add(this.ECEF_VEL(_j));}
-    _o.ECEF_ACC = new List<string>();
-    for (var _j = 0; _j < this.ECEF_ACCLength; ++_j) {_o.ECEF_ACC.Add(this.ECEF_ACC(_j));}
     _o.LAT = this.LAT;
     _o.LON = this.LON;
     _o.ALT = this.ALT;
     _o.SPD = this.SPD;
     _o.HDNG = this.HDNG;
     _o.COURSE = this.COURSE;
-    _o.LCO = new List<string>();
-    for (var _j = 0; _j < this.LCOLength; ++_j) {_o.LCO.Add(this.LCO(_j));}
-    _o.LCS = new List<string>();
-    for (var _j = 0; _j < this.LCSLength; ++_j) {_o.LCS.Add(this.LCS(_j));}
-    _o.LC_POS = new List<string>();
-    for (var _j = 0; _j < this.LC_POSLength; ++_j) {_o.LC_POS.Add(this.LC_POS(_j));}
-    _o.LC_VEL = new List<string>();
-    for (var _j = 0; _j < this.LC_VELLength; ++_j) {_o.LC_VEL.Add(this.LC_VEL(_j));}
-    _o.LC_ACC = new List<string>();
-    for (var _j = 0; _j < this.LC_ACCLength; ++_j) {_o.LC_ACC.Add(this.LC_ACC(_j));}
-    _o.E_NUVEL = new List<string>();
-    for (var _j = 0; _j < this.E_NUVELLength; ++_j) {_o.E_NUVEL.Add(this.E_NUVEL(_j));}
-    _o.E_NUPOS = new List<string>();
-    for (var _j = 0; _j < this.E_NUPOSLength; ++_j) {_o.E_NUPOS.Add(this.E_NUPOS(_j));}
-    _o.COV = new List<string>();
-    for (var _j = 0; _j < this.COVLength; ++_j) {_o.COV.Add(this.COV(_j));}
-    _o.ERR_ELLP = new List<string>();
-    for (var _j = 0; _j < this.ERR_ELLPLength; ++_j) {_o.ERR_ELLP.Add(this.ERR_ELLP(_j));}
     _o.SRC_TYPS = new List<string>();
     for (var _j = 0; _j < this.SRC_TYPSLength; ++_j) {_o.SRC_TYPS.Add(this.SRC_TYPS(_j));}
     _o.SRC_IDS = new List<string>();
@@ -599,6 +612,25 @@ public struct TRK : IFlatbufferObject
     _o.M3AV = this.M3AV;
     _o.TAGS = new List<string>();
     for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
+    _o.TRACK_START_TIME = this.TRACK_START_TIME;
+    _o.TRACK_STEP_SIZE = this.TRACK_STEP_SIZE;
+    _o.TRACK_COMPONENTS = this.TRACK_COMPONENTS;
+    _o.ECEF_POS = new List<double>();
+    for (var _j = 0; _j < this.ECEF_POSLength; ++_j) {_o.ECEF_POS.Add(this.ECEF_POS(_j));}
+    _o.ECEF_VEL = new List<double>();
+    for (var _j = 0; _j < this.ECEF_VELLength; ++_j) {_o.ECEF_VEL.Add(this.ECEF_VEL(_j));}
+    _o.ECEF_ACC = new List<double>();
+    for (var _j = 0; _j < this.ECEF_ACCLength; ++_j) {_o.ECEF_ACC.Add(this.ECEF_ACC(_j));}
+    _o.LC_POS = new List<double>();
+    for (var _j = 0; _j < this.LC_POSLength; ++_j) {_o.LC_POS.Add(this.LC_POS(_j));}
+    _o.LC_VEL = new List<double>();
+    for (var _j = 0; _j < this.LC_VELLength; ++_j) {_o.LC_VEL.Add(this.LC_VEL(_j));}
+    _o.LC_ACC = new List<double>();
+    for (var _j = 0; _j < this.LC_ACCLength; ++_j) {_o.LC_ACC.Add(this.LC_ACC(_j));}
+    _o.COV = new List<double>();
+    for (var _j = 0; _j < this.COVLength; ++_j) {_o.COV.Add(this.COV(_j));}
+    _o.ERR_ELLP = new List<double>();
+    for (var _j = 0; _j < this.ERR_ELLPLength; ++_j) {_o.ERR_ELLP.Add(this.ERR_ELLP(_j));}
   }
   public static Offset<TRK> Pack(FlatBufferBuilder builder, TRKT _o) {
     if (_o == null) return default(Offset<TRK>);
@@ -626,78 +658,6 @@ public struct TRK : IFlatbufferObject
     var _OBJ_IDENT = _o.OBJ_IDENT == null ? default(StringOffset) : builder.CreateString(_o.OBJ_IDENT);
     var _IDENT_AMP = _o.IDENT_AMP == null ? default(StringOffset) : builder.CreateString(_o.IDENT_AMP);
     var _ENVIRONMENT = _o.ENVIRONMENT == null ? default(StringOffset) : builder.CreateString(_o.ENVIRONMENT);
-    var _ECEF_POS = default(VectorOffset);
-    if (_o.ECEF_POS != null) {
-      var __ECEF_POS = new StringOffset[_o.ECEF_POS.Count];
-      for (var _j = 0; _j < __ECEF_POS.Length; ++_j) { __ECEF_POS[_j] = builder.CreateString(_o.ECEF_POS[_j]); }
-      _ECEF_POS = CreateECEF_POSVector(builder, __ECEF_POS);
-    }
-    var _ECEF_VEL = default(VectorOffset);
-    if (_o.ECEF_VEL != null) {
-      var __ECEF_VEL = new StringOffset[_o.ECEF_VEL.Count];
-      for (var _j = 0; _j < __ECEF_VEL.Length; ++_j) { __ECEF_VEL[_j] = builder.CreateString(_o.ECEF_VEL[_j]); }
-      _ECEF_VEL = CreateECEF_VELVector(builder, __ECEF_VEL);
-    }
-    var _ECEF_ACC = default(VectorOffset);
-    if (_o.ECEF_ACC != null) {
-      var __ECEF_ACC = new StringOffset[_o.ECEF_ACC.Count];
-      for (var _j = 0; _j < __ECEF_ACC.Length; ++_j) { __ECEF_ACC[_j] = builder.CreateString(_o.ECEF_ACC[_j]); }
-      _ECEF_ACC = CreateECEF_ACCVector(builder, __ECEF_ACC);
-    }
-    var _LCO = default(VectorOffset);
-    if (_o.LCO != null) {
-      var __LCO = new StringOffset[_o.LCO.Count];
-      for (var _j = 0; _j < __LCO.Length; ++_j) { __LCO[_j] = builder.CreateString(_o.LCO[_j]); }
-      _LCO = CreateLCOVector(builder, __LCO);
-    }
-    var _LCS = default(VectorOffset);
-    if (_o.LCS != null) {
-      var __LCS = new StringOffset[_o.LCS.Count];
-      for (var _j = 0; _j < __LCS.Length; ++_j) { __LCS[_j] = builder.CreateString(_o.LCS[_j]); }
-      _LCS = CreateLCSVector(builder, __LCS);
-    }
-    var _LC_POS = default(VectorOffset);
-    if (_o.LC_POS != null) {
-      var __LC_POS = new StringOffset[_o.LC_POS.Count];
-      for (var _j = 0; _j < __LC_POS.Length; ++_j) { __LC_POS[_j] = builder.CreateString(_o.LC_POS[_j]); }
-      _LC_POS = CreateLC_POSVector(builder, __LC_POS);
-    }
-    var _LC_VEL = default(VectorOffset);
-    if (_o.LC_VEL != null) {
-      var __LC_VEL = new StringOffset[_o.LC_VEL.Count];
-      for (var _j = 0; _j < __LC_VEL.Length; ++_j) { __LC_VEL[_j] = builder.CreateString(_o.LC_VEL[_j]); }
-      _LC_VEL = CreateLC_VELVector(builder, __LC_VEL);
-    }
-    var _LC_ACC = default(VectorOffset);
-    if (_o.LC_ACC != null) {
-      var __LC_ACC = new StringOffset[_o.LC_ACC.Count];
-      for (var _j = 0; _j < __LC_ACC.Length; ++_j) { __LC_ACC[_j] = builder.CreateString(_o.LC_ACC[_j]); }
-      _LC_ACC = CreateLC_ACCVector(builder, __LC_ACC);
-    }
-    var _E_NUVEL = default(VectorOffset);
-    if (_o.E_NUVEL != null) {
-      var __E_NUVEL = new StringOffset[_o.E_NUVEL.Count];
-      for (var _j = 0; _j < __E_NUVEL.Length; ++_j) { __E_NUVEL[_j] = builder.CreateString(_o.E_NUVEL[_j]); }
-      _E_NUVEL = CreateE_NUVELVector(builder, __E_NUVEL);
-    }
-    var _E_NUPOS = default(VectorOffset);
-    if (_o.E_NUPOS != null) {
-      var __E_NUPOS = new StringOffset[_o.E_NUPOS.Count];
-      for (var _j = 0; _j < __E_NUPOS.Length; ++_j) { __E_NUPOS[_j] = builder.CreateString(_o.E_NUPOS[_j]); }
-      _E_NUPOS = CreateE_NUPOSVector(builder, __E_NUPOS);
-    }
-    var _COV = default(VectorOffset);
-    if (_o.COV != null) {
-      var __COV = new StringOffset[_o.COV.Count];
-      for (var _j = 0; _j < __COV.Length; ++_j) { __COV[_j] = builder.CreateString(_o.COV[_j]); }
-      _COV = CreateCOVVector(builder, __COV);
-    }
-    var _ERR_ELLP = default(VectorOffset);
-    if (_o.ERR_ELLP != null) {
-      var __ERR_ELLP = new StringOffset[_o.ERR_ELLP.Count];
-      for (var _j = 0; _j < __ERR_ELLP.Length; ++_j) { __ERR_ELLP[_j] = builder.CreateString(_o.ERR_ELLP[_j]); }
-      _ERR_ELLP = CreateERR_ELLPVector(builder, __ERR_ELLP);
-    }
     var _SRC_TYPS = default(VectorOffset);
     if (_o.SRC_TYPS != null) {
       var __SRC_TYPS = new StringOffset[_o.SRC_TYPS.Count];
@@ -717,6 +677,47 @@ public struct TRK : IFlatbufferObject
       var __TAGS = new StringOffset[_o.TAGS.Count];
       for (var _j = 0; _j < __TAGS.Length; ++_j) { __TAGS[_j] = builder.CreateString(_o.TAGS[_j]); }
       _TAGS = CreateTAGSVector(builder, __TAGS);
+    }
+    var _TRACK_START_TIME = _o.TRACK_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.TRACK_START_TIME);
+    var _ECEF_POS = default(VectorOffset);
+    if (_o.ECEF_POS != null) {
+      var __ECEF_POS = _o.ECEF_POS.ToArray();
+      _ECEF_POS = CreateECEF_POSVector(builder, __ECEF_POS);
+    }
+    var _ECEF_VEL = default(VectorOffset);
+    if (_o.ECEF_VEL != null) {
+      var __ECEF_VEL = _o.ECEF_VEL.ToArray();
+      _ECEF_VEL = CreateECEF_VELVector(builder, __ECEF_VEL);
+    }
+    var _ECEF_ACC = default(VectorOffset);
+    if (_o.ECEF_ACC != null) {
+      var __ECEF_ACC = _o.ECEF_ACC.ToArray();
+      _ECEF_ACC = CreateECEF_ACCVector(builder, __ECEF_ACC);
+    }
+    var _LC_POS = default(VectorOffset);
+    if (_o.LC_POS != null) {
+      var __LC_POS = _o.LC_POS.ToArray();
+      _LC_POS = CreateLC_POSVector(builder, __LC_POS);
+    }
+    var _LC_VEL = default(VectorOffset);
+    if (_o.LC_VEL != null) {
+      var __LC_VEL = _o.LC_VEL.ToArray();
+      _LC_VEL = CreateLC_VELVector(builder, __LC_VEL);
+    }
+    var _LC_ACC = default(VectorOffset);
+    if (_o.LC_ACC != null) {
+      var __LC_ACC = _o.LC_ACC.ToArray();
+      _LC_ACC = CreateLC_ACCVector(builder, __LC_ACC);
+    }
+    var _COV = default(VectorOffset);
+    if (_o.COV != null) {
+      var __COV = _o.COV.ToArray();
+      _COV = CreateCOVVector(builder, __COV);
+    }
+    var _ERR_ELLP = default(VectorOffset);
+    if (_o.ERR_ELLP != null) {
+      var __ERR_ELLP = _o.ERR_ELLP.ToArray();
+      _ERR_ELLP = CreateERR_ELLPVector(builder, __ERR_ELLP);
     }
     return CreateTRK(
       builder,
@@ -749,24 +750,12 @@ public struct TRK : IFlatbufferObject
       _ENVIRONMENT,
       _o.ENVIRONMENT_CONF,
       _o.TRK_CONF,
-      _ECEF_POS,
-      _ECEF_VEL,
-      _ECEF_ACC,
       _o.LAT,
       _o.LON,
       _o.ALT,
       _o.SPD,
       _o.HDNG,
       _o.COURSE,
-      _LCO,
-      _LCS,
-      _LC_POS,
-      _LC_VEL,
-      _LC_ACC,
-      _E_NUVEL,
-      _E_NUPOS,
-      _COV,
-      _ERR_ELLP,
       _SRC_TYPS,
       _SRC_IDS,
       _CALL_SIGN,
@@ -779,7 +768,18 @@ public struct TRK : IFlatbufferObject
       _o.M2V,
       _o.M3A,
       _o.M3AV,
-      _TAGS);
+      _TAGS,
+      _TRACK_START_TIME,
+      _o.TRACK_STEP_SIZE,
+      _o.TRACK_COMPONENTS,
+      _ECEF_POS,
+      _ECEF_VEL,
+      _ECEF_ACC,
+      _LC_POS,
+      _LC_VEL,
+      _LC_ACC,
+      _COV,
+      _ERR_ELLP);
   }
 }
 
@@ -814,24 +814,12 @@ public class TRKT
   public string ENVIRONMENT { get; set; }
   public double ENVIRONMENT_CONF { get; set; }
   public double TRK_CONF { get; set; }
-  public List<string> ECEF_POS { get; set; }
-  public List<string> ECEF_VEL { get; set; }
-  public List<string> ECEF_ACC { get; set; }
   public double LAT { get; set; }
   public double LON { get; set; }
   public double ALT { get; set; }
   public double SPD { get; set; }
   public double HDNG { get; set; }
   public double COURSE { get; set; }
-  public List<string> LCO { get; set; }
-  public List<string> LCS { get; set; }
-  public List<string> LC_POS { get; set; }
-  public List<string> LC_VEL { get; set; }
-  public List<string> LC_ACC { get; set; }
-  public List<string> E_NUVEL { get; set; }
-  public List<string> E_NUPOS { get; set; }
-  public List<string> COV { get; set; }
-  public List<string> ERR_ELLP { get; set; }
   public List<string> SRC_TYPS { get; set; }
   public List<string> SRC_IDS { get; set; }
   public string CALL_SIGN { get; set; }
@@ -845,6 +833,17 @@ public class TRKT
   public int M3A { get; set; }
   public int M3AV { get; set; }
   public List<string> TAGS { get; set; }
+  public string TRACK_START_TIME { get; set; }
+  public double TRACK_STEP_SIZE { get; set; }
+  public byte TRACK_COMPONENTS { get; set; }
+  public List<double> ECEF_POS { get; set; }
+  public List<double> ECEF_VEL { get; set; }
+  public List<double> ECEF_ACC { get; set; }
+  public List<double> LC_POS { get; set; }
+  public List<double> LC_VEL { get; set; }
+  public List<double> LC_ACC { get; set; }
+  public List<double> COV { get; set; }
+  public List<double> ERR_ELLP { get; set; }
 
   public TRKT() {
     this.ID = null;
@@ -876,24 +875,12 @@ public class TRKT
     this.ENVIRONMENT = null;
     this.ENVIRONMENT_CONF = 0.0;
     this.TRK_CONF = 0.0;
-    this.ECEF_POS = null;
-    this.ECEF_VEL = null;
-    this.ECEF_ACC = null;
     this.LAT = 0.0;
     this.LON = 0.0;
     this.ALT = 0.0;
     this.SPD = 0.0;
     this.HDNG = 0.0;
     this.COURSE = 0.0;
-    this.LCO = null;
-    this.LCS = null;
-    this.LC_POS = null;
-    this.LC_VEL = null;
-    this.LC_ACC = null;
-    this.E_NUVEL = null;
-    this.E_NUPOS = null;
-    this.COV = null;
-    this.ERR_ELLP = null;
     this.SRC_TYPS = null;
     this.SRC_IDS = null;
     this.CALL_SIGN = null;
@@ -907,6 +894,17 @@ public class TRKT
     this.M3A = 0;
     this.M3AV = 0;
     this.TAGS = null;
+    this.TRACK_START_TIME = null;
+    this.TRACK_STEP_SIZE = 0.0;
+    this.TRACK_COMPONENTS = 3;
+    this.ECEF_POS = null;
+    this.ECEF_VEL = null;
+    this.ECEF_ACC = null;
+    this.LC_POS = null;
+    this.LC_VEL = null;
+    this.LC_ACC = null;
+    this.COV = null;
+    this.ERR_ELLP = null;
   }
   public static TRKT DeserializeFromBinary(byte[] fbBuffer) {
     return TRK.GetRootAsTRK(new ByteBuffer(fbBuffer)).UnPack();
@@ -953,37 +951,36 @@ static public class TRKVerify
       && verifier.VerifyString(tablePos, 56 /*ENVIRONMENT*/, false)
       && verifier.VerifyField(tablePos, 58 /*ENVIRONMENT_CONF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 60 /*TRK_CONF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 62 /*ECEF_POS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 64 /*ECEF_VEL*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 66 /*ECEF_ACC*/, false)
-      && verifier.VerifyField(tablePos, 68 /*LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*ALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 74 /*SPD*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 76 /*HDNG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 78 /*COURSE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 80 /*LCO*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 82 /*LCS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 84 /*LC_POS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 86 /*LC_VEL*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 88 /*LC_ACC*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 90 /*E_NUVEL*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 92 /*E_NUPOS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 94 /*COV*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 96 /*ERR_ELLP*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 98 /*SRC_TYPS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 100 /*SRC_IDS*/, false)
-      && verifier.VerifyString(tablePos, 102 /*CALL_SIGN*/, false)
-      && verifier.VerifyField(tablePos, 104 /*MULTI_SOURCE*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 106 /*J_SERIES*/, false)
-      && verifier.VerifyField(tablePos, 108 /*STRENGTH*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 110 /*M1*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 112 /*M1V*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 114 /*M2*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 116 /*M2V*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 118 /*M3A*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 120 /*M3AV*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 122 /*TAGS*/, false)
+      && verifier.VerifyField(tablePos, 62 /*LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*ALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*SPD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*HDNG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*COURSE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 74 /*SRC_TYPS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 76 /*SRC_IDS*/, false)
+      && verifier.VerifyString(tablePos, 78 /*CALL_SIGN*/, false)
+      && verifier.VerifyField(tablePos, 80 /*MULTI_SOURCE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 82 /*J_SERIES*/, false)
+      && verifier.VerifyField(tablePos, 84 /*STRENGTH*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 86 /*M1*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 88 /*M1V*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 90 /*M2*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 92 /*M2V*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 94 /*M3A*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 96 /*M3AV*/, 4 /*int*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 98 /*TAGS*/, false)
+      && verifier.VerifyString(tablePos, 100 /*TRACK_START_TIME*/, false)
+      && verifier.VerifyField(tablePos, 102 /*TRACK_STEP_SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*TRACK_COMPONENTS*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 106 /*ECEF_POS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 108 /*ECEF_VEL*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 110 /*ECEF_ACC*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 112 /*LC_POS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 114 /*LC_VEL*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 116 /*LC_ACC*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 118 /*COV*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 120 /*ERR_ELLP*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

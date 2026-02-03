@@ -95,8 +95,6 @@ class propagatorConfig
 
 class VCMStateVector
 
-class VCMCovarianceMatrixLine
-
 class keplerianElements
 
 class equinoctialElements
@@ -212,39 +210,6 @@ struct VCMStateVectorBuilder:
         return this
     def add_Z_DOT(Z_DOT:float):
         b_.PrependFloat64Slot(6, Z_DOT, 0.0)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// VCM Covariance Matrix Line
-class VCMCovarianceMatrixLine : flatbuffers.handle
-    def CX_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    def CY_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
-    def CZ_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
-    def CX_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-
-def GetRootAsVCMCovarianceMatrixLine(buf:string): return VCMCovarianceMatrixLine { buf, flatbuffers.indirect(buf, 0) }
-
-struct VCMCovarianceMatrixLineBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(4)
-        return this
-    def add_CX_X(CX_X:float):
-        b_.PrependFloat64Slot(0, CX_X, 0.0)
-        return this
-    def add_CY_X(CY_X:float):
-        b_.PrependFloat64Slot(1, CY_X, 0.0)
-        return this
-    def add_CZ_X(CZ_X:float):
-        b_.PrependFloat64Slot(2, CZ_X, 0.0)
-        return this
-    def add_CX_DOT_X(CX_DOT_X:float):
-        b_.PrependFloat64Slot(3, CX_DOT_X, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -471,66 +436,64 @@ class VCM : flatbuffers.handle
     def PROPAGATOR_SETTINGS() -> propagatorConfig?:
         let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: propagatorConfig { buf_, o } else: nil
-    def COVARIANCE_MATRIX(i:int) -> VCMCovarianceMatrixLine:
-        return VCMCovarianceMatrixLine { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
-    def COVARIANCE_MATRIX_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
     def UVW_SIGMAS() -> uvwSigmas?:
-        let o = flatbuffers.field_table(buf_, pos_, 34)
+        let o = flatbuffers.field_table(buf_, pos_, 32)
         return if o: uvwSigmas { buf_, o } else: nil
     def MASS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
     def SOLAR_RAD_AREA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     def SOLAR_RAD_COEFF() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     def DRAG_AREA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     def DRAG_COEFF() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     def SRP() -> perturbationStatus:
-        return perturbationStatus(flatbuffers.field_int8(buf_, pos_, 46, 0))
+        return perturbationStatus(flatbuffers.field_int8(buf_, pos_, 44, 0))
     def CLASSIFICATION_TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 48)
+        return flatbuffers.field_string(buf_, pos_, 46)
     def NORAD_CAT_ID() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 50, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 48, 0)
     def ELEMENT_SET_NO() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 52, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 50, 0)
     def REV_AT_EPOCH() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     def BSTAR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
     def MEAN_MOTION_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
     def MEAN_MOTION_DDOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
     def COV_REFERENCE_FRAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 62)
-    def CX_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
-    def CY_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
-    def CZ_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
-    def CX_DOT_X() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+    def COVARIANCE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 8)
+    def COVARIANCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 62)
     def USER_DEFINED_BIP_0044_TYPE() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 72, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 64, 0)
     def USER_DEFINED_OBJECT_DESIGNATOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 74)
+        return flatbuffers.field_string(buf_, pos_, 66)
     def USER_DEFINED_EARTH_MODEL() -> string:
-        return flatbuffers.field_string(buf_, pos_, 76)
+        return flatbuffers.field_string(buf_, pos_, 68)
     def USER_DEFINED_EPOCH_TIMESTAMP() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
     def USER_DEFINED_MICROSECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
 
 def GetRootAsVCM(buf:string): return VCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct VCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(39)
+        b_.StartObject(35)
         return this
     def add_CCSDS_OMM_VERS(CCSDS_OMM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -574,88 +537,76 @@ struct VCMBuilder:
     def add_PROPAGATOR_SETTINGS(PROPAGATOR_SETTINGS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, PROPAGATOR_SETTINGS)
         return this
-    def add_COVARIANCE_MATRIX(COVARIANCE_MATRIX:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, COVARIANCE_MATRIX)
-        return this
     def add_UVW_SIGMAS(UVW_SIGMAS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, UVW_SIGMAS)
+        b_.PrependUOffsetTRelativeSlot(14, UVW_SIGMAS)
         return this
     def add_MASS(MASS:float):
-        b_.PrependFloat64Slot(16, MASS, 0.0)
+        b_.PrependFloat64Slot(15, MASS, 0.0)
         return this
     def add_SOLAR_RAD_AREA(SOLAR_RAD_AREA:float):
-        b_.PrependFloat64Slot(17, SOLAR_RAD_AREA, 0.0)
+        b_.PrependFloat64Slot(16, SOLAR_RAD_AREA, 0.0)
         return this
     def add_SOLAR_RAD_COEFF(SOLAR_RAD_COEFF:float):
-        b_.PrependFloat64Slot(18, SOLAR_RAD_COEFF, 0.0)
+        b_.PrependFloat64Slot(17, SOLAR_RAD_COEFF, 0.0)
         return this
     def add_DRAG_AREA(DRAG_AREA:float):
-        b_.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+        b_.PrependFloat64Slot(18, DRAG_AREA, 0.0)
         return this
     def add_DRAG_COEFF(DRAG_COEFF:float):
-        b_.PrependFloat64Slot(20, DRAG_COEFF, 0.0)
+        b_.PrependFloat64Slot(19, DRAG_COEFF, 0.0)
         return this
     def add_SRP(SRP:perturbationStatus):
-        b_.PrependInt8Slot(21, SRP, 0)
+        b_.PrependInt8Slot(20, SRP, 0)
         return this
     def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(22, CLASSIFICATION_TYPE)
+        b_.PrependUOffsetTRelativeSlot(21, CLASSIFICATION_TYPE)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
-        b_.PrependUint32Slot(23, NORAD_CAT_ID, 0)
+        b_.PrependUint32Slot(22, NORAD_CAT_ID, 0)
         return this
     def add_ELEMENT_SET_NO(ELEMENT_SET_NO:int):
-        b_.PrependUint32Slot(24, ELEMENT_SET_NO, 0)
+        b_.PrependUint32Slot(23, ELEMENT_SET_NO, 0)
         return this
     def add_REV_AT_EPOCH(REV_AT_EPOCH:float):
-        b_.PrependFloat64Slot(25, REV_AT_EPOCH, 0.0)
+        b_.PrependFloat64Slot(24, REV_AT_EPOCH, 0.0)
         return this
     def add_BSTAR(BSTAR:float):
-        b_.PrependFloat64Slot(26, BSTAR, 0.0)
+        b_.PrependFloat64Slot(25, BSTAR, 0.0)
         return this
     def add_MEAN_MOTION_DOT(MEAN_MOTION_DOT:float):
-        b_.PrependFloat64Slot(27, MEAN_MOTION_DOT, 0.0)
+        b_.PrependFloat64Slot(26, MEAN_MOTION_DOT, 0.0)
         return this
     def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
-        b_.PrependFloat64Slot(28, MEAN_MOTION_DDOT, 0.0)
+        b_.PrependFloat64Slot(27, MEAN_MOTION_DDOT, 0.0)
         return this
     def add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(29, COV_REFERENCE_FRAME)
+        b_.PrependUOffsetTRelativeSlot(28, COV_REFERENCE_FRAME)
         return this
-    def add_CX_X(CX_X:float):
-        b_.PrependFloat64Slot(30, CX_X, 0.0)
-        return this
-    def add_CY_X(CY_X:float):
-        b_.PrependFloat64Slot(31, CY_X, 0.0)
-        return this
-    def add_CZ_X(CZ_X:float):
-        b_.PrependFloat64Slot(32, CZ_X, 0.0)
-        return this
-    def add_CX_DOT_X(CX_DOT_X:float):
-        b_.PrependFloat64Slot(33, CX_DOT_X, 0.0)
+    def add_COVARIANCE(COVARIANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, COVARIANCE)
         return this
     def add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE:int):
-        b_.PrependUint32Slot(34, USER_DEFINED_BIP_0044_TYPE, 0)
+        b_.PrependUint32Slot(30, USER_DEFINED_BIP_0044_TYPE, 0)
         return this
     def add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(35, USER_DEFINED_OBJECT_DESIGNATOR)
+        b_.PrependUOffsetTRelativeSlot(31, USER_DEFINED_OBJECT_DESIGNATOR)
         return this
     def add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(36, USER_DEFINED_EARTH_MODEL)
+        b_.PrependUOffsetTRelativeSlot(32, USER_DEFINED_EARTH_MODEL)
         return this
     def add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP:float):
-        b_.PrependFloat64Slot(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+        b_.PrependFloat64Slot(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
         return this
     def add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS:float):
-        b_.PrependFloat64Slot(38, USER_DEFINED_MICROSECONDS, 0.0)
+        b_.PrependFloat64Slot(34, USER_DEFINED_MICROSECONDS, 0.0)
         return this
     def end():
         return b_.EndObject()
 
-def VCMStartCOVARIANCE_MATRIXVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def VCMCreateCOVARIANCE_MATRIXVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+def VCMStartCOVARIANCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def VCMCreateCOVARIANCEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 

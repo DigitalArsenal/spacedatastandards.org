@@ -1326,13 +1326,15 @@ public struct OCM: FlatBufferObject, Verifiable {
     case HEADER = 4
     case METADATA = 6
     case TRAJ_TYPE = 8
-    case STATE_DATA = 10
-    case PHYSICAL_PROPERTIES = 12
-    case COVARIANCE_DATA = 14
-    case MANEUVER_DATA = 16
-    case PERTURBATIONS = 18
-    case ORBIT_DETERMINATION = 20
-    case USER_DEFINED_PARAMETERS = 22
+    case STATE_STEP_SIZE = 10
+    case STATE_VECTOR_SIZE = 12
+    case STATE_DATA = 14
+    case COVARIANCE_DATA = 16
+    case PHYSICAL_PROPERTIES = 18
+    case MANEUVER_DATA = 20
+    case PERTURBATIONS = 22
+    case ORBIT_DETERMINATION = 24
+    case USER_DEFINED_PARAMETERS = 26
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -1344,16 +1346,28 @@ public struct OCM: FlatBufferObject, Verifiable {
   ///  Trajectory type (e.g., PROPAGATED, ESTIMATED).
   public var TRAJ_TYPE: String? { let o = _accessor.offset(VTOFFSET.TRAJ_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRAJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRAJ_TYPE.v) }
-  ///  State vector data.
+  ///  Time interval between state vectors in seconds (required for time-series data).
+  public var STATE_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STATE_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of components per state vector.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VTOFFSET.STATE_VECTOR_SIZE.v); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  State data as row-major array of doubles.
+  ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
   public var hasStateData: Bool { let o = _accessor.offset(VTOFFSET.STATE_DATA.v); return o == 0 ? false : true }
   public var STATE_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.STATE_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STATE_DATA(at index: Int32) -> StateVector? { let o = _accessor.offset(VTOFFSET.STATE_DATA.v); return o == 0 ? nil : StateVector(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Physical properties of the space object.
-  public var PHYSICAL_PROPERTIES: PhysicalProperties? { let o = _accessor.offset(VTOFFSET.PHYSICAL_PROPERTIES.v); return o == 0 ? nil : PhysicalProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Covariance data associated with the state vectors.
+  public func STATE_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.STATE_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var STATE_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.STATE_DATA.v) ?? [] }
+  ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  ///  Time alignment matches STATE_DATA epochs.
   public var hasCovarianceData: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_DATA.v); return o == 0 ? false : true }
   public var COVARIANCE_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COVARIANCE_DATA(at index: Int32) -> StateVector? { let o = _accessor.offset(VTOFFSET.COVARIANCE_DATA.v); return o == 0 ? nil : StateVector(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public func COVARIANCE_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COVARIANCE_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var COVARIANCE_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.COVARIANCE_DATA.v) ?? [] }
+  ///  Physical properties of the space object.
+  public var PHYSICAL_PROPERTIES: PhysicalProperties? { let o = _accessor.offset(VTOFFSET.PHYSICAL_PROPERTIES.v); return o == 0 ? nil : PhysicalProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   ///  Maneuver data.
   public var hasManeuverData: Bool { let o = _accessor.offset(VTOFFSET.MANEUVER_DATA.v); return o == 0 ? false : true }
   public var MANEUVER_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.MANEUVER_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
@@ -1366,13 +1380,15 @@ public struct OCM: FlatBufferObject, Verifiable {
   public var hasUserDefinedParameters: Bool { let o = _accessor.offset(VTOFFSET.USER_DEFINED_PARAMETERS.v); return o == 0 ? false : true }
   public var USER_DEFINED_PARAMETERSCount: Int32 { let o = _accessor.offset(VTOFFSET.USER_DEFINED_PARAMETERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func USER_DEFINED_PARAMETERS(at index: Int32) -> UserDefinedParameters? { let o = _accessor.offset(VTOFFSET.USER_DEFINED_PARAMETERS.v); return o == 0 ? nil : UserDefinedParameters(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VTOFFSET.HEADER.p) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VTOFFSET.METADATA.p) }
   public static func add(TRAJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJ_TYPE, at: VTOFFSET.TRAJ_TYPE.p) }
+  public static func add(STATE_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_STEP_SIZE, def: 0.0, at: VTOFFSET.STATE_STEP_SIZE.p) }
+  public static func add(STATE_VECTOR_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_VECTOR_SIZE, def: 6, at: VTOFFSET.STATE_VECTOR_SIZE.p) }
   public static func addVectorOf(STATE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_DATA, at: VTOFFSET.STATE_DATA.p) }
-  public static func add(PHYSICAL_PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHYSICAL_PROPERTIES, at: VTOFFSET.PHYSICAL_PROPERTIES.p) }
   public static func addVectorOf(COVARIANCE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_DATA, at: VTOFFSET.COVARIANCE_DATA.p) }
+  public static func add(PHYSICAL_PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHYSICAL_PROPERTIES, at: VTOFFSET.PHYSICAL_PROPERTIES.p) }
   public static func addVectorOf(MANEUVER_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVER_DATA, at: VTOFFSET.MANEUVER_DATA.p) }
   public static func add(PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PERTURBATIONS, at: VTOFFSET.PERTURBATIONS.p) }
   public static func add(ORBIT_DETERMINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_DETERMINATION, at: VTOFFSET.ORBIT_DETERMINATION.p) }
@@ -1383,9 +1399,11 @@ public struct OCM: FlatBufferObject, Verifiable {
     HEADEROffset HEADER: Offset = Offset(),
     METADATAOffset METADATA: Offset = Offset(),
     TRAJ_TYPEOffset TRAJ_TYPE: Offset = Offset(),
+    STATE_STEP_SIZE: Double = 0.0,
+    STATE_VECTOR_SIZE: UInt8 = 6,
     STATE_DATAVectorOffset STATE_DATA: Offset = Offset(),
-    PHYSICAL_PROPERTIESOffset PHYSICAL_PROPERTIES: Offset = Offset(),
     COVARIANCE_DATAVectorOffset COVARIANCE_DATA: Offset = Offset(),
+    PHYSICAL_PROPERTIESOffset PHYSICAL_PROPERTIES: Offset = Offset(),
     MANEUVER_DATAVectorOffset MANEUVER_DATA: Offset = Offset(),
     PERTURBATIONSOffset PERTURBATIONS: Offset = Offset(),
     ORBIT_DETERMINATIONOffset ORBIT_DETERMINATION: Offset = Offset(),
@@ -1395,9 +1413,11 @@ public struct OCM: FlatBufferObject, Verifiable {
     OCM.add(HEADER: HEADER, &fbb)
     OCM.add(METADATA: METADATA, &fbb)
     OCM.add(TRAJ_TYPE: TRAJ_TYPE, &fbb)
+    OCM.add(STATE_STEP_SIZE: STATE_STEP_SIZE, &fbb)
+    OCM.add(STATE_VECTOR_SIZE: STATE_VECTOR_SIZE, &fbb)
     OCM.addVectorOf(STATE_DATA: STATE_DATA, &fbb)
-    OCM.add(PHYSICAL_PROPERTIES: PHYSICAL_PROPERTIES, &fbb)
     OCM.addVectorOf(COVARIANCE_DATA: COVARIANCE_DATA, &fbb)
+    OCM.add(PHYSICAL_PROPERTIES: PHYSICAL_PROPERTIES, &fbb)
     OCM.addVectorOf(MANEUVER_DATA: MANEUVER_DATA, &fbb)
     OCM.add(PERTURBATIONS: PERTURBATIONS, &fbb)
     OCM.add(ORBIT_DETERMINATION: ORBIT_DETERMINATION, &fbb)
@@ -1410,9 +1430,11 @@ public struct OCM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.HEADER.p, fieldName: "HEADER", required: false, type: ForwardOffset<Header>.self)
     try _v.visit(field: VTOFFSET.METADATA.p, fieldName: "METADATA", required: false, type: ForwardOffset<Metadata>.self)
     try _v.visit(field: VTOFFSET.TRAJ_TYPE.p, fieldName: "TRAJ_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATE_DATA.p, fieldName: "STATE_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<StateVector>, StateVector>>.self)
+    try _v.visit(field: VTOFFSET.STATE_STEP_SIZE.p, fieldName: "STATE_STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.STATE_VECTOR_SIZE.p, fieldName: "STATE_VECTOR_SIZE", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.STATE_DATA.p, fieldName: "STATE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COVARIANCE_DATA.p, fieldName: "COVARIANCE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.PHYSICAL_PROPERTIES.p, fieldName: "PHYSICAL_PROPERTIES", required: false, type: ForwardOffset<PhysicalProperties>.self)
-    try _v.visit(field: VTOFFSET.COVARIANCE_DATA.p, fieldName: "COVARIANCE_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<StateVector>, StateVector>>.self)
     try _v.visit(field: VTOFFSET.MANEUVER_DATA.p, fieldName: "MANEUVER_DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<Maneuver>, Maneuver>>.self)
     try _v.visit(field: VTOFFSET.PERTURBATIONS.p, fieldName: "PERTURBATIONS", required: false, type: ForwardOffset<Perturbations>.self)
     try _v.visit(field: VTOFFSET.ORBIT_DETERMINATION.p, fieldName: "ORBIT_DETERMINATION", required: false, type: ForwardOffset<OrbitDetermination>.self)

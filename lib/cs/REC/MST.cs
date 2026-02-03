@@ -175,72 +175,112 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetAOU_RPT_TYPEBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
   public byte[] GetAOU_RPT_TYPEArray() { return __p.__vector_as_array<byte>(50); }
-  public string AOU_RPT_DATA(int j) { int o = __p.__offset(52); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int AOU_RPT_DATALength { get { int o = __p.__offset(52); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public double CONTAINMENT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TRK_CONF { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int TRK_QUAL { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double ANG_ELEV { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string SEN_MODE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public double CONTAINMENT { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double TRK_CONF { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public int TRK_QUAL { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public double ANG_ELEV { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public string SEN_MODE { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSEN_MODEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+  public Span<byte> GetSEN_MODEBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetSEN_MODEBytes() { return __p.__vector_as_arraysegment(62); }
+  public ArraySegment<byte>? GetSEN_MODEBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetSEN_MODEArray() { return __p.__vector_as_array<byte>(62); }
-  public string INFO_SOURCE { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSEN_MODEArray() { return __p.__vector_as_array<byte>(60); }
+  public string INFO_SOURCE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINFO_SOURCEBytes() { return __p.__vector_as_span<byte>(64, 1); }
+  public Span<byte> GetINFO_SOURCEBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetINFO_SOURCEBytes() { return __p.__vector_as_arraysegment(64); }
+  public ArraySegment<byte>? GetINFO_SOURCEBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetINFO_SOURCEArray() { return __p.__vector_as_array<byte>(64); }
-  public bool BOOSTING { get { int o = __p.__offset(66); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public double POLAR_SING_LOC_LAT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double POLAR_SING_LOC_LON { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool EMG_IND { get { int o = __p.__offset(72); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public bool DROP_PT_IND { get { int o = __p.__offset(74); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int SPACE_AMP_CONF { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string LAUNCH_TIME { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetINFO_SOURCEArray() { return __p.__vector_as_array<byte>(62); }
+  public bool BOOSTING { get { int o = __p.__offset(64); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public double POLAR_SING_LOC_LAT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double POLAR_SING_LOC_LON { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public bool EMG_IND { get { int o = __p.__offset(70); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool DROP_PT_IND { get { int o = __p.__offset(72); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public int SPACE_AMP_CONF { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string LAUNCH_TIME { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_TIMEBytes() { return __p.__vector_as_span<byte>(78, 1); }
+  public Span<byte> GetLAUNCH_TIMEBytes() { return __p.__vector_as_span<byte>(76, 1); }
 #else
-  public ArraySegment<byte>? GetLAUNCH_TIMEBytes() { return __p.__vector_as_arraysegment(78); }
+  public ArraySegment<byte>? GetLAUNCH_TIMEBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public byte[] GetLAUNCH_TIMEArray() { return __p.__vector_as_array<byte>(78); }
-  public double LAUNCH_LAT { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LAUNCH_LON { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AZ_CORR { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BURNOUT_ALT { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string LAUNCH_AOU_TYPE { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAUNCH_TIMEArray() { return __p.__vector_as_array<byte>(76); }
+  public double LAUNCH_LAT { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double LAUNCH_LON { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double AZ_CORR { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double BURNOUT_ALT { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public string LAUNCH_AOU_TYPE { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(88, 1); }
+  public Span<byte> GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(86, 1); }
 #else
-  public ArraySegment<byte>? GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(88); }
+  public ArraySegment<byte>? GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(86); }
 #endif
-  public byte[] GetLAUNCH_AOU_TYPEArray() { return __p.__vector_as_array<byte>(88); }
-  public string LAUNCH_AOU_DATA(int j) { int o = __p.__offset(90); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int LAUNCH_AOU_DATALength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string IMPACT_TIME { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAUNCH_AOU_TYPEArray() { return __p.__vector_as_array<byte>(86); }
+  public string IMPACT_TIME { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIMPACT_TIMEBytes() { return __p.__vector_as_span<byte>(92, 1); }
+  public Span<byte> GetIMPACT_TIMEBytes() { return __p.__vector_as_span<byte>(88, 1); }
 #else
-  public ArraySegment<byte>? GetIMPACT_TIMEBytes() { return __p.__vector_as_arraysegment(92); }
+  public ArraySegment<byte>? GetIMPACT_TIMEBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
-  public byte[] GetIMPACT_TIMEArray() { return __p.__vector_as_array<byte>(92); }
-  public double IMPACT_LAT { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double IMPACT_LON { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string IMPACT_AOU_TYPE { get { int o = __p.__offset(98); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetIMPACT_TIMEArray() { return __p.__vector_as_array<byte>(88); }
+  public double IMPACT_LAT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double IMPACT_LON { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public string IMPACT_AOU_TYPE { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(98, 1); }
+  public Span<byte> GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(94, 1); }
 #else
-  public ArraySegment<byte>? GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(98); }
+  public ArraySegment<byte>? GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(94); }
 #endif
-  public byte[] GetIMPACT_AOU_TYPEArray() { return __p.__vector_as_array<byte>(98); }
-  public string IMPACT_AOU_DATA(int j) { int o = __p.__offset(100); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int IMPACT_AOU_DATALength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string VECTORS(int j) { int o = __p.__offset(102); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public byte[] GetIMPACT_AOU_TYPEArray() { return __p.__vector_as_array<byte>(94); }
+  /// Start time for vector data (ISO 8601 UTC format).
+  public string VECTOR_START_TIME { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetVECTOR_START_TIMEBytes() { return __p.__vector_as_span<byte>(96, 1); }
+#else
+  public ArraySegment<byte>? GetVECTOR_START_TIMEBytes() { return __p.__vector_as_arraysegment(96); }
+#endif
+  public byte[] GetVECTOR_START_TIMEArray() { return __p.__vector_as_array<byte>(96); }
+  /// Time interval between vector points in seconds.
+  public double VECTOR_STEP_SIZE { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  public byte VECTOR_COMPONENTS { get { int o = __p.__offset(100); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
+  /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+  public double VECTORS(int j) { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int VECTORSLength { get { int o = __p.__offset(102); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetVECTORSBytes() { return __p.__vector_as_span<double>(102, 8); }
+#else
+  public ArraySegment<byte>? GetVECTORSBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public double[] GetVECTORSArray() { return __p.__vector_as_array<double>(102); }
+  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  public double AOU_RPT(int j) { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int AOU_RPTLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetAOU_RPTBytes() { return __p.__vector_as_span<double>(104, 8); }
+#else
+  public ArraySegment<byte>? GetAOU_RPTBytes() { return __p.__vector_as_arraysegment(104); }
+#endif
+  public double[] GetAOU_RPTArray() { return __p.__vector_as_array<double>(104); }
+  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  public double LAUNCH_AOU(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int LAUNCH_AOULength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetLAUNCH_AOUBytes() { return __p.__vector_as_span<double>(106, 8); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_AOUBytes() { return __p.__vector_as_arraysegment(106); }
+#endif
+  public double[] GetLAUNCH_AOUArray() { return __p.__vector_as_array<double>(106); }
+  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  public double IMPACT_AOU(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int IMPACT_AOULength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetIMPACT_AOUBytes() { return __p.__vector_as_span<double>(108, 8); }
+#else
+  public ArraySegment<byte>? GetIMPACT_AOUBytes() { return __p.__vector_as_arraysegment(108); }
+#endif
+  public double[] GetIMPACT_AOUArray() { return __p.__vector_as_array<double>(108); }
 
   public static Offset<MST> CreateMST(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -267,7 +307,6 @@ public struct MST : IFlatbufferObject
       StringOffset MSL_STATUSOffset = default(StringOffset),
       StringOffset TSOffset = default(StringOffset),
       StringOffset AOU_RPT_TYPEOffset = default(StringOffset),
-      VectorOffset AOU_RPT_DATAOffset = default(VectorOffset),
       double CONTAINMENT = 0.0,
       double TRK_CONF = 0.0,
       int TRK_QUAL = 0,
@@ -286,14 +325,19 @@ public struct MST : IFlatbufferObject
       double AZ_CORR = 0.0,
       double BURNOUT_ALT = 0.0,
       StringOffset LAUNCH_AOU_TYPEOffset = default(StringOffset),
-      VectorOffset LAUNCH_AOU_DATAOffset = default(VectorOffset),
       StringOffset IMPACT_TIMEOffset = default(StringOffset),
       double IMPACT_LAT = 0.0,
       double IMPACT_LON = 0.0,
       StringOffset IMPACT_AOU_TYPEOffset = default(StringOffset),
-      VectorOffset IMPACT_AOU_DATAOffset = default(VectorOffset),
-      VectorOffset VECTORSOffset = default(VectorOffset)) {
-    builder.StartTable(50);
+      StringOffset VECTOR_START_TIMEOffset = default(StringOffset),
+      double VECTOR_STEP_SIZE = 0.0,
+      byte VECTOR_COMPONENTS = 6,
+      VectorOffset VECTORSOffset = default(VectorOffset),
+      VectorOffset AOU_RPTOffset = default(VectorOffset),
+      VectorOffset LAUNCH_AOUOffset = default(VectorOffset),
+      VectorOffset IMPACT_AOUOffset = default(VectorOffset)) {
+    builder.StartTable(53);
+    MST.AddVECTOR_STEP_SIZE(builder, VECTOR_STEP_SIZE);
     MST.AddIMPACT_LON(builder, IMPACT_LON);
     MST.AddIMPACT_LAT(builder, IMPACT_LAT);
     MST.AddBURNOUT_ALT(builder, BURNOUT_ALT);
@@ -305,18 +349,19 @@ public struct MST : IFlatbufferObject
     MST.AddANG_ELEV(builder, ANG_ELEV);
     MST.AddTRK_CONF(builder, TRK_CONF);
     MST.AddCONTAINMENT(builder, CONTAINMENT);
+    MST.AddIMPACT_AOU(builder, IMPACT_AOUOffset);
+    MST.AddLAUNCH_AOU(builder, LAUNCH_AOUOffset);
+    MST.AddAOU_RPT(builder, AOU_RPTOffset);
     MST.AddVECTORS(builder, VECTORSOffset);
-    MST.AddIMPACT_AOU_DATA(builder, IMPACT_AOU_DATAOffset);
+    MST.AddVECTOR_START_TIME(builder, VECTOR_START_TIMEOffset);
     MST.AddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPEOffset);
     MST.AddIMPACT_TIME(builder, IMPACT_TIMEOffset);
-    MST.AddLAUNCH_AOU_DATA(builder, LAUNCH_AOU_DATAOffset);
     MST.AddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPEOffset);
     MST.AddLAUNCH_TIME(builder, LAUNCH_TIMEOffset);
     MST.AddSPACE_AMP_CONF(builder, SPACE_AMP_CONF);
     MST.AddINFO_SOURCE(builder, INFO_SOURCEOffset);
     MST.AddSEN_MODE(builder, SEN_MODEOffset);
     MST.AddTRK_QUAL(builder, TRK_QUAL);
-    MST.AddAOU_RPT_DATA(builder, AOU_RPT_DATAOffset);
     MST.AddAOU_RPT_TYPE(builder, AOU_RPT_TYPEOffset);
     MST.AddTS(builder, TSOffset);
     MST.AddMSL_STATUS(builder, MSL_STATUSOffset);
@@ -340,6 +385,7 @@ public struct MST : IFlatbufferObject
     MST.AddMSG_SUB_TYPE(builder, MSG_SUB_TYPEOffset);
     MST.AddMSG_TYPE(builder, MSG_TYPEOffset);
     MST.AddID(builder, IDOffset);
+    MST.AddVECTOR_COMPONENTS(builder, VECTOR_COMPONENTS);
     MST.AddDROP_PT_IND(builder, DROP_PT_IND);
     MST.AddEMG_IND(builder, EMG_IND);
     MST.AddBOOSTING(builder, BOOSTING);
@@ -347,7 +393,7 @@ public struct MST : IFlatbufferObject
     return MST.EndMST(builder);
   }
 
-  public static void StartMST(FlatBufferBuilder builder) { builder.StartTable(50); }
+  public static void StartMST(FlatBufferBuilder builder) { builder.StartTable(53); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddMSG_TYPE(FlatBufferBuilder builder, StringOffset MSG_TYPEOffset) { builder.AddOffset(1, MSG_TYPEOffset.Value, 0); }
   public static void AddMSG_SUB_TYPE(FlatBufferBuilder builder, StringOffset MSG_SUB_TYPEOffset) { builder.AddOffset(2, MSG_SUB_TYPEOffset.Value, 0); }
@@ -372,52 +418,55 @@ public struct MST : IFlatbufferObject
   public static void AddMSL_STATUS(FlatBufferBuilder builder, StringOffset MSL_STATUSOffset) { builder.AddOffset(21, MSL_STATUSOffset.Value, 0); }
   public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(22, TSOffset.Value, 0); }
   public static void AddAOU_RPT_TYPE(FlatBufferBuilder builder, StringOffset AOU_RPT_TYPEOffset) { builder.AddOffset(23, AOU_RPT_TYPEOffset.Value, 0); }
-  public static void AddAOU_RPT_DATA(FlatBufferBuilder builder, VectorOffset AOU_RPT_DATAOffset) { builder.AddOffset(24, AOU_RPT_DATAOffset.Value, 0); }
-  public static VectorOffset CreateAOU_RPT_DATAVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateAOU_RPT_DATAVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateAOU_RPT_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateAOU_RPT_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartAOU_RPT_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCONTAINMENT(FlatBufferBuilder builder, double CONTAINMENT) { builder.AddDouble(25, CONTAINMENT, 0.0); }
-  public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(26, TRK_CONF, 0.0); }
-  public static void AddTRK_QUAL(FlatBufferBuilder builder, int TRK_QUAL) { builder.AddInt(27, TRK_QUAL, 0); }
-  public static void AddANG_ELEV(FlatBufferBuilder builder, double ANG_ELEV) { builder.AddDouble(28, ANG_ELEV, 0.0); }
-  public static void AddSEN_MODE(FlatBufferBuilder builder, StringOffset SEN_MODEOffset) { builder.AddOffset(29, SEN_MODEOffset.Value, 0); }
-  public static void AddINFO_SOURCE(FlatBufferBuilder builder, StringOffset INFO_SOURCEOffset) { builder.AddOffset(30, INFO_SOURCEOffset.Value, 0); }
-  public static void AddBOOSTING(FlatBufferBuilder builder, bool BOOSTING) { builder.AddBool(31, BOOSTING, false); }
-  public static void AddPOLAR_SING_LOC_LAT(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.AddDouble(32, POLAR_SING_LOC_LAT, 0.0); }
-  public static void AddPOLAR_SING_LOC_LON(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.AddDouble(33, POLAR_SING_LOC_LON, 0.0); }
-  public static void AddEMG_IND(FlatBufferBuilder builder, bool EMG_IND) { builder.AddBool(34, EMG_IND, false); }
-  public static void AddDROP_PT_IND(FlatBufferBuilder builder, bool DROP_PT_IND) { builder.AddBool(35, DROP_PT_IND, false); }
-  public static void AddSPACE_AMP_CONF(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.AddInt(36, SPACE_AMP_CONF, 0); }
-  public static void AddLAUNCH_TIME(FlatBufferBuilder builder, StringOffset LAUNCH_TIMEOffset) { builder.AddOffset(37, LAUNCH_TIMEOffset.Value, 0); }
-  public static void AddLAUNCH_LAT(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.AddDouble(38, LAUNCH_LAT, 0.0); }
-  public static void AddLAUNCH_LON(FlatBufferBuilder builder, double LAUNCH_LON) { builder.AddDouble(39, LAUNCH_LON, 0.0); }
-  public static void AddAZ_CORR(FlatBufferBuilder builder, double AZ_CORR) { builder.AddDouble(40, AZ_CORR, 0.0); }
-  public static void AddBURNOUT_ALT(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.AddDouble(41, BURNOUT_ALT, 0.0); }
-  public static void AddLAUNCH_AOU_TYPE(FlatBufferBuilder builder, StringOffset LAUNCH_AOU_TYPEOffset) { builder.AddOffset(42, LAUNCH_AOU_TYPEOffset.Value, 0); }
-  public static void AddLAUNCH_AOU_DATA(FlatBufferBuilder builder, VectorOffset LAUNCH_AOU_DATAOffset) { builder.AddOffset(43, LAUNCH_AOU_DATAOffset.Value, 0); }
-  public static VectorOffset CreateLAUNCH_AOU_DATAVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateLAUNCH_AOU_DATAVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLAUNCH_AOU_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateLAUNCH_AOU_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartLAUNCH_AOU_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddIMPACT_TIME(FlatBufferBuilder builder, StringOffset IMPACT_TIMEOffset) { builder.AddOffset(44, IMPACT_TIMEOffset.Value, 0); }
-  public static void AddIMPACT_LAT(FlatBufferBuilder builder, double IMPACT_LAT) { builder.AddDouble(45, IMPACT_LAT, 0.0); }
-  public static void AddIMPACT_LON(FlatBufferBuilder builder, double IMPACT_LON) { builder.AddDouble(46, IMPACT_LON, 0.0); }
-  public static void AddIMPACT_AOU_TYPE(FlatBufferBuilder builder, StringOffset IMPACT_AOU_TYPEOffset) { builder.AddOffset(47, IMPACT_AOU_TYPEOffset.Value, 0); }
-  public static void AddIMPACT_AOU_DATA(FlatBufferBuilder builder, VectorOffset IMPACT_AOU_DATAOffset) { builder.AddOffset(48, IMPACT_AOU_DATAOffset.Value, 0); }
-  public static VectorOffset CreateIMPACT_AOU_DATAVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateIMPACT_AOU_DATAVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateIMPACT_AOU_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateIMPACT_AOU_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartIMPACT_AOU_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCONTAINMENT(FlatBufferBuilder builder, double CONTAINMENT) { builder.AddDouble(24, CONTAINMENT, 0.0); }
+  public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(25, TRK_CONF, 0.0); }
+  public static void AddTRK_QUAL(FlatBufferBuilder builder, int TRK_QUAL) { builder.AddInt(26, TRK_QUAL, 0); }
+  public static void AddANG_ELEV(FlatBufferBuilder builder, double ANG_ELEV) { builder.AddDouble(27, ANG_ELEV, 0.0); }
+  public static void AddSEN_MODE(FlatBufferBuilder builder, StringOffset SEN_MODEOffset) { builder.AddOffset(28, SEN_MODEOffset.Value, 0); }
+  public static void AddINFO_SOURCE(FlatBufferBuilder builder, StringOffset INFO_SOURCEOffset) { builder.AddOffset(29, INFO_SOURCEOffset.Value, 0); }
+  public static void AddBOOSTING(FlatBufferBuilder builder, bool BOOSTING) { builder.AddBool(30, BOOSTING, false); }
+  public static void AddPOLAR_SING_LOC_LAT(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.AddDouble(31, POLAR_SING_LOC_LAT, 0.0); }
+  public static void AddPOLAR_SING_LOC_LON(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.AddDouble(32, POLAR_SING_LOC_LON, 0.0); }
+  public static void AddEMG_IND(FlatBufferBuilder builder, bool EMG_IND) { builder.AddBool(33, EMG_IND, false); }
+  public static void AddDROP_PT_IND(FlatBufferBuilder builder, bool DROP_PT_IND) { builder.AddBool(34, DROP_PT_IND, false); }
+  public static void AddSPACE_AMP_CONF(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.AddInt(35, SPACE_AMP_CONF, 0); }
+  public static void AddLAUNCH_TIME(FlatBufferBuilder builder, StringOffset LAUNCH_TIMEOffset) { builder.AddOffset(36, LAUNCH_TIMEOffset.Value, 0); }
+  public static void AddLAUNCH_LAT(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.AddDouble(37, LAUNCH_LAT, 0.0); }
+  public static void AddLAUNCH_LON(FlatBufferBuilder builder, double LAUNCH_LON) { builder.AddDouble(38, LAUNCH_LON, 0.0); }
+  public static void AddAZ_CORR(FlatBufferBuilder builder, double AZ_CORR) { builder.AddDouble(39, AZ_CORR, 0.0); }
+  public static void AddBURNOUT_ALT(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.AddDouble(40, BURNOUT_ALT, 0.0); }
+  public static void AddLAUNCH_AOU_TYPE(FlatBufferBuilder builder, StringOffset LAUNCH_AOU_TYPEOffset) { builder.AddOffset(41, LAUNCH_AOU_TYPEOffset.Value, 0); }
+  public static void AddIMPACT_TIME(FlatBufferBuilder builder, StringOffset IMPACT_TIMEOffset) { builder.AddOffset(42, IMPACT_TIMEOffset.Value, 0); }
+  public static void AddIMPACT_LAT(FlatBufferBuilder builder, double IMPACT_LAT) { builder.AddDouble(43, IMPACT_LAT, 0.0); }
+  public static void AddIMPACT_LON(FlatBufferBuilder builder, double IMPACT_LON) { builder.AddDouble(44, IMPACT_LON, 0.0); }
+  public static void AddIMPACT_AOU_TYPE(FlatBufferBuilder builder, StringOffset IMPACT_AOU_TYPEOffset) { builder.AddOffset(45, IMPACT_AOU_TYPEOffset.Value, 0); }
+  public static void AddVECTOR_START_TIME(FlatBufferBuilder builder, StringOffset VECTOR_START_TIMEOffset) { builder.AddOffset(46, VECTOR_START_TIMEOffset.Value, 0); }
+  public static void AddVECTOR_STEP_SIZE(FlatBufferBuilder builder, double VECTOR_STEP_SIZE) { builder.AddDouble(47, VECTOR_STEP_SIZE, 0.0); }
+  public static void AddVECTOR_COMPONENTS(FlatBufferBuilder builder, byte VECTOR_COMPONENTS) { builder.AddByte(48, VECTOR_COMPONENTS, 6); }
   public static void AddVECTORS(FlatBufferBuilder builder, VectorOffset VECTORSOffset) { builder.AddOffset(49, VECTORSOffset.Value, 0); }
-  public static VectorOffset CreateVECTORSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartVECTORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateVECTORSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateVECTORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartVECTORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddAOU_RPT(FlatBufferBuilder builder, VectorOffset AOU_RPTOffset) { builder.AddOffset(50, AOU_RPTOffset.Value, 0); }
+  public static VectorOffset CreateAOU_RPTVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateAOU_RPTVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateAOU_RPTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateAOU_RPTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartAOU_RPTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddLAUNCH_AOU(FlatBufferBuilder builder, VectorOffset LAUNCH_AOUOffset) { builder.AddOffset(51, LAUNCH_AOUOffset.Value, 0); }
+  public static VectorOffset CreateLAUNCH_AOUVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateLAUNCH_AOUVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLAUNCH_AOUVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLAUNCH_AOUVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLAUNCH_AOUVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddIMPACT_AOU(FlatBufferBuilder builder, VectorOffset IMPACT_AOUOffset) { builder.AddOffset(52, IMPACT_AOUOffset.Value, 0); }
+  public static VectorOffset CreateIMPACT_AOUVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_AOUVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_AOUVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_AOUVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartIMPACT_AOUVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<MST> EndMST(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MST>(o);
@@ -454,8 +503,6 @@ public struct MST : IFlatbufferObject
     _o.MSL_STATUS = this.MSL_STATUS;
     _o.TS = this.TS;
     _o.AOU_RPT_TYPE = this.AOU_RPT_TYPE;
-    _o.AOU_RPT_DATA = new List<string>();
-    for (var _j = 0; _j < this.AOU_RPT_DATALength; ++_j) {_o.AOU_RPT_DATA.Add(this.AOU_RPT_DATA(_j));}
     _o.CONTAINMENT = this.CONTAINMENT;
     _o.TRK_CONF = this.TRK_CONF;
     _o.TRK_QUAL = this.TRK_QUAL;
@@ -474,16 +521,21 @@ public struct MST : IFlatbufferObject
     _o.AZ_CORR = this.AZ_CORR;
     _o.BURNOUT_ALT = this.BURNOUT_ALT;
     _o.LAUNCH_AOU_TYPE = this.LAUNCH_AOU_TYPE;
-    _o.LAUNCH_AOU_DATA = new List<string>();
-    for (var _j = 0; _j < this.LAUNCH_AOU_DATALength; ++_j) {_o.LAUNCH_AOU_DATA.Add(this.LAUNCH_AOU_DATA(_j));}
     _o.IMPACT_TIME = this.IMPACT_TIME;
     _o.IMPACT_LAT = this.IMPACT_LAT;
     _o.IMPACT_LON = this.IMPACT_LON;
     _o.IMPACT_AOU_TYPE = this.IMPACT_AOU_TYPE;
-    _o.IMPACT_AOU_DATA = new List<string>();
-    for (var _j = 0; _j < this.IMPACT_AOU_DATALength; ++_j) {_o.IMPACT_AOU_DATA.Add(this.IMPACT_AOU_DATA(_j));}
-    _o.VECTORS = new List<string>();
+    _o.VECTOR_START_TIME = this.VECTOR_START_TIME;
+    _o.VECTOR_STEP_SIZE = this.VECTOR_STEP_SIZE;
+    _o.VECTOR_COMPONENTS = this.VECTOR_COMPONENTS;
+    _o.VECTORS = new List<double>();
     for (var _j = 0; _j < this.VECTORSLength; ++_j) {_o.VECTORS.Add(this.VECTORS(_j));}
+    _o.AOU_RPT = new List<double>();
+    for (var _j = 0; _j < this.AOU_RPTLength; ++_j) {_o.AOU_RPT.Add(this.AOU_RPT(_j));}
+    _o.LAUNCH_AOU = new List<double>();
+    for (var _j = 0; _j < this.LAUNCH_AOULength; ++_j) {_o.LAUNCH_AOU.Add(this.LAUNCH_AOU(_j));}
+    _o.IMPACT_AOU = new List<double>();
+    for (var _j = 0; _j < this.IMPACT_AOULength; ++_j) {_o.IMPACT_AOU.Add(this.IMPACT_AOU(_j));}
   }
   public static Offset<MST> Pack(FlatBufferBuilder builder, MSTT _o) {
     if (_o == null) return default(Offset<MST>);
@@ -509,35 +561,32 @@ public struct MST : IFlatbufferObject
     var _MSL_STATUS = _o.MSL_STATUS == null ? default(StringOffset) : builder.CreateString(_o.MSL_STATUS);
     var _TS = _o.TS == null ? default(StringOffset) : builder.CreateString(_o.TS);
     var _AOU_RPT_TYPE = _o.AOU_RPT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.AOU_RPT_TYPE);
-    var _AOU_RPT_DATA = default(VectorOffset);
-    if (_o.AOU_RPT_DATA != null) {
-      var __AOU_RPT_DATA = new StringOffset[_o.AOU_RPT_DATA.Count];
-      for (var _j = 0; _j < __AOU_RPT_DATA.Length; ++_j) { __AOU_RPT_DATA[_j] = builder.CreateString(_o.AOU_RPT_DATA[_j]); }
-      _AOU_RPT_DATA = CreateAOU_RPT_DATAVector(builder, __AOU_RPT_DATA);
-    }
     var _SEN_MODE = _o.SEN_MODE == null ? default(StringOffset) : builder.CreateString(_o.SEN_MODE);
     var _INFO_SOURCE = _o.INFO_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.INFO_SOURCE);
     var _LAUNCH_TIME = _o.LAUNCH_TIME == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_TIME);
     var _LAUNCH_AOU_TYPE = _o.LAUNCH_AOU_TYPE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_AOU_TYPE);
-    var _LAUNCH_AOU_DATA = default(VectorOffset);
-    if (_o.LAUNCH_AOU_DATA != null) {
-      var __LAUNCH_AOU_DATA = new StringOffset[_o.LAUNCH_AOU_DATA.Count];
-      for (var _j = 0; _j < __LAUNCH_AOU_DATA.Length; ++_j) { __LAUNCH_AOU_DATA[_j] = builder.CreateString(_o.LAUNCH_AOU_DATA[_j]); }
-      _LAUNCH_AOU_DATA = CreateLAUNCH_AOU_DATAVector(builder, __LAUNCH_AOU_DATA);
-    }
     var _IMPACT_TIME = _o.IMPACT_TIME == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_TIME);
     var _IMPACT_AOU_TYPE = _o.IMPACT_AOU_TYPE == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_AOU_TYPE);
-    var _IMPACT_AOU_DATA = default(VectorOffset);
-    if (_o.IMPACT_AOU_DATA != null) {
-      var __IMPACT_AOU_DATA = new StringOffset[_o.IMPACT_AOU_DATA.Count];
-      for (var _j = 0; _j < __IMPACT_AOU_DATA.Length; ++_j) { __IMPACT_AOU_DATA[_j] = builder.CreateString(_o.IMPACT_AOU_DATA[_j]); }
-      _IMPACT_AOU_DATA = CreateIMPACT_AOU_DATAVector(builder, __IMPACT_AOU_DATA);
-    }
+    var _VECTOR_START_TIME = _o.VECTOR_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.VECTOR_START_TIME);
     var _VECTORS = default(VectorOffset);
     if (_o.VECTORS != null) {
-      var __VECTORS = new StringOffset[_o.VECTORS.Count];
-      for (var _j = 0; _j < __VECTORS.Length; ++_j) { __VECTORS[_j] = builder.CreateString(_o.VECTORS[_j]); }
+      var __VECTORS = _o.VECTORS.ToArray();
       _VECTORS = CreateVECTORSVector(builder, __VECTORS);
+    }
+    var _AOU_RPT = default(VectorOffset);
+    if (_o.AOU_RPT != null) {
+      var __AOU_RPT = _o.AOU_RPT.ToArray();
+      _AOU_RPT = CreateAOU_RPTVector(builder, __AOU_RPT);
+    }
+    var _LAUNCH_AOU = default(VectorOffset);
+    if (_o.LAUNCH_AOU != null) {
+      var __LAUNCH_AOU = _o.LAUNCH_AOU.ToArray();
+      _LAUNCH_AOU = CreateLAUNCH_AOUVector(builder, __LAUNCH_AOU);
+    }
+    var _IMPACT_AOU = default(VectorOffset);
+    if (_o.IMPACT_AOU != null) {
+      var __IMPACT_AOU = _o.IMPACT_AOU.ToArray();
+      _IMPACT_AOU = CreateIMPACT_AOUVector(builder, __IMPACT_AOU);
     }
     return CreateMST(
       builder,
@@ -565,7 +614,6 @@ public struct MST : IFlatbufferObject
       _MSL_STATUS,
       _TS,
       _AOU_RPT_TYPE,
-      _AOU_RPT_DATA,
       _o.CONTAINMENT,
       _o.TRK_CONF,
       _o.TRK_QUAL,
@@ -584,13 +632,17 @@ public struct MST : IFlatbufferObject
       _o.AZ_CORR,
       _o.BURNOUT_ALT,
       _LAUNCH_AOU_TYPE,
-      _LAUNCH_AOU_DATA,
       _IMPACT_TIME,
       _o.IMPACT_LAT,
       _o.IMPACT_LON,
       _IMPACT_AOU_TYPE,
-      _IMPACT_AOU_DATA,
-      _VECTORS);
+      _VECTOR_START_TIME,
+      _o.VECTOR_STEP_SIZE,
+      _o.VECTOR_COMPONENTS,
+      _VECTORS,
+      _AOU_RPT,
+      _LAUNCH_AOU,
+      _IMPACT_AOU);
   }
 }
 
@@ -620,7 +672,6 @@ public class MSTT
   public string MSL_STATUS { get; set; }
   public string TS { get; set; }
   public string AOU_RPT_TYPE { get; set; }
-  public List<string> AOU_RPT_DATA { get; set; }
   public double CONTAINMENT { get; set; }
   public double TRK_CONF { get; set; }
   public int TRK_QUAL { get; set; }
@@ -639,13 +690,17 @@ public class MSTT
   public double AZ_CORR { get; set; }
   public double BURNOUT_ALT { get; set; }
   public string LAUNCH_AOU_TYPE { get; set; }
-  public List<string> LAUNCH_AOU_DATA { get; set; }
   public string IMPACT_TIME { get; set; }
   public double IMPACT_LAT { get; set; }
   public double IMPACT_LON { get; set; }
   public string IMPACT_AOU_TYPE { get; set; }
-  public List<string> IMPACT_AOU_DATA { get; set; }
-  public List<string> VECTORS { get; set; }
+  public string VECTOR_START_TIME { get; set; }
+  public double VECTOR_STEP_SIZE { get; set; }
+  public byte VECTOR_COMPONENTS { get; set; }
+  public List<double> VECTORS { get; set; }
+  public List<double> AOU_RPT { get; set; }
+  public List<double> LAUNCH_AOU { get; set; }
+  public List<double> IMPACT_AOU { get; set; }
 
   public MSTT() {
     this.ID = null;
@@ -672,7 +727,6 @@ public class MSTT
     this.MSL_STATUS = null;
     this.TS = null;
     this.AOU_RPT_TYPE = null;
-    this.AOU_RPT_DATA = null;
     this.CONTAINMENT = 0.0;
     this.TRK_CONF = 0.0;
     this.TRK_QUAL = 0;
@@ -691,13 +745,17 @@ public class MSTT
     this.AZ_CORR = 0.0;
     this.BURNOUT_ALT = 0.0;
     this.LAUNCH_AOU_TYPE = null;
-    this.LAUNCH_AOU_DATA = null;
     this.IMPACT_TIME = null;
     this.IMPACT_LAT = 0.0;
     this.IMPACT_LON = 0.0;
     this.IMPACT_AOU_TYPE = null;
-    this.IMPACT_AOU_DATA = null;
+    this.VECTOR_START_TIME = null;
+    this.VECTOR_STEP_SIZE = 0.0;
+    this.VECTOR_COMPONENTS = 6;
     this.VECTORS = null;
+    this.AOU_RPT = null;
+    this.LAUNCH_AOU = null;
+    this.IMPACT_AOU = null;
   }
   public static MSTT DeserializeFromBinary(byte[] fbBuffer) {
     return MST.GetRootAsMST(new ByteBuffer(fbBuffer)).UnPack();
@@ -739,32 +797,35 @@ static public class MSTVerify
       && verifier.VerifyString(tablePos, 46 /*MSL_STATUS*/, false)
       && verifier.VerifyString(tablePos, 48 /*TS*/, false)
       && verifier.VerifyString(tablePos, 50 /*AOU_RPT_TYPE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 52 /*AOU_RPT_DATA*/, false)
-      && verifier.VerifyField(tablePos, 54 /*CONTAINMENT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*TRK_CONF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*TRK_QUAL*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 60 /*ANG_ELEV*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 62 /*SEN_MODE*/, false)
-      && verifier.VerifyString(tablePos, 64 /*INFO_SOURCE*/, false)
-      && verifier.VerifyField(tablePos, 66 /*BOOSTING*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 68 /*POLAR_SING_LOC_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*POLAR_SING_LOC_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*EMG_IND*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 74 /*DROP_PT_IND*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 76 /*SPACE_AMP_CONF*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 78 /*LAUNCH_TIME*/, false)
-      && verifier.VerifyField(tablePos, 80 /*LAUNCH_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 82 /*LAUNCH_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 84 /*AZ_CORR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 86 /*BURNOUT_ALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 88 /*LAUNCH_AOU_TYPE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 90 /*LAUNCH_AOU_DATA*/, false)
-      && verifier.VerifyString(tablePos, 92 /*IMPACT_TIME*/, false)
-      && verifier.VerifyField(tablePos, 94 /*IMPACT_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 96 /*IMPACT_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 98 /*IMPACT_AOU_TYPE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 100 /*IMPACT_AOU_DATA*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 102 /*VECTORS*/, false)
+      && verifier.VerifyField(tablePos, 52 /*CONTAINMENT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*TRK_CONF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*TRK_QUAL*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 58 /*ANG_ELEV*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 60 /*SEN_MODE*/, false)
+      && verifier.VerifyString(tablePos, 62 /*INFO_SOURCE*/, false)
+      && verifier.VerifyField(tablePos, 64 /*BOOSTING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 66 /*POLAR_SING_LOC_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*POLAR_SING_LOC_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*EMG_IND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 72 /*DROP_PT_IND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 74 /*SPACE_AMP_CONF*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 76 /*LAUNCH_TIME*/, false)
+      && verifier.VerifyField(tablePos, 78 /*LAUNCH_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*LAUNCH_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*AZ_CORR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 84 /*BURNOUT_ALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 86 /*LAUNCH_AOU_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 88 /*IMPACT_TIME*/, false)
+      && verifier.VerifyField(tablePos, 90 /*IMPACT_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*IMPACT_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 94 /*IMPACT_AOU_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 96 /*VECTOR_START_TIME*/, false)
+      && verifier.VerifyField(tablePos, 98 /*VECTOR_STEP_SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*VECTOR_COMPONENTS*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 102 /*VECTORS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 104 /*AOU_RPT*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 106 /*LAUNCH_AOU*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 108 /*IMPACT_AOU*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

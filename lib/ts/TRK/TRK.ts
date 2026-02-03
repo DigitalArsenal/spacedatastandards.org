@@ -224,272 +224,298 @@ TRK_CONF():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ECEF_POS(index: number):string
-ECEF_POS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ECEF_POS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-ecefPosLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-ECEF_VEL(index: number):string
-ECEF_VEL(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ECEF_VEL(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-ecefVelLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-ECEF_ACC(index: number):string
-ECEF_ACC(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ECEF_ACC(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-ecefAccLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 LAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 LON():number {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 ALT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 SPD():number {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 HDNG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 COURSE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-LCO(index: number):string
-LCO(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LCO(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-lcoLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-LCS(index: number):string
-LCS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LCS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-lcsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-LC_POS(index: number):string
-LC_POS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LC_POS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-lcPosLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-LC_VEL(index: number):string
-LC_VEL(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LC_VEL(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-lcVelLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-LC_ACC(index: number):string
-LC_ACC(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-LC_ACC(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-lcAccLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-E_NUVEL(index: number):string
-E_NUVEL(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-E_NUVEL(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-eNuvelLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-E_NUPOS(index: number):string
-E_NUPOS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-E_NUPOS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-eNuposLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-COV(index: number):string
-COV(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-COV(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-covLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-ERR_ELLP(index: number):string
-ERR_ELLP(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ERR_ELLP(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-errEllpLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 SRC_TYPS(index: number):string
 SRC_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcTypsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 SRC_IDS(index: number):string
 SRC_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 CALL_SIGN():string|null
 CALL_SIGN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 102);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 MULTI_SOURCE():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
+  const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
 J_SERIES():string|null
 J_SERIES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 J_SERIES(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
+  const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 STRENGTH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 108);
+  const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M1():number {
-  const offset = this.bb!.__offset(this.bb_pos, 110);
+  const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M1V():number {
-  const offset = this.bb!.__offset(this.bb_pos, 112);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M2():number {
-  const offset = this.bb!.__offset(this.bb_pos, 114);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M2V():number {
-  const offset = this.bb!.__offset(this.bb_pos, 116);
+  const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M3A():number {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
+  const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 M3AV():number {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
+  const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Start time for track data (ISO 8601 UTC format).
+ */
+TRACK_START_TIME():string|null
+TRACK_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRACK_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Time interval between track points in seconds.
+ */
+TRACK_STEP_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of components per point (default 3 for X, Y, Z).
+ */
+TRACK_COMPONENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 3;
+}
+
+/**
+ * ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+ */
+ECEF_POS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+ecefPosLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+ecefPosArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+ */
+ECEF_VEL(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+ecefVelLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+ecefVelArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+ */
+ECEF_ACC(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+ecefAccLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+ecefAccArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Local coordinate position as flat array
+ */
+LC_POS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+lcPosLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+lcPosArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Local coordinate velocity as flat array
+ */
+LC_VEL(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+lcVelLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+lcVelArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Local coordinate acceleration as flat array
+ */
+LC_ACC(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+lcAccLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+lcAccArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Covariance data (21 elements per point for 6x6 lower triangular)
+ */
+COV(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+covLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Error ellipse data (6 elements per point)
+ */
+ERR_ELLP(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+errEllpLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+errEllpArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startTRK(builder:flatbuffers.Builder) {
-  builder.startObject(60);
+  builder.startObject(59);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -608,224 +634,32 @@ static addTrkConf(builder:flatbuffers.Builder, TRK_CONF:number) {
   builder.addFieldFloat64(28, TRK_CONF, 0.0);
 }
 
-static addEcefPos(builder:flatbuffers.Builder, ECEF_POSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, ECEF_POSOffset, 0);
-}
-
-static createEcefPosVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startEcefPosVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addEcefVel(builder:flatbuffers.Builder, ECEF_VELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(30, ECEF_VELOffset, 0);
-}
-
-static createEcefVelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startEcefVelVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addEcefAcc(builder:flatbuffers.Builder, ECEF_ACCOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, ECEF_ACCOffset, 0);
-}
-
-static createEcefAccVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startEcefAccVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addLat(builder:flatbuffers.Builder, LAT:number) {
-  builder.addFieldFloat64(32, LAT, 0.0);
+  builder.addFieldFloat64(29, LAT, 0.0);
 }
 
 static addLon(builder:flatbuffers.Builder, LON:number) {
-  builder.addFieldFloat64(33, LON, 0.0);
+  builder.addFieldFloat64(30, LON, 0.0);
 }
 
 static addAlt(builder:flatbuffers.Builder, ALT:number) {
-  builder.addFieldFloat64(34, ALT, 0.0);
+  builder.addFieldFloat64(31, ALT, 0.0);
 }
 
 static addSpd(builder:flatbuffers.Builder, SPD:number) {
-  builder.addFieldFloat64(35, SPD, 0.0);
+  builder.addFieldFloat64(32, SPD, 0.0);
 }
 
 static addHdng(builder:flatbuffers.Builder, HDNG:number) {
-  builder.addFieldFloat64(36, HDNG, 0.0);
+  builder.addFieldFloat64(33, HDNG, 0.0);
 }
 
 static addCourse(builder:flatbuffers.Builder, COURSE:number) {
-  builder.addFieldFloat64(37, COURSE, 0.0);
-}
-
-static addLco(builder:flatbuffers.Builder, LCOOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(38, LCOOffset, 0);
-}
-
-static createLcoVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLcoVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addLcs(builder:flatbuffers.Builder, LCSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(39, LCSOffset, 0);
-}
-
-static createLcsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLcsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addLcPos(builder:flatbuffers.Builder, LC_POSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(40, LC_POSOffset, 0);
-}
-
-static createLcPosVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLcPosVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addLcVel(builder:flatbuffers.Builder, LC_VELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, LC_VELOffset, 0);
-}
-
-static createLcVelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLcVelVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addLcAcc(builder:flatbuffers.Builder, LC_ACCOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(42, LC_ACCOffset, 0);
-}
-
-static createLcAccVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLcAccVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addENuvel(builder:flatbuffers.Builder, E_NUVELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, E_NUVELOffset, 0);
-}
-
-static createENuvelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startENuvelVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addENupos(builder:flatbuffers.Builder, E_NUPOSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(44, E_NUPOSOffset, 0);
-}
-
-static createENuposVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startENuposVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addCov(builder:flatbuffers.Builder, COVOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(45, COVOffset, 0);
-}
-
-static createCovVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startCovVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addErrEllp(builder:flatbuffers.Builder, ERR_ELLPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(46, ERR_ELLPOffset, 0);
-}
-
-static createErrEllpVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startErrEllpVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.addFieldFloat64(34, COURSE, 0.0);
 }
 
 static addSrcTyps(builder:flatbuffers.Builder, SRC_TYPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(47, SRC_TYPSOffset, 0);
+  builder.addFieldOffset(35, SRC_TYPSOffset, 0);
 }
 
 static createSrcTypsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -841,7 +675,7 @@ static startSrcTypsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSrcIds(builder:flatbuffers.Builder, SRC_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(48, SRC_IDSOffset, 0);
+  builder.addFieldOffset(36, SRC_IDSOffset, 0);
 }
 
 static createSrcIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -857,47 +691,47 @@ static startSrcIdsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addCallSign(builder:flatbuffers.Builder, CALL_SIGNOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(49, CALL_SIGNOffset, 0);
+  builder.addFieldOffset(37, CALL_SIGNOffset, 0);
 }
 
 static addMultiSource(builder:flatbuffers.Builder, MULTI_SOURCE:boolean) {
-  builder.addFieldInt8(50, +MULTI_SOURCE, +false);
+  builder.addFieldInt8(38, +MULTI_SOURCE, +false);
 }
 
 static addJSeries(builder:flatbuffers.Builder, J_SERIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(51, J_SERIESOffset, 0);
+  builder.addFieldOffset(39, J_SERIESOffset, 0);
 }
 
 static addStrength(builder:flatbuffers.Builder, STRENGTH:number) {
-  builder.addFieldInt32(52, STRENGTH, 0);
+  builder.addFieldInt32(40, STRENGTH, 0);
 }
 
 static addM1(builder:flatbuffers.Builder, M1:number) {
-  builder.addFieldInt32(53, M1, 0);
+  builder.addFieldInt32(41, M1, 0);
 }
 
 static addM1V(builder:flatbuffers.Builder, M1V:number) {
-  builder.addFieldInt32(54, M1V, 0);
+  builder.addFieldInt32(42, M1V, 0);
 }
 
 static addM2(builder:flatbuffers.Builder, M2:number) {
-  builder.addFieldInt32(55, M2, 0);
+  builder.addFieldInt32(43, M2, 0);
 }
 
 static addM2V(builder:flatbuffers.Builder, M2V:number) {
-  builder.addFieldInt32(56, M2V, 0);
+  builder.addFieldInt32(44, M2V, 0);
 }
 
 static addM3A(builder:flatbuffers.Builder, M3A:number) {
-  builder.addFieldInt32(57, M3A, 0);
+  builder.addFieldInt32(45, M3A, 0);
 }
 
 static addM3Av(builder:flatbuffers.Builder, M3AV:number) {
-  builder.addFieldInt32(58, M3AV, 0);
+  builder.addFieldInt32(46, M3AV, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(59, TAGSOffset, 0);
+  builder.addFieldOffset(47, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -910,6 +744,186 @@ static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):
 
 static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
+}
+
+static addTrackStartTime(builder:flatbuffers.Builder, TRACK_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, TRACK_START_TIMEOffset, 0);
+}
+
+static addTrackStepSize(builder:flatbuffers.Builder, TRACK_STEP_SIZE:number) {
+  builder.addFieldFloat64(49, TRACK_STEP_SIZE, 0.0);
+}
+
+static addTrackComponents(builder:flatbuffers.Builder, TRACK_COMPONENTS:number) {
+  builder.addFieldInt8(50, TRACK_COMPONENTS, 3);
+}
+
+static addEcefPos(builder:flatbuffers.Builder, ECEF_POSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, ECEF_POSOffset, 0);
+}
+
+static createEcefPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createEcefPosVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createEcefPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEcefPosVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addEcefVel(builder:flatbuffers.Builder, ECEF_VELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, ECEF_VELOffset, 0);
+}
+
+static createEcefVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createEcefVelVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createEcefVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEcefVelVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addEcefAcc(builder:flatbuffers.Builder, ECEF_ACCOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(53, ECEF_ACCOffset, 0);
+}
+
+static createEcefAccVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createEcefAccVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createEcefAccVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEcefAccVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addLcPos(builder:flatbuffers.Builder, LC_POSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(54, LC_POSOffset, 0);
+}
+
+static createLcPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createLcPosVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createLcPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLcPosVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addLcVel(builder:flatbuffers.Builder, LC_VELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(55, LC_VELOffset, 0);
+}
+
+static createLcVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createLcVelVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createLcVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLcVelVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addLcAcc(builder:flatbuffers.Builder, LC_ACCOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(56, LC_ACCOffset, 0);
+}
+
+static createLcAccVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createLcAccVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createLcAccVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLcAccVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addCov(builder:flatbuffers.Builder, COVOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(57, COVOffset, 0);
+}
+
+static createCovVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addErrEllp(builder:flatbuffers.Builder, ERR_ELLPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(58, ERR_ELLPOffset, 0);
+}
+
+static createErrEllpVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createErrEllpVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createErrEllpVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startErrEllpVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
 }
 
 static endTRK(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -925,7 +939,7 @@ static finishSizePrefixedTRKBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TRK', true);
 }
 
-static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STATOffset:flatbuffers.Offset, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, ENVIRONMENT_CONF:number, TRK_CONF:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, LCOOffset:flatbuffers.Offset, LCSOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, E_NUVELOffset:flatbuffers.Offset, E_NUPOSOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STATOffset:flatbuffers.Offset, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, ENVIRONMENT_CONF:number, TRK_CONF:number, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset, TRACK_START_TIMEOffset:flatbuffers.Offset, TRACK_STEP_SIZE:number, TRACK_COMPONENTS:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset):flatbuffers.Offset {
   TRK.startTRK(builder);
   TRK.addId(builder, IDOffset);
   TRK.addCntct(builder, CNTCTOffset);
@@ -956,24 +970,12 @@ static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCT
   TRK.addEnvironment(builder, ENVIRONMENTOffset);
   TRK.addEnvironmentConf(builder, ENVIRONMENT_CONF);
   TRK.addTrkConf(builder, TRK_CONF);
-  TRK.addEcefPos(builder, ECEF_POSOffset);
-  TRK.addEcefVel(builder, ECEF_VELOffset);
-  TRK.addEcefAcc(builder, ECEF_ACCOffset);
   TRK.addLat(builder, LAT);
   TRK.addLon(builder, LON);
   TRK.addAlt(builder, ALT);
   TRK.addSpd(builder, SPD);
   TRK.addHdng(builder, HDNG);
   TRK.addCourse(builder, COURSE);
-  TRK.addLco(builder, LCOOffset);
-  TRK.addLcs(builder, LCSOffset);
-  TRK.addLcPos(builder, LC_POSOffset);
-  TRK.addLcVel(builder, LC_VELOffset);
-  TRK.addLcAcc(builder, LC_ACCOffset);
-  TRK.addENuvel(builder, E_NUVELOffset);
-  TRK.addENupos(builder, E_NUPOSOffset);
-  TRK.addCov(builder, COVOffset);
-  TRK.addErrEllp(builder, ERR_ELLPOffset);
   TRK.addSrcTyps(builder, SRC_TYPSOffset);
   TRK.addSrcIds(builder, SRC_IDSOffset);
   TRK.addCallSign(builder, CALL_SIGNOffset);
@@ -987,6 +989,17 @@ static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCT
   TRK.addM3A(builder, M3A);
   TRK.addM3Av(builder, M3AV);
   TRK.addTags(builder, TAGSOffset);
+  TRK.addTrackStartTime(builder, TRACK_START_TIMEOffset);
+  TRK.addTrackStepSize(builder, TRACK_STEP_SIZE);
+  TRK.addTrackComponents(builder, TRACK_COMPONENTS);
+  TRK.addEcefPos(builder, ECEF_POSOffset);
+  TRK.addEcefVel(builder, ECEF_VELOffset);
+  TRK.addEcefAcc(builder, ECEF_ACCOffset);
+  TRK.addLcPos(builder, LC_POSOffset);
+  TRK.addLcVel(builder, LC_VELOffset);
+  TRK.addLcAcc(builder, LC_ACCOffset);
+  TRK.addCov(builder, COVOffset);
+  TRK.addErrEllp(builder, ERR_ELLPOffset);
   return TRK.endTRK(builder);
 }
 
@@ -1021,24 +1034,12 @@ unpack(): TRKT {
     this.ENVIRONMENT(),
     this.ENVIRONMENT_CONF(),
     this.TRK_CONF(),
-    this.bb!.createScalarList<string>(this.ECEF_POS.bind(this), this.ecefPosLength()),
-    this.bb!.createScalarList<string>(this.ECEF_VEL.bind(this), this.ecefVelLength()),
-    this.bb!.createScalarList<string>(this.ECEF_ACC.bind(this), this.ecefAccLength()),
     this.LAT(),
     this.LON(),
     this.ALT(),
     this.SPD(),
     this.HDNG(),
     this.COURSE(),
-    this.bb!.createScalarList<string>(this.LCO.bind(this), this.lcoLength()),
-    this.bb!.createScalarList<string>(this.LCS.bind(this), this.lcsLength()),
-    this.bb!.createScalarList<string>(this.LC_POS.bind(this), this.lcPosLength()),
-    this.bb!.createScalarList<string>(this.LC_VEL.bind(this), this.lcVelLength()),
-    this.bb!.createScalarList<string>(this.LC_ACC.bind(this), this.lcAccLength()),
-    this.bb!.createScalarList<string>(this.E_NUVEL.bind(this), this.eNuvelLength()),
-    this.bb!.createScalarList<string>(this.E_NUPOS.bind(this), this.eNuposLength()),
-    this.bb!.createScalarList<string>(this.COV.bind(this), this.covLength()),
-    this.bb!.createScalarList<string>(this.ERR_ELLP.bind(this), this.errEllpLength()),
     this.bb!.createScalarList<string>(this.SRC_TYPS.bind(this), this.srcTypsLength()),
     this.bb!.createScalarList<string>(this.SRC_IDS.bind(this), this.srcIdsLength()),
     this.CALL_SIGN(),
@@ -1051,7 +1052,18 @@ unpack(): TRKT {
     this.M2V(),
     this.M3A(),
     this.M3AV(),
-    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
+    this.TRACK_START_TIME(),
+    this.TRACK_STEP_SIZE(),
+    this.TRACK_COMPONENTS(),
+    this.bb!.createScalarList<number>(this.ECEF_POS.bind(this), this.ecefPosLength()),
+    this.bb!.createScalarList<number>(this.ECEF_VEL.bind(this), this.ecefVelLength()),
+    this.bb!.createScalarList<number>(this.ECEF_ACC.bind(this), this.ecefAccLength()),
+    this.bb!.createScalarList<number>(this.LC_POS.bind(this), this.lcPosLength()),
+    this.bb!.createScalarList<number>(this.LC_VEL.bind(this), this.lcVelLength()),
+    this.bb!.createScalarList<number>(this.LC_ACC.bind(this), this.lcAccLength()),
+    this.bb!.createScalarList<number>(this.COV.bind(this), this.covLength()),
+    this.bb!.createScalarList<number>(this.ERR_ELLP.bind(this), this.errEllpLength())
   );
 }
 
@@ -1086,24 +1098,12 @@ unpackTo(_o: TRKT): void {
   _o.ENVIRONMENT = this.ENVIRONMENT();
   _o.ENVIRONMENT_CONF = this.ENVIRONMENT_CONF();
   _o.TRK_CONF = this.TRK_CONF();
-  _o.ECEF_POS = this.bb!.createScalarList<string>(this.ECEF_POS.bind(this), this.ecefPosLength());
-  _o.ECEF_VEL = this.bb!.createScalarList<string>(this.ECEF_VEL.bind(this), this.ecefVelLength());
-  _o.ECEF_ACC = this.bb!.createScalarList<string>(this.ECEF_ACC.bind(this), this.ecefAccLength());
   _o.LAT = this.LAT();
   _o.LON = this.LON();
   _o.ALT = this.ALT();
   _o.SPD = this.SPD();
   _o.HDNG = this.HDNG();
   _o.COURSE = this.COURSE();
-  _o.LCO = this.bb!.createScalarList<string>(this.LCO.bind(this), this.lcoLength());
-  _o.LCS = this.bb!.createScalarList<string>(this.LCS.bind(this), this.lcsLength());
-  _o.LC_POS = this.bb!.createScalarList<string>(this.LC_POS.bind(this), this.lcPosLength());
-  _o.LC_VEL = this.bb!.createScalarList<string>(this.LC_VEL.bind(this), this.lcVelLength());
-  _o.LC_ACC = this.bb!.createScalarList<string>(this.LC_ACC.bind(this), this.lcAccLength());
-  _o.E_NUVEL = this.bb!.createScalarList<string>(this.E_NUVEL.bind(this), this.eNuvelLength());
-  _o.E_NUPOS = this.bb!.createScalarList<string>(this.E_NUPOS.bind(this), this.eNuposLength());
-  _o.COV = this.bb!.createScalarList<string>(this.COV.bind(this), this.covLength());
-  _o.ERR_ELLP = this.bb!.createScalarList<string>(this.ERR_ELLP.bind(this), this.errEllpLength());
   _o.SRC_TYPS = this.bb!.createScalarList<string>(this.SRC_TYPS.bind(this), this.srcTypsLength());
   _o.SRC_IDS = this.bb!.createScalarList<string>(this.SRC_IDS.bind(this), this.srcIdsLength());
   _o.CALL_SIGN = this.CALL_SIGN();
@@ -1117,6 +1117,17 @@ unpackTo(_o: TRKT): void {
   _o.M3A = this.M3A();
   _o.M3AV = this.M3AV();
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
+  _o.TRACK_START_TIME = this.TRACK_START_TIME();
+  _o.TRACK_STEP_SIZE = this.TRACK_STEP_SIZE();
+  _o.TRACK_COMPONENTS = this.TRACK_COMPONENTS();
+  _o.ECEF_POS = this.bb!.createScalarList<number>(this.ECEF_POS.bind(this), this.ecefPosLength());
+  _o.ECEF_VEL = this.bb!.createScalarList<number>(this.ECEF_VEL.bind(this), this.ecefVelLength());
+  _o.ECEF_ACC = this.bb!.createScalarList<number>(this.ECEF_ACC.bind(this), this.ecefAccLength());
+  _o.LC_POS = this.bb!.createScalarList<number>(this.LC_POS.bind(this), this.lcPosLength());
+  _o.LC_VEL = this.bb!.createScalarList<number>(this.LC_VEL.bind(this), this.lcVelLength());
+  _o.LC_ACC = this.bb!.createScalarList<number>(this.LC_ACC.bind(this), this.lcAccLength());
+  _o.COV = this.bb!.createScalarList<number>(this.COV.bind(this), this.covLength());
+  _o.ERR_ELLP = this.bb!.createScalarList<number>(this.ERR_ELLP.bind(this), this.errEllpLength());
 }
 }
 
@@ -1151,24 +1162,12 @@ constructor(
   public ENVIRONMENT: string|Uint8Array|null = null,
   public ENVIRONMENT_CONF: number = 0.0,
   public TRK_CONF: number = 0.0,
-  public ECEF_POS: (string)[] = [],
-  public ECEF_VEL: (string)[] = [],
-  public ECEF_ACC: (string)[] = [],
   public LAT: number = 0.0,
   public LON: number = 0.0,
   public ALT: number = 0.0,
   public SPD: number = 0.0,
   public HDNG: number = 0.0,
   public COURSE: number = 0.0,
-  public LCO: (string)[] = [],
-  public LCS: (string)[] = [],
-  public LC_POS: (string)[] = [],
-  public LC_VEL: (string)[] = [],
-  public LC_ACC: (string)[] = [],
-  public E_NUVEL: (string)[] = [],
-  public E_NUPOS: (string)[] = [],
-  public COV: (string)[] = [],
-  public ERR_ELLP: (string)[] = [],
   public SRC_TYPS: (string)[] = [],
   public SRC_IDS: (string)[] = [],
   public CALL_SIGN: string|Uint8Array|null = null,
@@ -1181,7 +1180,18 @@ constructor(
   public M2V: number = 0,
   public M3A: number = 0,
   public M3AV: number = 0,
-  public TAGS: (string)[] = []
+  public TAGS: (string)[] = [],
+  public TRACK_START_TIME: string|Uint8Array|null = null,
+  public TRACK_STEP_SIZE: number = 0.0,
+  public TRACK_COMPONENTS: number = 3,
+  public ECEF_POS: (number)[] = [],
+  public ECEF_VEL: (number)[] = [],
+  public ECEF_ACC: (number)[] = [],
+  public LC_POS: (number)[] = [],
+  public LC_VEL: (number)[] = [],
+  public LC_ACC: (number)[] = [],
+  public COV: (number)[] = [],
+  public ERR_ELLP: (number)[] = []
 ){}
 
 
@@ -1210,23 +1220,20 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJ_IDENT = (this.OBJ_IDENT !== null ? builder.createString(this.OBJ_IDENT!) : 0);
   const IDENT_AMP = (this.IDENT_AMP !== null ? builder.createString(this.IDENT_AMP!) : 0);
   const ENVIRONMENT = (this.ENVIRONMENT !== null ? builder.createString(this.ENVIRONMENT!) : 0);
-  const ECEF_POS = TRK.createEcefPosVector(builder, builder.createObjectOffsetList(this.ECEF_POS));
-  const ECEF_VEL = TRK.createEcefVelVector(builder, builder.createObjectOffsetList(this.ECEF_VEL));
-  const ECEF_ACC = TRK.createEcefAccVector(builder, builder.createObjectOffsetList(this.ECEF_ACC));
-  const LCO = TRK.createLcoVector(builder, builder.createObjectOffsetList(this.LCO));
-  const LCS = TRK.createLcsVector(builder, builder.createObjectOffsetList(this.LCS));
-  const LC_POS = TRK.createLcPosVector(builder, builder.createObjectOffsetList(this.LC_POS));
-  const LC_VEL = TRK.createLcVelVector(builder, builder.createObjectOffsetList(this.LC_VEL));
-  const LC_ACC = TRK.createLcAccVector(builder, builder.createObjectOffsetList(this.LC_ACC));
-  const E_NUVEL = TRK.createENuvelVector(builder, builder.createObjectOffsetList(this.E_NUVEL));
-  const E_NUPOS = TRK.createENuposVector(builder, builder.createObjectOffsetList(this.E_NUPOS));
-  const COV = TRK.createCovVector(builder, builder.createObjectOffsetList(this.COV));
-  const ERR_ELLP = TRK.createErrEllpVector(builder, builder.createObjectOffsetList(this.ERR_ELLP));
   const SRC_TYPS = TRK.createSrcTypsVector(builder, builder.createObjectOffsetList(this.SRC_TYPS));
   const SRC_IDS = TRK.createSrcIdsVector(builder, builder.createObjectOffsetList(this.SRC_IDS));
   const CALL_SIGN = (this.CALL_SIGN !== null ? builder.createString(this.CALL_SIGN!) : 0);
   const J_SERIES = (this.J_SERIES !== null ? builder.createString(this.J_SERIES!) : 0);
   const TAGS = TRK.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
+  const TRACK_START_TIME = (this.TRACK_START_TIME !== null ? builder.createString(this.TRACK_START_TIME!) : 0);
+  const ECEF_POS = TRK.createEcefPosVector(builder, this.ECEF_POS);
+  const ECEF_VEL = TRK.createEcefVelVector(builder, this.ECEF_VEL);
+  const ECEF_ACC = TRK.createEcefAccVector(builder, this.ECEF_ACC);
+  const LC_POS = TRK.createLcPosVector(builder, this.LC_POS);
+  const LC_VEL = TRK.createLcVelVector(builder, this.LC_VEL);
+  const LC_ACC = TRK.createLcAccVector(builder, this.LC_ACC);
+  const COV = TRK.createCovVector(builder, this.COV);
+  const ERR_ELLP = TRK.createErrEllpVector(builder, this.ERR_ELLP);
 
   return TRK.createTRK(builder,
     ID,
@@ -1258,24 +1265,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ENVIRONMENT,
     this.ENVIRONMENT_CONF,
     this.TRK_CONF,
-    ECEF_POS,
-    ECEF_VEL,
-    ECEF_ACC,
     this.LAT,
     this.LON,
     this.ALT,
     this.SPD,
     this.HDNG,
     this.COURSE,
-    LCO,
-    LCS,
-    LC_POS,
-    LC_VEL,
-    LC_ACC,
-    E_NUVEL,
-    E_NUPOS,
-    COV,
-    ERR_ELLP,
     SRC_TYPS,
     SRC_IDS,
     CALL_SIGN,
@@ -1288,7 +1283,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.M2V,
     this.M3A,
     this.M3AV,
-    TAGS
+    TAGS,
+    TRACK_START_TIME,
+    this.TRACK_STEP_SIZE,
+    this.TRACK_COMPONENTS,
+    ECEF_POS,
+    ECEF_VEL,
+    ECEF_ACC,
+    LC_POS,
+    LC_VEL,
+    LC_ACC,
+    COV,
+    ERR_ELLP
   );
 }
 }

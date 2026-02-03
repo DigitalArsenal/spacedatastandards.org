@@ -327,60 +327,6 @@ public struct VCMStateVector: FlatBufferObject, Verifiable {
   }
 }
 
-///  VCM Covariance Matrix Line
-public struct VCMCovarianceMatrixLine: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case CX_X = 4
-    case CY_X = 6
-    case CZ_X = 8
-    case CX_DOT_X = 10
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CY_X: Double { let o = _accessor.offset(VTOFFSET.CY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CZ_X: Double { let o = _accessor.offset(VTOFFSET.CZ_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CX_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startVCMCovarianceMatrixLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
-  public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
-  public static func add(CZ_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_X, def: 0.0, at: VTOFFSET.CZ_X.p) }
-  public static func add(CX_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X, def: 0.0, at: VTOFFSET.CX_DOT_X.p) }
-  public static func endVCMCovarianceMatrixLine(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createVCMCovarianceMatrixLine(
-    _ fbb: inout FlatBufferBuilder,
-    CX_X: Double = 0.0,
-    CY_X: Double = 0.0,
-    CZ_X: Double = 0.0,
-    CX_DOT_X: Double = 0.0
-  ) -> Offset {
-    let __start = VCMCovarianceMatrixLine.startVCMCovarianceMatrixLine(&fbb)
-    VCMCovarianceMatrixLine.add(CX_X: CX_X, &fbb)
-    VCMCovarianceMatrixLine.add(CY_X: CY_X, &fbb)
-    VCMCovarianceMatrixLine.add(CZ_X: CZ_X, &fbb)
-    VCMCovarianceMatrixLine.add(CX_DOT_X: CX_DOT_X, &fbb)
-    return VCMCovarianceMatrixLine.endVCMCovarianceMatrixLine(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_X.p, fieldName: "CZ_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X.p, fieldName: "CX_DOT_X", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
 ///  Keplerian Elements
 public struct keplerianElements: FlatBufferObject, Verifiable {
 
@@ -688,31 +634,27 @@ public struct VCM: FlatBufferObject, Verifiable {
     case GM = 26
     case ATMOSPHERIC_MODEL_DATA = 28
     case PROPAGATOR_SETTINGS = 30
-    case COVARIANCE_MATRIX = 32
-    case UVW_SIGMAS = 34
-    case MASS = 36
-    case SOLAR_RAD_AREA = 38
-    case SOLAR_RAD_COEFF = 40
-    case DRAG_AREA = 42
-    case DRAG_COEFF = 44
-    case SRP = 46
-    case CLASSIFICATION_TYPE = 48
-    case NORAD_CAT_ID = 50
-    case ELEMENT_SET_NO = 52
-    case REV_AT_EPOCH = 54
-    case BSTAR = 56
-    case MEAN_MOTION_DOT = 58
-    case MEAN_MOTION_DDOT = 60
-    case COV_REFERENCE_FRAME = 62
-    case CX_X = 64
-    case CY_X = 66
-    case CZ_X = 68
-    case CX_DOT_X = 70
-    case USER_DEFINED_BIP_0044_TYPE = 72
-    case USER_DEFINED_OBJECT_DESIGNATOR = 74
-    case USER_DEFINED_EARTH_MODEL = 76
-    case USER_DEFINED_EPOCH_TIMESTAMP = 78
-    case USER_DEFINED_MICROSECONDS = 80
+    case UVW_SIGMAS = 32
+    case MASS = 34
+    case SOLAR_RAD_AREA = 36
+    case SOLAR_RAD_COEFF = 38
+    case DRAG_AREA = 40
+    case DRAG_COEFF = 42
+    case SRP = 44
+    case CLASSIFICATION_TYPE = 46
+    case NORAD_CAT_ID = 48
+    case ELEMENT_SET_NO = 50
+    case REV_AT_EPOCH = 52
+    case BSTAR = 54
+    case MEAN_MOTION_DOT = 56
+    case MEAN_MOTION_DDOT = 58
+    case COV_REFERENCE_FRAME = 60
+    case COVARIANCE = 62
+    case USER_DEFINED_BIP_0044_TYPE = 64
+    case USER_DEFINED_OBJECT_DESIGNATOR = 66
+    case USER_DEFINED_EARTH_MODEL = 68
+    case USER_DEFINED_EPOCH_TIMESTAMP = 70
+    case USER_DEFINED_MICROSECONDS = 72
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -738,9 +680,6 @@ public struct VCM: FlatBufferObject, Verifiable {
   public var GM: Double { let o = _accessor.offset(VTOFFSET.GM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelData? { let o = _accessor.offset(VTOFFSET.ATMOSPHERIC_MODEL_DATA.v); return o == 0 ? nil : VCMAtmosphericModelData(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   public var PROPAGATOR_SETTINGS: propagatorConfig? { let o = _accessor.offset(VTOFFSET.PROPAGATOR_SETTINGS.v); return o == 0 ? nil : propagatorConfig(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  public var hasCovarianceMatrix: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX.v); return o == 0 ? false : true }
-  public var COVARIANCE_MATRIXCount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COVARIANCE_MATRIX(at index: Int32) -> VCMCovarianceMatrixLine? { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX.v); return o == 0 ? nil : VCMCovarianceMatrixLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
   public var UVW_SIGMAS: uvwSigmas? { let o = _accessor.offset(VTOFFSET.UVW_SIGMAS.v); return o == 0 ? nil : uvwSigmas(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
   public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -758,10 +697,16 @@ public struct VCM: FlatBufferObject, Verifiable {
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VTOFFSET.MEAN_MOTION_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var COV_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COV_REFERENCE_FRAME.v) }
-  public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CY_X: Double { let o = _accessor.offset(VTOFFSET.CY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CZ_X: Double { let o = _accessor.offset(VTOFFSET.CZ_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CX_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  ///  Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///          CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///          CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///          CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  ///  Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  public var hasCovariance: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? false : true }
+  public var COVARIANCECount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func COVARIANCE(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COVARIANCE.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var COVARIANCE: [Double] { return _accessor.getVector(at: VTOFFSET.COVARIANCE.v) ?? [] }
   public var USER_DEFINED_BIP_0044_TYPE: UInt32 { let o = _accessor.offset(VTOFFSET.USER_DEFINED_BIP_0044_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   public var USER_DEFINED_OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var USER_DEFINED_OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.v) }
@@ -769,7 +714,7 @@ public struct VCM: FlatBufferObject, Verifiable {
   public var USER_DEFINED_EARTH_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USER_DEFINED_EARTH_MODEL.v) }
   public var USER_DEFINED_EPOCH_TIMESTAMP: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_EPOCH_TIMESTAMP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var USER_DEFINED_MICROSECONDS: Double { let o = _accessor.offset(VTOFFSET.USER_DEFINED_MICROSECONDS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startVCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 39) }
+  public static func startVCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VTOFFSET.CCSDS_OMM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
@@ -784,7 +729,6 @@ public struct VCM: FlatBufferObject, Verifiable {
   public static func add(GM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GM, def: 0.0, at: VTOFFSET.GM.p) }
   public static func add(ATMOSPHERIC_MODEL_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL_DATA, at: VTOFFSET.ATMOSPHERIC_MODEL_DATA.p) }
   public static func add(PROPAGATOR_SETTINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_SETTINGS, at: VTOFFSET.PROPAGATOR_SETTINGS.p) }
-  public static func addVectorOf(COVARIANCE_MATRIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_MATRIX, at: VTOFFSET.COVARIANCE_MATRIX.p) }
   public static func add(UVW_SIGMAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UVW_SIGMAS, at: VTOFFSET.UVW_SIGMAS.p) }
   public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
   public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VTOFFSET.SOLAR_RAD_AREA.p) }
@@ -800,10 +744,7 @@ public struct VCM: FlatBufferObject, Verifiable {
   public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DOT.p) }
   public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VTOFFSET.MEAN_MOTION_DDOT.p) }
   public static func add(COV_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REFERENCE_FRAME, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
-  public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
-  public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
-  public static func add(CZ_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_X, def: 0.0, at: VTOFFSET.CZ_X.p) }
-  public static func add(CX_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X, def: 0.0, at: VTOFFSET.CX_DOT_X.p) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VTOFFSET.COVARIANCE.p) }
   public static func add(USER_DEFINED_BIP_0044_TYPE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: USER_DEFINED_BIP_0044_TYPE, def: 0, at: VTOFFSET.USER_DEFINED_BIP_0044_TYPE.p) }
   public static func add(USER_DEFINED_OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_OBJECT_DESIGNATOR, at: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.p) }
   public static func add(USER_DEFINED_EARTH_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_EARTH_MODEL, at: VTOFFSET.USER_DEFINED_EARTH_MODEL.p) }
@@ -826,7 +767,6 @@ public struct VCM: FlatBufferObject, Verifiable {
     GM: Double = 0.0,
     ATMOSPHERIC_MODEL_DATAOffset ATMOSPHERIC_MODEL_DATA: Offset = Offset(),
     PROPAGATOR_SETTINGSOffset PROPAGATOR_SETTINGS: Offset = Offset(),
-    COVARIANCE_MATRIXVectorOffset COVARIANCE_MATRIX: Offset = Offset(),
     UVW_SIGMASOffset UVW_SIGMAS: Offset = Offset(),
     MASS: Double = 0.0,
     SOLAR_RAD_AREA: Double = 0.0,
@@ -842,10 +782,7 @@ public struct VCM: FlatBufferObject, Verifiable {
     MEAN_MOTION_DOT: Double = 0.0,
     MEAN_MOTION_DDOT: Double = 0.0,
     COV_REFERENCE_FRAMEOffset COV_REFERENCE_FRAME: Offset = Offset(),
-    CX_X: Double = 0.0,
-    CY_X: Double = 0.0,
-    CZ_X: Double = 0.0,
-    CX_DOT_X: Double = 0.0,
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
     USER_DEFINED_BIP_0044_TYPE: UInt32 = 0,
     USER_DEFINED_OBJECT_DESIGNATOROffset USER_DEFINED_OBJECT_DESIGNATOR: Offset = Offset(),
     USER_DEFINED_EARTH_MODELOffset USER_DEFINED_EARTH_MODEL: Offset = Offset(),
@@ -867,7 +804,6 @@ public struct VCM: FlatBufferObject, Verifiable {
     VCM.add(GM: GM, &fbb)
     VCM.add(ATMOSPHERIC_MODEL_DATA: ATMOSPHERIC_MODEL_DATA, &fbb)
     VCM.add(PROPAGATOR_SETTINGS: PROPAGATOR_SETTINGS, &fbb)
-    VCM.addVectorOf(COVARIANCE_MATRIX: COVARIANCE_MATRIX, &fbb)
     VCM.add(UVW_SIGMAS: UVW_SIGMAS, &fbb)
     VCM.add(MASS: MASS, &fbb)
     VCM.add(SOLAR_RAD_AREA: SOLAR_RAD_AREA, &fbb)
@@ -883,10 +819,7 @@ public struct VCM: FlatBufferObject, Verifiable {
     VCM.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
     VCM.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
     VCM.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
-    VCM.add(CX_X: CX_X, &fbb)
-    VCM.add(CY_X: CY_X, &fbb)
-    VCM.add(CZ_X: CZ_X, &fbb)
-    VCM.add(CX_DOT_X: CX_DOT_X, &fbb)
+    VCM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
     VCM.add(USER_DEFINED_BIP_0044_TYPE: USER_DEFINED_BIP_0044_TYPE, &fbb)
     VCM.add(USER_DEFINED_OBJECT_DESIGNATOR: USER_DEFINED_OBJECT_DESIGNATOR, &fbb)
     VCM.add(USER_DEFINED_EARTH_MODEL: USER_DEFINED_EARTH_MODEL, &fbb)
@@ -911,7 +844,6 @@ public struct VCM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.GM.p, fieldName: "GM", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ATMOSPHERIC_MODEL_DATA.p, fieldName: "ATMOSPHERIC_MODEL_DATA", required: false, type: ForwardOffset<VCMAtmosphericModelData>.self)
     try _v.visit(field: VTOFFSET.PROPAGATOR_SETTINGS.p, fieldName: "PROPAGATOR_SETTINGS", required: false, type: ForwardOffset<propagatorConfig>.self)
-    try _v.visit(field: VTOFFSET.COVARIANCE_MATRIX.p, fieldName: "COVARIANCE_MATRIX", required: false, type: ForwardOffset<Vector<ForwardOffset<VCMCovarianceMatrixLine>, VCMCovarianceMatrixLine>>.self)
     try _v.visit(field: VTOFFSET.UVW_SIGMAS.p, fieldName: "UVW_SIGMAS", required: false, type: ForwardOffset<uvwSigmas>.self)
     try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SOLAR_RAD_AREA.p, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
@@ -927,10 +859,7 @@ public struct VCM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DOT.p, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MEAN_MOTION_DDOT.p, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_X.p, fieldName: "CZ_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X.p, fieldName: "CX_DOT_X", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.COVARIANCE.p, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_BIP_0044_TYPE.p, fieldName: "USER_DEFINED_BIP_0044_TYPE", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_OBJECT_DESIGNATOR.p, fieldName: "USER_DEFINED_OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.USER_DEFINED_EARTH_MODEL.p, fieldName: "USER_DEFINED_EARTH_MODEL", required: false, type: ForwardOffset<String>.self)

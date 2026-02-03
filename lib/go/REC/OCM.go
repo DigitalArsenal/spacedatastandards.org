@@ -94,31 +94,105 @@ func (rcv *OCM) TRAJ_TYPE() []byte {
 }
 
 /// Trajectory type (e.g., PROPAGATED, ESTIMATED).
-/// State vector data.
-func (rcv *OCM) STATE_DATA(obj *StateVector, j int) bool {
+/// Time interval between state vectors in seconds (required for time-series data).
+func (rcv *OCM) STATE_STEP_SIZE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return false
+	return 0.0
+}
+
+/// Time interval between state vectors in seconds (required for time-series data).
+func (rcv *OCM) MutateSTATE_STEP_SIZE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+/// Number of components per state vector.
+/// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+/// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+func (rcv *OCM) STATE_VECTOR_SIZE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 6
+}
+
+/// Number of components per state vector.
+/// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+/// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+func (rcv *OCM) MutateSTATE_VECTOR_SIZE(n byte) bool {
+	return rcv._tab.MutateByteSlot(12, n)
+}
+
+/// State data as row-major array of doubles.
+/// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+/// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+/// Length must be divisible by STATE_VECTOR_SIZE.
+func (rcv *OCM) STATE_DATA(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
 }
 
 func (rcv *OCM) STATE_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-/// State vector data.
+/// State data as row-major array of doubles.
+/// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+/// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+/// Length must be divisible by STATE_VECTOR_SIZE.
+func (rcv *OCM) MutateSTATE_DATA(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+/// Time alignment matches STATE_DATA epochs.
+func (rcv *OCM) COVARIANCE_DATA(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OCM) COVARIANCE_DATALength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+/// Time alignment matches STATE_DATA epochs.
+func (rcv *OCM) MutateCOVARIANCE_DATA(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
 /// Physical properties of the space object.
 func (rcv *OCM) PHYSICAL_PROPERTIES(obj *PhysicalProperties) *PhysicalProperties {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -131,31 +205,9 @@ func (rcv *OCM) PHYSICAL_PROPERTIES(obj *PhysicalProperties) *PhysicalProperties
 }
 
 /// Physical properties of the space object.
-/// Covariance data associated with the state vectors.
-func (rcv *OCM) COVARIANCE_DATA(obj *StateVector, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *OCM) COVARIANCE_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-/// Covariance data associated with the state vectors.
 /// Maneuver data.
 func (rcv *OCM) MANEUVER_DATA(obj *Maneuver, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -167,7 +219,7 @@ func (rcv *OCM) MANEUVER_DATA(obj *Maneuver, j int) bool {
 }
 
 func (rcv *OCM) MANEUVER_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -177,7 +229,7 @@ func (rcv *OCM) MANEUVER_DATALength() int {
 /// Maneuver data.
 /// Perturbations parameters used.
 func (rcv *OCM) PERTURBATIONS(obj *Perturbations) *Perturbations {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -192,7 +244,7 @@ func (rcv *OCM) PERTURBATIONS(obj *Perturbations) *Perturbations {
 /// Perturbations parameters used.
 /// Orbit determination data.
 func (rcv *OCM) ORBIT_DETERMINATION(obj *OrbitDetermination) *OrbitDetermination {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -207,7 +259,7 @@ func (rcv *OCM) ORBIT_DETERMINATION(obj *OrbitDetermination) *OrbitDetermination
 /// Orbit determination data.
 /// User-defined parameters and supplemental comments.
 func (rcv *OCM) USER_DEFINED_PARAMETERS(obj *UserDefinedParameters, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -219,7 +271,7 @@ func (rcv *OCM) USER_DEFINED_PARAMETERS(obj *UserDefinedParameters, j int) bool 
 }
 
 func (rcv *OCM) USER_DEFINED_PARAMETERSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -228,7 +280,7 @@ func (rcv *OCM) USER_DEFINED_PARAMETERSLength() int {
 
 /// User-defined parameters and supplemental comments.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(12)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -239,35 +291,41 @@ func OCMAddMETADATA(builder *flatbuffers.Builder, METADATA flatbuffers.UOffsetT)
 func OCMAddTRAJ_TYPE(builder *flatbuffers.Builder, TRAJ_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TRAJ_TYPE), 0)
 }
+func OCMAddSTATE_STEP_SIZE(builder *flatbuffers.Builder, STATE_STEP_SIZE float64) {
+	builder.PrependFloat64Slot(3, STATE_STEP_SIZE, 0.0)
+}
+func OCMAddSTATE_VECTOR_SIZE(builder *flatbuffers.Builder, STATE_VECTOR_SIZE byte) {
+	builder.PrependByteSlot(4, STATE_VECTOR_SIZE, 6)
+}
 func OCMAddSTATE_DATA(builder *flatbuffers.Builder, STATE_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STATE_DATA), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(STATE_DATA), 0)
 }
 func OCMStartSTATE_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func OCMAddPHYSICAL_PROPERTIES(builder *flatbuffers.Builder, PHYSICAL_PROPERTIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PHYSICAL_PROPERTIES), 0)
+	return builder.StartVector(8, numElems, 8)
 }
 func OCMAddCOVARIANCE_DATA(builder *flatbuffers.Builder, COVARIANCE_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COVARIANCE_DATA), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COVARIANCE_DATA), 0)
 }
 func OCMStartCOVARIANCE_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
+}
+func OCMAddPHYSICAL_PROPERTIES(builder *flatbuffers.Builder, PHYSICAL_PROPERTIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PHYSICAL_PROPERTIES), 0)
 }
 func OCMAddMANEUVER_DATA(builder *flatbuffers.Builder, MANEUVER_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MANEUVER_DATA), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MANEUVER_DATA), 0)
 }
 func OCMStartMANEUVER_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func OCMAddPERTURBATIONS(builder *flatbuffers.Builder, PERTURBATIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PERTURBATIONS), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(PERTURBATIONS), 0)
 }
 func OCMAddORBIT_DETERMINATION(builder *flatbuffers.Builder, ORBIT_DETERMINATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORBIT_DETERMINATION), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ORBIT_DETERMINATION), 0)
 }
 func OCMAddUSER_DEFINED_PARAMETERS(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(USER_DEFINED_PARAMETERS), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(USER_DEFINED_PARAMETERS), 0)
 }
 func OCMStartUSER_DEFINED_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

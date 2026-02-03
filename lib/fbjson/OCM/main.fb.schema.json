@@ -979,26 +979,38 @@
           "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED).",
           "x-flatbuffer-type": "string"
         },
+        "STATE_STEP_SIZE": {
+          "type": "number",
+          "description": "Time interval between state vectors in seconds (required for time-series data).",
+          "x-flatbuffer-type": "double"
+        },
+        "STATE_VECTOR_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
+          "x-flatbuffer-type": "uint8"
+        },
         "STATE_DATA": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/StateVector"
+            "type": "number"
           },
-          "description": "State vector data.",
-          "x-flatbuffer-type": "[StateVector]"
+          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE_DATA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs.",
+          "x-flatbuffer-type": "[double]"
         },
         "PHYSICAL_PROPERTIES": {
           "$ref": "#/definitions/PhysicalProperties",
           "description": "Physical properties of the space object.",
           "x-flatbuffer-type": "PhysicalProperties"
-        },
-        "COVARIANCE_DATA": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/StateVector"
-          },
-          "description": "Covariance data associated with the state vectors.",
-          "x-flatbuffer-type": "[StateVector]"
         },
         "MANEUVER_DATA": {
           "type": "array",

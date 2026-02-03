@@ -141,96 +141,21 @@ public struct CDMObject : IFlatbufferObject
   public double Y_DOT { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Z-coordinate of the object's position in RTN
   public double Z_DOT { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CR_R { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CT_R { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CT_T { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CN_R { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CN_T { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CN_N { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CRDOT_R { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CRDOT_T { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CRDOT_N { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CRDOT_RDOT { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTDOT_R { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTDOT_T { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTDOT_N { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTDOT_RDOT { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTDOT_TDOT { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_R { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_T { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_N { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_RDOT { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_TDOT { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CNDOT_NDOT { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_R { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_T { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_N { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_RDOT { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_TDOT { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_NDOT { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CDRG_DRG { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_R { get { int o = __p.__offset(132); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_T { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_N { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_RDOT { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_TDOT { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_NDOT { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_DRG { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CSRP_SRP { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_R { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_T { get { int o = __p.__offset(150); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_N { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_RDOT { get { int o = __p.__offset(154); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_TDOT { get { int o = __p.__offset(156); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_NDOT { get { int o = __p.__offset(158); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_DRG { get { int o = __p.__offset(160); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_SRP { get { int o = __p.__offset(162); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Covariance Matrix component
-  public double CTHR_THR { get { int o = __p.__offset(164); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  public double COVARIANCE(int j) { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCELength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetCOVARIANCEBytes() { return __p.__vector_as_span<double>(76, 8); }
+#else
+  public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(76); }
+#endif
+  public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(76); }
 
   public static Offset<CDMObject> CreateCDMObject(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -269,97 +194,8 @@ public struct CDMObject : IFlatbufferObject
       double X_DOT = 0.0,
       double Y_DOT = 0.0,
       double Z_DOT = 0.0,
-      double CR_R = 0.0,
-      double CT_R = 0.0,
-      double CT_T = 0.0,
-      double CN_R = 0.0,
-      double CN_T = 0.0,
-      double CN_N = 0.0,
-      double CRDOT_R = 0.0,
-      double CRDOT_T = 0.0,
-      double CRDOT_N = 0.0,
-      double CRDOT_RDOT = 0.0,
-      double CTDOT_R = 0.0,
-      double CTDOT_T = 0.0,
-      double CTDOT_N = 0.0,
-      double CTDOT_RDOT = 0.0,
-      double CTDOT_TDOT = 0.0,
-      double CNDOT_R = 0.0,
-      double CNDOT_T = 0.0,
-      double CNDOT_N = 0.0,
-      double CNDOT_RDOT = 0.0,
-      double CNDOT_TDOT = 0.0,
-      double CNDOT_NDOT = 0.0,
-      double CDRG_R = 0.0,
-      double CDRG_T = 0.0,
-      double CDRG_N = 0.0,
-      double CDRG_RDOT = 0.0,
-      double CDRG_TDOT = 0.0,
-      double CDRG_NDOT = 0.0,
-      double CDRG_DRG = 0.0,
-      double CSRP_R = 0.0,
-      double CSRP_T = 0.0,
-      double CSRP_N = 0.0,
-      double CSRP_RDOT = 0.0,
-      double CSRP_TDOT = 0.0,
-      double CSRP_NDOT = 0.0,
-      double CSRP_DRG = 0.0,
-      double CSRP_SRP = 0.0,
-      double CTHR_R = 0.0,
-      double CTHR_T = 0.0,
-      double CTHR_N = 0.0,
-      double CTHR_RDOT = 0.0,
-      double CTHR_TDOT = 0.0,
-      double CTHR_NDOT = 0.0,
-      double CTHR_DRG = 0.0,
-      double CTHR_SRP = 0.0,
-      double CTHR_THR = 0.0) {
-    builder.StartTable(81);
-    CDMObject.AddCTHR_THR(builder, CTHR_THR);
-    CDMObject.AddCTHR_SRP(builder, CTHR_SRP);
-    CDMObject.AddCTHR_DRG(builder, CTHR_DRG);
-    CDMObject.AddCTHR_NDOT(builder, CTHR_NDOT);
-    CDMObject.AddCTHR_TDOT(builder, CTHR_TDOT);
-    CDMObject.AddCTHR_RDOT(builder, CTHR_RDOT);
-    CDMObject.AddCTHR_N(builder, CTHR_N);
-    CDMObject.AddCTHR_T(builder, CTHR_T);
-    CDMObject.AddCTHR_R(builder, CTHR_R);
-    CDMObject.AddCSRP_SRP(builder, CSRP_SRP);
-    CDMObject.AddCSRP_DRG(builder, CSRP_DRG);
-    CDMObject.AddCSRP_NDOT(builder, CSRP_NDOT);
-    CDMObject.AddCSRP_TDOT(builder, CSRP_TDOT);
-    CDMObject.AddCSRP_RDOT(builder, CSRP_RDOT);
-    CDMObject.AddCSRP_N(builder, CSRP_N);
-    CDMObject.AddCSRP_T(builder, CSRP_T);
-    CDMObject.AddCSRP_R(builder, CSRP_R);
-    CDMObject.AddCDRG_DRG(builder, CDRG_DRG);
-    CDMObject.AddCDRG_NDOT(builder, CDRG_NDOT);
-    CDMObject.AddCDRG_TDOT(builder, CDRG_TDOT);
-    CDMObject.AddCDRG_RDOT(builder, CDRG_RDOT);
-    CDMObject.AddCDRG_N(builder, CDRG_N);
-    CDMObject.AddCDRG_T(builder, CDRG_T);
-    CDMObject.AddCDRG_R(builder, CDRG_R);
-    CDMObject.AddCNDOT_NDOT(builder, CNDOT_NDOT);
-    CDMObject.AddCNDOT_TDOT(builder, CNDOT_TDOT);
-    CDMObject.AddCNDOT_RDOT(builder, CNDOT_RDOT);
-    CDMObject.AddCNDOT_N(builder, CNDOT_N);
-    CDMObject.AddCNDOT_T(builder, CNDOT_T);
-    CDMObject.AddCNDOT_R(builder, CNDOT_R);
-    CDMObject.AddCTDOT_TDOT(builder, CTDOT_TDOT);
-    CDMObject.AddCTDOT_RDOT(builder, CTDOT_RDOT);
-    CDMObject.AddCTDOT_N(builder, CTDOT_N);
-    CDMObject.AddCTDOT_T(builder, CTDOT_T);
-    CDMObject.AddCTDOT_R(builder, CTDOT_R);
-    CDMObject.AddCRDOT_RDOT(builder, CRDOT_RDOT);
-    CDMObject.AddCRDOT_N(builder, CRDOT_N);
-    CDMObject.AddCRDOT_T(builder, CRDOT_T);
-    CDMObject.AddCRDOT_R(builder, CRDOT_R);
-    CDMObject.AddCN_N(builder, CN_N);
-    CDMObject.AddCN_T(builder, CN_T);
-    CDMObject.AddCN_R(builder, CN_R);
-    CDMObject.AddCT_T(builder, CT_T);
-    CDMObject.AddCT_R(builder, CT_R);
-    CDMObject.AddCR_R(builder, CR_R);
+      VectorOffset COVARIANCEOffset = default(VectorOffset)) {
+    builder.StartTable(37);
     CDMObject.AddZ_DOT(builder, Z_DOT);
     CDMObject.AddY_DOT(builder, Y_DOT);
     CDMObject.AddX_DOT(builder, X_DOT);
@@ -376,6 +212,7 @@ public struct CDMObject : IFlatbufferObject
     CDMObject.AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED);
     CDMObject.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
     CDMObject.AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN);
+    CDMObject.AddCOVARIANCE(builder, COVARIANCEOffset);
     CDMObject.AddTRACKS_USED(builder, TRACKS_USED);
     CDMObject.AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE);
     CDMObject.AddOBS_USED(builder, OBS_USED);
@@ -399,7 +236,7 @@ public struct CDMObject : IFlatbufferObject
     return CDMObject.EndCDMObject(builder);
   }
 
-  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(81); }
+  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(37); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddPOC(FlatBufferBuilder builder, Offset<EPM> POCOffset) { builder.AddOffset(2, POCOffset.Value, 0); }
@@ -436,51 +273,12 @@ public struct CDMObject : IFlatbufferObject
   public static void AddX_DOT(FlatBufferBuilder builder, double X_DOT) { builder.AddDouble(33, X_DOT, 0.0); }
   public static void AddY_DOT(FlatBufferBuilder builder, double Y_DOT) { builder.AddDouble(34, Y_DOT, 0.0); }
   public static void AddZ_DOT(FlatBufferBuilder builder, double Z_DOT) { builder.AddDouble(35, Z_DOT, 0.0); }
-  public static void AddCR_R(FlatBufferBuilder builder, double CR_R) { builder.AddDouble(36, CR_R, 0.0); }
-  public static void AddCT_R(FlatBufferBuilder builder, double CT_R) { builder.AddDouble(37, CT_R, 0.0); }
-  public static void AddCT_T(FlatBufferBuilder builder, double CT_T) { builder.AddDouble(38, CT_T, 0.0); }
-  public static void AddCN_R(FlatBufferBuilder builder, double CN_R) { builder.AddDouble(39, CN_R, 0.0); }
-  public static void AddCN_T(FlatBufferBuilder builder, double CN_T) { builder.AddDouble(40, CN_T, 0.0); }
-  public static void AddCN_N(FlatBufferBuilder builder, double CN_N) { builder.AddDouble(41, CN_N, 0.0); }
-  public static void AddCRDOT_R(FlatBufferBuilder builder, double CRDOT_R) { builder.AddDouble(42, CRDOT_R, 0.0); }
-  public static void AddCRDOT_T(FlatBufferBuilder builder, double CRDOT_T) { builder.AddDouble(43, CRDOT_T, 0.0); }
-  public static void AddCRDOT_N(FlatBufferBuilder builder, double CRDOT_N) { builder.AddDouble(44, CRDOT_N, 0.0); }
-  public static void AddCRDOT_RDOT(FlatBufferBuilder builder, double CRDOT_RDOT) { builder.AddDouble(45, CRDOT_RDOT, 0.0); }
-  public static void AddCTDOT_R(FlatBufferBuilder builder, double CTDOT_R) { builder.AddDouble(46, CTDOT_R, 0.0); }
-  public static void AddCTDOT_T(FlatBufferBuilder builder, double CTDOT_T) { builder.AddDouble(47, CTDOT_T, 0.0); }
-  public static void AddCTDOT_N(FlatBufferBuilder builder, double CTDOT_N) { builder.AddDouble(48, CTDOT_N, 0.0); }
-  public static void AddCTDOT_RDOT(FlatBufferBuilder builder, double CTDOT_RDOT) { builder.AddDouble(49, CTDOT_RDOT, 0.0); }
-  public static void AddCTDOT_TDOT(FlatBufferBuilder builder, double CTDOT_TDOT) { builder.AddDouble(50, CTDOT_TDOT, 0.0); }
-  public static void AddCNDOT_R(FlatBufferBuilder builder, double CNDOT_R) { builder.AddDouble(51, CNDOT_R, 0.0); }
-  public static void AddCNDOT_T(FlatBufferBuilder builder, double CNDOT_T) { builder.AddDouble(52, CNDOT_T, 0.0); }
-  public static void AddCNDOT_N(FlatBufferBuilder builder, double CNDOT_N) { builder.AddDouble(53, CNDOT_N, 0.0); }
-  public static void AddCNDOT_RDOT(FlatBufferBuilder builder, double CNDOT_RDOT) { builder.AddDouble(54, CNDOT_RDOT, 0.0); }
-  public static void AddCNDOT_TDOT(FlatBufferBuilder builder, double CNDOT_TDOT) { builder.AddDouble(55, CNDOT_TDOT, 0.0); }
-  public static void AddCNDOT_NDOT(FlatBufferBuilder builder, double CNDOT_NDOT) { builder.AddDouble(56, CNDOT_NDOT, 0.0); }
-  public static void AddCDRG_R(FlatBufferBuilder builder, double CDRG_R) { builder.AddDouble(57, CDRG_R, 0.0); }
-  public static void AddCDRG_T(FlatBufferBuilder builder, double CDRG_T) { builder.AddDouble(58, CDRG_T, 0.0); }
-  public static void AddCDRG_N(FlatBufferBuilder builder, double CDRG_N) { builder.AddDouble(59, CDRG_N, 0.0); }
-  public static void AddCDRG_RDOT(FlatBufferBuilder builder, double CDRG_RDOT) { builder.AddDouble(60, CDRG_RDOT, 0.0); }
-  public static void AddCDRG_TDOT(FlatBufferBuilder builder, double CDRG_TDOT) { builder.AddDouble(61, CDRG_TDOT, 0.0); }
-  public static void AddCDRG_NDOT(FlatBufferBuilder builder, double CDRG_NDOT) { builder.AddDouble(62, CDRG_NDOT, 0.0); }
-  public static void AddCDRG_DRG(FlatBufferBuilder builder, double CDRG_DRG) { builder.AddDouble(63, CDRG_DRG, 0.0); }
-  public static void AddCSRP_R(FlatBufferBuilder builder, double CSRP_R) { builder.AddDouble(64, CSRP_R, 0.0); }
-  public static void AddCSRP_T(FlatBufferBuilder builder, double CSRP_T) { builder.AddDouble(65, CSRP_T, 0.0); }
-  public static void AddCSRP_N(FlatBufferBuilder builder, double CSRP_N) { builder.AddDouble(66, CSRP_N, 0.0); }
-  public static void AddCSRP_RDOT(FlatBufferBuilder builder, double CSRP_RDOT) { builder.AddDouble(67, CSRP_RDOT, 0.0); }
-  public static void AddCSRP_TDOT(FlatBufferBuilder builder, double CSRP_TDOT) { builder.AddDouble(68, CSRP_TDOT, 0.0); }
-  public static void AddCSRP_NDOT(FlatBufferBuilder builder, double CSRP_NDOT) { builder.AddDouble(69, CSRP_NDOT, 0.0); }
-  public static void AddCSRP_DRG(FlatBufferBuilder builder, double CSRP_DRG) { builder.AddDouble(70, CSRP_DRG, 0.0); }
-  public static void AddCSRP_SRP(FlatBufferBuilder builder, double CSRP_SRP) { builder.AddDouble(71, CSRP_SRP, 0.0); }
-  public static void AddCTHR_R(FlatBufferBuilder builder, double CTHR_R) { builder.AddDouble(72, CTHR_R, 0.0); }
-  public static void AddCTHR_T(FlatBufferBuilder builder, double CTHR_T) { builder.AddDouble(73, CTHR_T, 0.0); }
-  public static void AddCTHR_N(FlatBufferBuilder builder, double CTHR_N) { builder.AddDouble(74, CTHR_N, 0.0); }
-  public static void AddCTHR_RDOT(FlatBufferBuilder builder, double CTHR_RDOT) { builder.AddDouble(75, CTHR_RDOT, 0.0); }
-  public static void AddCTHR_TDOT(FlatBufferBuilder builder, double CTHR_TDOT) { builder.AddDouble(76, CTHR_TDOT, 0.0); }
-  public static void AddCTHR_NDOT(FlatBufferBuilder builder, double CTHR_NDOT) { builder.AddDouble(77, CTHR_NDOT, 0.0); }
-  public static void AddCTHR_DRG(FlatBufferBuilder builder, double CTHR_DRG) { builder.AddDouble(78, CTHR_DRG, 0.0); }
-  public static void AddCTHR_SRP(FlatBufferBuilder builder, double CTHR_SRP) { builder.AddDouble(79, CTHR_SRP, 0.0); }
-  public static void AddCTHR_THR(FlatBufferBuilder builder, double CTHR_THR) { builder.AddDouble(80, CTHR_THR, 0.0); }
+  public static void AddCOVARIANCE(FlatBufferBuilder builder, VectorOffset COVARIANCEOffset) { builder.AddOffset(36, COVARIANCEOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<CDMObject> EndCDMObject(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CDMObject>(o);
@@ -527,51 +325,8 @@ public struct CDMObject : IFlatbufferObject
     _o.X_DOT = this.X_DOT;
     _o.Y_DOT = this.Y_DOT;
     _o.Z_DOT = this.Z_DOT;
-    _o.CR_R = this.CR_R;
-    _o.CT_R = this.CT_R;
-    _o.CT_T = this.CT_T;
-    _o.CN_R = this.CN_R;
-    _o.CN_T = this.CN_T;
-    _o.CN_N = this.CN_N;
-    _o.CRDOT_R = this.CRDOT_R;
-    _o.CRDOT_T = this.CRDOT_T;
-    _o.CRDOT_N = this.CRDOT_N;
-    _o.CRDOT_RDOT = this.CRDOT_RDOT;
-    _o.CTDOT_R = this.CTDOT_R;
-    _o.CTDOT_T = this.CTDOT_T;
-    _o.CTDOT_N = this.CTDOT_N;
-    _o.CTDOT_RDOT = this.CTDOT_RDOT;
-    _o.CTDOT_TDOT = this.CTDOT_TDOT;
-    _o.CNDOT_R = this.CNDOT_R;
-    _o.CNDOT_T = this.CNDOT_T;
-    _o.CNDOT_N = this.CNDOT_N;
-    _o.CNDOT_RDOT = this.CNDOT_RDOT;
-    _o.CNDOT_TDOT = this.CNDOT_TDOT;
-    _o.CNDOT_NDOT = this.CNDOT_NDOT;
-    _o.CDRG_R = this.CDRG_R;
-    _o.CDRG_T = this.CDRG_T;
-    _o.CDRG_N = this.CDRG_N;
-    _o.CDRG_RDOT = this.CDRG_RDOT;
-    _o.CDRG_TDOT = this.CDRG_TDOT;
-    _o.CDRG_NDOT = this.CDRG_NDOT;
-    _o.CDRG_DRG = this.CDRG_DRG;
-    _o.CSRP_R = this.CSRP_R;
-    _o.CSRP_T = this.CSRP_T;
-    _o.CSRP_N = this.CSRP_N;
-    _o.CSRP_RDOT = this.CSRP_RDOT;
-    _o.CSRP_TDOT = this.CSRP_TDOT;
-    _o.CSRP_NDOT = this.CSRP_NDOT;
-    _o.CSRP_DRG = this.CSRP_DRG;
-    _o.CSRP_SRP = this.CSRP_SRP;
-    _o.CTHR_R = this.CTHR_R;
-    _o.CTHR_T = this.CTHR_T;
-    _o.CTHR_N = this.CTHR_N;
-    _o.CTHR_RDOT = this.CTHR_RDOT;
-    _o.CTHR_TDOT = this.CTHR_TDOT;
-    _o.CTHR_NDOT = this.CTHR_NDOT;
-    _o.CTHR_DRG = this.CTHR_DRG;
-    _o.CTHR_SRP = this.CTHR_SRP;
-    _o.CTHR_THR = this.CTHR_THR;
+    _o.COVARIANCE = new List<double>();
+    for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
   }
   public static Offset<CDMObject> Pack(FlatBufferBuilder builder, CDMObjectT _o) {
     if (_o == null) return default(Offset<CDMObject>);
@@ -587,6 +342,11 @@ public struct CDMObject : IFlatbufferObject
     var _N_BODY_PERTURBATIONS = _o.N_BODY_PERTURBATIONS == null ? default(StringOffset) : builder.CreateString(_o.N_BODY_PERTURBATIONS);
     var _TIME_LASTOB_START = _o.TIME_LASTOB_START == null ? default(StringOffset) : builder.CreateString(_o.TIME_LASTOB_START);
     var _TIME_LASTOB_END = _o.TIME_LASTOB_END == null ? default(StringOffset) : builder.CreateString(_o.TIME_LASTOB_END);
+    var _COVARIANCE = default(VectorOffset);
+    if (_o.COVARIANCE != null) {
+      var __COVARIANCE = _o.COVARIANCE.ToArray();
+      _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
+    }
     return CreateCDMObject(
       builder,
       _COMMENT,
@@ -625,51 +385,7 @@ public struct CDMObject : IFlatbufferObject
       _o.X_DOT,
       _o.Y_DOT,
       _o.Z_DOT,
-      _o.CR_R,
-      _o.CT_R,
-      _o.CT_T,
-      _o.CN_R,
-      _o.CN_T,
-      _o.CN_N,
-      _o.CRDOT_R,
-      _o.CRDOT_T,
-      _o.CRDOT_N,
-      _o.CRDOT_RDOT,
-      _o.CTDOT_R,
-      _o.CTDOT_T,
-      _o.CTDOT_N,
-      _o.CTDOT_RDOT,
-      _o.CTDOT_TDOT,
-      _o.CNDOT_R,
-      _o.CNDOT_T,
-      _o.CNDOT_N,
-      _o.CNDOT_RDOT,
-      _o.CNDOT_TDOT,
-      _o.CNDOT_NDOT,
-      _o.CDRG_R,
-      _o.CDRG_T,
-      _o.CDRG_N,
-      _o.CDRG_RDOT,
-      _o.CDRG_TDOT,
-      _o.CDRG_NDOT,
-      _o.CDRG_DRG,
-      _o.CSRP_R,
-      _o.CSRP_T,
-      _o.CSRP_N,
-      _o.CSRP_RDOT,
-      _o.CSRP_TDOT,
-      _o.CSRP_NDOT,
-      _o.CSRP_DRG,
-      _o.CSRP_SRP,
-      _o.CTHR_R,
-      _o.CTHR_T,
-      _o.CTHR_N,
-      _o.CTHR_RDOT,
-      _o.CTHR_TDOT,
-      _o.CTHR_NDOT,
-      _o.CTHR_DRG,
-      _o.CTHR_SRP,
-      _o.CTHR_THR);
+      _COVARIANCE);
   }
 }
 
@@ -711,51 +427,7 @@ public class CDMObjectT
   public double X_DOT { get; set; }
   public double Y_DOT { get; set; }
   public double Z_DOT { get; set; }
-  public double CR_R { get; set; }
-  public double CT_R { get; set; }
-  public double CT_T { get; set; }
-  public double CN_R { get; set; }
-  public double CN_T { get; set; }
-  public double CN_N { get; set; }
-  public double CRDOT_R { get; set; }
-  public double CRDOT_T { get; set; }
-  public double CRDOT_N { get; set; }
-  public double CRDOT_RDOT { get; set; }
-  public double CTDOT_R { get; set; }
-  public double CTDOT_T { get; set; }
-  public double CTDOT_N { get; set; }
-  public double CTDOT_RDOT { get; set; }
-  public double CTDOT_TDOT { get; set; }
-  public double CNDOT_R { get; set; }
-  public double CNDOT_T { get; set; }
-  public double CNDOT_N { get; set; }
-  public double CNDOT_RDOT { get; set; }
-  public double CNDOT_TDOT { get; set; }
-  public double CNDOT_NDOT { get; set; }
-  public double CDRG_R { get; set; }
-  public double CDRG_T { get; set; }
-  public double CDRG_N { get; set; }
-  public double CDRG_RDOT { get; set; }
-  public double CDRG_TDOT { get; set; }
-  public double CDRG_NDOT { get; set; }
-  public double CDRG_DRG { get; set; }
-  public double CSRP_R { get; set; }
-  public double CSRP_T { get; set; }
-  public double CSRP_N { get; set; }
-  public double CSRP_RDOT { get; set; }
-  public double CSRP_TDOT { get; set; }
-  public double CSRP_NDOT { get; set; }
-  public double CSRP_DRG { get; set; }
-  public double CSRP_SRP { get; set; }
-  public double CTHR_R { get; set; }
-  public double CTHR_T { get; set; }
-  public double CTHR_N { get; set; }
-  public double CTHR_RDOT { get; set; }
-  public double CTHR_TDOT { get; set; }
-  public double CTHR_NDOT { get; set; }
-  public double CTHR_DRG { get; set; }
-  public double CTHR_SRP { get; set; }
-  public double CTHR_THR { get; set; }
+  public List<double> COVARIANCE { get; set; }
 
   public CDMObjectT() {
     this.COMMENT = null;
@@ -794,51 +466,7 @@ public class CDMObjectT
     this.X_DOT = 0.0;
     this.Y_DOT = 0.0;
     this.Z_DOT = 0.0;
-    this.CR_R = 0.0;
-    this.CT_R = 0.0;
-    this.CT_T = 0.0;
-    this.CN_R = 0.0;
-    this.CN_T = 0.0;
-    this.CN_N = 0.0;
-    this.CRDOT_R = 0.0;
-    this.CRDOT_T = 0.0;
-    this.CRDOT_N = 0.0;
-    this.CRDOT_RDOT = 0.0;
-    this.CTDOT_R = 0.0;
-    this.CTDOT_T = 0.0;
-    this.CTDOT_N = 0.0;
-    this.CTDOT_RDOT = 0.0;
-    this.CTDOT_TDOT = 0.0;
-    this.CNDOT_R = 0.0;
-    this.CNDOT_T = 0.0;
-    this.CNDOT_N = 0.0;
-    this.CNDOT_RDOT = 0.0;
-    this.CNDOT_TDOT = 0.0;
-    this.CNDOT_NDOT = 0.0;
-    this.CDRG_R = 0.0;
-    this.CDRG_T = 0.0;
-    this.CDRG_N = 0.0;
-    this.CDRG_RDOT = 0.0;
-    this.CDRG_TDOT = 0.0;
-    this.CDRG_NDOT = 0.0;
-    this.CDRG_DRG = 0.0;
-    this.CSRP_R = 0.0;
-    this.CSRP_T = 0.0;
-    this.CSRP_N = 0.0;
-    this.CSRP_RDOT = 0.0;
-    this.CSRP_TDOT = 0.0;
-    this.CSRP_NDOT = 0.0;
-    this.CSRP_DRG = 0.0;
-    this.CSRP_SRP = 0.0;
-    this.CTHR_R = 0.0;
-    this.CTHR_T = 0.0;
-    this.CTHR_N = 0.0;
-    this.CTHR_RDOT = 0.0;
-    this.CTHR_TDOT = 0.0;
-    this.CTHR_NDOT = 0.0;
-    this.CTHR_DRG = 0.0;
-    this.CTHR_SRP = 0.0;
-    this.CTHR_THR = 0.0;
+    this.COVARIANCE = null;
   }
 }
 
@@ -884,51 +512,7 @@ static public class CDMObjectVerify
       && verifier.VerifyField(tablePos, 70 /*X_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 72 /*Y_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 74 /*Z_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 76 /*CR_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 78 /*CT_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 80 /*CT_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 82 /*CN_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 84 /*CN_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 86 /*CN_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 88 /*CRDOT_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 90 /*CRDOT_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 92 /*CRDOT_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 94 /*CRDOT_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 96 /*CTDOT_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 98 /*CTDOT_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 100 /*CTDOT_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 102 /*CTDOT_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 104 /*CTDOT_TDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 106 /*CNDOT_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 108 /*CNDOT_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 110 /*CNDOT_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 112 /*CNDOT_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 114 /*CNDOT_TDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 116 /*CNDOT_NDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 118 /*CDRG_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 120 /*CDRG_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 122 /*CDRG_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 124 /*CDRG_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 126 /*CDRG_TDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 128 /*CDRG_NDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 130 /*CDRG_DRG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 132 /*CSRP_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 134 /*CSRP_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 136 /*CSRP_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 138 /*CSRP_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 140 /*CSRP_TDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 142 /*CSRP_NDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 144 /*CSRP_DRG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 146 /*CSRP_SRP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 148 /*CTHR_R*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 150 /*CTHR_T*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 152 /*CTHR_N*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 154 /*CTHR_RDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 156 /*CTHR_TDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 158 /*CTHR_NDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 160 /*CTHR_DRG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 162 /*CTHR_SRP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 164 /*CTHR_THR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 76 /*COVARIANCE*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

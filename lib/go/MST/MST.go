@@ -254,25 +254,8 @@ func (rcv *MST) AOU_RPT_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) AOU_RPT_DATA(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *MST) AOU_RPT_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
 func (rcv *MST) CONTAINMENT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -280,11 +263,11 @@ func (rcv *MST) CONTAINMENT() float64 {
 }
 
 func (rcv *MST) MutateCONTAINMENT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(54, n)
+	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
 func (rcv *MST) TRK_CONF() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -292,11 +275,11 @@ func (rcv *MST) TRK_CONF() float64 {
 }
 
 func (rcv *MST) MutateTRK_CONF(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(56, n)
+	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
 func (rcv *MST) TRK_QUAL() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -304,11 +287,11 @@ func (rcv *MST) TRK_QUAL() int32 {
 }
 
 func (rcv *MST) MutateTRK_QUAL(n int32) bool {
-	return rcv._tab.MutateInt32Slot(58, n)
+	return rcv._tab.MutateInt32Slot(56, n)
 }
 
 func (rcv *MST) ANG_ELEV() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -316,11 +299,11 @@ func (rcv *MST) ANG_ELEV() float64 {
 }
 
 func (rcv *MST) MutateANG_ELEV(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(60, n)
+	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
 func (rcv *MST) SEN_MODE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -328,7 +311,7 @@ func (rcv *MST) SEN_MODE() []byte {
 }
 
 func (rcv *MST) INFO_SOURCE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -336,7 +319,7 @@ func (rcv *MST) INFO_SOURCE() []byte {
 }
 
 func (rcv *MST) BOOSTING() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -344,11 +327,11 @@ func (rcv *MST) BOOSTING() bool {
 }
 
 func (rcv *MST) MutateBOOSTING(n bool) bool {
-	return rcv._tab.MutateBoolSlot(66, n)
+	return rcv._tab.MutateBoolSlot(64, n)
 }
 
 func (rcv *MST) POLAR_SING_LOC_LAT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -356,11 +339,11 @@ func (rcv *MST) POLAR_SING_LOC_LAT() float64 {
 }
 
 func (rcv *MST) MutatePOLAR_SING_LOC_LAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(68, n)
+	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
 func (rcv *MST) POLAR_SING_LOC_LON() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -368,11 +351,11 @@ func (rcv *MST) POLAR_SING_LOC_LON() float64 {
 }
 
 func (rcv *MST) MutatePOLAR_SING_LOC_LON(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(70, n)
+	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
 func (rcv *MST) EMG_IND() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -380,11 +363,11 @@ func (rcv *MST) EMG_IND() bool {
 }
 
 func (rcv *MST) MutateEMG_IND(n bool) bool {
-	return rcv._tab.MutateBoolSlot(72, n)
+	return rcv._tab.MutateBoolSlot(70, n)
 }
 
 func (rcv *MST) DROP_PT_IND() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
@@ -392,11 +375,11 @@ func (rcv *MST) DROP_PT_IND() bool {
 }
 
 func (rcv *MST) MutateDROP_PT_IND(n bool) bool {
-	return rcv._tab.MutateBoolSlot(74, n)
+	return rcv._tab.MutateBoolSlot(72, n)
 }
 
 func (rcv *MST) SPACE_AMP_CONF() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -404,11 +387,11 @@ func (rcv *MST) SPACE_AMP_CONF() int32 {
 }
 
 func (rcv *MST) MutateSPACE_AMP_CONF(n int32) bool {
-	return rcv._tab.MutateInt32Slot(76, n)
+	return rcv._tab.MutateInt32Slot(74, n)
 }
 
 func (rcv *MST) LAUNCH_TIME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -416,7 +399,7 @@ func (rcv *MST) LAUNCH_TIME() []byte {
 }
 
 func (rcv *MST) LAUNCH_LAT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -424,11 +407,11 @@ func (rcv *MST) LAUNCH_LAT() float64 {
 }
 
 func (rcv *MST) MutateLAUNCH_LAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(80, n)
+	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
 func (rcv *MST) LAUNCH_LON() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -436,11 +419,11 @@ func (rcv *MST) LAUNCH_LON() float64 {
 }
 
 func (rcv *MST) MutateLAUNCH_LON(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(82, n)
+	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
 func (rcv *MST) AZ_CORR() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -448,11 +431,11 @@ func (rcv *MST) AZ_CORR() float64 {
 }
 
 func (rcv *MST) MutateAZ_CORR(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(84, n)
+	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
 func (rcv *MST) BURNOUT_ALT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -460,10 +443,18 @@ func (rcv *MST) BURNOUT_ALT() float64 {
 }
 
 func (rcv *MST) MutateBURNOUT_ALT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(86, n)
+	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
 func (rcv *MST) LAUNCH_AOU_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *MST) IMPACT_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -471,33 +462,8 @@ func (rcv *MST) LAUNCH_AOU_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) LAUNCH_AOU_DATA(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *MST) LAUNCH_AOU_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *MST) IMPACT_TIME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
 func (rcv *MST) IMPACT_LAT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -505,11 +471,11 @@ func (rcv *MST) IMPACT_LAT() float64 {
 }
 
 func (rcv *MST) MutateIMPACT_LAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(94, n)
+	return rcv._tab.MutateFloat64Slot(90, n)
 }
 
 func (rcv *MST) IMPACT_LON() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -517,41 +483,63 @@ func (rcv *MST) IMPACT_LON() float64 {
 }
 
 func (rcv *MST) MutateIMPACT_LON(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(96, n)
+	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
 func (rcv *MST) IMPACT_AOU_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *MST) IMPACT_AOU_DATA(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+/// Start time for vector data (ISO 8601 UTC format).
+func (rcv *MST) VECTOR_START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *MST) IMPACT_AOU_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+/// Start time for vector data (ISO 8601 UTC format).
+/// Time interval between vector points in seconds.
+func (rcv *MST) VECTOR_STEP_SIZE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
-		return rcv._tab.VectorLen(o)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return 0
+	return 0.0
 }
 
-func (rcv *MST) VECTORS(j int) []byte {
+/// Time interval between vector points in seconds.
+func (rcv *MST) MutateVECTOR_STEP_SIZE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(98, n)
+}
+
+/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+func (rcv *MST) VECTOR_COMPONENTS() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 6
+}
+
+/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+func (rcv *MST) MutateVECTOR_COMPONENTS(n byte) bool {
+	return rcv._tab.MutateByteSlot(100, n)
+}
+
+/// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+func (rcv *MST) VECTORS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *MST) VECTORSLength() int {
@@ -562,8 +550,102 @@ func (rcv *MST) VECTORSLength() int {
 	return 0
 }
 
+/// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+func (rcv *MST) MutateVECTORS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+func (rcv *MST) AOU_RPT(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *MST) AOU_RPTLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+func (rcv *MST) MutateAOU_RPT(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+func (rcv *MST) LAUNCH_AOU(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *MST) LAUNCH_AOULength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+func (rcv *MST) MutateLAUNCH_AOU(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+func (rcv *MST) IMPACT_AOU(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *MST) IMPACT_AOULength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+func (rcv *MST) MutateIMPACT_AOU(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
 func MSTStart(builder *flatbuffers.Builder) {
-	builder.StartObject(50)
+	builder.StartObject(53)
 }
 func MSTAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -637,95 +719,104 @@ func MSTAddTS(builder *flatbuffers.Builder, TS flatbuffers.UOffsetT) {
 func MSTAddAOU_RPT_TYPE(builder *flatbuffers.Builder, AOU_RPT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(AOU_RPT_TYPE), 0)
 }
-func MSTAddAOU_RPT_DATA(builder *flatbuffers.Builder, AOU_RPT_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(AOU_RPT_DATA), 0)
-}
-func MSTStartAOU_RPT_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
 func MSTAddCONTAINMENT(builder *flatbuffers.Builder, CONTAINMENT float64) {
-	builder.PrependFloat64Slot(25, CONTAINMENT, 0.0)
+	builder.PrependFloat64Slot(24, CONTAINMENT, 0.0)
 }
 func MSTAddTRK_CONF(builder *flatbuffers.Builder, TRK_CONF float64) {
-	builder.PrependFloat64Slot(26, TRK_CONF, 0.0)
+	builder.PrependFloat64Slot(25, TRK_CONF, 0.0)
 }
 func MSTAddTRK_QUAL(builder *flatbuffers.Builder, TRK_QUAL int32) {
-	builder.PrependInt32Slot(27, TRK_QUAL, 0)
+	builder.PrependInt32Slot(26, TRK_QUAL, 0)
 }
 func MSTAddANG_ELEV(builder *flatbuffers.Builder, ANG_ELEV float64) {
-	builder.PrependFloat64Slot(28, ANG_ELEV, 0.0)
+	builder.PrependFloat64Slot(27, ANG_ELEV, 0.0)
 }
 func MSTAddSEN_MODE(builder *flatbuffers.Builder, SEN_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(SEN_MODE), 0)
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(SEN_MODE), 0)
 }
 func MSTAddINFO_SOURCE(builder *flatbuffers.Builder, INFO_SOURCE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(INFO_SOURCE), 0)
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(INFO_SOURCE), 0)
 }
 func MSTAddBOOSTING(builder *flatbuffers.Builder, BOOSTING bool) {
-	builder.PrependBoolSlot(31, BOOSTING, false)
+	builder.PrependBoolSlot(30, BOOSTING, false)
 }
 func MSTAddPOLAR_SING_LOC_LAT(builder *flatbuffers.Builder, POLAR_SING_LOC_LAT float64) {
-	builder.PrependFloat64Slot(32, POLAR_SING_LOC_LAT, 0.0)
+	builder.PrependFloat64Slot(31, POLAR_SING_LOC_LAT, 0.0)
 }
 func MSTAddPOLAR_SING_LOC_LON(builder *flatbuffers.Builder, POLAR_SING_LOC_LON float64) {
-	builder.PrependFloat64Slot(33, POLAR_SING_LOC_LON, 0.0)
+	builder.PrependFloat64Slot(32, POLAR_SING_LOC_LON, 0.0)
 }
 func MSTAddEMG_IND(builder *flatbuffers.Builder, EMG_IND bool) {
-	builder.PrependBoolSlot(34, EMG_IND, false)
+	builder.PrependBoolSlot(33, EMG_IND, false)
 }
 func MSTAddDROP_PT_IND(builder *flatbuffers.Builder, DROP_PT_IND bool) {
-	builder.PrependBoolSlot(35, DROP_PT_IND, false)
+	builder.PrependBoolSlot(34, DROP_PT_IND, false)
 }
 func MSTAddSPACE_AMP_CONF(builder *flatbuffers.Builder, SPACE_AMP_CONF int32) {
-	builder.PrependInt32Slot(36, SPACE_AMP_CONF, 0)
+	builder.PrependInt32Slot(35, SPACE_AMP_CONF, 0)
 }
 func MSTAddLAUNCH_TIME(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
 }
 func MSTAddLAUNCH_LAT(builder *flatbuffers.Builder, LAUNCH_LAT float64) {
-	builder.PrependFloat64Slot(38, LAUNCH_LAT, 0.0)
+	builder.PrependFloat64Slot(37, LAUNCH_LAT, 0.0)
 }
 func MSTAddLAUNCH_LON(builder *flatbuffers.Builder, LAUNCH_LON float64) {
-	builder.PrependFloat64Slot(39, LAUNCH_LON, 0.0)
+	builder.PrependFloat64Slot(38, LAUNCH_LON, 0.0)
 }
 func MSTAddAZ_CORR(builder *flatbuffers.Builder, AZ_CORR float64) {
-	builder.PrependFloat64Slot(40, AZ_CORR, 0.0)
+	builder.PrependFloat64Slot(39, AZ_CORR, 0.0)
 }
 func MSTAddBURNOUT_ALT(builder *flatbuffers.Builder, BURNOUT_ALT float64) {
-	builder.PrependFloat64Slot(41, BURNOUT_ALT, 0.0)
+	builder.PrependFloat64Slot(40, BURNOUT_ALT, 0.0)
 }
 func MSTAddLAUNCH_AOU_TYPE(builder *flatbuffers.Builder, LAUNCH_AOU_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(LAUNCH_AOU_TYPE), 0)
-}
-func MSTAddLAUNCH_AOU_DATA(builder *flatbuffers.Builder, LAUNCH_AOU_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(LAUNCH_AOU_DATA), 0)
-}
-func MSTStartLAUNCH_AOU_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(LAUNCH_AOU_TYPE), 0)
 }
 func MSTAddIMPACT_TIME(builder *flatbuffers.Builder, IMPACT_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(IMPACT_TIME), 0)
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(IMPACT_TIME), 0)
 }
 func MSTAddIMPACT_LAT(builder *flatbuffers.Builder, IMPACT_LAT float64) {
-	builder.PrependFloat64Slot(45, IMPACT_LAT, 0.0)
+	builder.PrependFloat64Slot(43, IMPACT_LAT, 0.0)
 }
 func MSTAddIMPACT_LON(builder *flatbuffers.Builder, IMPACT_LON float64) {
-	builder.PrependFloat64Slot(46, IMPACT_LON, 0.0)
+	builder.PrependFloat64Slot(44, IMPACT_LON, 0.0)
 }
 func MSTAddIMPACT_AOU_TYPE(builder *flatbuffers.Builder, IMPACT_AOU_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(IMPACT_AOU_TYPE), 0)
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(IMPACT_AOU_TYPE), 0)
 }
-func MSTAddIMPACT_AOU_DATA(builder *flatbuffers.Builder, IMPACT_AOU_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(IMPACT_AOU_DATA), 0)
+func MSTAddVECTOR_START_TIME(builder *flatbuffers.Builder, VECTOR_START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(VECTOR_START_TIME), 0)
 }
-func MSTStartIMPACT_AOU_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+func MSTAddVECTOR_STEP_SIZE(builder *flatbuffers.Builder, VECTOR_STEP_SIZE float64) {
+	builder.PrependFloat64Slot(47, VECTOR_STEP_SIZE, 0.0)
+}
+func MSTAddVECTOR_COMPONENTS(builder *flatbuffers.Builder, VECTOR_COMPONENTS byte) {
+	builder.PrependByteSlot(48, VECTOR_COMPONENTS, 6)
 }
 func MSTAddVECTORS(builder *flatbuffers.Builder, VECTORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(VECTORS), 0)
 }
 func MSTStartVECTORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
+}
+func MSTAddAOU_RPT(builder *flatbuffers.Builder, AOU_RPT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(AOU_RPT), 0)
+}
+func MSTStartAOU_RPTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func MSTAddLAUNCH_AOU(builder *flatbuffers.Builder, LAUNCH_AOU flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(LAUNCH_AOU), 0)
+}
+func MSTStartLAUNCH_AOUVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func MSTAddIMPACT_AOU(builder *flatbuffers.Builder, IMPACT_AOU flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(IMPACT_AOU), 0)
+}
+func MSTStartIMPACT_AOUVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func MSTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

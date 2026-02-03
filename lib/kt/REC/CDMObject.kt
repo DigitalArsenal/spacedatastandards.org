@@ -378,365 +378,28 @@ class CDMObject : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Covariance Matrix component
+     * Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+     * Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+     *         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+     *         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+     *         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+     *         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+     *         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
      */
-    val CR_R : Double
-        get() {
-            val o = __offset(76)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+    fun COVARIANCE(j: Int) : Double {
+        val o = __offset(76)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
         }
-    /**
-     * Covariance Matrix component
-     */
-    val CT_R : Double
+    }
+    val COVARIANCELength : Int
         get() {
-            val o = __offset(78)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
-    /**
-     * Covariance Matrix component
-     */
-    val CT_T : Double
-        get() {
-            val o = __offset(80)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CN_R : Double
-        get() {
-            val o = __offset(82)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CN_T : Double
-        get() {
-            val o = __offset(84)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CN_N : Double
-        get() {
-            val o = __offset(86)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CRDOT_R : Double
-        get() {
-            val o = __offset(88)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CRDOT_T : Double
-        get() {
-            val o = __offset(90)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CRDOT_N : Double
-        get() {
-            val o = __offset(92)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CRDOT_RDOT : Double
-        get() {
-            val o = __offset(94)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTDOT_R : Double
-        get() {
-            val o = __offset(96)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTDOT_T : Double
-        get() {
-            val o = __offset(98)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTDOT_N : Double
-        get() {
-            val o = __offset(100)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTDOT_RDOT : Double
-        get() {
-            val o = __offset(102)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTDOT_TDOT : Double
-        get() {
-            val o = __offset(104)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_R : Double
-        get() {
-            val o = __offset(106)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_T : Double
-        get() {
-            val o = __offset(108)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_N : Double
-        get() {
-            val o = __offset(110)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_RDOT : Double
-        get() {
-            val o = __offset(112)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_TDOT : Double
-        get() {
-            val o = __offset(114)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CNDOT_NDOT : Double
-        get() {
-            val o = __offset(116)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_R : Double
-        get() {
-            val o = __offset(118)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_T : Double
-        get() {
-            val o = __offset(120)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_N : Double
-        get() {
-            val o = __offset(122)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_RDOT : Double
-        get() {
-            val o = __offset(124)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_TDOT : Double
-        get() {
-            val o = __offset(126)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_NDOT : Double
-        get() {
-            val o = __offset(128)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CDRG_DRG : Double
-        get() {
-            val o = __offset(130)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_R : Double
-        get() {
-            val o = __offset(132)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_T : Double
-        get() {
-            val o = __offset(134)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_N : Double
-        get() {
-            val o = __offset(136)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_RDOT : Double
-        get() {
-            val o = __offset(138)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_TDOT : Double
-        get() {
-            val o = __offset(140)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_NDOT : Double
-        get() {
-            val o = __offset(142)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_DRG : Double
-        get() {
-            val o = __offset(144)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CSRP_SRP : Double
-        get() {
-            val o = __offset(146)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_R : Double
-        get() {
-            val o = __offset(148)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_T : Double
-        get() {
-            val o = __offset(150)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_N : Double
-        get() {
-            val o = __offset(152)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_RDOT : Double
-        get() {
-            val o = __offset(154)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_TDOT : Double
-        get() {
-            val o = __offset(156)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_NDOT : Double
-        get() {
-            val o = __offset(158)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_DRG : Double
-        get() {
-            val o = __offset(160)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_SRP : Double
-        get() {
-            val o = __offset(162)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Covariance Matrix component
-     */
-    val CTHR_THR : Double
-        get() {
-            val o = __offset(164)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
+    val COVARIANCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 8)
+    fun COVARIANCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCDMObject(_bb: ByteBuffer): CDMObject = getRootAsCDMObject(_bb, CDMObject())
@@ -744,53 +407,8 @@ class CDMObject : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCDMObject(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, POCOffset: Int, OPERATOR_CONTACT_POSITIONOffset: Int, OPERATOR_ORGANIZATIONOffset: Int, EPHEMERIS_NAMEOffset: Int, COVARIANCE_METHOD: Byte, REFERENCE_FRAMEOffset: Int, GRAVITY_MODELOffset: Int, ATMOSPHERIC_MODELOffset: Int, N_BODY_PERTURBATIONSOffset: Int, SOLAR_RAD_PRESSURE: Boolean, EARTH_TIDES: Boolean, INTRACK_THRUST: Boolean, TIME_LASTOB_STARTOffset: Int, TIME_LASTOB_ENDOffset: Int, RECOMMENDED_OD_SPAN: Double, ACTUAL_OD_SPAN: Double, OBS_AVAILABLE: UInt, OBS_USED: UInt, TRACKS_AVAILABLE: UInt, TRACKS_USED: UInt, RESIDUALS_ACCEPTED: Double, WEIGHTED_RMS: Double, AREA_PC: Double, AREA_DRG: Double, AREA_SRP: Double, CR_AREA_OVER_MASS: Double, THRUST_ACCELERATION: Double, SEDR: Double, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, CR_R: Double, CT_R: Double, CT_T: Double, CN_R: Double, CN_T: Double, CN_N: Double, CRDOT_R: Double, CRDOT_T: Double, CRDOT_N: Double, CRDOT_RDOT: Double, CTDOT_R: Double, CTDOT_T: Double, CTDOT_N: Double, CTDOT_RDOT: Double, CTDOT_TDOT: Double, CNDOT_R: Double, CNDOT_T: Double, CNDOT_N: Double, CNDOT_RDOT: Double, CNDOT_TDOT: Double, CNDOT_NDOT: Double, CDRG_R: Double, CDRG_T: Double, CDRG_N: Double, CDRG_RDOT: Double, CDRG_TDOT: Double, CDRG_NDOT: Double, CDRG_DRG: Double, CSRP_R: Double, CSRP_T: Double, CSRP_N: Double, CSRP_RDOT: Double, CSRP_TDOT: Double, CSRP_NDOT: Double, CSRP_DRG: Double, CSRP_SRP: Double, CTHR_R: Double, CTHR_T: Double, CTHR_N: Double, CTHR_RDOT: Double, CTHR_TDOT: Double, CTHR_NDOT: Double, CTHR_DRG: Double, CTHR_SRP: Double, CTHR_THR: Double) : Int {
-            builder.startTable(81)
-            addCTHR_THR(builder, CTHR_THR)
-            addCTHR_SRP(builder, CTHR_SRP)
-            addCTHR_DRG(builder, CTHR_DRG)
-            addCTHR_NDOT(builder, CTHR_NDOT)
-            addCTHR_TDOT(builder, CTHR_TDOT)
-            addCTHR_RDOT(builder, CTHR_RDOT)
-            addCTHR_N(builder, CTHR_N)
-            addCTHR_T(builder, CTHR_T)
-            addCTHR_R(builder, CTHR_R)
-            addCSRP_SRP(builder, CSRP_SRP)
-            addCSRP_DRG(builder, CSRP_DRG)
-            addCSRP_NDOT(builder, CSRP_NDOT)
-            addCSRP_TDOT(builder, CSRP_TDOT)
-            addCSRP_RDOT(builder, CSRP_RDOT)
-            addCSRP_N(builder, CSRP_N)
-            addCSRP_T(builder, CSRP_T)
-            addCSRP_R(builder, CSRP_R)
-            addCDRG_DRG(builder, CDRG_DRG)
-            addCDRG_NDOT(builder, CDRG_NDOT)
-            addCDRG_TDOT(builder, CDRG_TDOT)
-            addCDRG_RDOT(builder, CDRG_RDOT)
-            addCDRG_N(builder, CDRG_N)
-            addCDRG_T(builder, CDRG_T)
-            addCDRG_R(builder, CDRG_R)
-            addCNDOT_NDOT(builder, CNDOT_NDOT)
-            addCNDOT_TDOT(builder, CNDOT_TDOT)
-            addCNDOT_RDOT(builder, CNDOT_RDOT)
-            addCNDOT_N(builder, CNDOT_N)
-            addCNDOT_T(builder, CNDOT_T)
-            addCNDOT_R(builder, CNDOT_R)
-            addCTDOT_TDOT(builder, CTDOT_TDOT)
-            addCTDOT_RDOT(builder, CTDOT_RDOT)
-            addCTDOT_N(builder, CTDOT_N)
-            addCTDOT_T(builder, CTDOT_T)
-            addCTDOT_R(builder, CTDOT_R)
-            addCRDOT_RDOT(builder, CRDOT_RDOT)
-            addCRDOT_N(builder, CRDOT_N)
-            addCRDOT_T(builder, CRDOT_T)
-            addCRDOT_R(builder, CRDOT_R)
-            addCN_N(builder, CN_N)
-            addCN_T(builder, CN_T)
-            addCN_R(builder, CN_R)
-            addCT_T(builder, CT_T)
-            addCT_R(builder, CT_R)
-            addCR_R(builder, CR_R)
+        fun createCDMObject(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, POCOffset: Int, OPERATOR_CONTACT_POSITIONOffset: Int, OPERATOR_ORGANIZATIONOffset: Int, EPHEMERIS_NAMEOffset: Int, COVARIANCE_METHOD: Byte, REFERENCE_FRAMEOffset: Int, GRAVITY_MODELOffset: Int, ATMOSPHERIC_MODELOffset: Int, N_BODY_PERTURBATIONSOffset: Int, SOLAR_RAD_PRESSURE: Boolean, EARTH_TIDES: Boolean, INTRACK_THRUST: Boolean, TIME_LASTOB_STARTOffset: Int, TIME_LASTOB_ENDOffset: Int, RECOMMENDED_OD_SPAN: Double, ACTUAL_OD_SPAN: Double, OBS_AVAILABLE: UInt, OBS_USED: UInt, TRACKS_AVAILABLE: UInt, TRACKS_USED: UInt, RESIDUALS_ACCEPTED: Double, WEIGHTED_RMS: Double, AREA_PC: Double, AREA_DRG: Double, AREA_SRP: Double, CR_AREA_OVER_MASS: Double, THRUST_ACCELERATION: Double, SEDR: Double, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, COVARIANCEOffset: Int) : Int {
+            builder.startTable(37)
             addZ_DOT(builder, Z_DOT)
             addY_DOT(builder, Y_DOT)
             addX_DOT(builder, X_DOT)
@@ -807,6 +425,7 @@ class CDMObject : Table() {
             addRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
             addACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
             addRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+            addCOVARIANCE(builder, COVARIANCEOffset)
             addTRACKS_USED(builder, TRACKS_USED)
             addTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
             addOBS_USED(builder, OBS_USED)
@@ -829,7 +448,7 @@ class CDMObject : Table() {
             addCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
             return endCDMObject(builder)
         }
-        fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(81)
+        fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(37)
         fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
         fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
         fun addPOC(builder: FlatBufferBuilder, POC: Int) = builder.addOffset(2, POC, 0)
@@ -866,51 +485,15 @@ class CDMObject : Table() {
         fun addX_DOT(builder: FlatBufferBuilder, X_DOT: Double) = builder.addDouble(33, X_DOT, 0.0)
         fun addY_DOT(builder: FlatBufferBuilder, Y_DOT: Double) = builder.addDouble(34, Y_DOT, 0.0)
         fun addZ_DOT(builder: FlatBufferBuilder, Z_DOT: Double) = builder.addDouble(35, Z_DOT, 0.0)
-        fun addCR_R(builder: FlatBufferBuilder, CR_R: Double) = builder.addDouble(36, CR_R, 0.0)
-        fun addCT_R(builder: FlatBufferBuilder, CT_R: Double) = builder.addDouble(37, CT_R, 0.0)
-        fun addCT_T(builder: FlatBufferBuilder, CT_T: Double) = builder.addDouble(38, CT_T, 0.0)
-        fun addCN_R(builder: FlatBufferBuilder, CN_R: Double) = builder.addDouble(39, CN_R, 0.0)
-        fun addCN_T(builder: FlatBufferBuilder, CN_T: Double) = builder.addDouble(40, CN_T, 0.0)
-        fun addCN_N(builder: FlatBufferBuilder, CN_N: Double) = builder.addDouble(41, CN_N, 0.0)
-        fun addCRDOT_R(builder: FlatBufferBuilder, CRDOT_R: Double) = builder.addDouble(42, CRDOT_R, 0.0)
-        fun addCRDOT_T(builder: FlatBufferBuilder, CRDOT_T: Double) = builder.addDouble(43, CRDOT_T, 0.0)
-        fun addCRDOT_N(builder: FlatBufferBuilder, CRDOT_N: Double) = builder.addDouble(44, CRDOT_N, 0.0)
-        fun addCRDOT_RDOT(builder: FlatBufferBuilder, CRDOT_RDOT: Double) = builder.addDouble(45, CRDOT_RDOT, 0.0)
-        fun addCTDOT_R(builder: FlatBufferBuilder, CTDOT_R: Double) = builder.addDouble(46, CTDOT_R, 0.0)
-        fun addCTDOT_T(builder: FlatBufferBuilder, CTDOT_T: Double) = builder.addDouble(47, CTDOT_T, 0.0)
-        fun addCTDOT_N(builder: FlatBufferBuilder, CTDOT_N: Double) = builder.addDouble(48, CTDOT_N, 0.0)
-        fun addCTDOT_RDOT(builder: FlatBufferBuilder, CTDOT_RDOT: Double) = builder.addDouble(49, CTDOT_RDOT, 0.0)
-        fun addCTDOT_TDOT(builder: FlatBufferBuilder, CTDOT_TDOT: Double) = builder.addDouble(50, CTDOT_TDOT, 0.0)
-        fun addCNDOT_R(builder: FlatBufferBuilder, CNDOT_R: Double) = builder.addDouble(51, CNDOT_R, 0.0)
-        fun addCNDOT_T(builder: FlatBufferBuilder, CNDOT_T: Double) = builder.addDouble(52, CNDOT_T, 0.0)
-        fun addCNDOT_N(builder: FlatBufferBuilder, CNDOT_N: Double) = builder.addDouble(53, CNDOT_N, 0.0)
-        fun addCNDOT_RDOT(builder: FlatBufferBuilder, CNDOT_RDOT: Double) = builder.addDouble(54, CNDOT_RDOT, 0.0)
-        fun addCNDOT_TDOT(builder: FlatBufferBuilder, CNDOT_TDOT: Double) = builder.addDouble(55, CNDOT_TDOT, 0.0)
-        fun addCNDOT_NDOT(builder: FlatBufferBuilder, CNDOT_NDOT: Double) = builder.addDouble(56, CNDOT_NDOT, 0.0)
-        fun addCDRG_R(builder: FlatBufferBuilder, CDRG_R: Double) = builder.addDouble(57, CDRG_R, 0.0)
-        fun addCDRG_T(builder: FlatBufferBuilder, CDRG_T: Double) = builder.addDouble(58, CDRG_T, 0.0)
-        fun addCDRG_N(builder: FlatBufferBuilder, CDRG_N: Double) = builder.addDouble(59, CDRG_N, 0.0)
-        fun addCDRG_RDOT(builder: FlatBufferBuilder, CDRG_RDOT: Double) = builder.addDouble(60, CDRG_RDOT, 0.0)
-        fun addCDRG_TDOT(builder: FlatBufferBuilder, CDRG_TDOT: Double) = builder.addDouble(61, CDRG_TDOT, 0.0)
-        fun addCDRG_NDOT(builder: FlatBufferBuilder, CDRG_NDOT: Double) = builder.addDouble(62, CDRG_NDOT, 0.0)
-        fun addCDRG_DRG(builder: FlatBufferBuilder, CDRG_DRG: Double) = builder.addDouble(63, CDRG_DRG, 0.0)
-        fun addCSRP_R(builder: FlatBufferBuilder, CSRP_R: Double) = builder.addDouble(64, CSRP_R, 0.0)
-        fun addCSRP_T(builder: FlatBufferBuilder, CSRP_T: Double) = builder.addDouble(65, CSRP_T, 0.0)
-        fun addCSRP_N(builder: FlatBufferBuilder, CSRP_N: Double) = builder.addDouble(66, CSRP_N, 0.0)
-        fun addCSRP_RDOT(builder: FlatBufferBuilder, CSRP_RDOT: Double) = builder.addDouble(67, CSRP_RDOT, 0.0)
-        fun addCSRP_TDOT(builder: FlatBufferBuilder, CSRP_TDOT: Double) = builder.addDouble(68, CSRP_TDOT, 0.0)
-        fun addCSRP_NDOT(builder: FlatBufferBuilder, CSRP_NDOT: Double) = builder.addDouble(69, CSRP_NDOT, 0.0)
-        fun addCSRP_DRG(builder: FlatBufferBuilder, CSRP_DRG: Double) = builder.addDouble(70, CSRP_DRG, 0.0)
-        fun addCSRP_SRP(builder: FlatBufferBuilder, CSRP_SRP: Double) = builder.addDouble(71, CSRP_SRP, 0.0)
-        fun addCTHR_R(builder: FlatBufferBuilder, CTHR_R: Double) = builder.addDouble(72, CTHR_R, 0.0)
-        fun addCTHR_T(builder: FlatBufferBuilder, CTHR_T: Double) = builder.addDouble(73, CTHR_T, 0.0)
-        fun addCTHR_N(builder: FlatBufferBuilder, CTHR_N: Double) = builder.addDouble(74, CTHR_N, 0.0)
-        fun addCTHR_RDOT(builder: FlatBufferBuilder, CTHR_RDOT: Double) = builder.addDouble(75, CTHR_RDOT, 0.0)
-        fun addCTHR_TDOT(builder: FlatBufferBuilder, CTHR_TDOT: Double) = builder.addDouble(76, CTHR_TDOT, 0.0)
-        fun addCTHR_NDOT(builder: FlatBufferBuilder, CTHR_NDOT: Double) = builder.addDouble(77, CTHR_NDOT, 0.0)
-        fun addCTHR_DRG(builder: FlatBufferBuilder, CTHR_DRG: Double) = builder.addDouble(78, CTHR_DRG, 0.0)
-        fun addCTHR_SRP(builder: FlatBufferBuilder, CTHR_SRP: Double) = builder.addDouble(79, CTHR_SRP, 0.0)
-        fun addCTHR_THR(builder: FlatBufferBuilder, CTHR_THR: Double) = builder.addDouble(80, CTHR_THR, 0.0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, COVARIANCE: Int) = builder.addOffset(36, COVARIANCE, 0)
+        fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endCDMObject(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

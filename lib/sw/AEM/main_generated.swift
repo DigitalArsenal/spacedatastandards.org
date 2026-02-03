@@ -4,86 +4,6 @@
 
 import FlatBuffers
 
-public struct AEMAttitudeEntry: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$AEM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: AEMAttitudeEntry.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case Q1 = 6
-    case Q2 = 8
-    case Q3 = 10
-    case QC = 12
-    case RATE_X = 14
-    case RATE_Y = 16
-    case RATE_Z = 18
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  public var Q1: Double { let o = _accessor.offset(VTOFFSET.Q1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q2: Double { let o = _accessor.offset(VTOFFSET.Q2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q3: Double { let o = _accessor.offset(VTOFFSET.Q3.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var QC: Double { let o = _accessor.offset(VTOFFSET.QC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RATE_X: Double { let o = _accessor.offset(VTOFFSET.RATE_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RATE_Y: Double { let o = _accessor.offset(VTOFFSET.RATE_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RATE_Z: Double { let o = _accessor.offset(VTOFFSET.RATE_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startAEMAttitudeEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VTOFFSET.Q1.p) }
-  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VTOFFSET.Q2.p) }
-  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VTOFFSET.Q3.p) }
-  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VTOFFSET.QC.p) }
-  public static func add(RATE_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_X, def: 0.0, at: VTOFFSET.RATE_X.p) }
-  public static func add(RATE_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_Y, def: 0.0, at: VTOFFSET.RATE_Y.p) }
-  public static func add(RATE_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_Z, def: 0.0, at: VTOFFSET.RATE_Z.p) }
-  public static func endAEMAttitudeEntry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createAEMAttitudeEntry(
-    _ fbb: inout FlatBufferBuilder,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    Q1: Double = 0.0,
-    Q2: Double = 0.0,
-    Q3: Double = 0.0,
-    QC: Double = 0.0,
-    RATE_X: Double = 0.0,
-    RATE_Y: Double = 0.0,
-    RATE_Z: Double = 0.0
-  ) -> Offset {
-    let __start = AEMAttitudeEntry.startAEMAttitudeEntry(&fbb)
-    AEMAttitudeEntry.add(EPOCH: EPOCH, &fbb)
-    AEMAttitudeEntry.add(Q1: Q1, &fbb)
-    AEMAttitudeEntry.add(Q2: Q2, &fbb)
-    AEMAttitudeEntry.add(Q3: Q3, &fbb)
-    AEMAttitudeEntry.add(QC: QC, &fbb)
-    AEMAttitudeEntry.add(RATE_X: RATE_X, &fbb)
-    AEMAttitudeEntry.add(RATE_Y: RATE_Y, &fbb)
-    AEMAttitudeEntry.add(RATE_Z: RATE_Z, &fbb)
-    return AEMAttitudeEntry.endAEMAttitudeEntry(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.Q1.p, fieldName: "Q1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Q2.p, fieldName: "Q2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Q3.p, fieldName: "Q3", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.QC.p, fieldName: "QC", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RATE_X.p, fieldName: "RATE_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RATE_Y.p, fieldName: "RATE_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RATE_Z.p, fieldName: "RATE_Z", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
 public struct AEMSegment: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }
@@ -105,7 +25,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
     case ATTITUDE_TYPE = 16
     case START_TIME = 18
     case STOP_TIME = 20
-    case DATA = 22
+    case STEP_SIZE = 22
+    case ATTITUDE_COMPONENTS = 24
+    case ATTITUDE_DATA = 26
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -128,10 +50,21 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
   public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
   public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
-  public var hasData: Bool { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? false : true }
-  public var DATACount: Int32 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA(at index: Int32) -> AEMAttitudeEntry? { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? nil : AEMAttitudeEntry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  Time interval between attitude states in seconds (required).
+  public var STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of components per attitude state.
+  ///  7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  ///  4 = quaternion only (Q1, Q2, Q3, QC)
+  public var ATTITUDE_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.ATTITUDE_COMPONENTS.v); return o == 0 ? 7 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Attitude data as row-major array of doubles.
+  ///  Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  ///  Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  ///  Length must be divisible by ATTITUDE_COMPONENTS.
+  public var hasAttitudeData: Bool { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? false : true }
+  public var ATTITUDE_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ATTITUDE_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var ATTITUDE_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.ATTITUDE_DATA.v) ?? [] }
+  public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
   public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VTOFFSET.REF_FRAME_A.p) }
@@ -141,7 +74,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
   public static func add(ATTITUDE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_TYPE, at: VTOFFSET.ATTITUDE_TYPE.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
-  public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VTOFFSET.DATA.p) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VTOFFSET.STEP_SIZE.p) }
+  public static func add(ATTITUDE_COMPONENTS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_COMPONENTS, def: 7, at: VTOFFSET.ATTITUDE_COMPONENTS.p) }
+  public static func addVectorOf(ATTITUDE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATTITUDE_DATA, at: VTOFFSET.ATTITUDE_DATA.p) }
   public static func endAEMSegment(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAEMSegment(
     _ fbb: inout FlatBufferBuilder,
@@ -154,7 +89,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
     ATTITUDE_TYPEOffset ATTITUDE_TYPE: Offset = Offset(),
     START_TIMEOffset START_TIME: Offset = Offset(),
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
-    DATAVectorOffset DATA: Offset = Offset()
+    STEP_SIZE: Double = 0.0,
+    ATTITUDE_COMPONENTS: UInt8 = 7,
+    ATTITUDE_DATAVectorOffset ATTITUDE_DATA: Offset = Offset()
   ) -> Offset {
     let __start = AEMSegment.startAEMSegment(&fbb)
     AEMSegment.add(OBJECT_NAME: OBJECT_NAME, &fbb)
@@ -166,7 +103,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
     AEMSegment.add(ATTITUDE_TYPE: ATTITUDE_TYPE, &fbb)
     AEMSegment.add(START_TIME: START_TIME, &fbb)
     AEMSegment.add(STOP_TIME: STOP_TIME, &fbb)
-    AEMSegment.addVectorOf(DATA: DATA, &fbb)
+    AEMSegment.add(STEP_SIZE: STEP_SIZE, &fbb)
+    AEMSegment.add(ATTITUDE_COMPONENTS: ATTITUDE_COMPONENTS, &fbb)
+    AEMSegment.addVectorOf(ATTITUDE_DATA: ATTITUDE_DATA, &fbb)
     return AEMSegment.endAEMSegment(&fbb, start: __start)
   }
 
@@ -181,7 +120,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ATTITUDE_TYPE.p, fieldName: "ATTITUDE_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA.p, fieldName: "DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<AEMAttitudeEntry>, AEMAttitudeEntry>>.self)
+    try _v.visit(field: VTOFFSET.STEP_SIZE.p, fieldName: "STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ATTITUDE_COMPONENTS.p, fieldName: "ATTITUDE_COMPONENTS", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.ATTITUDE_DATA.p, fieldName: "ATTITUDE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

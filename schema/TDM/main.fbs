@@ -1,9 +1,15 @@
-// Hash: 3049e1f1943a27ee1f731bda828d33e815fe37cefe91c98eaca7cbbf088770d1
-// Version: 1.0.2
+// Hash: 3cff136fc81adf1cf217342e255f454a72fa8d922b9231f2a0d93fca5f76519b
+// Version: 2.0.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
 // Based on CCSDS 503.0-B-1 standard, November 2007
+//
+// Time Reconstruction:
+// Individual observation times can be reconstructed using the step-size formula:
+//   time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+// where i is the zero-based index into the observation arrays.
+//
 /// Tracking Data Message
 table TDM {
 
@@ -36,6 +42,13 @@ table TDM {
 
   /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   EPOCH: string;
+
+  /// Time interval between observations in seconds (required).
+  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+  OBSERVATION_STEP_SIZE:double;
+
+  /// Start time for observation time reconstruction (ISO 8601 UTC format).
+  OBSERVATION_START_TIME:string;
 
   /// TDM version number -  CCSDS 503.0-B-1, Page D-9
   CCSDS_TDM_VERS: string;

@@ -53,6 +53,16 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
+     * Time interval between observations in seconds (required).
+     * Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+     */
+    OBSERVATION_STEP_SIZE(): number;
+    /**
+     * Start time for observation time reconstruction (ISO 8601 UTC format).
+     */
+    OBSERVATION_START_TIME(): string | null;
+    OBSERVATION_START_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
      * TDM version number -  CCSDS 503.0-B-1, Page D-9
      */
     CCSDS_TDM_VERS(): string | null;
@@ -309,6 +319,8 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     static addObserverPositionReferenceFrame(builder: flatbuffers.Builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addObsReferenceFrame(builder: flatbuffers.Builder, OBS_REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
+    static addObservationStepSize(builder: flatbuffers.Builder, OBSERVATION_STEP_SIZE: number): void;
+    static addObservationStartTime(builder: flatbuffers.Builder, OBSERVATION_START_TIMEOffset: flatbuffers.Offset): void;
     static addCcsdsTdmVers(builder: flatbuffers.Builder, CCSDS_TDM_VERSOffset: flatbuffers.Offset): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -443,6 +455,8 @@ export declare class TDMT implements flatbuffers.IGeneratedObject {
     OBSERVER_POSITION_REFERENCE_FRAME: RFMT | null;
     OBS_REFERENCE_FRAME: RFMT | null;
     EPOCH: string | Uint8Array | null;
+    OBSERVATION_STEP_SIZE: number;
+    OBSERVATION_START_TIME: string | Uint8Array | null;
     CCSDS_TDM_VERS: string | Uint8Array | null;
     COMMENT: (string)[];
     CREATION_DATE: string | Uint8Array | null;
@@ -492,7 +506,7 @@ export declare class TDMT implements flatbuffers.IGeneratedObject {
     TEMPERATURE: (number)[];
     CLOCK_BIAS: (number)[];
     CLOCK_DRIFT: (number)[];
-    constructor(OBSERVER_ID?: string | Uint8Array | null, OBSERVER_X?: number, OBSERVER_Y?: number, OBSERVER_Z?: number, OBSERVER_VX?: number, OBSERVER_VY?: number, OBSERVER_VZ?: number, OBSERVER_POSITION_REFERENCE_FRAME?: RFMT | null, OBS_REFERENCE_FRAME?: RFMT | null, EPOCH?: string | Uint8Array | null, CCSDS_TDM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, META_START?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, PARTICIPANT_1?: string | Uint8Array | null, PARTICIPANT_2?: string | Uint8Array | null, PARTICIPANT_3?: string | Uint8Array | null, PARTICIPANT_4?: string | Uint8Array | null, PARTICIPANT_5?: string | Uint8Array | null, MODE?: string | Uint8Array | null, PATH_1?: number, PATH_2?: number, TRANSMIT_BAND?: string | Uint8Array | null, RECEIVE_BAND?: string | Uint8Array | null, INTEGRATION_INTERVAL?: number, INTEGRATION_REF?: string | Uint8Array | null, RECEIVE_DELAY_2?: number, RECEIVE_DELAY_3?: number, DATA_QUALITY?: string | Uint8Array | null, META_STOP?: string | Uint8Array | null, DATA_START?: string | Uint8Array | null, TRANSMIT_FREQ_1?: number, RECEIVE_FREQ?: (number)[], DATA_STOP?: string | Uint8Array | null, TIMETAG_REF?: string | Uint8Array | null, ANGLE_TYPE?: string | Uint8Array | null, ANGLE_1?: (number)[], ANGLE_2?: (number)[], ANGLE_UNCERTAINTY_1?: number, ANGLE_UNCERTAINTY_2?: number, RANGE_RATE?: number, RANGE_UNCERTAINTY?: number, RANGE_MODE?: string | Uint8Array | null, RANGE_MODULUS?: number, CORRECTION_ANGLE_1?: number, CORRECTION_ANGLE_2?: number, CORRECTIONS_APPLIED?: string | Uint8Array | null, TROPO_DRY?: (number)[], TROPO_WET?: (number)[], STEC?: (number)[], PRESSURE?: (number)[], RHUMIDITY?: (number)[], TEMPERATURE?: (number)[], CLOCK_BIAS?: (number)[], CLOCK_DRIFT?: (number)[]);
+    constructor(OBSERVER_ID?: string | Uint8Array | null, OBSERVER_X?: number, OBSERVER_Y?: number, OBSERVER_Z?: number, OBSERVER_VX?: number, OBSERVER_VY?: number, OBSERVER_VZ?: number, OBSERVER_POSITION_REFERENCE_FRAME?: RFMT | null, OBS_REFERENCE_FRAME?: RFMT | null, EPOCH?: string | Uint8Array | null, OBSERVATION_STEP_SIZE?: number, OBSERVATION_START_TIME?: string | Uint8Array | null, CCSDS_TDM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, META_START?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, PARTICIPANT_1?: string | Uint8Array | null, PARTICIPANT_2?: string | Uint8Array | null, PARTICIPANT_3?: string | Uint8Array | null, PARTICIPANT_4?: string | Uint8Array | null, PARTICIPANT_5?: string | Uint8Array | null, MODE?: string | Uint8Array | null, PATH_1?: number, PATH_2?: number, TRANSMIT_BAND?: string | Uint8Array | null, RECEIVE_BAND?: string | Uint8Array | null, INTEGRATION_INTERVAL?: number, INTEGRATION_REF?: string | Uint8Array | null, RECEIVE_DELAY_2?: number, RECEIVE_DELAY_3?: number, DATA_QUALITY?: string | Uint8Array | null, META_STOP?: string | Uint8Array | null, DATA_START?: string | Uint8Array | null, TRANSMIT_FREQ_1?: number, RECEIVE_FREQ?: (number)[], DATA_STOP?: string | Uint8Array | null, TIMETAG_REF?: string | Uint8Array | null, ANGLE_TYPE?: string | Uint8Array | null, ANGLE_1?: (number)[], ANGLE_2?: (number)[], ANGLE_UNCERTAINTY_1?: number, ANGLE_UNCERTAINTY_2?: number, RANGE_RATE?: number, RANGE_UNCERTAINTY?: number, RANGE_MODE?: string | Uint8Array | null, RANGE_MODULUS?: number, CORRECTION_ANGLE_1?: number, CORRECTION_ANGLE_2?: number, CORRECTIONS_APPLIED?: string | Uint8Array | null, TROPO_DRY?: (number)[], TROPO_WET?: (number)[], STEC?: (number)[], PRESSURE?: (number)[], RHUMIDITY?: (number)[], TEMPERATURE?: (number)[], CLOCK_BIAS?: (number)[], CLOCK_DRIFT?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TDM.d.ts.map

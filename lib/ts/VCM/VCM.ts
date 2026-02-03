@@ -5,7 +5,6 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { VCMAtmosphericModelData, VCMAtmosphericModelDataT } from './VCMAtmosphericModelData.js';
-import { VCMCovarianceMatrixLine, VCMCovarianceMatrixLineT } from './VCMCovarianceMatrixLine.js';
 import { VCMStateVector, VCMStateVectorT } from './VCMStateVector.js';
 import { equinoctialElements, equinoctialElementsT } from './equinoctialElements.js';
 import { keplerianElements, keplerianElementsT } from './keplerianElements.js';
@@ -119,146 +118,139 @@ PROPAGATOR_SETTINGS(obj?:propagatorConfig):propagatorConfig|null {
   return offset ? (obj || new propagatorConfig()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-COVARIANCE_MATRIX(index: number, obj?:VCMCovarianceMatrixLine):VCMCovarianceMatrixLine|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? (obj || new VCMCovarianceMatrixLine()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-covarianceMatrixLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 UVW_SIGMAS(obj?:uvwSigmas):uvwSigmas|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new uvwSigmas()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 MASS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 SOLAR_RAD_AREA():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 SOLAR_RAD_COEFF():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 DRAG_AREA():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 DRAG_COEFF():number {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 SRP():perturbationStatus {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : perturbationStatus.OFF;
 }
 
 CLASSIFICATION_TYPE():string|null
 CLASSIFICATION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CLASSIFICATION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 NORAD_CAT_ID():number {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
 ELEMENT_SET_NO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
+  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
 REV_AT_EPOCH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 BSTAR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
+  const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 MEAN_MOTION_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
+  const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 MEAN_MOTION_DDOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 COV_REFERENCE_FRAME():string|null
 COV_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COV_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
+  const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CX_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+/**
+ * Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+ * Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+ *         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+ *         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+ *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+ * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+ */
+COVARIANCE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-CY_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+covarianceLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-CZ_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-CX_DOT_X():number {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+covarianceArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 USER_DEFINED_BIP_0044_TYPE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
 USER_DEFINED_OBJECT_DESIGNATOR():string|null
 USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USER_DEFINED_OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 USER_DEFINED_EARTH_MODEL():string|null
 USER_DEFINED_EARTH_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 USER_DEFINED_EARTH_MODEL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 USER_DEFINED_EPOCH_TIMESTAMP():number {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 USER_DEFINED_MICROSECONDS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 static startVCM(builder:flatbuffers.Builder) {
-  builder.startObject(39);
+  builder.startObject(35);
 }
 
 static addCcsdsOmmVers(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number) {
@@ -317,116 +309,105 @@ static addPropagatorSettings(builder:flatbuffers.Builder, PROPAGATOR_SETTINGSOff
   builder.addFieldOffset(13, PROPAGATOR_SETTINGSOffset, 0);
 }
 
-static addCovarianceMatrix(builder:flatbuffers.Builder, COVARIANCE_MATRIXOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, COVARIANCE_MATRIXOffset, 0);
+static addUvwSigmas(builder:flatbuffers.Builder, UVW_SIGMASOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, UVW_SIGMASOffset, 0);
 }
 
-static createCovarianceMatrixVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static addMass(builder:flatbuffers.Builder, MASS:number) {
+  builder.addFieldFloat64(15, MASS, 0.0);
+}
+
+static addSolarRadArea(builder:flatbuffers.Builder, SOLAR_RAD_AREA:number) {
+  builder.addFieldFloat64(16, SOLAR_RAD_AREA, 0.0);
+}
+
+static addSolarRadCoeff(builder:flatbuffers.Builder, SOLAR_RAD_COEFF:number) {
+  builder.addFieldFloat64(17, SOLAR_RAD_COEFF, 0.0);
+}
+
+static addDragArea(builder:flatbuffers.Builder, DRAG_AREA:number) {
+  builder.addFieldFloat64(18, DRAG_AREA, 0.0);
+}
+
+static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
+  builder.addFieldFloat64(19, DRAG_COEFF, 0.0);
+}
+
+static addSrp(builder:flatbuffers.Builder, SRP:perturbationStatus) {
+  builder.addFieldInt8(20, SRP, perturbationStatus.OFF);
+}
+
+static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, CLASSIFICATION_TYPEOffset, 0);
+}
+
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(22, NORAD_CAT_ID, 0);
+}
+
+static addElementSetNo(builder:flatbuffers.Builder, ELEMENT_SET_NO:number) {
+  builder.addFieldInt32(23, ELEMENT_SET_NO, 0);
+}
+
+static addRevAtEpoch(builder:flatbuffers.Builder, REV_AT_EPOCH:number) {
+  builder.addFieldFloat64(24, REV_AT_EPOCH, 0.0);
+}
+
+static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
+  builder.addFieldFloat64(25, BSTAR, 0.0);
+}
+
+static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
+  builder.addFieldFloat64(26, MEAN_MOTION_DOT, 0.0);
+}
+
+static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
+  builder.addFieldFloat64(27, MEAN_MOTION_DDOT, 0.0);
+}
+
+static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, COV_REFERENCE_FRAMEOffset, 0);
+}
+
+static addCovariance(builder:flatbuffers.Builder, COVARIANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, COVARIANCEOffset, 0);
+}
+
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
-static startCovarianceMatrixVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addUvwSigmas(builder:flatbuffers.Builder, UVW_SIGMASOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, UVW_SIGMASOffset, 0);
-}
-
-static addMass(builder:flatbuffers.Builder, MASS:number) {
-  builder.addFieldFloat64(16, MASS, 0.0);
-}
-
-static addSolarRadArea(builder:flatbuffers.Builder, SOLAR_RAD_AREA:number) {
-  builder.addFieldFloat64(17, SOLAR_RAD_AREA, 0.0);
-}
-
-static addSolarRadCoeff(builder:flatbuffers.Builder, SOLAR_RAD_COEFF:number) {
-  builder.addFieldFloat64(18, SOLAR_RAD_COEFF, 0.0);
-}
-
-static addDragArea(builder:flatbuffers.Builder, DRAG_AREA:number) {
-  builder.addFieldFloat64(19, DRAG_AREA, 0.0);
-}
-
-static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
-  builder.addFieldFloat64(20, DRAG_COEFF, 0.0);
-}
-
-static addSrp(builder:flatbuffers.Builder, SRP:perturbationStatus) {
-  builder.addFieldInt8(21, SRP, perturbationStatus.OFF);
-}
-
-static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, CLASSIFICATION_TYPEOffset, 0);
-}
-
-static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
-  builder.addFieldInt32(23, NORAD_CAT_ID, 0);
-}
-
-static addElementSetNo(builder:flatbuffers.Builder, ELEMENT_SET_NO:number) {
-  builder.addFieldInt32(24, ELEMENT_SET_NO, 0);
-}
-
-static addRevAtEpoch(builder:flatbuffers.Builder, REV_AT_EPOCH:number) {
-  builder.addFieldFloat64(25, REV_AT_EPOCH, 0.0);
-}
-
-static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
-  builder.addFieldFloat64(26, BSTAR, 0.0);
-}
-
-static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
-  builder.addFieldFloat64(27, MEAN_MOTION_DOT, 0.0);
-}
-
-static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
-  builder.addFieldFloat64(28, MEAN_MOTION_DDOT, 0.0);
-}
-
-static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, COV_REFERENCE_FRAMEOffset, 0);
-}
-
-static addCxX(builder:flatbuffers.Builder, CX_X:number) {
-  builder.addFieldFloat64(30, CX_X, 0.0);
-}
-
-static addCyX(builder:flatbuffers.Builder, CY_X:number) {
-  builder.addFieldFloat64(31, CY_X, 0.0);
-}
-
-static addCzX(builder:flatbuffers.Builder, CZ_X:number) {
-  builder.addFieldFloat64(32, CZ_X, 0.0);
-}
-
-static addCxDotX(builder:flatbuffers.Builder, CX_DOT_X:number) {
-  builder.addFieldFloat64(33, CX_DOT_X, 0.0);
+static startCovarianceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
 }
 
 static addUserDefinedBip0044Type(builder:flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE:number) {
-  builder.addFieldInt32(34, USER_DEFINED_BIP_0044_TYPE, 0);
+  builder.addFieldInt32(30, USER_DEFINED_BIP_0044_TYPE, 0);
 }
 
 static addUserDefinedObjectDesignator(builder:flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(35, USER_DEFINED_OBJECT_DESIGNATOROffset, 0);
+  builder.addFieldOffset(31, USER_DEFINED_OBJECT_DESIGNATOROffset, 0);
 }
 
 static addUserDefinedEarthModel(builder:flatbuffers.Builder, USER_DEFINED_EARTH_MODELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(36, USER_DEFINED_EARTH_MODELOffset, 0);
+  builder.addFieldOffset(32, USER_DEFINED_EARTH_MODELOffset, 0);
 }
 
 static addUserDefinedEpochTimestamp(builder:flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP:number) {
-  builder.addFieldFloat64(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
+  builder.addFieldFloat64(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0);
 }
 
 static addUserDefinedMicroseconds(builder:flatbuffers.Builder, USER_DEFINED_MICROSECONDS:number) {
-  builder.addFieldFloat64(38, USER_DEFINED_MICROSECONDS, 0.0);
+  builder.addFieldFloat64(34, USER_DEFINED_MICROSECONDS, 0.0);
 }
 
 static endVCM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -459,7 +440,6 @@ unpack(): VCMT {
     this.GM(),
     (this.ATMOSPHERIC_MODEL_DATA() !== null ? this.ATMOSPHERIC_MODEL_DATA()!.unpack() : null),
     (this.PROPAGATOR_SETTINGS() !== null ? this.PROPAGATOR_SETTINGS()!.unpack() : null),
-    this.bb!.createObjList<VCMCovarianceMatrixLine, VCMCovarianceMatrixLineT>(this.COVARIANCE_MATRIX.bind(this), this.covarianceMatrixLength()),
     (this.UVW_SIGMAS() !== null ? this.UVW_SIGMAS()!.unpack() : null),
     this.MASS(),
     this.SOLAR_RAD_AREA(),
@@ -475,10 +455,7 @@ unpack(): VCMT {
     this.MEAN_MOTION_DOT(),
     this.MEAN_MOTION_DDOT(),
     this.COV_REFERENCE_FRAME(),
-    this.CX_X(),
-    this.CY_X(),
-    this.CZ_X(),
-    this.CX_DOT_X(),
+    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength()),
     this.USER_DEFINED_BIP_0044_TYPE(),
     this.USER_DEFINED_OBJECT_DESIGNATOR(),
     this.USER_DEFINED_EARTH_MODEL(),
@@ -503,7 +480,6 @@ unpackTo(_o: VCMT): void {
   _o.GM = this.GM();
   _o.ATMOSPHERIC_MODEL_DATA = (this.ATMOSPHERIC_MODEL_DATA() !== null ? this.ATMOSPHERIC_MODEL_DATA()!.unpack() : null);
   _o.PROPAGATOR_SETTINGS = (this.PROPAGATOR_SETTINGS() !== null ? this.PROPAGATOR_SETTINGS()!.unpack() : null);
-  _o.COVARIANCE_MATRIX = this.bb!.createObjList<VCMCovarianceMatrixLine, VCMCovarianceMatrixLineT>(this.COVARIANCE_MATRIX.bind(this), this.covarianceMatrixLength());
   _o.UVW_SIGMAS = (this.UVW_SIGMAS() !== null ? this.UVW_SIGMAS()!.unpack() : null);
   _o.MASS = this.MASS();
   _o.SOLAR_RAD_AREA = this.SOLAR_RAD_AREA();
@@ -519,10 +495,7 @@ unpackTo(_o: VCMT): void {
   _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT();
   _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT();
   _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME();
-  _o.CX_X = this.CX_X();
-  _o.CY_X = this.CY_X();
-  _o.CZ_X = this.CZ_X();
-  _o.CX_DOT_X = this.CX_DOT_X();
+  _o.COVARIANCE = this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength());
   _o.USER_DEFINED_BIP_0044_TYPE = this.USER_DEFINED_BIP_0044_TYPE();
   _o.USER_DEFINED_OBJECT_DESIGNATOR = this.USER_DEFINED_OBJECT_DESIGNATOR();
   _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL();
@@ -547,7 +520,6 @@ constructor(
   public GM: number = 0.0,
   public ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelDataT|null = null,
   public PROPAGATOR_SETTINGS: propagatorConfigT|null = null,
-  public COVARIANCE_MATRIX: (VCMCovarianceMatrixLineT)[] = [],
   public UVW_SIGMAS: uvwSigmasT|null = null,
   public MASS: number = 0.0,
   public SOLAR_RAD_AREA: number = 0.0,
@@ -563,10 +535,7 @@ constructor(
   public MEAN_MOTION_DOT: number = 0.0,
   public MEAN_MOTION_DDOT: number = 0.0,
   public COV_REFERENCE_FRAME: string|Uint8Array|null = null,
-  public CX_X: number = 0.0,
-  public CY_X: number = 0.0,
-  public CZ_X: number = 0.0,
-  public CX_DOT_X: number = 0.0,
+  public COVARIANCE: (number)[] = [],
   public USER_DEFINED_BIP_0044_TYPE: number = 0,
   public USER_DEFINED_OBJECT_DESIGNATOR: string|Uint8Array|null = null,
   public USER_DEFINED_EARTH_MODEL: string|Uint8Array|null = null,
@@ -588,10 +557,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EQUINOCTIAL_ELEMENTS = (this.EQUINOCTIAL_ELEMENTS !== null ? this.EQUINOCTIAL_ELEMENTS!.pack(builder) : 0);
   const ATMOSPHERIC_MODEL_DATA = (this.ATMOSPHERIC_MODEL_DATA !== null ? this.ATMOSPHERIC_MODEL_DATA!.pack(builder) : 0);
   const PROPAGATOR_SETTINGS = (this.PROPAGATOR_SETTINGS !== null ? this.PROPAGATOR_SETTINGS!.pack(builder) : 0);
-  const COVARIANCE_MATRIX = VCM.createCovarianceMatrixVector(builder, builder.createObjectOffsetList(this.COVARIANCE_MATRIX));
   const UVW_SIGMAS = (this.UVW_SIGMAS !== null ? this.UVW_SIGMAS!.pack(builder) : 0);
   const CLASSIFICATION_TYPE = (this.CLASSIFICATION_TYPE !== null ? builder.createString(this.CLASSIFICATION_TYPE!) : 0);
   const COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME !== null ? builder.createString(this.COV_REFERENCE_FRAME!) : 0);
+  const COVARIANCE = VCM.createCovarianceVector(builder, this.COVARIANCE);
   const USER_DEFINED_OBJECT_DESIGNATOR = (this.USER_DEFINED_OBJECT_DESIGNATOR !== null ? builder.createString(this.USER_DEFINED_OBJECT_DESIGNATOR!) : 0);
   const USER_DEFINED_EARTH_MODEL = (this.USER_DEFINED_EARTH_MODEL !== null ? builder.createString(this.USER_DEFINED_EARTH_MODEL!) : 0);
 
@@ -610,7 +579,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   VCM.addGm(builder, this.GM);
   VCM.addAtmosphericModelData(builder, ATMOSPHERIC_MODEL_DATA);
   VCM.addPropagatorSettings(builder, PROPAGATOR_SETTINGS);
-  VCM.addCovarianceMatrix(builder, COVARIANCE_MATRIX);
   VCM.addUvwSigmas(builder, UVW_SIGMAS);
   VCM.addMass(builder, this.MASS);
   VCM.addSolarRadArea(builder, this.SOLAR_RAD_AREA);
@@ -626,10 +594,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   VCM.addMeanMotionDot(builder, this.MEAN_MOTION_DOT);
   VCM.addMeanMotionDdot(builder, this.MEAN_MOTION_DDOT);
   VCM.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
-  VCM.addCxX(builder, this.CX_X);
-  VCM.addCyX(builder, this.CY_X);
-  VCM.addCzX(builder, this.CZ_X);
-  VCM.addCxDotX(builder, this.CX_DOT_X);
+  VCM.addCovariance(builder, COVARIANCE);
   VCM.addUserDefinedBip0044Type(builder, this.USER_DEFINED_BIP_0044_TYPE);
   VCM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOR);
   VCM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODEL);

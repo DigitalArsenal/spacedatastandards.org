@@ -62,48 +62,12 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     ENVIRONMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     ENVIRONMENT_CONF(): number;
     TRK_CONF(): number;
-    ECEF_POS(index: number): string;
-    ECEF_POS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    ecefPosLength(): number;
-    ECEF_VEL(index: number): string;
-    ECEF_VEL(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    ecefVelLength(): number;
-    ECEF_ACC(index: number): string;
-    ECEF_ACC(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    ecefAccLength(): number;
     LAT(): number;
     LON(): number;
     ALT(): number;
     SPD(): number;
     HDNG(): number;
     COURSE(): number;
-    LCO(index: number): string;
-    LCO(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    lcoLength(): number;
-    LCS(index: number): string;
-    LCS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    lcsLength(): number;
-    LC_POS(index: number): string;
-    LC_POS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    lcPosLength(): number;
-    LC_VEL(index: number): string;
-    LC_VEL(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    lcVelLength(): number;
-    LC_ACC(index: number): string;
-    LC_ACC(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    lcAccLength(): number;
-    E_NUVEL(index: number): string;
-    E_NUVEL(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    eNuvelLength(): number;
-    E_NUPOS(index: number): string;
-    E_NUPOS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    eNuposLength(): number;
-    COV(index: number): string;
-    COV(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    covLength(): number;
-    ERR_ELLP(index: number): string;
-    ERR_ELLP(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
-    errEllpLength(): number;
     SRC_TYPS(index: number): string;
     SRC_TYPS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     srcTypsLength(): number;
@@ -125,6 +89,67 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     TAGS(index: number): string;
     TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     tagsLength(): number;
+    /**
+     * Start time for track data (ISO 8601 UTC format).
+     */
+    TRACK_START_TIME(): string | null;
+    TRACK_START_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Time interval between track points in seconds.
+     */
+    TRACK_STEP_SIZE(): number;
+    /**
+     * Number of components per point (default 3 for X, Y, Z).
+     */
+    TRACK_COMPONENTS(): number;
+    /**
+     * ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+     */
+    ECEF_POS(index: number): number | null;
+    ecefPosLength(): number;
+    ecefPosArray(): Float64Array | null;
+    /**
+     * ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+     */
+    ECEF_VEL(index: number): number | null;
+    ecefVelLength(): number;
+    ecefVelArray(): Float64Array | null;
+    /**
+     * ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+     */
+    ECEF_ACC(index: number): number | null;
+    ecefAccLength(): number;
+    ecefAccArray(): Float64Array | null;
+    /**
+     * Local coordinate position as flat array
+     */
+    LC_POS(index: number): number | null;
+    lcPosLength(): number;
+    lcPosArray(): Float64Array | null;
+    /**
+     * Local coordinate velocity as flat array
+     */
+    LC_VEL(index: number): number | null;
+    lcVelLength(): number;
+    lcVelArray(): Float64Array | null;
+    /**
+     * Local coordinate acceleration as flat array
+     */
+    LC_ACC(index: number): number | null;
+    lcAccLength(): number;
+    lcAccArray(): Float64Array | null;
+    /**
+     * Covariance data (21 elements per point for 6x6 lower triangular)
+     */
+    COV(index: number): number | null;
+    covLength(): number;
+    covArray(): Float64Array | null;
+    /**
+     * Error ellipse data (6 elements per point)
+     */
+    ERR_ELLP(index: number): number | null;
+    errEllpLength(): number;
+    errEllpArray(): Float64Array | null;
     static startTRK(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addCntct(builder: flatbuffers.Builder, CNTCTOffset: flatbuffers.Offset): void;
@@ -155,48 +180,12 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     static addEnvironment(builder: flatbuffers.Builder, ENVIRONMENTOffset: flatbuffers.Offset): void;
     static addEnvironmentConf(builder: flatbuffers.Builder, ENVIRONMENT_CONF: number): void;
     static addTrkConf(builder: flatbuffers.Builder, TRK_CONF: number): void;
-    static addEcefPos(builder: flatbuffers.Builder, ECEF_POSOffset: flatbuffers.Offset): void;
-    static createEcefPosVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startEcefPosVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addEcefVel(builder: flatbuffers.Builder, ECEF_VELOffset: flatbuffers.Offset): void;
-    static createEcefVelVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startEcefVelVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addEcefAcc(builder: flatbuffers.Builder, ECEF_ACCOffset: flatbuffers.Offset): void;
-    static createEcefAccVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startEcefAccVector(builder: flatbuffers.Builder, numElems: number): void;
     static addLat(builder: flatbuffers.Builder, LAT: number): void;
     static addLon(builder: flatbuffers.Builder, LON: number): void;
     static addAlt(builder: flatbuffers.Builder, ALT: number): void;
     static addSpd(builder: flatbuffers.Builder, SPD: number): void;
     static addHdng(builder: flatbuffers.Builder, HDNG: number): void;
     static addCourse(builder: flatbuffers.Builder, COURSE: number): void;
-    static addLco(builder: flatbuffers.Builder, LCOOffset: flatbuffers.Offset): void;
-    static createLcoVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLcoVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addLcs(builder: flatbuffers.Builder, LCSOffset: flatbuffers.Offset): void;
-    static createLcsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLcsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addLcPos(builder: flatbuffers.Builder, LC_POSOffset: flatbuffers.Offset): void;
-    static createLcPosVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLcPosVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addLcVel(builder: flatbuffers.Builder, LC_VELOffset: flatbuffers.Offset): void;
-    static createLcVelVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLcVelVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addLcAcc(builder: flatbuffers.Builder, LC_ACCOffset: flatbuffers.Offset): void;
-    static createLcAccVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startLcAccVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addENuvel(builder: flatbuffers.Builder, E_NUVELOffset: flatbuffers.Offset): void;
-    static createENuvelVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startENuvelVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addENupos(builder: flatbuffers.Builder, E_NUPOSOffset: flatbuffers.Offset): void;
-    static createENuposVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startENuposVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addCov(builder: flatbuffers.Builder, COVOffset: flatbuffers.Offset): void;
-    static createCovVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startCovVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addErrEllp(builder: flatbuffers.Builder, ERR_ELLPOffset: flatbuffers.Offset): void;
-    static createErrEllpVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startErrEllpVector(builder: flatbuffers.Builder, numElems: number): void;
     static addSrcTyps(builder: flatbuffers.Builder, SRC_TYPSOffset: flatbuffers.Offset): void;
     static createSrcTypsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSrcTypsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -216,10 +205,69 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     static addTags(builder: flatbuffers.Builder, TAGSOffset: flatbuffers.Offset): void;
     static createTagsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTagsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTrackStartTime(builder: flatbuffers.Builder, TRACK_START_TIMEOffset: flatbuffers.Offset): void;
+    static addTrackStepSize(builder: flatbuffers.Builder, TRACK_STEP_SIZE: number): void;
+    static addTrackComponents(builder: flatbuffers.Builder, TRACK_COMPONENTS: number): void;
+    static addEcefPos(builder: flatbuffers.Builder, ECEF_POSOffset: flatbuffers.Offset): void;
+    static createEcefPosVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createEcefPosVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEcefPosVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEcefVel(builder: flatbuffers.Builder, ECEF_VELOffset: flatbuffers.Offset): void;
+    static createEcefVelVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createEcefVelVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEcefVelVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEcefAcc(builder: flatbuffers.Builder, ECEF_ACCOffset: flatbuffers.Offset): void;
+    static createEcefAccVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createEcefAccVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startEcefAccVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addLcPos(builder: flatbuffers.Builder, LC_POSOffset: flatbuffers.Offset): void;
+    static createLcPosVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createLcPosVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startLcPosVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addLcVel(builder: flatbuffers.Builder, LC_VELOffset: flatbuffers.Offset): void;
+    static createLcVelVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createLcVelVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startLcVelVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addLcAcc(builder: flatbuffers.Builder, LC_ACCOffset: flatbuffers.Offset): void;
+    static createLcAccVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createLcAccVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startLcAccVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCov(builder: flatbuffers.Builder, COVOffset: flatbuffers.Offset): void;
+    static createCovVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createCovVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCovVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addErrEllp(builder: flatbuffers.Builder, ERR_ELLPOffset: flatbuffers.Offset): void;
+    static createErrEllpVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createErrEllpVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startErrEllpVector(builder: flatbuffers.Builder, numElems: number): void;
     static endTRK(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishTRKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedTRKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createTRK(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CNTCTOffset: flatbuffers.Offset, MSG_TSOffset: flatbuffers.Offset, MSN_IDOffset: flatbuffers.Offset, ASSET_NATOffset: flatbuffers.Offset, ASSETOffset: flatbuffers.Offset, SENOffset: flatbuffers.Offset, SEN_QUALOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, TRK_NUMOffset: flatbuffers.Offset, TRK_STATOffset: flatbuffers.Offset, OBJ_NATOffset: flatbuffers.Offset, OBJ_IDOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_SPECOffset: flatbuffers.Offset, OBJ_PLATOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, MOD_TYPEOffset: flatbuffers.Offset, TRK_ITM_IDOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, TRK_QUAL: number, TRK_PT_TYPEOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_CRED: number, IDENT_REL: number, IDENT_AMPOffset: flatbuffers.Offset, ENVIRONMENTOffset: flatbuffers.Offset, ENVIRONMENT_CONF: number, TRK_CONF: number, ECEF_POSOffset: flatbuffers.Offset, ECEF_VELOffset: flatbuffers.Offset, ECEF_ACCOffset: flatbuffers.Offset, LAT: number, LON: number, ALT: number, SPD: number, HDNG: number, COURSE: number, LCOOffset: flatbuffers.Offset, LCSOffset: flatbuffers.Offset, LC_POSOffset: flatbuffers.Offset, LC_VELOffset: flatbuffers.Offset, LC_ACCOffset: flatbuffers.Offset, E_NUVELOffset: flatbuffers.Offset, E_NUPOSOffset: flatbuffers.Offset, COVOffset: flatbuffers.Offset, ERR_ELLPOffset: flatbuffers.Offset, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, MULTI_SOURCE: boolean, J_SERIESOffset: flatbuffers.Offset, STRENGTH: number, M1: number, M1V: number, M2: number, M2V: number, M3A: number, M3AV: number, TAGSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createTRK(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CNTCTOffset: flatbuffers.Offset, MSG_TSOffset: flatbuffers.Offset, MSN_IDOffset: flatbuffers.Offset, ASSET_NATOffset: flatbuffers.Offset, ASSETOffset: flatbuffers.Offset, SENOffset: flatbuffers.Offset, SEN_QUALOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, TRK_NUMOffset: flatbuffers.Offset, TRK_STATOffset: flatbuffers.Offset, OBJ_NATOffset: flatbuffers.Offset, OBJ_IDOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_SPECOffset: flatbuffers.Offset, OBJ_PLATOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, MOD_TYPEOffset: flatbuffers.Offset, TRK_ITM_IDOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, TRK_QUAL: number, TRK_PT_TYPEOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_CRED: number, IDENT_REL: number, IDENT_AMPOffset: flatbuffers.Offset, ENVIRONMENTOffset: flatbuffers.Offset, ENVIRONMENT_CONF: number, TRK_CONF: number, LAT: number, LON: number, ALT: number, SPD: number, HDNG: number, COURSE: number, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, MULTI_SOURCE: boolean, J_SERIESOffset: flatbuffers.Offset, STRENGTH: number, M1: number, M1V: number, M2: number, M2V: number, M3A: number, M3AV: number, TAGSOffset: flatbuffers.Offset, TRACK_START_TIMEOffset: flatbuffers.Offset, TRACK_STEP_SIZE: number, TRACK_COMPONENTS: number, ECEF_POSOffset: flatbuffers.Offset, ECEF_VELOffset: flatbuffers.Offset, ECEF_ACCOffset: flatbuffers.Offset, LC_POSOffset: flatbuffers.Offset, LC_VELOffset: flatbuffers.Offset, LC_ACCOffset: flatbuffers.Offset, COVOffset: flatbuffers.Offset, ERR_ELLPOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): TRKT;
     unpackTo(_o: TRKT): void;
 }
@@ -253,24 +301,12 @@ export declare class TRKT implements flatbuffers.IGeneratedObject {
     ENVIRONMENT: string | Uint8Array | null;
     ENVIRONMENT_CONF: number;
     TRK_CONF: number;
-    ECEF_POS: (string)[];
-    ECEF_VEL: (string)[];
-    ECEF_ACC: (string)[];
     LAT: number;
     LON: number;
     ALT: number;
     SPD: number;
     HDNG: number;
     COURSE: number;
-    LCO: (string)[];
-    LCS: (string)[];
-    LC_POS: (string)[];
-    LC_VEL: (string)[];
-    LC_ACC: (string)[];
-    E_NUVEL: (string)[];
-    E_NUPOS: (string)[];
-    COV: (string)[];
-    ERR_ELLP: (string)[];
     SRC_TYPS: (string)[];
     SRC_IDS: (string)[];
     CALL_SIGN: string | Uint8Array | null;
@@ -284,7 +320,18 @@ export declare class TRKT implements flatbuffers.IGeneratedObject {
     M3A: number;
     M3AV: number;
     TAGS: (string)[];
-    constructor(ID?: string | Uint8Array | null, CNTCT?: string | Uint8Array | null, MSG_TS?: string | Uint8Array | null, MSN_ID?: string | Uint8Array | null, ASSET_NAT?: string | Uint8Array | null, ASSET?: string | Uint8Array | null, SEN?: string | Uint8Array | null, SEN_QUAL?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, TRK_NUM?: string | Uint8Array | null, TRK_STAT?: string | Uint8Array | null, OBJ_NAT?: string | Uint8Array | null, OBJ_ID?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_SPEC?: string | Uint8Array | null, OBJ_PLAT?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, MOD_TYPE?: string | Uint8Array | null, TRK_ITM_ID?: string | Uint8Array | null, TS?: string | Uint8Array | null, TRK_QUAL?: number, TRK_PT_TYPE?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_CRED?: number, IDENT_REL?: number, IDENT_AMP?: string | Uint8Array | null, ENVIRONMENT?: string | Uint8Array | null, ENVIRONMENT_CONF?: number, TRK_CONF?: number, ECEF_POS?: (string)[], ECEF_VEL?: (string)[], ECEF_ACC?: (string)[], LAT?: number, LON?: number, ALT?: number, SPD?: number, HDNG?: number, COURSE?: number, LCO?: (string)[], LCS?: (string)[], LC_POS?: (string)[], LC_VEL?: (string)[], LC_ACC?: (string)[], E_NUVEL?: (string)[], E_NUPOS?: (string)[], COV?: (string)[], ERR_ELLP?: (string)[], SRC_TYPS?: (string)[], SRC_IDS?: (string)[], CALL_SIGN?: string | Uint8Array | null, MULTI_SOURCE?: boolean, J_SERIES?: string | Uint8Array | null, STRENGTH?: number, M1?: number, M1V?: number, M2?: number, M2V?: number, M3A?: number, M3AV?: number, TAGS?: (string)[]);
+    TRACK_START_TIME: string | Uint8Array | null;
+    TRACK_STEP_SIZE: number;
+    TRACK_COMPONENTS: number;
+    ECEF_POS: (number)[];
+    ECEF_VEL: (number)[];
+    ECEF_ACC: (number)[];
+    LC_POS: (number)[];
+    LC_VEL: (number)[];
+    LC_ACC: (number)[];
+    COV: (number)[];
+    ERR_ELLP: (number)[];
+    constructor(ID?: string | Uint8Array | null, CNTCT?: string | Uint8Array | null, MSG_TS?: string | Uint8Array | null, MSN_ID?: string | Uint8Array | null, ASSET_NAT?: string | Uint8Array | null, ASSET?: string | Uint8Array | null, SEN?: string | Uint8Array | null, SEN_QUAL?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, TRK_NUM?: string | Uint8Array | null, TRK_STAT?: string | Uint8Array | null, OBJ_NAT?: string | Uint8Array | null, OBJ_ID?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_SPEC?: string | Uint8Array | null, OBJ_PLAT?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, MOD_TYPE?: string | Uint8Array | null, TRK_ITM_ID?: string | Uint8Array | null, TS?: string | Uint8Array | null, TRK_QUAL?: number, TRK_PT_TYPE?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_CRED?: number, IDENT_REL?: number, IDENT_AMP?: string | Uint8Array | null, ENVIRONMENT?: string | Uint8Array | null, ENVIRONMENT_CONF?: number, TRK_CONF?: number, LAT?: number, LON?: number, ALT?: number, SPD?: number, HDNG?: number, COURSE?: number, SRC_TYPS?: (string)[], SRC_IDS?: (string)[], CALL_SIGN?: string | Uint8Array | null, MULTI_SOURCE?: boolean, J_SERIES?: string | Uint8Array | null, STRENGTH?: number, M1?: number, M1V?: number, M2?: number, M2V?: number, M3A?: number, M3AV?: number, TAGS?: (string)[], TRACK_START_TIME?: string | Uint8Array | null, TRACK_STEP_SIZE?: number, TRACK_COMPONENTS?: number, ECEF_POS?: (number)[], ECEF_VEL?: (number)[], ECEF_ACC?: (number)[], LC_POS?: (number)[], LC_VEL?: (number)[], LC_ACC?: (number)[], COV?: (number)[], ERR_ELLP?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TRK.d.ts.map

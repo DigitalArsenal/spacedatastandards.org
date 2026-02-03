@@ -106,86 +106,124 @@ public final class TRK extends Table {
   public ByteBuffer ENVIRONMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
   public double ENVIRONMENT_CONF() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double TRK_CONF() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String ECEF_POS(int j) { int o = __offset(62); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ECEF_POSLength() { int o = __offset(62); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector ecefPosVector() { return ecefPosVector(new StringVector()); }
-  public StringVector ecefPosVector(StringVector obj) { int o = __offset(62); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ECEF_VEL(int j) { int o = __offset(64); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ECEF_VELLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector ecefVelVector() { return ecefVelVector(new StringVector()); }
-  public StringVector ecefVelVector(StringVector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ECEF_ACC(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ECEF_ACCLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector ecefAccVector() { return ecefAccVector(new StringVector()); }
-  public StringVector ecefAccVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public double LAT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LON() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ALT() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SPD() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double HDNG() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double COURSE() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String LCO(int j) { int o = __offset(80); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LCOLength() { int o = __offset(80); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector lcoVector() { return lcoVector(new StringVector()); }
-  public StringVector lcoVector(StringVector obj) { int o = __offset(80); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String LCS(int j) { int o = __offset(82); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LCSLength() { int o = __offset(82); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector lcsVector() { return lcsVector(new StringVector()); }
-  public StringVector lcsVector(StringVector obj) { int o = __offset(82); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String LC_POS(int j) { int o = __offset(84); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LC_POSLength() { int o = __offset(84); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector lcPosVector() { return lcPosVector(new StringVector()); }
-  public StringVector lcPosVector(StringVector obj) { int o = __offset(84); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String LC_VEL(int j) { int o = __offset(86); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LC_VELLength() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector lcVelVector() { return lcVelVector(new StringVector()); }
-  public StringVector lcVelVector(StringVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String LC_ACC(int j) { int o = __offset(88); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int LC_ACCLength() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector lcAccVector() { return lcAccVector(new StringVector()); }
-  public StringVector lcAccVector(StringVector obj) { int o = __offset(88); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String E_NUVEL(int j) { int o = __offset(90); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int E_NUVELLength() { int o = __offset(90); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector eNuvelVector() { return eNuvelVector(new StringVector()); }
-  public StringVector eNuvelVector(StringVector obj) { int o = __offset(90); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String E_NUPOS(int j) { int o = __offset(92); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int E_NUPOSLength() { int o = __offset(92); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector eNuposVector() { return eNuposVector(new StringVector()); }
-  public StringVector eNuposVector(StringVector obj) { int o = __offset(92); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String COV(int j) { int o = __offset(94); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int COVLength() { int o = __offset(94); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector covVector() { return covVector(new StringVector()); }
-  public StringVector covVector(StringVector obj) { int o = __offset(94); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ERR_ELLP(int j) { int o = __offset(96); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ERR_ELLPLength() { int o = __offset(96); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector errEllpVector() { return errEllpVector(new StringVector()); }
-  public StringVector errEllpVector(StringVector obj) { int o = __offset(96); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SRC_TYPS(int j) { int o = __offset(98); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SRC_TYPSLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
+  public double LAT() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double LON() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ALT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SPD() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double HDNG() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double COURSE() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public String SRC_TYPS(int j) { int o = __offset(74); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SRC_TYPSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcTypsVector() { return srcTypsVector(new StringVector()); }
-  public StringVector srcTypsVector(StringVector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SRC_IDS(int j) { int o = __offset(100); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SRC_IDSLength() { int o = __offset(100); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector srcTypsVector(StringVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public String SRC_IDS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SRC_IDSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcIdsVector() { return srcIdsVector(new StringVector()); }
-  public StringVector srcIdsVector(StringVector obj) { int o = __offset(100); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String CALL_SIGN() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
-  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
-  public boolean MULTI_SOURCE() { int o = __offset(104); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String J_SERIES() { int o = __offset(106); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer J_SERIESAsByteBuffer() { return __vector_as_bytebuffer(106, 1); }
-  public ByteBuffer J_SERIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 1); }
-  public int STRENGTH() { int o = __offset(108); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M1() { int o = __offset(110); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M1V() { int o = __offset(112); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M2() { int o = __offset(114); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M2V() { int o = __offset(116); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M3A() { int o = __offset(118); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M3AV() { int o = __offset(120); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String TAGS(int j) { int o = __offset(122); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TAGSLength() { int o = __offset(122); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector srcIdsVector(StringVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public String CALL_SIGN() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  public boolean MULTI_SOURCE() { int o = __offset(80); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public String J_SERIES() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer J_SERIESAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer J_SERIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  public int STRENGTH() { int o = __offset(84); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M1() { int o = __offset(86); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M1V() { int o = __offset(88); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M2() { int o = __offset(90); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M2V() { int o = __offset(92); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M3A() { int o = __offset(94); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int M3AV() { int o = __offset(96); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String TAGS(int j) { int o = __offset(98); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
-  public StringVector tagsVector(StringVector obj) { int o = __offset(122); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Start time for track data (ISO 8601 UTC format).
+   */
+  public String TRACK_START_TIME() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRACK_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
+  public ByteBuffer TRACK_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  /**
+   * Time interval between track points in seconds.
+   */
+  public double TRACK_STEP_SIZE() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of components per point (default 3 for X, Y, Z).
+   */
+  public int TRACK_COMPONENTS() { int o = __offset(104); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 3; }
+  /**
+   * ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+   */
+  public double ECEF_POS(int j) { int o = __offset(106); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ECEF_POSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector ecefPosVector() { return ecefPosVector(new DoubleVector()); }
+  public DoubleVector ecefPosVector(DoubleVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ECEF_POSAsByteBuffer() { return __vector_as_bytebuffer(106, 8); }
+  public ByteBuffer ECEF_POSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 8); }
+  /**
+   * ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+   */
+  public double ECEF_VEL(int j) { int o = __offset(108); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ECEF_VELLength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector ecefVelVector() { return ecefVelVector(new DoubleVector()); }
+  public DoubleVector ecefVelVector(DoubleVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ECEF_VELAsByteBuffer() { return __vector_as_bytebuffer(108, 8); }
+  public ByteBuffer ECEF_VELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 108, 8); }
+  /**
+   * ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+   */
+  public double ECEF_ACC(int j) { int o = __offset(110); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ECEF_ACCLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector ecefAccVector() { return ecefAccVector(new DoubleVector()); }
+  public DoubleVector ecefAccVector(DoubleVector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ECEF_ACCAsByteBuffer() { return __vector_as_bytebuffer(110, 8); }
+  public ByteBuffer ECEF_ACCInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 110, 8); }
+  /**
+   * Local coordinate position as flat array
+   */
+  public double LC_POS(int j) { int o = __offset(112); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int LC_POSLength() { int o = __offset(112); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector lcPosVector() { return lcPosVector(new DoubleVector()); }
+  public DoubleVector lcPosVector(DoubleVector obj) { int o = __offset(112); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer LC_POSAsByteBuffer() { return __vector_as_bytebuffer(112, 8); }
+  public ByteBuffer LC_POSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 8); }
+  /**
+   * Local coordinate velocity as flat array
+   */
+  public double LC_VEL(int j) { int o = __offset(114); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int LC_VELLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector lcVelVector() { return lcVelVector(new DoubleVector()); }
+  public DoubleVector lcVelVector(DoubleVector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer LC_VELAsByteBuffer() { return __vector_as_bytebuffer(114, 8); }
+  public ByteBuffer LC_VELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 8); }
+  /**
+   * Local coordinate acceleration as flat array
+   */
+  public double LC_ACC(int j) { int o = __offset(116); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int LC_ACCLength() { int o = __offset(116); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector lcAccVector() { return lcAccVector(new DoubleVector()); }
+  public DoubleVector lcAccVector(DoubleVector obj) { int o = __offset(116); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer LC_ACCAsByteBuffer() { return __vector_as_bytebuffer(116, 8); }
+  public ByteBuffer LC_ACCInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 8); }
+  /**
+   * Covariance data (21 elements per point for 6x6 lower triangular)
+   */
+  public double COV(int j) { int o = __offset(118); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVLength() { int o = __offset(118); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covVector() { return covVector(new DoubleVector()); }
+  public DoubleVector covVector(DoubleVector obj) { int o = __offset(118); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVAsByteBuffer() { return __vector_as_bytebuffer(118, 8); }
+  public ByteBuffer COVInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 8); }
+  /**
+   * Error ellipse data (6 elements per point)
+   */
+  public double ERR_ELLP(int j) { int o = __offset(120); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ERR_ELLPLength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector errEllpVector() { return errEllpVector(new DoubleVector()); }
+  public DoubleVector errEllpVector(DoubleVector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ERR_ELLPAsByteBuffer() { return __vector_as_bytebuffer(120, 8); }
+  public ByteBuffer ERR_ELLPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 120, 8); }
 
   public static int createTRK(FlatBufferBuilder builder,
       int IDOffset,
@@ -217,24 +255,12 @@ public final class TRK extends Table {
       int ENVIRONMENTOffset,
       double ENVIRONMENT_CONF,
       double TRK_CONF,
-      int ECEF_POSOffset,
-      int ECEF_VELOffset,
-      int ECEF_ACCOffset,
       double LAT,
       double LON,
       double ALT,
       double SPD,
       double HDNG,
       double COURSE,
-      int LCOOffset,
-      int LCSOffset,
-      int LC_POSOffset,
-      int LC_VELOffset,
-      int LC_ACCOffset,
-      int E_NUVELOffset,
-      int E_NUPOSOffset,
-      int COVOffset,
-      int ERR_ELLPOffset,
       int SRC_TYPSOffset,
       int SRC_IDSOffset,
       int CALL_SIGNOffset,
@@ -247,8 +273,20 @@ public final class TRK extends Table {
       int M2V,
       int M3A,
       int M3AV,
-      int TAGSOffset) {
-    builder.startTable(60);
+      int TAGSOffset,
+      int TRACK_START_TIMEOffset,
+      double TRACK_STEP_SIZE,
+      int TRACK_COMPONENTS,
+      int ECEF_POSOffset,
+      int ECEF_VELOffset,
+      int ECEF_ACCOffset,
+      int LC_POSOffset,
+      int LC_VELOffset,
+      int LC_ACCOffset,
+      int COVOffset,
+      int ERR_ELLPOffset) {
+    builder.startTable(59);
+    TRK.addTrackStepSize(builder, TRACK_STEP_SIZE);
     TRK.addCourse(builder, COURSE);
     TRK.addHdng(builder, HDNG);
     TRK.addSpd(builder, SPD);
@@ -257,6 +295,15 @@ public final class TRK extends Table {
     TRK.addLat(builder, LAT);
     TRK.addTrkConf(builder, TRK_CONF);
     TRK.addEnvironmentConf(builder, ENVIRONMENT_CONF);
+    TRK.addErrEllp(builder, ERR_ELLPOffset);
+    TRK.addCov(builder, COVOffset);
+    TRK.addLcAcc(builder, LC_ACCOffset);
+    TRK.addLcVel(builder, LC_VELOffset);
+    TRK.addLcPos(builder, LC_POSOffset);
+    TRK.addEcefAcc(builder, ECEF_ACCOffset);
+    TRK.addEcefVel(builder, ECEF_VELOffset);
+    TRK.addEcefPos(builder, ECEF_POSOffset);
+    TRK.addTrackStartTime(builder, TRACK_START_TIMEOffset);
     TRK.addTags(builder, TAGSOffset);
     TRK.addM3Av(builder, M3AV);
     TRK.addM3A(builder, M3A);
@@ -269,18 +316,6 @@ public final class TRK extends Table {
     TRK.addCallSign(builder, CALL_SIGNOffset);
     TRK.addSrcIds(builder, SRC_IDSOffset);
     TRK.addSrcTyps(builder, SRC_TYPSOffset);
-    TRK.addErrEllp(builder, ERR_ELLPOffset);
-    TRK.addCov(builder, COVOffset);
-    TRK.addENupos(builder, E_NUPOSOffset);
-    TRK.addENuvel(builder, E_NUVELOffset);
-    TRK.addLcAcc(builder, LC_ACCOffset);
-    TRK.addLcVel(builder, LC_VELOffset);
-    TRK.addLcPos(builder, LC_POSOffset);
-    TRK.addLcs(builder, LCSOffset);
-    TRK.addLco(builder, LCOOffset);
-    TRK.addEcefAcc(builder, ECEF_ACCOffset);
-    TRK.addEcefVel(builder, ECEF_VELOffset);
-    TRK.addEcefPos(builder, ECEF_POSOffset);
     TRK.addEnvironment(builder, ENVIRONMENTOffset);
     TRK.addIdentAmp(builder, IDENT_AMPOffset);
     TRK.addIdentRel(builder, IDENT_REL);
@@ -308,11 +343,12 @@ public final class TRK extends Table {
     TRK.addMsgTs(builder, MSG_TSOffset);
     TRK.addCntct(builder, CNTCTOffset);
     TRK.addId(builder, IDOffset);
+    TRK.addTrackComponents(builder, TRACK_COMPONENTS);
     TRK.addMultiSource(builder, MULTI_SOURCE);
     return TRK.endTRK(builder);
   }
 
-  public static void startTRK(FlatBufferBuilder builder) { builder.startTable(60); }
+  public static void startTRK(FlatBufferBuilder builder) { builder.startTable(59); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCntct(FlatBufferBuilder builder, int CNTCTOffset) { builder.addOffset(1, CNTCTOffset, 0); }
   public static void addMsgTs(FlatBufferBuilder builder, int MSG_TSOffset) { builder.addOffset(2, MSG_TSOffset, 0); }
@@ -342,67 +378,58 @@ public final class TRK extends Table {
   public static void addEnvironment(FlatBufferBuilder builder, int ENVIRONMENTOffset) { builder.addOffset(26, ENVIRONMENTOffset, 0); }
   public static void addEnvironmentConf(FlatBufferBuilder builder, double ENVIRONMENT_CONF) { builder.addDouble(27, ENVIRONMENT_CONF, 0.0); }
   public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(28, TRK_CONF, 0.0); }
-  public static void addEcefPos(FlatBufferBuilder builder, int ECEF_POSOffset) { builder.addOffset(29, ECEF_POSOffset, 0); }
-  public static int createEcefPosVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startEcefPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addEcefVel(FlatBufferBuilder builder, int ECEF_VELOffset) { builder.addOffset(30, ECEF_VELOffset, 0); }
-  public static int createEcefVelVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startEcefVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addEcefAcc(FlatBufferBuilder builder, int ECEF_ACCOffset) { builder.addOffset(31, ECEF_ACCOffset, 0); }
-  public static int createEcefAccVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startEcefAccVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(32, LAT, 0.0); }
-  public static void addLon(FlatBufferBuilder builder, double LON) { builder.addDouble(33, LON, 0.0); }
-  public static void addAlt(FlatBufferBuilder builder, double ALT) { builder.addDouble(34, ALT, 0.0); }
-  public static void addSpd(FlatBufferBuilder builder, double SPD) { builder.addDouble(35, SPD, 0.0); }
-  public static void addHdng(FlatBufferBuilder builder, double HDNG) { builder.addDouble(36, HDNG, 0.0); }
-  public static void addCourse(FlatBufferBuilder builder, double COURSE) { builder.addDouble(37, COURSE, 0.0); }
-  public static void addLco(FlatBufferBuilder builder, int LCOOffset) { builder.addOffset(38, LCOOffset, 0); }
-  public static int createLcoVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLcoVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addLcs(FlatBufferBuilder builder, int LCSOffset) { builder.addOffset(39, LCSOffset, 0); }
-  public static int createLcsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLcsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addLcPos(FlatBufferBuilder builder, int LC_POSOffset) { builder.addOffset(40, LC_POSOffset, 0); }
-  public static int createLcPosVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLcPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addLcVel(FlatBufferBuilder builder, int LC_VELOffset) { builder.addOffset(41, LC_VELOffset, 0); }
-  public static int createLcVelVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLcVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addLcAcc(FlatBufferBuilder builder, int LC_ACCOffset) { builder.addOffset(42, LC_ACCOffset, 0); }
-  public static int createLcAccVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startLcAccVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addENuvel(FlatBufferBuilder builder, int E_NUVELOffset) { builder.addOffset(43, E_NUVELOffset, 0); }
-  public static int createENuvelVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startENuvelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addENupos(FlatBufferBuilder builder, int E_NUPOSOffset) { builder.addOffset(44, E_NUPOSOffset, 0); }
-  public static int createENuposVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startENuposVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCov(FlatBufferBuilder builder, int COVOffset) { builder.addOffset(45, COVOffset, 0); }
-  public static int createCovVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startCovVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addErrEllp(FlatBufferBuilder builder, int ERR_ELLPOffset) { builder.addOffset(46, ERR_ELLPOffset, 0); }
-  public static int createErrEllpVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startErrEllpVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSrcTyps(FlatBufferBuilder builder, int SRC_TYPSOffset) { builder.addOffset(47, SRC_TYPSOffset, 0); }
+  public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(29, LAT, 0.0); }
+  public static void addLon(FlatBufferBuilder builder, double LON) { builder.addDouble(30, LON, 0.0); }
+  public static void addAlt(FlatBufferBuilder builder, double ALT) { builder.addDouble(31, ALT, 0.0); }
+  public static void addSpd(FlatBufferBuilder builder, double SPD) { builder.addDouble(32, SPD, 0.0); }
+  public static void addHdng(FlatBufferBuilder builder, double HDNG) { builder.addDouble(33, HDNG, 0.0); }
+  public static void addCourse(FlatBufferBuilder builder, double COURSE) { builder.addDouble(34, COURSE, 0.0); }
+  public static void addSrcTyps(FlatBufferBuilder builder, int SRC_TYPSOffset) { builder.addOffset(35, SRC_TYPSOffset, 0); }
   public static int createSrcTypsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSrcTypsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSrcIds(FlatBufferBuilder builder, int SRC_IDSOffset) { builder.addOffset(48, SRC_IDSOffset, 0); }
+  public static void addSrcIds(FlatBufferBuilder builder, int SRC_IDSOffset) { builder.addOffset(36, SRC_IDSOffset, 0); }
   public static int createSrcIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSrcIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(49, CALL_SIGNOffset, 0); }
-  public static void addMultiSource(FlatBufferBuilder builder, boolean MULTI_SOURCE) { builder.addBoolean(50, MULTI_SOURCE, false); }
-  public static void addJSeries(FlatBufferBuilder builder, int J_SERIESOffset) { builder.addOffset(51, J_SERIESOffset, 0); }
-  public static void addStrength(FlatBufferBuilder builder, int STRENGTH) { builder.addInt(52, STRENGTH, 0); }
-  public static void addM1(FlatBufferBuilder builder, int M1) { builder.addInt(53, M1, 0); }
-  public static void addM1V(FlatBufferBuilder builder, int M1V) { builder.addInt(54, M1V, 0); }
-  public static void addM2(FlatBufferBuilder builder, int M2) { builder.addInt(55, M2, 0); }
-  public static void addM2V(FlatBufferBuilder builder, int M2V) { builder.addInt(56, M2V, 0); }
-  public static void addM3A(FlatBufferBuilder builder, int M3A) { builder.addInt(57, M3A, 0); }
-  public static void addM3Av(FlatBufferBuilder builder, int M3AV) { builder.addInt(58, M3AV, 0); }
-  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(59, TAGSOffset, 0); }
+  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(37, CALL_SIGNOffset, 0); }
+  public static void addMultiSource(FlatBufferBuilder builder, boolean MULTI_SOURCE) { builder.addBoolean(38, MULTI_SOURCE, false); }
+  public static void addJSeries(FlatBufferBuilder builder, int J_SERIESOffset) { builder.addOffset(39, J_SERIESOffset, 0); }
+  public static void addStrength(FlatBufferBuilder builder, int STRENGTH) { builder.addInt(40, STRENGTH, 0); }
+  public static void addM1(FlatBufferBuilder builder, int M1) { builder.addInt(41, M1, 0); }
+  public static void addM1V(FlatBufferBuilder builder, int M1V) { builder.addInt(42, M1V, 0); }
+  public static void addM2(FlatBufferBuilder builder, int M2) { builder.addInt(43, M2, 0); }
+  public static void addM2V(FlatBufferBuilder builder, int M2V) { builder.addInt(44, M2V, 0); }
+  public static void addM3A(FlatBufferBuilder builder, int M3A) { builder.addInt(45, M3A, 0); }
+  public static void addM3Av(FlatBufferBuilder builder, int M3AV) { builder.addInt(46, M3AV, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(47, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTrackStartTime(FlatBufferBuilder builder, int TRACK_START_TIMEOffset) { builder.addOffset(48, TRACK_START_TIMEOffset, 0); }
+  public static void addTrackStepSize(FlatBufferBuilder builder, double TRACK_STEP_SIZE) { builder.addDouble(49, TRACK_STEP_SIZE, 0.0); }
+  public static void addTrackComponents(FlatBufferBuilder builder, int TRACK_COMPONENTS) { builder.addByte(50, (byte) TRACK_COMPONENTS, (byte) 3); }
+  public static void addEcefPos(FlatBufferBuilder builder, int ECEF_POSOffset) { builder.addOffset(51, ECEF_POSOffset, 0); }
+  public static int createEcefPosVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startEcefPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addEcefVel(FlatBufferBuilder builder, int ECEF_VELOffset) { builder.addOffset(52, ECEF_VELOffset, 0); }
+  public static int createEcefVelVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startEcefVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addEcefAcc(FlatBufferBuilder builder, int ECEF_ACCOffset) { builder.addOffset(53, ECEF_ACCOffset, 0); }
+  public static int createEcefAccVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startEcefAccVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addLcPos(FlatBufferBuilder builder, int LC_POSOffset) { builder.addOffset(54, LC_POSOffset, 0); }
+  public static int createLcPosVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startLcPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addLcVel(FlatBufferBuilder builder, int LC_VELOffset) { builder.addOffset(55, LC_VELOffset, 0); }
+  public static int createLcVelVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startLcVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addLcAcc(FlatBufferBuilder builder, int LC_ACCOffset) { builder.addOffset(56, LC_ACCOffset, 0); }
+  public static int createLcAccVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startLcAccVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addCov(FlatBufferBuilder builder, int COVOffset) { builder.addOffset(57, COVOffset, 0); }
+  public static int createCovVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addErrEllp(FlatBufferBuilder builder, int ERR_ELLPOffset) { builder.addOffset(58, ERR_ELLPOffset, 0); }
+  public static int createErrEllpVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startErrEllpVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endTRK(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

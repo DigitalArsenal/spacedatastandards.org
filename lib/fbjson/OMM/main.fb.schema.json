@@ -1315,17 +1315,17 @@
         },
         "BSTAR": {
           "type": "number",
-          "description": "BSTAR in 1/Earth radii or BTERM in m\u00b2/kg depending on MEAN_ELEMENT_THEORY [C]",
+          "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DOT": {
           "type": "number",
-          "description": "MEAN_MOTION_DOT in rev/day\u00b2 [C if SGP or PPT3]",
+          "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DDOT": {
           "type": "number",
-          "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]",
+          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
           "x-flatbuffer-type": "double"
         },
         "COV_REFERENCE_FRAME": {
@@ -1333,110 +1333,13 @@
           "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW",
           "x-flatbuffer-type": "RFM"
         },
-        "CX_X": {
-          "type": "number",
-          "description": "CX_X [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_X": {
-          "type": "number",
-          "description": "CY_X [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_Y": {
-          "type": "number",
-          "description": "CY_Y [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_X": {
-          "type": "number",
-          "description": "CZ_X [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_Y": {
-          "type": "number",
-          "description": "CZ_Y [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_Z": {
-          "type": "number",
-          "description": "CZ_Z [km**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CX_DOT_X": {
-          "type": "number",
-          "description": "CX_DOT_X [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CX_DOT_Y": {
-          "type": "number",
-          "description": "CX_DOT_Y [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CX_DOT_Z": {
-          "type": "number",
-          "description": "CX_DOT_Z [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CX_DOT_X_DOT": {
-          "type": "number",
-          "description": "CX_DOT_X_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_DOT_X": {
-          "type": "number",
-          "description": "CY_DOT_X [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_DOT_Y": {
-          "type": "number",
-          "description": "CY_DOT_Y [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_DOT_Z": {
-          "type": "number",
-          "description": "CY_DOT_Z [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_DOT_X_DOT": {
-          "type": "number",
-          "description": "CY_DOT_X_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CY_DOT_Y_DOT": {
-          "type": "number",
-          "description": "CY_DOT_Y_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_X": {
-          "type": "number",
-          "description": "CZ_DOT_X [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_Y": {
-          "type": "number",
-          "description": "CZ_DOT_Y [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_Z": {
-          "type": "number",
-          "description": "CZ_DOT_Z [km**2/s]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_X_DOT": {
-          "type": "number",
-          "description": "CZ_DOT_X_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_Y_DOT": {
-          "type": "number",
-          "description": "CZ_DOT_Y_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
-        },
-        "CZ_DOT_Z_DOT": {
-          "type": "number",
-          "description": "CZ_DOT_Z_DOT [km**2/s**2]",
-          "x-flatbuffer-type": "double"
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+          "x-flatbuffer-type": "[double]"
         },
         "USER_DEFINED_BIP_0044_TYPE": {
           "type": "integer",

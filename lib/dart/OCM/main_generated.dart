@@ -2069,24 +2069,34 @@ class OCM {
   Metadata? get METADATA => Metadata.reader.vTableGetNullable(_bc, _bcOffset, 6);
   ///  Trajectory type (e.g., PROPAGATED, ESTIMATED).
   String? get TRAJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  State vector data.
-  List<StateVector>? get STATE_DATA => const fb.ListReader<StateVector>(StateVector.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Time interval between state vectors in seconds (required for time-series data).
+  double get STATE_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Number of components per state vector.
+  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  int get STATE_VECTOR_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 6);
+  ///  State data as row-major array of doubles.
+  ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  ///  Length must be divisible by STATE_VECTOR_SIZE.
+  List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+  ///  Time alignment matches STATE_DATA epochs.
+  List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
   ///  Physical properties of the space object.
-  PhysicalProperties? get PHYSICAL_PROPERTIES => PhysicalProperties.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Covariance data associated with the state vectors.
-  List<StateVector>? get COVARIANCE_DATA => const fb.ListReader<StateVector>(StateVector.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  PhysicalProperties? get PHYSICAL_PROPERTIES => PhysicalProperties.reader.vTableGetNullable(_bc, _bcOffset, 18);
   ///  Maneuver data.
-  List<Maneuver>? get MANEUVER_DATA => const fb.ListReader<Maneuver>(Maneuver.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  List<Maneuver>? get MANEUVER_DATA => const fb.ListReader<Maneuver>(Maneuver.reader).vTableGetNullable(_bc, _bcOffset, 20);
   ///  Perturbations parameters used.
-  Perturbations? get PERTURBATIONS => Perturbations.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  Perturbations? get PERTURBATIONS => Perturbations.reader.vTableGetNullable(_bc, _bcOffset, 22);
   ///  Orbit determination data.
-  OrbitDetermination? get ORBIT_DETERMINATION => OrbitDetermination.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  OrbitDetermination? get ORBIT_DETERMINATION => OrbitDetermination.reader.vTableGetNullable(_bc, _bcOffset, 24);
   ///  User-defined parameters and supplemental comments.
-  List<UserDefinedParameters>? get USER_DEFINED_PARAMETERS => const fb.ListReader<UserDefinedParameters>(UserDefinedParameters.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<UserDefinedParameters>? get USER_DEFINED_PARAMETERS => const fb.ListReader<UserDefinedParameters>(UserDefinedParameters.reader).vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, TRAJ_TYPE: ${TRAJ_TYPE}, STATE_DATA: ${STATE_DATA}, PHYSICAL_PROPERTIES: ${PHYSICAL_PROPERTIES}, COVARIANCE_DATA: ${COVARIANCE_DATA}, MANEUVER_DATA: ${MANEUVER_DATA}, PERTURBATIONS: ${PERTURBATIONS}, ORBIT_DETERMINATION: ${ORBIT_DETERMINATION}, USER_DEFINED_PARAMETERS: ${USER_DEFINED_PARAMETERS}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, TRAJ_TYPE: ${TRAJ_TYPE}, STATE_STEP_SIZE: ${STATE_STEP_SIZE}, STATE_VECTOR_SIZE: ${STATE_VECTOR_SIZE}, STATE_DATA: ${STATE_DATA}, COVARIANCE_DATA: ${COVARIANCE_DATA}, PHYSICAL_PROPERTIES: ${PHYSICAL_PROPERTIES}, MANEUVER_DATA: ${MANEUVER_DATA}, PERTURBATIONS: ${PERTURBATIONS}, ORBIT_DETERMINATION: ${ORBIT_DETERMINATION}, USER_DEFINED_PARAMETERS: ${USER_DEFINED_PARAMETERS}}';
   }
 }
 
@@ -2104,7 +2114,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(12);
   }
 
   int addHeaderOffset(int? offset) {
@@ -2119,32 +2129,40 @@ class OCMBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addStateStepSize(double? STATE_STEP_SIZE) {
+    fbBuilder.addFloat64(3, STATE_STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addStateVectorSize(int? STATE_VECTOR_SIZE) {
+    fbBuilder.addUint8(4, STATE_VECTOR_SIZE);
+    return fbBuilder.offset;
+  }
   int addStateDataOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addPhysicalPropertiesOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addCovarianceDataOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addManeuverDataOffset(int? offset) {
+  int addCovarianceDataOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addPerturbationsOffset(int? offset) {
+  int addPhysicalPropertiesOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addOrbitDeterminationOffset(int? offset) {
+  int addManeuverDataOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addUserDefinedParametersOffset(int? offset) {
+  int addPerturbationsOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitDeterminationOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
 
@@ -2157,9 +2175,11 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final HeaderObjectBuilder? _HEADER;
   final MetadataObjectBuilder? _METADATA;
   final String? _TRAJ_TYPE;
-  final List<StateVectorObjectBuilder>? _STATE_DATA;
+  final double? _STATE_STEP_SIZE;
+  final int? _STATE_VECTOR_SIZE;
+  final List<double>? _STATE_DATA;
+  final List<double>? _COVARIANCE_DATA;
   final PhysicalPropertiesObjectBuilder? _PHYSICAL_PROPERTIES;
-  final List<StateVectorObjectBuilder>? _COVARIANCE_DATA;
   final List<ManeuverObjectBuilder>? _MANEUVER_DATA;
   final PerturbationsObjectBuilder? _PERTURBATIONS;
   final OrbitDeterminationObjectBuilder? _ORBIT_DETERMINATION;
@@ -2169,9 +2189,11 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     HeaderObjectBuilder? HEADER,
     MetadataObjectBuilder? METADATA,
     String? TRAJ_TYPE,
-    List<StateVectorObjectBuilder>? STATE_DATA,
+    double? STATE_STEP_SIZE,
+    int? STATE_VECTOR_SIZE,
+    List<double>? STATE_DATA,
+    List<double>? COVARIANCE_DATA,
     PhysicalPropertiesObjectBuilder? PHYSICAL_PROPERTIES,
-    List<StateVectorObjectBuilder>? COVARIANCE_DATA,
     List<ManeuverObjectBuilder>? MANEUVER_DATA,
     PerturbationsObjectBuilder? PERTURBATIONS,
     OrbitDeterminationObjectBuilder? ORBIT_DETERMINATION,
@@ -2180,9 +2202,11 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
       : _HEADER = HEADER,
         _METADATA = METADATA,
         _TRAJ_TYPE = TRAJ_TYPE,
+        _STATE_STEP_SIZE = STATE_STEP_SIZE,
+        _STATE_VECTOR_SIZE = STATE_VECTOR_SIZE,
         _STATE_DATA = STATE_DATA,
-        _PHYSICAL_PROPERTIES = PHYSICAL_PROPERTIES,
         _COVARIANCE_DATA = COVARIANCE_DATA,
+        _PHYSICAL_PROPERTIES = PHYSICAL_PROPERTIES,
         _MANEUVER_DATA = MANEUVER_DATA,
         _PERTURBATIONS = PERTURBATIONS,
         _ORBIT_DETERMINATION = ORBIT_DETERMINATION,
@@ -2196,27 +2220,29 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     final int? TRAJ_TYPEOffset = _TRAJ_TYPE == null ? null
         : fbBuilder.writeString(_TRAJ_TYPE!);
     final int? STATE_DATAOffset = _STATE_DATA == null ? null
-        : fbBuilder.writeList(_STATE_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? PHYSICAL_PROPERTIESOffset = _PHYSICAL_PROPERTIES?.getOrCreateOffset(fbBuilder);
+        : fbBuilder.writeListFloat64(_STATE_DATA!);
     final int? COVARIANCE_DATAOffset = _COVARIANCE_DATA == null ? null
-        : fbBuilder.writeList(_COVARIANCE_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+        : fbBuilder.writeListFloat64(_COVARIANCE_DATA!);
+    final int? PHYSICAL_PROPERTIESOffset = _PHYSICAL_PROPERTIES?.getOrCreateOffset(fbBuilder);
     final int? MANEUVER_DATAOffset = _MANEUVER_DATA == null ? null
         : fbBuilder.writeList(_MANEUVER_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? PERTURBATIONSOffset = _PERTURBATIONS?.getOrCreateOffset(fbBuilder);
     final int? ORBIT_DETERMINATIONOffset = _ORBIT_DETERMINATION?.getOrCreateOffset(fbBuilder);
     final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
         : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addOffset(2, TRAJ_TYPEOffset);
-    fbBuilder.addOffset(3, STATE_DATAOffset);
-    fbBuilder.addOffset(4, PHYSICAL_PROPERTIESOffset);
-    fbBuilder.addOffset(5, COVARIANCE_DATAOffset);
-    fbBuilder.addOffset(6, MANEUVER_DATAOffset);
-    fbBuilder.addOffset(7, PERTURBATIONSOffset);
-    fbBuilder.addOffset(8, ORBIT_DETERMINATIONOffset);
-    fbBuilder.addOffset(9, USER_DEFINED_PARAMETERSOffset);
+    fbBuilder.addFloat64(3, _STATE_STEP_SIZE);
+    fbBuilder.addUint8(4, _STATE_VECTOR_SIZE);
+    fbBuilder.addOffset(5, STATE_DATAOffset);
+    fbBuilder.addOffset(6, COVARIANCE_DATAOffset);
+    fbBuilder.addOffset(7, PHYSICAL_PROPERTIESOffset);
+    fbBuilder.addOffset(8, MANEUVER_DATAOffset);
+    fbBuilder.addOffset(9, PERTURBATIONSOffset);
+    fbBuilder.addOffset(10, ORBIT_DETERMINATIONOffset);
+    fbBuilder.addOffset(11, USER_DEFINED_PARAMETERSOffset);
     return fbBuilder.endTable();
   }
 

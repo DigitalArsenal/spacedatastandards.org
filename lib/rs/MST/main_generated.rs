@@ -50,32 +50,35 @@ impl<'a> MST<'a> {
   pub const VT_MSL_STATUS: flatbuffers::VOffsetT = 46;
   pub const VT_TS: flatbuffers::VOffsetT = 48;
   pub const VT_AOU_RPT_TYPE: flatbuffers::VOffsetT = 50;
-  pub const VT_AOU_RPT_DATA: flatbuffers::VOffsetT = 52;
-  pub const VT_CONTAINMENT: flatbuffers::VOffsetT = 54;
-  pub const VT_TRK_CONF: flatbuffers::VOffsetT = 56;
-  pub const VT_TRK_QUAL: flatbuffers::VOffsetT = 58;
-  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 60;
-  pub const VT_SEN_MODE: flatbuffers::VOffsetT = 62;
-  pub const VT_INFO_SOURCE: flatbuffers::VOffsetT = 64;
-  pub const VT_BOOSTING: flatbuffers::VOffsetT = 66;
-  pub const VT_POLAR_SING_LOC_LAT: flatbuffers::VOffsetT = 68;
-  pub const VT_POLAR_SING_LOC_LON: flatbuffers::VOffsetT = 70;
-  pub const VT_EMG_IND: flatbuffers::VOffsetT = 72;
-  pub const VT_DROP_PT_IND: flatbuffers::VOffsetT = 74;
-  pub const VT_SPACE_AMP_CONF: flatbuffers::VOffsetT = 76;
-  pub const VT_LAUNCH_TIME: flatbuffers::VOffsetT = 78;
-  pub const VT_LAUNCH_LAT: flatbuffers::VOffsetT = 80;
-  pub const VT_LAUNCH_LON: flatbuffers::VOffsetT = 82;
-  pub const VT_AZ_CORR: flatbuffers::VOffsetT = 84;
-  pub const VT_BURNOUT_ALT: flatbuffers::VOffsetT = 86;
-  pub const VT_LAUNCH_AOU_TYPE: flatbuffers::VOffsetT = 88;
-  pub const VT_LAUNCH_AOU_DATA: flatbuffers::VOffsetT = 90;
-  pub const VT_IMPACT_TIME: flatbuffers::VOffsetT = 92;
-  pub const VT_IMPACT_LAT: flatbuffers::VOffsetT = 94;
-  pub const VT_IMPACT_LON: flatbuffers::VOffsetT = 96;
-  pub const VT_IMPACT_AOU_TYPE: flatbuffers::VOffsetT = 98;
-  pub const VT_IMPACT_AOU_DATA: flatbuffers::VOffsetT = 100;
+  pub const VT_CONTAINMENT: flatbuffers::VOffsetT = 52;
+  pub const VT_TRK_CONF: flatbuffers::VOffsetT = 54;
+  pub const VT_TRK_QUAL: flatbuffers::VOffsetT = 56;
+  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 58;
+  pub const VT_SEN_MODE: flatbuffers::VOffsetT = 60;
+  pub const VT_INFO_SOURCE: flatbuffers::VOffsetT = 62;
+  pub const VT_BOOSTING: flatbuffers::VOffsetT = 64;
+  pub const VT_POLAR_SING_LOC_LAT: flatbuffers::VOffsetT = 66;
+  pub const VT_POLAR_SING_LOC_LON: flatbuffers::VOffsetT = 68;
+  pub const VT_EMG_IND: flatbuffers::VOffsetT = 70;
+  pub const VT_DROP_PT_IND: flatbuffers::VOffsetT = 72;
+  pub const VT_SPACE_AMP_CONF: flatbuffers::VOffsetT = 74;
+  pub const VT_LAUNCH_TIME: flatbuffers::VOffsetT = 76;
+  pub const VT_LAUNCH_LAT: flatbuffers::VOffsetT = 78;
+  pub const VT_LAUNCH_LON: flatbuffers::VOffsetT = 80;
+  pub const VT_AZ_CORR: flatbuffers::VOffsetT = 82;
+  pub const VT_BURNOUT_ALT: flatbuffers::VOffsetT = 84;
+  pub const VT_LAUNCH_AOU_TYPE: flatbuffers::VOffsetT = 86;
+  pub const VT_IMPACT_TIME: flatbuffers::VOffsetT = 88;
+  pub const VT_IMPACT_LAT: flatbuffers::VOffsetT = 90;
+  pub const VT_IMPACT_LON: flatbuffers::VOffsetT = 92;
+  pub const VT_IMPACT_AOU_TYPE: flatbuffers::VOffsetT = 94;
+  pub const VT_VECTOR_START_TIME: flatbuffers::VOffsetT = 96;
+  pub const VT_VECTOR_STEP_SIZE: flatbuffers::VOffsetT = 98;
+  pub const VT_VECTOR_COMPONENTS: flatbuffers::VOffsetT = 100;
   pub const VT_VECTORS: flatbuffers::VOffsetT = 102;
+  pub const VT_AOU_RPT: flatbuffers::VOffsetT = 104;
+  pub const VT_LAUNCH_AOU: flatbuffers::VOffsetT = 106;
+  pub const VT_IMPACT_AOU: flatbuffers::VOffsetT = 108;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -87,6 +90,7 @@ impl<'a> MST<'a> {
     args: &'args MSTArgs<'args>
   ) -> flatbuffers::WIPOffset<MST<'bldr>> {
     let mut builder = MSTBuilder::new(_fbb);
+    builder.add_VECTOR_STEP_SIZE(args.VECTOR_STEP_SIZE);
     builder.add_IMPACT_LON(args.IMPACT_LON);
     builder.add_IMPACT_LAT(args.IMPACT_LAT);
     builder.add_BURNOUT_ALT(args.BURNOUT_ALT);
@@ -98,18 +102,19 @@ impl<'a> MST<'a> {
     builder.add_ANG_ELEV(args.ANG_ELEV);
     builder.add_TRK_CONF(args.TRK_CONF);
     builder.add_CONTAINMENT(args.CONTAINMENT);
+    if let Some(x) = args.IMPACT_AOU { builder.add_IMPACT_AOU(x); }
+    if let Some(x) = args.LAUNCH_AOU { builder.add_LAUNCH_AOU(x); }
+    if let Some(x) = args.AOU_RPT { builder.add_AOU_RPT(x); }
     if let Some(x) = args.VECTORS { builder.add_VECTORS(x); }
-    if let Some(x) = args.IMPACT_AOU_DATA { builder.add_IMPACT_AOU_DATA(x); }
+    if let Some(x) = args.VECTOR_START_TIME { builder.add_VECTOR_START_TIME(x); }
     if let Some(x) = args.IMPACT_AOU_TYPE { builder.add_IMPACT_AOU_TYPE(x); }
     if let Some(x) = args.IMPACT_TIME { builder.add_IMPACT_TIME(x); }
-    if let Some(x) = args.LAUNCH_AOU_DATA { builder.add_LAUNCH_AOU_DATA(x); }
     if let Some(x) = args.LAUNCH_AOU_TYPE { builder.add_LAUNCH_AOU_TYPE(x); }
     if let Some(x) = args.LAUNCH_TIME { builder.add_LAUNCH_TIME(x); }
     builder.add_SPACE_AMP_CONF(args.SPACE_AMP_CONF);
     if let Some(x) = args.INFO_SOURCE { builder.add_INFO_SOURCE(x); }
     if let Some(x) = args.SEN_MODE { builder.add_SEN_MODE(x); }
     builder.add_TRK_QUAL(args.TRK_QUAL);
-    if let Some(x) = args.AOU_RPT_DATA { builder.add_AOU_RPT_DATA(x); }
     if let Some(x) = args.AOU_RPT_TYPE { builder.add_AOU_RPT_TYPE(x); }
     if let Some(x) = args.TS { builder.add_TS(x); }
     if let Some(x) = args.MSL_STATUS { builder.add_MSL_STATUS(x); }
@@ -133,6 +138,7 @@ impl<'a> MST<'a> {
     if let Some(x) = args.MSG_SUB_TYPE { builder.add_MSG_SUB_TYPE(x); }
     if let Some(x) = args.MSG_TYPE { builder.add_MSG_TYPE(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_VECTOR_COMPONENTS(args.VECTOR_COMPONENTS);
     builder.add_DROP_PT_IND(args.DROP_PT_IND);
     builder.add_EMG_IND(args.EMG_IND);
     builder.add_BOOSTING(args.BOOSTING);
@@ -209,9 +215,6 @@ impl<'a> MST<'a> {
     let AOU_RPT_TYPE = self.AOU_RPT_TYPE().map(|x| {
       x.to_string()
     });
-    let AOU_RPT_DATA = self.AOU_RPT_DATA().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
     let CONTAINMENT = self.CONTAINMENT();
     let TRK_CONF = self.TRK_CONF();
     let TRK_QUAL = self.TRK_QUAL();
@@ -238,9 +241,6 @@ impl<'a> MST<'a> {
     let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE().map(|x| {
       x.to_string()
     });
-    let LAUNCH_AOU_DATA = self.LAUNCH_AOU_DATA().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
     let IMPACT_TIME = self.IMPACT_TIME().map(|x| {
       x.to_string()
     });
@@ -249,11 +249,22 @@ impl<'a> MST<'a> {
     let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE().map(|x| {
       x.to_string()
     });
-    let IMPACT_AOU_DATA = self.IMPACT_AOU_DATA().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+    let VECTOR_START_TIME = self.VECTOR_START_TIME().map(|x| {
+      x.to_string()
     });
+    let VECTOR_STEP_SIZE = self.VECTOR_STEP_SIZE();
+    let VECTOR_COMPONENTS = self.VECTOR_COMPONENTS();
     let VECTORS = self.VECTORS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
+    });
+    let AOU_RPT = self.AOU_RPT().map(|x| {
+      x.into_iter().collect()
+    });
+    let LAUNCH_AOU = self.LAUNCH_AOU().map(|x| {
+      x.into_iter().collect()
+    });
+    let IMPACT_AOU = self.IMPACT_AOU().map(|x| {
+      x.into_iter().collect()
     });
     MSTT {
       ID,
@@ -280,7 +291,6 @@ impl<'a> MST<'a> {
       MSL_STATUS,
       TS,
       AOU_RPT_TYPE,
-      AOU_RPT_DATA,
       CONTAINMENT,
       TRK_CONF,
       TRK_QUAL,
@@ -299,13 +309,17 @@ impl<'a> MST<'a> {
       AZ_CORR,
       BURNOUT_ALT,
       LAUNCH_AOU_TYPE,
-      LAUNCH_AOU_DATA,
       IMPACT_TIME,
       IMPACT_LAT,
       IMPACT_LON,
       IMPACT_AOU_TYPE,
-      IMPACT_AOU_DATA,
+      VECTOR_START_TIME,
+      VECTOR_STEP_SIZE,
+      VECTOR_COMPONENTS,
       VECTORS,
+      AOU_RPT,
+      LAUNCH_AOU,
+      IMPACT_AOU,
     }
   }
 
@@ -478,13 +492,6 @@ impl<'a> MST<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_AOU_RPT_TYPE, None)}
   }
   #[inline]
-  pub fn AOU_RPT_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MST::VT_AOU_RPT_DATA, None)}
-  }
-  #[inline]
   pub fn CONTAINMENT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
@@ -611,13 +618,6 @@ impl<'a> MST<'a> {
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_LAUNCH_AOU_TYPE, None)}
   }
   #[inline]
-  pub fn LAUNCH_AOU_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MST::VT_LAUNCH_AOU_DATA, None)}
-  }
-  #[inline]
   pub fn IMPACT_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
@@ -645,19 +645,61 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_IMPACT_AOU_TYPE, None)}
   }
+  /// Start time for vector data (ISO 8601 UTC format).
   #[inline]
-  pub fn IMPACT_AOU_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn VECTOR_START_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MST::VT_IMPACT_AOU_DATA, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_VECTOR_START_TIME, None)}
   }
+  /// Time interval between vector points in seconds.
   #[inline]
-  pub fn VECTORS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn VECTOR_STEP_SIZE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MST::VT_VECTORS, None)}
+    unsafe { self._tab.get::<f64>(MST::VT_VECTOR_STEP_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  #[inline]
+  pub fn VECTOR_COMPONENTS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(MST::VT_VECTOR_COMPONENTS, Some(6)).unwrap()}
+  }
+  /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+  #[inline]
+  pub fn VECTORS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_VECTORS, None)}
+  }
+  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  #[inline]
+  pub fn AOU_RPT(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_AOU_RPT, None)}
+  }
+  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  #[inline]
+  pub fn LAUNCH_AOU(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_LAUNCH_AOU, None)}
+  }
+  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  #[inline]
+  pub fn IMPACT_AOU(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_IMPACT_AOU, None)}
   }
 }
 
@@ -692,7 +734,6 @@ impl flatbuffers::Verifiable for MST<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSL_STATUS", Self::VT_MSL_STATUS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AOU_RPT_TYPE", Self::VT_AOU_RPT_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("AOU_RPT_DATA", Self::VT_AOU_RPT_DATA, false)?
      .visit_field::<f64>("CONTAINMENT", Self::VT_CONTAINMENT, false)?
      .visit_field::<f64>("TRK_CONF", Self::VT_TRK_CONF, false)?
      .visit_field::<i32>("TRK_QUAL", Self::VT_TRK_QUAL, false)?
@@ -711,13 +752,17 @@ impl flatbuffers::Verifiable for MST<'_> {
      .visit_field::<f64>("AZ_CORR", Self::VT_AZ_CORR, false)?
      .visit_field::<f64>("BURNOUT_ALT", Self::VT_BURNOUT_ALT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_AOU_TYPE", Self::VT_LAUNCH_AOU_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LAUNCH_AOU_DATA", Self::VT_LAUNCH_AOU_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMPACT_TIME", Self::VT_IMPACT_TIME, false)?
      .visit_field::<f64>("IMPACT_LAT", Self::VT_IMPACT_LAT, false)?
      .visit_field::<f64>("IMPACT_LON", Self::VT_IMPACT_LON, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMPACT_AOU_TYPE", Self::VT_IMPACT_AOU_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("IMPACT_AOU_DATA", Self::VT_IMPACT_AOU_DATA, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("VECTORS", Self::VT_VECTORS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VECTOR_START_TIME", Self::VT_VECTOR_START_TIME, false)?
+     .visit_field::<f64>("VECTOR_STEP_SIZE", Self::VT_VECTOR_STEP_SIZE, false)?
+     .visit_field::<u8>("VECTOR_COMPONENTS", Self::VT_VECTOR_COMPONENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("VECTORS", Self::VT_VECTORS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("AOU_RPT", Self::VT_AOU_RPT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("LAUNCH_AOU", Self::VT_LAUNCH_AOU, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("IMPACT_AOU", Self::VT_IMPACT_AOU, false)?
      .finish();
     Ok(())
   }
@@ -747,7 +792,6 @@ pub struct MSTArgs<'a> {
     pub MSL_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AOU_RPT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AOU_RPT_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub CONTAINMENT: f64,
     pub TRK_CONF: f64,
     pub TRK_QUAL: i32,
@@ -766,13 +810,17 @@ pub struct MSTArgs<'a> {
     pub AZ_CORR: f64,
     pub BURNOUT_ALT: f64,
     pub LAUNCH_AOU_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LAUNCH_AOU_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub IMPACT_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IMPACT_LAT: f64,
     pub IMPACT_LON: f64,
     pub IMPACT_AOU_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub IMPACT_AOU_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub VECTORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub VECTOR_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VECTOR_STEP_SIZE: f64,
+    pub VECTOR_COMPONENTS: u8,
+    pub VECTORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub AOU_RPT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub LAUNCH_AOU: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub IMPACT_AOU: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for MSTArgs<'a> {
   #[inline]
@@ -802,7 +850,6 @@ impl<'a> Default for MSTArgs<'a> {
       MSL_STATUS: None,
       TS: None,
       AOU_RPT_TYPE: None,
-      AOU_RPT_DATA: None,
       CONTAINMENT: 0.0,
       TRK_CONF: 0.0,
       TRK_QUAL: 0,
@@ -821,13 +868,17 @@ impl<'a> Default for MSTArgs<'a> {
       AZ_CORR: 0.0,
       BURNOUT_ALT: 0.0,
       LAUNCH_AOU_TYPE: None,
-      LAUNCH_AOU_DATA: None,
       IMPACT_TIME: None,
       IMPACT_LAT: 0.0,
       IMPACT_LON: 0.0,
       IMPACT_AOU_TYPE: None,
-      IMPACT_AOU_DATA: None,
+      VECTOR_START_TIME: None,
+      VECTOR_STEP_SIZE: 0.0,
+      VECTOR_COMPONENTS: 6,
       VECTORS: None,
+      AOU_RPT: None,
+      LAUNCH_AOU: None,
+      IMPACT_AOU: None,
     }
   }
 }
@@ -934,10 +985,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_AOU_RPT_TYPE, AOU_RPT_TYPE);
   }
   #[inline]
-  pub fn add_AOU_RPT_DATA(&mut self, AOU_RPT_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_AOU_RPT_DATA, AOU_RPT_DATA);
-  }
-  #[inline]
   pub fn add_CONTAINMENT(&mut self, CONTAINMENT: f64) {
     self.fbb_.push_slot::<f64>(MST::VT_CONTAINMENT, CONTAINMENT, 0.0);
   }
@@ -1010,10 +1057,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_LAUNCH_AOU_TYPE, LAUNCH_AOU_TYPE);
   }
   #[inline]
-  pub fn add_LAUNCH_AOU_DATA(&mut self, LAUNCH_AOU_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_LAUNCH_AOU_DATA, LAUNCH_AOU_DATA);
-  }
-  #[inline]
   pub fn add_IMPACT_TIME(&mut self, IMPACT_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_IMPACT_TIME, IMPACT_TIME);
   }
@@ -1030,12 +1073,32 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_IMPACT_AOU_TYPE, IMPACT_AOU_TYPE);
   }
   #[inline]
-  pub fn add_IMPACT_AOU_DATA(&mut self, IMPACT_AOU_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_IMPACT_AOU_DATA, IMPACT_AOU_DATA);
+  pub fn add_VECTOR_START_TIME(&mut self, VECTOR_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_VECTOR_START_TIME, VECTOR_START_TIME);
   }
   #[inline]
-  pub fn add_VECTORS(&mut self, VECTORS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_VECTOR_STEP_SIZE(&mut self, VECTOR_STEP_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(MST::VT_VECTOR_STEP_SIZE, VECTOR_STEP_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_VECTOR_COMPONENTS(&mut self, VECTOR_COMPONENTS: u8) {
+    self.fbb_.push_slot::<u8>(MST::VT_VECTOR_COMPONENTS, VECTOR_COMPONENTS, 6);
+  }
+  #[inline]
+  pub fn add_VECTORS(&mut self, VECTORS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_VECTORS, VECTORS);
+  }
+  #[inline]
+  pub fn add_AOU_RPT(&mut self, AOU_RPT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_AOU_RPT, AOU_RPT);
+  }
+  #[inline]
+  pub fn add_LAUNCH_AOU(&mut self, LAUNCH_AOU: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_LAUNCH_AOU, LAUNCH_AOU);
+  }
+  #[inline]
+  pub fn add_IMPACT_AOU(&mut self, IMPACT_AOU: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_IMPACT_AOU, IMPACT_AOU);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> MSTBuilder<'a, 'b, A> {
@@ -1079,7 +1142,6 @@ impl core::fmt::Debug for MST<'_> {
       ds.field("MSL_STATUS", &self.MSL_STATUS());
       ds.field("TS", &self.TS());
       ds.field("AOU_RPT_TYPE", &self.AOU_RPT_TYPE());
-      ds.field("AOU_RPT_DATA", &self.AOU_RPT_DATA());
       ds.field("CONTAINMENT", &self.CONTAINMENT());
       ds.field("TRK_CONF", &self.TRK_CONF());
       ds.field("TRK_QUAL", &self.TRK_QUAL());
@@ -1098,13 +1160,17 @@ impl core::fmt::Debug for MST<'_> {
       ds.field("AZ_CORR", &self.AZ_CORR());
       ds.field("BURNOUT_ALT", &self.BURNOUT_ALT());
       ds.field("LAUNCH_AOU_TYPE", &self.LAUNCH_AOU_TYPE());
-      ds.field("LAUNCH_AOU_DATA", &self.LAUNCH_AOU_DATA());
       ds.field("IMPACT_TIME", &self.IMPACT_TIME());
       ds.field("IMPACT_LAT", &self.IMPACT_LAT());
       ds.field("IMPACT_LON", &self.IMPACT_LON());
       ds.field("IMPACT_AOU_TYPE", &self.IMPACT_AOU_TYPE());
-      ds.field("IMPACT_AOU_DATA", &self.IMPACT_AOU_DATA());
+      ds.field("VECTOR_START_TIME", &self.VECTOR_START_TIME());
+      ds.field("VECTOR_STEP_SIZE", &self.VECTOR_STEP_SIZE());
+      ds.field("VECTOR_COMPONENTS", &self.VECTOR_COMPONENTS());
       ds.field("VECTORS", &self.VECTORS());
+      ds.field("AOU_RPT", &self.AOU_RPT());
+      ds.field("LAUNCH_AOU", &self.LAUNCH_AOU());
+      ds.field("IMPACT_AOU", &self.IMPACT_AOU());
       ds.finish()
   }
 }
@@ -1135,7 +1201,6 @@ pub struct MSTT {
   pub MSL_STATUS: Option<String>,
   pub TS: Option<String>,
   pub AOU_RPT_TYPE: Option<String>,
-  pub AOU_RPT_DATA: Option<Vec<String>>,
   pub CONTAINMENT: f64,
   pub TRK_CONF: f64,
   pub TRK_QUAL: i32,
@@ -1154,13 +1219,17 @@ pub struct MSTT {
   pub AZ_CORR: f64,
   pub BURNOUT_ALT: f64,
   pub LAUNCH_AOU_TYPE: Option<String>,
-  pub LAUNCH_AOU_DATA: Option<Vec<String>>,
   pub IMPACT_TIME: Option<String>,
   pub IMPACT_LAT: f64,
   pub IMPACT_LON: f64,
   pub IMPACT_AOU_TYPE: Option<String>,
-  pub IMPACT_AOU_DATA: Option<Vec<String>>,
-  pub VECTORS: Option<Vec<String>>,
+  pub VECTOR_START_TIME: Option<String>,
+  pub VECTOR_STEP_SIZE: f64,
+  pub VECTOR_COMPONENTS: u8,
+  pub VECTORS: Option<Vec<f64>>,
+  pub AOU_RPT: Option<Vec<f64>>,
+  pub LAUNCH_AOU: Option<Vec<f64>>,
+  pub IMPACT_AOU: Option<Vec<f64>>,
 }
 impl Default for MSTT {
   fn default() -> Self {
@@ -1189,7 +1258,6 @@ impl Default for MSTT {
       MSL_STATUS: None,
       TS: None,
       AOU_RPT_TYPE: None,
-      AOU_RPT_DATA: None,
       CONTAINMENT: 0.0,
       TRK_CONF: 0.0,
       TRK_QUAL: 0,
@@ -1208,13 +1276,17 @@ impl Default for MSTT {
       AZ_CORR: 0.0,
       BURNOUT_ALT: 0.0,
       LAUNCH_AOU_TYPE: None,
-      LAUNCH_AOU_DATA: None,
       IMPACT_TIME: None,
       IMPACT_LAT: 0.0,
       IMPACT_LON: 0.0,
       IMPACT_AOU_TYPE: None,
-      IMPACT_AOU_DATA: None,
+      VECTOR_START_TIME: None,
+      VECTOR_STEP_SIZE: 0.0,
+      VECTOR_COMPONENTS: 6,
       VECTORS: None,
+      AOU_RPT: None,
+      LAUNCH_AOU: None,
+      IMPACT_AOU: None,
     }
   }
 }
@@ -1291,9 +1363,6 @@ impl MSTT {
     let AOU_RPT_TYPE = self.AOU_RPT_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let AOU_RPT_DATA = self.AOU_RPT_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let CONTAINMENT = self.CONTAINMENT;
     let TRK_CONF = self.TRK_CONF;
     let TRK_QUAL = self.TRK_QUAL;
@@ -1320,9 +1389,6 @@ impl MSTT {
     let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAUNCH_AOU_DATA = self.LAUNCH_AOU_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let IMPACT_TIME = self.IMPACT_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1331,11 +1397,22 @@ impl MSTT {
     let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let IMPACT_AOU_DATA = self.IMPACT_AOU_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    let VECTOR_START_TIME = self.VECTOR_START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
+    let VECTOR_STEP_SIZE = self.VECTOR_STEP_SIZE;
+    let VECTOR_COMPONENTS = self.VECTOR_COMPONENTS;
     let VECTORS = self.VECTORS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
+    });
+    let AOU_RPT = self.AOU_RPT.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let LAUNCH_AOU = self.LAUNCH_AOU.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let IMPACT_AOU = self.IMPACT_AOU.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     MST::create(_fbb, &MSTArgs{
       ID,
@@ -1362,7 +1439,6 @@ impl MSTT {
       MSL_STATUS,
       TS,
       AOU_RPT_TYPE,
-      AOU_RPT_DATA,
       CONTAINMENT,
       TRK_CONF,
       TRK_QUAL,
@@ -1381,13 +1457,17 @@ impl MSTT {
       AZ_CORR,
       BURNOUT_ALT,
       LAUNCH_AOU_TYPE,
-      LAUNCH_AOU_DATA,
       IMPACT_TIME,
       IMPACT_LAT,
       IMPACT_LON,
       IMPACT_AOU_TYPE,
-      IMPACT_AOU_DATA,
+      VECTOR_START_TIME,
+      VECTOR_STEP_SIZE,
+      VECTOR_COMPONENTS,
       VECTORS,
+      AOU_RPT,
+      LAUNCH_AOU,
+      IMPACT_AOU,
     })
   }
 }

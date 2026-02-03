@@ -125,19 +125,44 @@ class AEMSegment : Table() {
         }
     val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
     fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    fun DATA(j: Int) : AEMAttitudeEntry? = DATA(AEMAttitudeEntry(), j)
-    fun DATA(obj: AEMAttitudeEntry, j: Int) : AEMAttitudeEntry? {
-        val o = __offset(22)
+    /**
+     * Time interval between attitude states in seconds (required).
+     */
+    val STEP_SIZE : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of components per attitude state.
+     * 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+     * 4 = quaternion only (Q1, Q2, Q3, QC)
+     */
+    val ATTITUDE_COMPONENTS : UByte
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 7u
+        }
+    /**
+     * Attitude data as row-major array of doubles.
+     * Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+     * Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+     * Length must be divisible by ATTITUDE_COMPONENTS.
+     */
+    fun ATTITUDE_DATA(j: Int) : Double {
+        val o = __offset(26)
         return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
-    val DATALength : Int
+    val ATTITUDE_DATALength : Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
+    val ATTITUDE_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 8)
+    fun ATTITUDE_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsAEMSegment(_bb: ByteBuffer): AEMSegment = getRootAsAEMSegment(_bb, AEMSegment())
@@ -145,9 +170,10 @@ class AEMSegment : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAEMSegment(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, REF_FRAME_AOffset: Int, REF_FRAME_BOffset: Int, ATTITUDE_DIROffset: Int, TIME_SYSTEMOffset: Int, ATTITUDE_TYPEOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, DATAOffset: Int) : Int {
-            builder.startTable(10)
-            addDATA(builder, DATAOffset)
+        fun createAEMSegment(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, REF_FRAME_AOffset: Int, REF_FRAME_BOffset: Int, ATTITUDE_DIROffset: Int, TIME_SYSTEMOffset: Int, ATTITUDE_TYPEOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, STEP_SIZE: Double, ATTITUDE_COMPONENTS: UByte, ATTITUDE_DATAOffset: Int) : Int {
+            builder.startTable(12)
+            addSTEP_SIZE(builder, STEP_SIZE)
+            addATTITUDE_DATA(builder, ATTITUDE_DATAOffset)
             addSTOP_TIME(builder, STOP_TIMEOffset)
             addSTART_TIME(builder, START_TIMEOffset)
             addATTITUDE_TYPE(builder, ATTITUDE_TYPEOffset)
@@ -157,9 +183,10 @@ class AEMSegment : Table() {
             addREF_FRAME_A(builder, REF_FRAME_AOffset)
             addOBJECT_ID(builder, OBJECT_IDOffset)
             addOBJECT_NAME(builder, OBJECT_NAMEOffset)
+            addATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS)
             return endAEMSegment(builder)
         }
-        fun startAEMSegment(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startAEMSegment(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(0, OBJECT_NAME, 0)
         fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(1, OBJECT_ID, 0)
         fun addREF_FRAME_A(builder: FlatBufferBuilder, REF_FRAME_A: Int) = builder.addOffset(2, REF_FRAME_A, 0)
@@ -169,15 +196,17 @@ class AEMSegment : Table() {
         fun addATTITUDE_TYPE(builder: FlatBufferBuilder, ATTITUDE_TYPE: Int) = builder.addOffset(6, ATTITUDE_TYPE, 0)
         fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(7, START_TIME, 0)
         fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(8, STOP_TIME, 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(9, DATA, 0)
-        fun createDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addSTEP_SIZE(builder: FlatBufferBuilder, STEP_SIZE: Double) = builder.addDouble(9, STEP_SIZE, 0.0)
+        fun addATTITUDE_COMPONENTS(builder: FlatBufferBuilder, ATTITUDE_COMPONENTS: UByte) = builder.addByte(10, ATTITUDE_COMPONENTS.toByte(), 7)
+        fun addATTITUDE_DATA(builder: FlatBufferBuilder, ATTITUDE_DATA: Int) = builder.addOffset(11, ATTITUDE_DATA, 0)
+        fun createAttitudeDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startAttitudeDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endAEMSegment(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

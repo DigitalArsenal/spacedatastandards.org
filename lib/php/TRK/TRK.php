@@ -231,68 +231,11 @@ class TRK extends Table
     }
 
     /**
-     * @param int offset
-     * @return string
-     */
-    public function getECEF_POS($j)
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getECEF_POSLength()
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getECEF_VEL($j)
-    {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getECEF_VELLength()
-    {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getECEF_ACC($j)
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getECEF_ACCLength()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
      * @return double
      */
     public function getLAT()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -301,7 +244,7 @@ class TRK extends Table
      */
     public function getLON()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -310,7 +253,7 @@ class TRK extends Table
      */
     public function getALT()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -319,7 +262,7 @@ class TRK extends Table
      */
     public function getSPD()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -328,7 +271,7 @@ class TRK extends Table
      */
     public function getHDNG()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -337,179 +280,8 @@ class TRK extends Table
      */
     public function getCOURSE()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLCO($j)
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLCOLength()
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLCS($j)
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLCSLength()
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLC_POS($j)
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLC_POSLength()
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLC_VEL($j)
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLC_VELLength()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getLC_ACC($j)
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLC_ACCLength()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getE_NUVEL($j)
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getE_NUVELLength()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getE_NUPOS($j)
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getE_NUPOSLength()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getCOV($j)
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCOVLength()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getERR_ELLP($j)
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getERR_ELLPLength()
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -518,7 +290,7 @@ class TRK extends Table
      */
     public function getSRC_TYPS($j)
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -527,7 +299,7 @@ class TRK extends Table
      */
     public function getSRC_TYPSLength()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -537,7 +309,7 @@ class TRK extends Table
      */
     public function getSRC_IDS($j)
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -546,13 +318,13 @@ class TRK extends Table
      */
     public function getSRC_IDSLength()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     public function getCALL_SIGN()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -561,13 +333,13 @@ class TRK extends Table
      */
     public function getMULTI_SOURCE()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
     public function getJ_SERIES()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -576,7 +348,7 @@ class TRK extends Table
      */
     public function getSTRENGTH()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -585,7 +357,7 @@ class TRK extends Table
      */
     public function getM1()
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -594,7 +366,7 @@ class TRK extends Table
      */
     public function getM1V()
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -603,7 +375,7 @@ class TRK extends Table
      */
     public function getM2()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -612,7 +384,7 @@ class TRK extends Table
      */
     public function getM2V()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -621,7 +393,7 @@ class TRK extends Table
      */
     public function getM3A()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -630,7 +402,7 @@ class TRK extends Table
      */
     public function getM3AV()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
@@ -640,7 +412,7 @@ class TRK extends Table
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -649,7 +421,194 @@ class TRK extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Start time for track data (ISO 8601 UTC format).
+    public function getTRACK_START_TIME()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Time interval between track points in seconds.
+    /**
+     * @return double
+     */
+    public function getTRACK_STEP_SIZE()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of components per point (default 3 for X, Y, Z).
+    /**
+     * @return byte
+     */
+    public function getTRACK_COMPONENTS()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 3;
+    }
+
+    /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getECEF_POS($j)
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getECEF_POSLength()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getECEF_VEL($j)
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getECEF_VELLength()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getECEF_ACC($j)
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getECEF_ACCLength()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Local coordinate position as flat array
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getLC_POS($j)
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLC_POSLength()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Local coordinate velocity as flat array
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getLC_VEL($j)
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLC_VELLength()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Local coordinate acceleration as flat array
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getLC_ACC($j)
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLC_ACCLength()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Covariance data (21 elements per point for 6x6 lower triangular)
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getCOV($j)
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOVLength()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Error ellipse data (6 elements per point)
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getERR_ELLP($j)
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getERR_ELLPLength()
+    {
+        $o = $this->__offset(120);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -659,16 +618,16 @@ class TRK extends Table
      */
     public static function startTRK(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(60);
+        $builder->StartObject(59);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TRK
      */
-    public static function createTRK(FlatBufferBuilder $builder, $ID, $CNTCT, $MSG_TS, $MSN_ID, $ASSET_NAT, $ASSET, $SEN, $SEN_QUAL, $TRK_ID, $TRK_NUM, $TRK_STAT, $OBJ_NAT, $OBJ_ID, $OBJ_TYPE, $OBJ_SPEC, $OBJ_PLAT, $OBJ_ACT, $MOD_TYPE, $TRK_ITM_ID, $TS, $TRK_QUAL, $TRK_PT_TYPE, $OBJ_IDENT, $IDENT_CRED, $IDENT_REL, $IDENT_AMP, $ENVIRONMENT, $ENVIRONMENT_CONF, $TRK_CONF, $ECEF_POS, $ECEF_VEL, $ECEF_ACC, $LAT, $LON, $ALT, $SPD, $HDNG, $COURSE, $LCO, $LCS, $LC_POS, $LC_VEL, $LC_ACC, $E_NUVEL, $E_NUPOS, $COV, $ERR_ELLP, $SRC_TYPS, $SRC_IDS, $CALL_SIGN, $MULTI_SOURCE, $J_SERIES, $STRENGTH, $M1, $M1V, $M2, $M2V, $M3A, $M3AV, $TAGS)
+    public static function createTRK(FlatBufferBuilder $builder, $ID, $CNTCT, $MSG_TS, $MSN_ID, $ASSET_NAT, $ASSET, $SEN, $SEN_QUAL, $TRK_ID, $TRK_NUM, $TRK_STAT, $OBJ_NAT, $OBJ_ID, $OBJ_TYPE, $OBJ_SPEC, $OBJ_PLAT, $OBJ_ACT, $MOD_TYPE, $TRK_ITM_ID, $TS, $TRK_QUAL, $TRK_PT_TYPE, $OBJ_IDENT, $IDENT_CRED, $IDENT_REL, $IDENT_AMP, $ENVIRONMENT, $ENVIRONMENT_CONF, $TRK_CONF, $LAT, $LON, $ALT, $SPD, $HDNG, $COURSE, $SRC_TYPS, $SRC_IDS, $CALL_SIGN, $MULTI_SOURCE, $J_SERIES, $STRENGTH, $M1, $M1V, $M2, $M2V, $M3A, $M3AV, $TAGS, $TRACK_START_TIME, $TRACK_STEP_SIZE, $TRACK_COMPONENTS, $ECEF_POS, $ECEF_VEL, $ECEF_ACC, $LC_POS, $LC_VEL, $LC_ACC, $COV, $ERR_ELLP)
     {
-        $builder->startObject(60);
+        $builder->startObject(59);
         self::addID($builder, $ID);
         self::addCNTCT($builder, $CNTCT);
         self::addMSG_TS($builder, $MSG_TS);
@@ -698,24 +657,12 @@ class TRK extends Table
         self::addENVIRONMENT($builder, $ENVIRONMENT);
         self::addENVIRONMENT_CONF($builder, $ENVIRONMENT_CONF);
         self::addTRK_CONF($builder, $TRK_CONF);
-        self::addECEF_POS($builder, $ECEF_POS);
-        self::addECEF_VEL($builder, $ECEF_VEL);
-        self::addECEF_ACC($builder, $ECEF_ACC);
         self::addLAT($builder, $LAT);
         self::addLON($builder, $LON);
         self::addALT($builder, $ALT);
         self::addSPD($builder, $SPD);
         self::addHDNG($builder, $HDNG);
         self::addCOURSE($builder, $COURSE);
-        self::addLCO($builder, $LCO);
-        self::addLCS($builder, $LCS);
-        self::addLC_POS($builder, $LC_POS);
-        self::addLC_VEL($builder, $LC_VEL);
-        self::addLC_ACC($builder, $LC_ACC);
-        self::addE_NUVEL($builder, $E_NUVEL);
-        self::addE_NUPOS($builder, $E_NUPOS);
-        self::addCOV($builder, $COV);
-        self::addERR_ELLP($builder, $ERR_ELLP);
         self::addSRC_TYPS($builder, $SRC_TYPS);
         self::addSRC_IDS($builder, $SRC_IDS);
         self::addCALL_SIGN($builder, $CALL_SIGN);
@@ -729,6 +676,17 @@ class TRK extends Table
         self::addM3A($builder, $M3A);
         self::addM3AV($builder, $M3AV);
         self::addTAGS($builder, $TAGS);
+        self::addTRACK_START_TIME($builder, $TRACK_START_TIME);
+        self::addTRACK_STEP_SIZE($builder, $TRACK_STEP_SIZE);
+        self::addTRACK_COMPONENTS($builder, $TRACK_COMPONENTS);
+        self::addECEF_POS($builder, $ECEF_POS);
+        self::addECEF_VEL($builder, $ECEF_VEL);
+        self::addECEF_ACC($builder, $ECEF_ACC);
+        self::addLC_POS($builder, $LC_POS);
+        self::addLC_VEL($builder, $LC_VEL);
+        self::addLC_ACC($builder, $LC_ACC);
+        self::addCOV($builder, $COV);
+        self::addERR_ELLP($builder, $ERR_ELLP);
         $o = $builder->endObject();
         return $o;
     }
@@ -1025,114 +983,12 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addECEF_POS(FlatBufferBuilder $builder, $ECEF_POS)
-    {
-        $builder->addOffsetX(29, $ECEF_POS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createECEF_POSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startECEF_POSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addECEF_VEL(FlatBufferBuilder $builder, $ECEF_VEL)
-    {
-        $builder->addOffsetX(30, $ECEF_VEL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createECEF_VELVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startECEF_VELVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addECEF_ACC(FlatBufferBuilder $builder, $ECEF_ACC)
-    {
-        $builder->addOffsetX(31, $ECEF_ACC, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createECEF_ACCVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startECEF_ACCVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addLAT(FlatBufferBuilder $builder, $LAT)
     {
-        $builder->addDoubleX(32, $LAT, 0.0);
+        $builder->addDoubleX(29, $LAT, 0.0);
     }
 
     /**
@@ -1142,7 +998,7 @@ class TRK extends Table
      */
     public static function addLON(FlatBufferBuilder $builder, $LON)
     {
-        $builder->addDoubleX(33, $LON, 0.0);
+        $builder->addDoubleX(30, $LON, 0.0);
     }
 
     /**
@@ -1152,7 +1008,7 @@ class TRK extends Table
      */
     public static function addALT(FlatBufferBuilder $builder, $ALT)
     {
-        $builder->addDoubleX(34, $ALT, 0.0);
+        $builder->addDoubleX(31, $ALT, 0.0);
     }
 
     /**
@@ -1162,7 +1018,7 @@ class TRK extends Table
      */
     public static function addSPD(FlatBufferBuilder $builder, $SPD)
     {
-        $builder->addDoubleX(35, $SPD, 0.0);
+        $builder->addDoubleX(32, $SPD, 0.0);
     }
 
     /**
@@ -1172,7 +1028,7 @@ class TRK extends Table
      */
     public static function addHDNG(FlatBufferBuilder $builder, $HDNG)
     {
-        $builder->addDoubleX(36, $HDNG, 0.0);
+        $builder->addDoubleX(33, $HDNG, 0.0);
     }
 
     /**
@@ -1182,313 +1038,7 @@ class TRK extends Table
      */
     public static function addCOURSE(FlatBufferBuilder $builder, $COURSE)
     {
-        $builder->addDoubleX(37, $COURSE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLCO(FlatBufferBuilder $builder, $LCO)
-    {
-        $builder->addOffsetX(38, $LCO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLCOVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLCOVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLCS(FlatBufferBuilder $builder, $LCS)
-    {
-        $builder->addOffsetX(39, $LCS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLCSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLCSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLC_POS(FlatBufferBuilder $builder, $LC_POS)
-    {
-        $builder->addOffsetX(40, $LC_POS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLC_POSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLC_POSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLC_VEL(FlatBufferBuilder $builder, $LC_VEL)
-    {
-        $builder->addOffsetX(41, $LC_VEL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLC_VELVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLC_VELVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLC_ACC(FlatBufferBuilder $builder, $LC_ACC)
-    {
-        $builder->addOffsetX(42, $LC_ACC, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLC_ACCVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLC_ACCVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addE_NUVEL(FlatBufferBuilder $builder, $E_NUVEL)
-    {
-        $builder->addOffsetX(43, $E_NUVEL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createE_NUVELVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startE_NUVELVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addE_NUPOS(FlatBufferBuilder $builder, $E_NUPOS)
-    {
-        $builder->addOffsetX(44, $E_NUPOS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createE_NUPOSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startE_NUPOSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addCOV(FlatBufferBuilder $builder, $COV)
-    {
-        $builder->addOffsetX(45, $COV, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createCOVVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startCOVVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addERR_ELLP(FlatBufferBuilder $builder, $ERR_ELLP)
-    {
-        $builder->addOffsetX(46, $ERR_ELLP, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createERR_ELLPVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startERR_ELLPVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
+        $builder->addDoubleX(34, $COURSE, 0.0);
     }
 
     /**
@@ -1498,7 +1048,7 @@ class TRK extends Table
      */
     public static function addSRC_TYPS(FlatBufferBuilder $builder, $SRC_TYPS)
     {
-        $builder->addOffsetX(47, $SRC_TYPS, 0);
+        $builder->addOffsetX(35, $SRC_TYPS, 0);
     }
 
     /**
@@ -1532,7 +1082,7 @@ class TRK extends Table
      */
     public static function addSRC_IDS(FlatBufferBuilder $builder, $SRC_IDS)
     {
-        $builder->addOffsetX(48, $SRC_IDS, 0);
+        $builder->addOffsetX(36, $SRC_IDS, 0);
     }
 
     /**
@@ -1566,7 +1116,7 @@ class TRK extends Table
      */
     public static function addCALL_SIGN(FlatBufferBuilder $builder, $CALL_SIGN)
     {
-        $builder->addOffsetX(49, $CALL_SIGN, 0);
+        $builder->addOffsetX(37, $CALL_SIGN, 0);
     }
 
     /**
@@ -1576,7 +1126,7 @@ class TRK extends Table
      */
     public static function addMULTI_SOURCE(FlatBufferBuilder $builder, $MULTI_SOURCE)
     {
-        $builder->addBoolX(50, $MULTI_SOURCE, false);
+        $builder->addBoolX(38, $MULTI_SOURCE, false);
     }
 
     /**
@@ -1586,7 +1136,7 @@ class TRK extends Table
      */
     public static function addJ_SERIES(FlatBufferBuilder $builder, $J_SERIES)
     {
-        $builder->addOffsetX(51, $J_SERIES, 0);
+        $builder->addOffsetX(39, $J_SERIES, 0);
     }
 
     /**
@@ -1596,7 +1146,7 @@ class TRK extends Table
      */
     public static function addSTRENGTH(FlatBufferBuilder $builder, $STRENGTH)
     {
-        $builder->addIntX(52, $STRENGTH, 0);
+        $builder->addIntX(40, $STRENGTH, 0);
     }
 
     /**
@@ -1606,7 +1156,7 @@ class TRK extends Table
      */
     public static function addM1(FlatBufferBuilder $builder, $M1)
     {
-        $builder->addIntX(53, $M1, 0);
+        $builder->addIntX(41, $M1, 0);
     }
 
     /**
@@ -1616,7 +1166,7 @@ class TRK extends Table
      */
     public static function addM1V(FlatBufferBuilder $builder, $M1V)
     {
-        $builder->addIntX(54, $M1V, 0);
+        $builder->addIntX(42, $M1V, 0);
     }
 
     /**
@@ -1626,7 +1176,7 @@ class TRK extends Table
      */
     public static function addM2(FlatBufferBuilder $builder, $M2)
     {
-        $builder->addIntX(55, $M2, 0);
+        $builder->addIntX(43, $M2, 0);
     }
 
     /**
@@ -1636,7 +1186,7 @@ class TRK extends Table
      */
     public static function addM2V(FlatBufferBuilder $builder, $M2V)
     {
-        $builder->addIntX(56, $M2V, 0);
+        $builder->addIntX(44, $M2V, 0);
     }
 
     /**
@@ -1646,7 +1196,7 @@ class TRK extends Table
      */
     public static function addM3A(FlatBufferBuilder $builder, $M3A)
     {
-        $builder->addIntX(57, $M3A, 0);
+        $builder->addIntX(45, $M3A, 0);
     }
 
     /**
@@ -1656,7 +1206,7 @@ class TRK extends Table
      */
     public static function addM3AV(FlatBufferBuilder $builder, $M3AV)
     {
-        $builder->addIntX(58, $M3AV, 0);
+        $builder->addIntX(46, $M3AV, 0);
     }
 
     /**
@@ -1666,7 +1216,7 @@ class TRK extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(59, $TAGS, 0);
+        $builder->addOffsetX(47, $TAGS, 0);
     }
 
     /**
@@ -1691,6 +1241,308 @@ class TRK extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRACK_START_TIME(FlatBufferBuilder $builder, $TRACK_START_TIME)
+    {
+        $builder->addOffsetX(48, $TRACK_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRACK_STEP_SIZE(FlatBufferBuilder $builder, $TRACK_STEP_SIZE)
+    {
+        $builder->addDoubleX(49, $TRACK_STEP_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addTRACK_COMPONENTS(FlatBufferBuilder $builder, $TRACK_COMPONENTS)
+    {
+        $builder->addByteX(50, $TRACK_COMPONENTS, 3);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addECEF_POS(FlatBufferBuilder $builder, $ECEF_POS)
+    {
+        $builder->addOffsetX(51, $ECEF_POS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createECEF_POSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startECEF_POSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addECEF_VEL(FlatBufferBuilder $builder, $ECEF_VEL)
+    {
+        $builder->addOffsetX(52, $ECEF_VEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createECEF_VELVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startECEF_VELVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addECEF_ACC(FlatBufferBuilder $builder, $ECEF_ACC)
+    {
+        $builder->addOffsetX(53, $ECEF_ACC, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createECEF_ACCVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startECEF_ACCVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLC_POS(FlatBufferBuilder $builder, $LC_POS)
+    {
+        $builder->addOffsetX(54, $LC_POS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLC_POSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLC_POSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLC_VEL(FlatBufferBuilder $builder, $LC_VEL)
+    {
+        $builder->addOffsetX(55, $LC_VEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLC_VELVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLC_VELVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLC_ACC(FlatBufferBuilder $builder, $LC_ACC)
+    {
+        $builder->addOffsetX(56, $LC_ACC, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLC_ACCVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLC_ACCVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV(FlatBufferBuilder $builder, $COV)
+    {
+        $builder->addOffsetX(57, $COV, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOVVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOVVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addERR_ELLP(FlatBufferBuilder $builder, $ERR_ELLP)
+    {
+        $builder->addOffsetX(58, $ERR_ELLP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createERR_ELLPVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startERR_ELLPVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

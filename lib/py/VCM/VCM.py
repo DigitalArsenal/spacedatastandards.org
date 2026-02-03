@@ -144,33 +144,8 @@ class VCM(object):
         return None
 
     # VCM
-    def COVARIANCE_MATRIX(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from VCMCovarianceMatrixLine import VCMCovarianceMatrixLine
-            obj = VCMCovarianceMatrixLine()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # VCM
-    def COVARIANCE_MATRIXLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # VCM
-    def COVARIANCE_MATRIXIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        return o == 0
-
-    # VCM
     def UVW_SIGMAS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from uvwSigmas import uvwSigmas
@@ -181,167 +156,172 @@ class VCM(object):
 
     # VCM
     def MASS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def SOLAR_RAD_AREA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def SOLAR_RAD_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def DRAG_AREA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def DRAG_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def SRP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
     # VCM
     def CLASSIFICATION_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # VCM
     def NORAD_CAT_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # VCM
     def ELEMENT_SET_NO(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # VCM
     def REV_AT_EPOCH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def BSTAR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def MEAN_MOTION_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def MEAN_MOTION_DDOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def COV_REFERENCE_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    # Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    #         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    #         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    #         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    # Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
     # VCM
-    def CX_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+    def COVARIANCE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
 
     # VCM
-    def CY_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+    def COVARIANCEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # VCM
-    def CZ_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+    def COVARIANCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.VectorLen(o)
+        return 0
 
     # VCM
-    def CX_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+    def COVARIANCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        return o == 0
 
     # VCM
     def USER_DEFINED_BIP_0044_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # VCM
     def USER_DEFINED_OBJECT_DESIGNATOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # VCM
     def USER_DEFINED_EARTH_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # VCM
     def USER_DEFINED_EPOCH_TIMESTAMP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # VCM
     def USER_DEFINED_MICROSECONDS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
 def VCMStart(builder):
-    builder.StartObject(39)
+    builder.StartObject(35)
 
 def Start(builder):
     VCMStart(builder)
@@ -430,158 +410,134 @@ def VCMAddPROPAGATOR_SETTINGS(builder, PROPAGATOR_SETTINGS):
 def AddPROPAGATOR_SETTINGS(builder, PROPAGATOR_SETTINGS):
     VCMAddPROPAGATOR_SETTINGS(builder, PROPAGATOR_SETTINGS)
 
-def VCMAddCOVARIANCE_MATRIX(builder, COVARIANCE_MATRIX):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX), 0)
-
-def AddCOVARIANCE_MATRIX(builder, COVARIANCE_MATRIX):
-    VCMAddCOVARIANCE_MATRIX(builder, COVARIANCE_MATRIX)
-
-def VCMStartCOVARIANCE_MATRIXVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartCOVARIANCE_MATRIXVector(builder, numElems):
-    return VCMStartCOVARIANCE_MATRIXVector(builder, numElems)
-
 def VCMAddUVW_SIGMAS(builder, UVW_SIGMAS):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(UVW_SIGMAS), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(UVW_SIGMAS), 0)
 
 def AddUVW_SIGMAS(builder, UVW_SIGMAS):
     VCMAddUVW_SIGMAS(builder, UVW_SIGMAS)
 
 def VCMAddMASS(builder, MASS):
-    builder.PrependFloat64Slot(16, MASS, 0.0)
+    builder.PrependFloat64Slot(15, MASS, 0.0)
 
 def AddMASS(builder, MASS):
     VCMAddMASS(builder, MASS)
 
 def VCMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
-    builder.PrependFloat64Slot(17, SOLAR_RAD_AREA, 0.0)
+    builder.PrependFloat64Slot(16, SOLAR_RAD_AREA, 0.0)
 
 def AddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
     VCMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
 
 def VCMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
-    builder.PrependFloat64Slot(18, SOLAR_RAD_COEFF, 0.0)
+    builder.PrependFloat64Slot(17, SOLAR_RAD_COEFF, 0.0)
 
 def AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
     VCMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
 
 def VCMAddDRAG_AREA(builder, DRAG_AREA):
-    builder.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+    builder.PrependFloat64Slot(18, DRAG_AREA, 0.0)
 
 def AddDRAG_AREA(builder, DRAG_AREA):
     VCMAddDRAG_AREA(builder, DRAG_AREA)
 
 def VCMAddDRAG_COEFF(builder, DRAG_COEFF):
-    builder.PrependFloat64Slot(20, DRAG_COEFF, 0.0)
+    builder.PrependFloat64Slot(19, DRAG_COEFF, 0.0)
 
 def AddDRAG_COEFF(builder, DRAG_COEFF):
     VCMAddDRAG_COEFF(builder, DRAG_COEFF)
 
 def VCMAddSRP(builder, SRP):
-    builder.PrependInt8Slot(21, SRP, 0)
+    builder.PrependInt8Slot(20, SRP, 0)
 
 def AddSRP(builder, SRP):
     VCMAddSRP(builder, SRP)
 
 def VCMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
 
 def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
     VCMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
 
 def VCMAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
-    builder.PrependUint32Slot(23, NORAD_CAT_ID, 0)
+    builder.PrependUint32Slot(22, NORAD_CAT_ID, 0)
 
 def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
     VCMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 
 def VCMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO):
-    builder.PrependUint32Slot(24, ELEMENT_SET_NO, 0)
+    builder.PrependUint32Slot(23, ELEMENT_SET_NO, 0)
 
 def AddELEMENT_SET_NO(builder, ELEMENT_SET_NO):
     VCMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO)
 
 def VCMAddREV_AT_EPOCH(builder, REV_AT_EPOCH):
-    builder.PrependFloat64Slot(25, REV_AT_EPOCH, 0.0)
+    builder.PrependFloat64Slot(24, REV_AT_EPOCH, 0.0)
 
 def AddREV_AT_EPOCH(builder, REV_AT_EPOCH):
     VCMAddREV_AT_EPOCH(builder, REV_AT_EPOCH)
 
 def VCMAddBSTAR(builder, BSTAR):
-    builder.PrependFloat64Slot(26, BSTAR, 0.0)
+    builder.PrependFloat64Slot(25, BSTAR, 0.0)
 
 def AddBSTAR(builder, BSTAR):
     VCMAddBSTAR(builder, BSTAR)
 
 def VCMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
-    builder.PrependFloat64Slot(27, MEAN_MOTION_DOT, 0.0)
+    builder.PrependFloat64Slot(26, MEAN_MOTION_DOT, 0.0)
 
 def AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
     VCMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
 
 def VCMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
-    builder.PrependFloat64Slot(28, MEAN_MOTION_DDOT, 0.0)
+    builder.PrependFloat64Slot(27, MEAN_MOTION_DDOT, 0.0)
 
 def AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
     VCMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
 
 def VCMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
-    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REFERENCE_FRAME), 0)
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REFERENCE_FRAME), 0)
 
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
     VCMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 
-def VCMAddCX_X(builder, CX_X):
-    builder.PrependFloat64Slot(30, CX_X, 0.0)
+def VCMAddCOVARIANCE(builder, COVARIANCE):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
 
-def AddCX_X(builder, CX_X):
-    VCMAddCX_X(builder, CX_X)
+def AddCOVARIANCE(builder, COVARIANCE):
+    VCMAddCOVARIANCE(builder, COVARIANCE)
 
-def VCMAddCY_X(builder, CY_X):
-    builder.PrependFloat64Slot(31, CY_X, 0.0)
+def VCMStartCOVARIANCEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
 
-def AddCY_X(builder, CY_X):
-    VCMAddCY_X(builder, CY_X)
-
-def VCMAddCZ_X(builder, CZ_X):
-    builder.PrependFloat64Slot(32, CZ_X, 0.0)
-
-def AddCZ_X(builder, CZ_X):
-    VCMAddCZ_X(builder, CZ_X)
-
-def VCMAddCX_DOT_X(builder, CX_DOT_X):
-    builder.PrependFloat64Slot(33, CX_DOT_X, 0.0)
-
-def AddCX_DOT_X(builder, CX_DOT_X):
-    VCMAddCX_DOT_X(builder, CX_DOT_X)
+def StartCOVARIANCEVector(builder, numElems):
+    return VCMStartCOVARIANCEVector(builder, numElems)
 
 def VCMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
-    builder.PrependUint32Slot(34, USER_DEFINED_BIP_0044_TYPE, 0)
+    builder.PrependUint32Slot(30, USER_DEFINED_BIP_0044_TYPE, 0)
 
 def AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     VCMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
 
 def VCMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
-    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
 
 def AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
     VCMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)
 
 def VCMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
-    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
 
 def AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
     VCMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
 
 def VCMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
-    builder.PrependFloat64Slot(37, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+    builder.PrependFloat64Slot(33, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
 
 def AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
     VCMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
 
 def VCMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
-    builder.PrependFloat64Slot(38, USER_DEFINED_MICROSECONDS, 0.0)
+    builder.PrependFloat64Slot(34, USER_DEFINED_MICROSECONDS, 0.0)
 
 def AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
     VCMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
@@ -593,7 +549,6 @@ def End(builder):
     return VCMEnd(builder)
 
 import VCMAtmosphericModelData
-import VCMCovarianceMatrixLine
 import VCMStateVector
 import equinoctialElements
 import keplerianElements
@@ -622,7 +577,6 @@ class VCMT(object):
         self.GM = 0.0  # type: float
         self.ATMOSPHERIC_MODEL_DATA = None  # type: Optional[VCMAtmosphericModelData.VCMAtmosphericModelDataT]
         self.PROPAGATOR_SETTINGS = None  # type: Optional[propagatorConfig.propagatorConfigT]
-        self.COVARIANCE_MATRIX = None  # type: List[VCMCovarianceMatrixLine.VCMCovarianceMatrixLineT]
         self.UVW_SIGMAS = None  # type: Optional[uvwSigmas.uvwSigmasT]
         self.MASS = 0.0  # type: float
         self.SOLAR_RAD_AREA = 0.0  # type: float
@@ -638,10 +592,7 @@ class VCMT(object):
         self.MEAN_MOTION_DOT = 0.0  # type: float
         self.MEAN_MOTION_DDOT = 0.0  # type: float
         self.COV_REFERENCE_FRAME = None  # type: str
-        self.CX_X = 0.0  # type: float
-        self.CY_X = 0.0  # type: float
-        self.CZ_X = 0.0  # type: float
-        self.CX_DOT_X = 0.0  # type: float
+        self.COVARIANCE = None  # type: List[float]
         self.USER_DEFINED_BIP_0044_TYPE = 0  # type: int
         self.USER_DEFINED_OBJECT_DESIGNATOR = None  # type: str
         self.USER_DEFINED_EARTH_MODEL = None  # type: str
@@ -688,14 +639,6 @@ class VCMT(object):
             self.ATMOSPHERIC_MODEL_DATA = VCMAtmosphericModelData.VCMAtmosphericModelDataT.InitFromObj(VCM.ATMOSPHERIC_MODEL_DATA())
         if VCM.PROPAGATOR_SETTINGS() is not None:
             self.PROPAGATOR_SETTINGS = propagatorConfig.propagatorConfigT.InitFromObj(VCM.PROPAGATOR_SETTINGS())
-        if not VCM.COVARIANCE_MATRIXIsNone():
-            self.COVARIANCE_MATRIX = []
-            for i in range(VCM.COVARIANCE_MATRIXLength()):
-                if VCM.COVARIANCE_MATRIX(i) is None:
-                    self.COVARIANCE_MATRIX.append(None)
-                else:
-                    vCMCovarianceMatrixLine_ = VCMCovarianceMatrixLine.VCMCovarianceMatrixLineT.InitFromObj(VCM.COVARIANCE_MATRIX(i))
-                    self.COVARIANCE_MATRIX.append(vCMCovarianceMatrixLine_)
         if VCM.UVW_SIGMAS() is not None:
             self.UVW_SIGMAS = uvwSigmas.uvwSigmasT.InitFromObj(VCM.UVW_SIGMAS())
         self.MASS = VCM.MASS()
@@ -712,10 +655,13 @@ class VCMT(object):
         self.MEAN_MOTION_DOT = VCM.MEAN_MOTION_DOT()
         self.MEAN_MOTION_DDOT = VCM.MEAN_MOTION_DDOT()
         self.COV_REFERENCE_FRAME = VCM.COV_REFERENCE_FRAME()
-        self.CX_X = VCM.CX_X()
-        self.CY_X = VCM.CY_X()
-        self.CZ_X = VCM.CZ_X()
-        self.CX_DOT_X = VCM.CX_DOT_X()
+        if not VCM.COVARIANCEIsNone():
+            if np is None:
+                self.COVARIANCE = []
+                for i in range(VCM.COVARIANCELength()):
+                    self.COVARIANCE.append(VCM.COVARIANCE(i))
+            else:
+                self.COVARIANCE = VCM.COVARIANCEAsNumpy()
         self.USER_DEFINED_BIP_0044_TYPE = VCM.USER_DEFINED_BIP_0044_TYPE()
         self.USER_DEFINED_OBJECT_DESIGNATOR = VCM.USER_DEFINED_OBJECT_DESIGNATOR()
         self.USER_DEFINED_EARTH_MODEL = VCM.USER_DEFINED_EARTH_MODEL()
@@ -748,20 +694,20 @@ class VCMT(object):
             ATMOSPHERIC_MODEL_DATA = self.ATMOSPHERIC_MODEL_DATA.Pack(builder)
         if self.PROPAGATOR_SETTINGS is not None:
             PROPAGATOR_SETTINGS = self.PROPAGATOR_SETTINGS.Pack(builder)
-        if self.COVARIANCE_MATRIX is not None:
-            COVARIANCE_MATRIXlist = []
-            for i in range(len(self.COVARIANCE_MATRIX)):
-                COVARIANCE_MATRIXlist.append(self.COVARIANCE_MATRIX[i].Pack(builder))
-            VCMStartCOVARIANCE_MATRIXVector(builder, len(self.COVARIANCE_MATRIX))
-            for i in reversed(range(len(self.COVARIANCE_MATRIX))):
-                builder.PrependUOffsetTRelative(COVARIANCE_MATRIXlist[i])
-            COVARIANCE_MATRIX = builder.EndVector()
         if self.UVW_SIGMAS is not None:
             UVW_SIGMAS = self.UVW_SIGMAS.Pack(builder)
         if self.CLASSIFICATION_TYPE is not None:
             CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
         if self.COV_REFERENCE_FRAME is not None:
             COV_REFERENCE_FRAME = builder.CreateString(self.COV_REFERENCE_FRAME)
+        if self.COVARIANCE is not None:
+            if np is not None and type(self.COVARIANCE) is np.ndarray:
+                COVARIANCE = builder.CreateNumpyVector(self.COVARIANCE)
+            else:
+                VCMStartCOVARIANCEVector(builder, len(self.COVARIANCE))
+                for i in reversed(range(len(self.COVARIANCE))):
+                    builder.PrependFloat64(self.COVARIANCE[i])
+                COVARIANCE = builder.EndVector()
         if self.USER_DEFINED_OBJECT_DESIGNATOR is not None:
             USER_DEFINED_OBJECT_DESIGNATOR = builder.CreateString(self.USER_DEFINED_OBJECT_DESIGNATOR)
         if self.USER_DEFINED_EARTH_MODEL is not None:
@@ -793,8 +739,6 @@ class VCMT(object):
             VCMAddATMOSPHERIC_MODEL_DATA(builder, ATMOSPHERIC_MODEL_DATA)
         if self.PROPAGATOR_SETTINGS is not None:
             VCMAddPROPAGATOR_SETTINGS(builder, PROPAGATOR_SETTINGS)
-        if self.COVARIANCE_MATRIX is not None:
-            VCMAddCOVARIANCE_MATRIX(builder, COVARIANCE_MATRIX)
         if self.UVW_SIGMAS is not None:
             VCMAddUVW_SIGMAS(builder, UVW_SIGMAS)
         VCMAddMASS(builder, self.MASS)
@@ -813,10 +757,8 @@ class VCMT(object):
         VCMAddMEAN_MOTION_DDOT(builder, self.MEAN_MOTION_DDOT)
         if self.COV_REFERENCE_FRAME is not None:
             VCMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-        VCMAddCX_X(builder, self.CX_X)
-        VCMAddCY_X(builder, self.CY_X)
-        VCMAddCZ_X(builder, self.CZ_X)
-        VCMAddCX_DOT_X(builder, self.CX_DOT_X)
+        if self.COVARIANCE is not None:
+            VCMAddCOVARIANCE(builder, COVARIANCE)
         VCMAddUSER_DEFINED_BIP_0044_TYPE(builder, self.USER_DEFINED_BIP_0044_TYPE)
         if self.USER_DEFINED_OBJECT_DESIGNATOR is not None:
             VCMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)

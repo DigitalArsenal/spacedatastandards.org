@@ -4,7 +4,6 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { AEMAttitudeEntry, AEMAttitudeEntryT } from './AEMAttitudeEntry.js';
 
 
 export class AEMSegment implements flatbuffers.IUnpackableObject<AEMSegmentT> {
@@ -88,18 +87,47 @@ STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DATA(index: number, obj?:AEMAttitudeEntry):AEMAttitudeEntry|null {
+/**
+ * Time interval between attitude states in seconds (required).
+ */
+STEP_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? (obj || new AEMAttitudeEntry()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-dataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+/**
+ * Number of components per attitude state.
+ * 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+ * 4 = quaternion only (Q1, Q2, Q3, QC)
+ */
+ATTITUDE_COMPONENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 7;
+}
+
+/**
+ * Attitude data as row-major array of doubles.
+ * Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+ * Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+ * Length must be divisible by ATTITUDE_COMPONENTS.
+ */
+ATTITUDE_DATA(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+attitudeDataLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+attitudeDataArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startAEMSegment(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(12);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -138,20 +166,33 @@ static addStopTime(builder:flatbuffers.Builder, STOP_TIMEOffset:flatbuffers.Offs
   builder.addFieldOffset(8, STOP_TIMEOffset, 0);
 }
 
-static addData(builder:flatbuffers.Builder, DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, DATAOffset, 0);
+static addStepSize(builder:flatbuffers.Builder, STEP_SIZE:number) {
+  builder.addFieldFloat64(9, STEP_SIZE, 0.0);
 }
 
-static createDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static addAttitudeComponents(builder:flatbuffers.Builder, ATTITUDE_COMPONENTS:number) {
+  builder.addFieldInt8(10, ATTITUDE_COMPONENTS, 7);
+}
+
+static addAttitudeData(builder:flatbuffers.Builder, ATTITUDE_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, ATTITUDE_DATAOffset, 0);
+}
+
+static createAttitudeDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAttitudeDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAttitudeDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
-static startDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static startAttitudeDataVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
 }
 
 static endAEMSegment(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -159,7 +200,7 @@ static endAEMSegment(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, REF_FRAME_AOffset:flatbuffers.Offset, REF_FRAME_BOffset:flatbuffers.Offset, ATTITUDE_DIROffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, ATTITUDE_TYPEOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, REF_FRAME_AOffset:flatbuffers.Offset, REF_FRAME_BOffset:flatbuffers.Offset, ATTITUDE_DIROffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, ATTITUDE_TYPEOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, STEP_SIZE:number, ATTITUDE_COMPONENTS:number, ATTITUDE_DATAOffset:flatbuffers.Offset):flatbuffers.Offset {
   AEMSegment.startAEMSegment(builder);
   AEMSegment.addObjectName(builder, OBJECT_NAMEOffset);
   AEMSegment.addObjectId(builder, OBJECT_IDOffset);
@@ -170,7 +211,9 @@ static createAEMSegment(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffe
   AEMSegment.addAttitudeType(builder, ATTITUDE_TYPEOffset);
   AEMSegment.addStartTime(builder, START_TIMEOffset);
   AEMSegment.addStopTime(builder, STOP_TIMEOffset);
-  AEMSegment.addData(builder, DATAOffset);
+  AEMSegment.addStepSize(builder, STEP_SIZE);
+  AEMSegment.addAttitudeComponents(builder, ATTITUDE_COMPONENTS);
+  AEMSegment.addAttitudeData(builder, ATTITUDE_DATAOffset);
   return AEMSegment.endAEMSegment(builder);
 }
 
@@ -185,7 +228,9 @@ unpack(): AEMSegmentT {
     this.ATTITUDE_TYPE(),
     this.START_TIME(),
     this.STOP_TIME(),
-    this.bb!.createObjList<AEMAttitudeEntry, AEMAttitudeEntryT>(this.DATA.bind(this), this.dataLength())
+    this.STEP_SIZE(),
+    this.ATTITUDE_COMPONENTS(),
+    this.bb!.createScalarList<number>(this.ATTITUDE_DATA.bind(this), this.attitudeDataLength())
   );
 }
 
@@ -200,7 +245,9 @@ unpackTo(_o: AEMSegmentT): void {
   _o.ATTITUDE_TYPE = this.ATTITUDE_TYPE();
   _o.START_TIME = this.START_TIME();
   _o.STOP_TIME = this.STOP_TIME();
-  _o.DATA = this.bb!.createObjList<AEMAttitudeEntry, AEMAttitudeEntryT>(this.DATA.bind(this), this.dataLength());
+  _o.STEP_SIZE = this.STEP_SIZE();
+  _o.ATTITUDE_COMPONENTS = this.ATTITUDE_COMPONENTS();
+  _o.ATTITUDE_DATA = this.bb!.createScalarList<number>(this.ATTITUDE_DATA.bind(this), this.attitudeDataLength());
 }
 }
 
@@ -215,7 +262,9 @@ constructor(
   public ATTITUDE_TYPE: string|Uint8Array|null = null,
   public START_TIME: string|Uint8Array|null = null,
   public STOP_TIME: string|Uint8Array|null = null,
-  public DATA: (AEMAttitudeEntryT)[] = []
+  public STEP_SIZE: number = 0.0,
+  public ATTITUDE_COMPONENTS: number = 7,
+  public ATTITUDE_DATA: (number)[] = []
 ){}
 
 
@@ -229,7 +278,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ATTITUDE_TYPE = (this.ATTITUDE_TYPE !== null ? builder.createString(this.ATTITUDE_TYPE!) : 0);
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
   const STOP_TIME = (this.STOP_TIME !== null ? builder.createString(this.STOP_TIME!) : 0);
-  const DATA = AEMSegment.createDataVector(builder, builder.createObjectOffsetList(this.DATA));
+  const ATTITUDE_DATA = AEMSegment.createAttitudeDataVector(builder, this.ATTITUDE_DATA);
 
   return AEMSegment.createAEMSegment(builder,
     OBJECT_NAME,
@@ -241,7 +290,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ATTITUDE_TYPE,
     START_TIME,
     STOP_TIME,
-    DATA
+    this.STEP_SIZE,
+    this.ATTITUDE_COMPONENTS,
+    ATTITUDE_DATA
   );
 }
 }

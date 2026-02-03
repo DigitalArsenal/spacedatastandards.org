@@ -10,7 +10,6 @@ import { Metadata, MetadataT } from './Metadata.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
-import { StateVector, StateVectorT } from './StateVector.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 
 
@@ -66,49 +65,81 @@ TRAJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * State vector data.
+ * Time interval between state vectors in seconds (required for time-series data).
  */
-STATE_DATA(index: number, obj?:StateVector):StateVector|null {
+STATE_STEP_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? (obj || new StateVector()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of components per state vector.
+ * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+ * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+ */
+STATE_VECTOR_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 6;
+}
+
+/**
+ * State data as row-major array of doubles.
+ * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+ * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+ * Length must be divisible by STATE_VECTOR_SIZE.
+ */
+STATE_DATA(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 stateDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+stateDataArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+ * Time alignment matches STATE_DATA epochs.
+ */
+COVARIANCE_DATA(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+covarianceDataLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covarianceDataArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 /**
  * Physical properties of the space object.
  */
 PHYSICAL_PROPERTIES(obj?:PhysicalProperties):PhysicalProperties|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new PhysicalProperties()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
- * Covariance data associated with the state vectors.
- */
-COVARIANCE_DATA(index: number, obj?:StateVector):StateVector|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? (obj || new StateVector()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-covarianceDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 /**
  * Maneuver data.
  */
 MANEUVER_DATA(index: number, obj?:Maneuver):Maneuver|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new Maneuver()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 maneuverDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -116,7 +147,7 @@ maneuverDataLength():number {
  * Perturbations parameters used.
  */
 PERTURBATIONS(obj?:Perturbations):Perturbations|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new Perturbations()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -124,7 +155,7 @@ PERTURBATIONS(obj?:Perturbations):Perturbations|null {
  * Orbit determination data.
  */
 ORBIT_DETERMINATION(obj?:OrbitDetermination):OrbitDetermination|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new OrbitDetermination()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -132,17 +163,17 @@ ORBIT_DETERMINATION(obj?:OrbitDetermination):OrbitDetermination|null {
  * User-defined parameters and supplemental comments.
  */
 USER_DEFINED_PARAMETERS(index: number, obj?:UserDefinedParameters):UserDefinedParameters|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new UserDefinedParameters()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 userDefinedParametersLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(12);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -157,44 +188,62 @@ static addTrajType(builder:flatbuffers.Builder, TRAJ_TYPEOffset:flatbuffers.Offs
   builder.addFieldOffset(2, TRAJ_TYPEOffset, 0);
 }
 
-static addStateData(builder:flatbuffers.Builder, STATE_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, STATE_DATAOffset, 0);
+static addStateStepSize(builder:flatbuffers.Builder, STATE_STEP_SIZE:number) {
+  builder.addFieldFloat64(3, STATE_STEP_SIZE, 0.0);
 }
 
-static createStateDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static addStateVectorSize(builder:flatbuffers.Builder, STATE_VECTOR_SIZE:number) {
+  builder.addFieldInt8(4, STATE_VECTOR_SIZE, 6);
+}
+
+static addStateData(builder:flatbuffers.Builder, STATE_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, STATE_DATAOffset, 0);
+}
+
+static createStateDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createStateDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createStateDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startStateDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addPhysicalProperties(builder:flatbuffers.Builder, PHYSICAL_PROPERTIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, PHYSICAL_PROPERTIESOffset, 0);
+  builder.startVector(8, numElems, 8);
 }
 
 static addCovarianceData(builder:flatbuffers.Builder, COVARIANCE_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, COVARIANCE_DATAOffset, 0);
+  builder.addFieldOffset(6, COVARIANCE_DATAOffset, 0);
 }
 
-static createCovarianceDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startCovarianceDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
+}
+
+static addPhysicalProperties(builder:flatbuffers.Builder, PHYSICAL_PROPERTIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, PHYSICAL_PROPERTIESOffset, 0);
 }
 
 static addManeuverData(builder:flatbuffers.Builder, MANEUVER_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, MANEUVER_DATAOffset, 0);
+  builder.addFieldOffset(8, MANEUVER_DATAOffset, 0);
 }
 
 static createManeuverDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -210,15 +259,15 @@ static startManeuverDataVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addPerturbations(builder:flatbuffers.Builder, PERTURBATIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, PERTURBATIONSOffset, 0);
+  builder.addFieldOffset(9, PERTURBATIONSOffset, 0);
 }
 
 static addOrbitDetermination(builder:flatbuffers.Builder, ORBIT_DETERMINATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, ORBIT_DETERMINATIONOffset, 0);
+  builder.addFieldOffset(10, ORBIT_DETERMINATIONOffset, 0);
 }
 
 static addUserDefinedParameters(builder:flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, USER_DEFINED_PARAMETERSOffset, 0);
+  builder.addFieldOffset(11, USER_DEFINED_PARAMETERSOffset, 0);
 }
 
 static createUserDefinedParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -252,9 +301,11 @@ unpack(): OCMT {
     (this.HEADER() !== null ? this.HEADER()!.unpack() : null),
     (this.METADATA() !== null ? this.METADATA()!.unpack() : null),
     this.TRAJ_TYPE(),
-    this.bb!.createObjList<StateVector, StateVectorT>(this.STATE_DATA.bind(this), this.stateDataLength()),
+    this.STATE_STEP_SIZE(),
+    this.STATE_VECTOR_SIZE(),
+    this.bb!.createScalarList<number>(this.STATE_DATA.bind(this), this.stateDataLength()),
+    this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength()),
     (this.PHYSICAL_PROPERTIES() !== null ? this.PHYSICAL_PROPERTIES()!.unpack() : null),
-    this.bb!.createObjList<StateVector, StateVectorT>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength()),
     this.bb!.createObjList<Maneuver, ManeuverT>(this.MANEUVER_DATA.bind(this), this.maneuverDataLength()),
     (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null),
     (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null),
@@ -267,9 +318,11 @@ unpackTo(_o: OCMT): void {
   _o.HEADER = (this.HEADER() !== null ? this.HEADER()!.unpack() : null);
   _o.METADATA = (this.METADATA() !== null ? this.METADATA()!.unpack() : null);
   _o.TRAJ_TYPE = this.TRAJ_TYPE();
-  _o.STATE_DATA = this.bb!.createObjList<StateVector, StateVectorT>(this.STATE_DATA.bind(this), this.stateDataLength());
+  _o.STATE_STEP_SIZE = this.STATE_STEP_SIZE();
+  _o.STATE_VECTOR_SIZE = this.STATE_VECTOR_SIZE();
+  _o.STATE_DATA = this.bb!.createScalarList<number>(this.STATE_DATA.bind(this), this.stateDataLength());
+  _o.COVARIANCE_DATA = this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength());
   _o.PHYSICAL_PROPERTIES = (this.PHYSICAL_PROPERTIES() !== null ? this.PHYSICAL_PROPERTIES()!.unpack() : null);
-  _o.COVARIANCE_DATA = this.bb!.createObjList<StateVector, StateVectorT>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength());
   _o.MANEUVER_DATA = this.bb!.createObjList<Maneuver, ManeuverT>(this.MANEUVER_DATA.bind(this), this.maneuverDataLength());
   _o.PERTURBATIONS = (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null);
   _o.ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null);
@@ -282,9 +335,11 @@ constructor(
   public HEADER: HeaderT|null = null,
   public METADATA: MetadataT|null = null,
   public TRAJ_TYPE: string|Uint8Array|null = null,
-  public STATE_DATA: (StateVectorT)[] = [],
+  public STATE_STEP_SIZE: number = 0.0,
+  public STATE_VECTOR_SIZE: number = 6,
+  public STATE_DATA: (number)[] = [],
+  public COVARIANCE_DATA: (number)[] = [],
   public PHYSICAL_PROPERTIES: PhysicalPropertiesT|null = null,
-  public COVARIANCE_DATA: (StateVectorT)[] = [],
   public MANEUVER_DATA: (ManeuverT)[] = [],
   public PERTURBATIONS: PerturbationsT|null = null,
   public ORBIT_DETERMINATION: OrbitDeterminationT|null = null,
@@ -296,9 +351,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const HEADER = (this.HEADER !== null ? this.HEADER!.pack(builder) : 0);
   const METADATA = (this.METADATA !== null ? this.METADATA!.pack(builder) : 0);
   const TRAJ_TYPE = (this.TRAJ_TYPE !== null ? builder.createString(this.TRAJ_TYPE!) : 0);
-  const STATE_DATA = OCM.createStateDataVector(builder, builder.createObjectOffsetList(this.STATE_DATA));
+  const STATE_DATA = OCM.createStateDataVector(builder, this.STATE_DATA);
+  const COVARIANCE_DATA = OCM.createCovarianceDataVector(builder, this.COVARIANCE_DATA);
   const PHYSICAL_PROPERTIES = (this.PHYSICAL_PROPERTIES !== null ? this.PHYSICAL_PROPERTIES!.pack(builder) : 0);
-  const COVARIANCE_DATA = OCM.createCovarianceDataVector(builder, builder.createObjectOffsetList(this.COVARIANCE_DATA));
   const MANEUVER_DATA = OCM.createManeuverDataVector(builder, builder.createObjectOffsetList(this.MANEUVER_DATA));
   const PERTURBATIONS = (this.PERTURBATIONS !== null ? this.PERTURBATIONS!.pack(builder) : 0);
   const ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION !== null ? this.ORBIT_DETERMINATION!.pack(builder) : 0);
@@ -308,9 +363,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addHeader(builder, HEADER);
   OCM.addMetadata(builder, METADATA);
   OCM.addTrajType(builder, TRAJ_TYPE);
+  OCM.addStateStepSize(builder, this.STATE_STEP_SIZE);
+  OCM.addStateVectorSize(builder, this.STATE_VECTOR_SIZE);
   OCM.addStateData(builder, STATE_DATA);
-  OCM.addPhysicalProperties(builder, PHYSICAL_PROPERTIES);
   OCM.addCovarianceData(builder, COVARIANCE_DATA);
+  OCM.addPhysicalProperties(builder, PHYSICAL_PROPERTIES);
   OCM.addManeuverData(builder, MANEUVER_DATA);
   OCM.addPerturbations(builder, PERTURBATIONS);
   OCM.addOrbitDetermination(builder, ORBIT_DETERMINATION);

@@ -123,51 +123,7 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_X_DOT = 70,
     VT_Y_DOT = 72,
     VT_Z_DOT = 74,
-    VT_CR_R = 76,
-    VT_CT_R = 78,
-    VT_CT_T = 80,
-    VT_CN_R = 82,
-    VT_CN_T = 84,
-    VT_CN_N = 86,
-    VT_CRDOT_R = 88,
-    VT_CRDOT_T = 90,
-    VT_CRDOT_N = 92,
-    VT_CRDOT_RDOT = 94,
-    VT_CTDOT_R = 96,
-    VT_CTDOT_T = 98,
-    VT_CTDOT_N = 100,
-    VT_CTDOT_RDOT = 102,
-    VT_CTDOT_TDOT = 104,
-    VT_CNDOT_R = 106,
-    VT_CNDOT_T = 108,
-    VT_CNDOT_N = 110,
-    VT_CNDOT_RDOT = 112,
-    VT_CNDOT_TDOT = 114,
-    VT_CNDOT_NDOT = 116,
-    VT_CDRG_R = 118,
-    VT_CDRG_T = 120,
-    VT_CDRG_N = 122,
-    VT_CDRG_RDOT = 124,
-    VT_CDRG_TDOT = 126,
-    VT_CDRG_NDOT = 128,
-    VT_CDRG_DRG = 130,
-    VT_CSRP_R = 132,
-    VT_CSRP_T = 134,
-    VT_CSRP_N = 136,
-    VT_CSRP_RDOT = 138,
-    VT_CSRP_TDOT = 140,
-    VT_CSRP_NDOT = 142,
-    VT_CSRP_DRG = 144,
-    VT_CSRP_SRP = 146,
-    VT_CTHR_R = 148,
-    VT_CTHR_T = 150,
-    VT_CTHR_N = 152,
-    VT_CTHR_RDOT = 154,
-    VT_CTHR_TDOT = 156,
-    VT_CTHR_NDOT = 158,
-    VT_CTHR_DRG = 160,
-    VT_CTHR_SRP = 162,
-    VT_CTHR_THR = 164
+    VT_COVARIANCE = 76
   };
   /// A comment
   const ::flatbuffers::String *COMMENT() const {
@@ -312,185 +268,15 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double Z_DOT() const {
     return GetField<double>(VT_Z_DOT, 0.0);
   }
-  /// Covariance Matrix component
-  double CR_R() const {
-    return GetField<double>(VT_CR_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CT_R() const {
-    return GetField<double>(VT_CT_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CT_T() const {
-    return GetField<double>(VT_CT_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CN_R() const {
-    return GetField<double>(VT_CN_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CN_T() const {
-    return GetField<double>(VT_CN_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CN_N() const {
-    return GetField<double>(VT_CN_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CRDOT_R() const {
-    return GetField<double>(VT_CRDOT_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CRDOT_T() const {
-    return GetField<double>(VT_CRDOT_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CRDOT_N() const {
-    return GetField<double>(VT_CRDOT_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CRDOT_RDOT() const {
-    return GetField<double>(VT_CRDOT_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTDOT_R() const {
-    return GetField<double>(VT_CTDOT_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTDOT_T() const {
-    return GetField<double>(VT_CTDOT_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTDOT_N() const {
-    return GetField<double>(VT_CTDOT_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTDOT_RDOT() const {
-    return GetField<double>(VT_CTDOT_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTDOT_TDOT() const {
-    return GetField<double>(VT_CTDOT_TDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_R() const {
-    return GetField<double>(VT_CNDOT_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_T() const {
-    return GetField<double>(VT_CNDOT_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_N() const {
-    return GetField<double>(VT_CNDOT_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_RDOT() const {
-    return GetField<double>(VT_CNDOT_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_TDOT() const {
-    return GetField<double>(VT_CNDOT_TDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CNDOT_NDOT() const {
-    return GetField<double>(VT_CNDOT_NDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_R() const {
-    return GetField<double>(VT_CDRG_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_T() const {
-    return GetField<double>(VT_CDRG_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_N() const {
-    return GetField<double>(VT_CDRG_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_RDOT() const {
-    return GetField<double>(VT_CDRG_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_TDOT() const {
-    return GetField<double>(VT_CDRG_TDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_NDOT() const {
-    return GetField<double>(VT_CDRG_NDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CDRG_DRG() const {
-    return GetField<double>(VT_CDRG_DRG, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_R() const {
-    return GetField<double>(VT_CSRP_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_T() const {
-    return GetField<double>(VT_CSRP_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_N() const {
-    return GetField<double>(VT_CSRP_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_RDOT() const {
-    return GetField<double>(VT_CSRP_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_TDOT() const {
-    return GetField<double>(VT_CSRP_TDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_NDOT() const {
-    return GetField<double>(VT_CSRP_NDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_DRG() const {
-    return GetField<double>(VT_CSRP_DRG, 0.0);
-  }
-  /// Covariance Matrix component
-  double CSRP_SRP() const {
-    return GetField<double>(VT_CSRP_SRP, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_R() const {
-    return GetField<double>(VT_CTHR_R, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_T() const {
-    return GetField<double>(VT_CTHR_T, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_N() const {
-    return GetField<double>(VT_CTHR_N, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_RDOT() const {
-    return GetField<double>(VT_CTHR_RDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_TDOT() const {
-    return GetField<double>(VT_CTHR_TDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_NDOT() const {
-    return GetField<double>(VT_CTHR_NDOT, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_DRG() const {
-    return GetField<double>(VT_CTHR_DRG, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_SRP() const {
-    return GetField<double>(VT_CTHR_SRP, 0.0);
-  }
-  /// Covariance Matrix component
-  double CTHR_THR() const {
-    return GetField<double>(VT_CTHR_THR, 0.0);
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -542,51 +328,8 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_X_DOT, 8) &&
            VerifyField<double>(verifier, VT_Y_DOT, 8) &&
            VerifyField<double>(verifier, VT_Z_DOT, 8) &&
-           VerifyField<double>(verifier, VT_CR_R, 8) &&
-           VerifyField<double>(verifier, VT_CT_R, 8) &&
-           VerifyField<double>(verifier, VT_CT_T, 8) &&
-           VerifyField<double>(verifier, VT_CN_R, 8) &&
-           VerifyField<double>(verifier, VT_CN_T, 8) &&
-           VerifyField<double>(verifier, VT_CN_N, 8) &&
-           VerifyField<double>(verifier, VT_CRDOT_R, 8) &&
-           VerifyField<double>(verifier, VT_CRDOT_T, 8) &&
-           VerifyField<double>(verifier, VT_CRDOT_N, 8) &&
-           VerifyField<double>(verifier, VT_CRDOT_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CTDOT_R, 8) &&
-           VerifyField<double>(verifier, VT_CTDOT_T, 8) &&
-           VerifyField<double>(verifier, VT_CTDOT_N, 8) &&
-           VerifyField<double>(verifier, VT_CTDOT_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CTDOT_TDOT, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_R, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_T, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_N, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_TDOT, 8) &&
-           VerifyField<double>(verifier, VT_CNDOT_NDOT, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_R, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_T, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_N, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_TDOT, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_NDOT, 8) &&
-           VerifyField<double>(verifier, VT_CDRG_DRG, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_R, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_T, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_N, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_TDOT, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_NDOT, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_DRG, 8) &&
-           VerifyField<double>(verifier, VT_CSRP_SRP, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_R, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_T, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_N, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_RDOT, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_TDOT, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_NDOT, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_DRG, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_SRP, 8) &&
-           VerifyField<double>(verifier, VT_CTHR_THR, 8) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
            verifier.EndTable();
   }
 };
@@ -703,140 +446,8 @@ struct CDMObjectBuilder {
   void add_Z_DOT(double Z_DOT) {
     fbb_.AddElement<double>(CDMObject::VT_Z_DOT, Z_DOT, 0.0);
   }
-  void add_CR_R(double CR_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CR_R, CR_R, 0.0);
-  }
-  void add_CT_R(double CT_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CT_R, CT_R, 0.0);
-  }
-  void add_CT_T(double CT_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CT_T, CT_T, 0.0);
-  }
-  void add_CN_R(double CN_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CN_R, CN_R, 0.0);
-  }
-  void add_CN_T(double CN_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CN_T, CN_T, 0.0);
-  }
-  void add_CN_N(double CN_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CN_N, CN_N, 0.0);
-  }
-  void add_CRDOT_R(double CRDOT_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CRDOT_R, CRDOT_R, 0.0);
-  }
-  void add_CRDOT_T(double CRDOT_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CRDOT_T, CRDOT_T, 0.0);
-  }
-  void add_CRDOT_N(double CRDOT_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CRDOT_N, CRDOT_N, 0.0);
-  }
-  void add_CRDOT_RDOT(double CRDOT_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CRDOT_RDOT, CRDOT_RDOT, 0.0);
-  }
-  void add_CTDOT_R(double CTDOT_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CTDOT_R, CTDOT_R, 0.0);
-  }
-  void add_CTDOT_T(double CTDOT_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CTDOT_T, CTDOT_T, 0.0);
-  }
-  void add_CTDOT_N(double CTDOT_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CTDOT_N, CTDOT_N, 0.0);
-  }
-  void add_CTDOT_RDOT(double CTDOT_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CTDOT_RDOT, CTDOT_RDOT, 0.0);
-  }
-  void add_CTDOT_TDOT(double CTDOT_TDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CTDOT_TDOT, CTDOT_TDOT, 0.0);
-  }
-  void add_CNDOT_R(double CNDOT_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_R, CNDOT_R, 0.0);
-  }
-  void add_CNDOT_T(double CNDOT_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_T, CNDOT_T, 0.0);
-  }
-  void add_CNDOT_N(double CNDOT_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_N, CNDOT_N, 0.0);
-  }
-  void add_CNDOT_RDOT(double CNDOT_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_RDOT, CNDOT_RDOT, 0.0);
-  }
-  void add_CNDOT_TDOT(double CNDOT_TDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_TDOT, CNDOT_TDOT, 0.0);
-  }
-  void add_CNDOT_NDOT(double CNDOT_NDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CNDOT_NDOT, CNDOT_NDOT, 0.0);
-  }
-  void add_CDRG_R(double CDRG_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_R, CDRG_R, 0.0);
-  }
-  void add_CDRG_T(double CDRG_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_T, CDRG_T, 0.0);
-  }
-  void add_CDRG_N(double CDRG_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_N, CDRG_N, 0.0);
-  }
-  void add_CDRG_RDOT(double CDRG_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_RDOT, CDRG_RDOT, 0.0);
-  }
-  void add_CDRG_TDOT(double CDRG_TDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_TDOT, CDRG_TDOT, 0.0);
-  }
-  void add_CDRG_NDOT(double CDRG_NDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_NDOT, CDRG_NDOT, 0.0);
-  }
-  void add_CDRG_DRG(double CDRG_DRG) {
-    fbb_.AddElement<double>(CDMObject::VT_CDRG_DRG, CDRG_DRG, 0.0);
-  }
-  void add_CSRP_R(double CSRP_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_R, CSRP_R, 0.0);
-  }
-  void add_CSRP_T(double CSRP_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_T, CSRP_T, 0.0);
-  }
-  void add_CSRP_N(double CSRP_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_N, CSRP_N, 0.0);
-  }
-  void add_CSRP_RDOT(double CSRP_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_RDOT, CSRP_RDOT, 0.0);
-  }
-  void add_CSRP_TDOT(double CSRP_TDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_TDOT, CSRP_TDOT, 0.0);
-  }
-  void add_CSRP_NDOT(double CSRP_NDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_NDOT, CSRP_NDOT, 0.0);
-  }
-  void add_CSRP_DRG(double CSRP_DRG) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_DRG, CSRP_DRG, 0.0);
-  }
-  void add_CSRP_SRP(double CSRP_SRP) {
-    fbb_.AddElement<double>(CDMObject::VT_CSRP_SRP, CSRP_SRP, 0.0);
-  }
-  void add_CTHR_R(double CTHR_R) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_R, CTHR_R, 0.0);
-  }
-  void add_CTHR_T(double CTHR_T) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_T, CTHR_T, 0.0);
-  }
-  void add_CTHR_N(double CTHR_N) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_N, CTHR_N, 0.0);
-  }
-  void add_CTHR_RDOT(double CTHR_RDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_RDOT, CTHR_RDOT, 0.0);
-  }
-  void add_CTHR_TDOT(double CTHR_TDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_TDOT, CTHR_TDOT, 0.0);
-  }
-  void add_CTHR_NDOT(double CTHR_NDOT) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_NDOT, CTHR_NDOT, 0.0);
-  }
-  void add_CTHR_DRG(double CTHR_DRG) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_DRG, CTHR_DRG, 0.0);
-  }
-  void add_CTHR_SRP(double CTHR_SRP) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_SRP, CTHR_SRP, 0.0);
-  }
-  void add_CTHR_THR(double CTHR_THR) {
-    fbb_.AddElement<double>(CDMObject::VT_CTHR_THR, CTHR_THR, 0.0);
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(CDMObject::VT_COVARIANCE, COVARIANCE);
   }
   explicit CDMObjectBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -887,97 +498,8 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     double X_DOT = 0.0,
     double Y_DOT = 0.0,
     double Z_DOT = 0.0,
-    double CR_R = 0.0,
-    double CT_R = 0.0,
-    double CT_T = 0.0,
-    double CN_R = 0.0,
-    double CN_T = 0.0,
-    double CN_N = 0.0,
-    double CRDOT_R = 0.0,
-    double CRDOT_T = 0.0,
-    double CRDOT_N = 0.0,
-    double CRDOT_RDOT = 0.0,
-    double CTDOT_R = 0.0,
-    double CTDOT_T = 0.0,
-    double CTDOT_N = 0.0,
-    double CTDOT_RDOT = 0.0,
-    double CTDOT_TDOT = 0.0,
-    double CNDOT_R = 0.0,
-    double CNDOT_T = 0.0,
-    double CNDOT_N = 0.0,
-    double CNDOT_RDOT = 0.0,
-    double CNDOT_TDOT = 0.0,
-    double CNDOT_NDOT = 0.0,
-    double CDRG_R = 0.0,
-    double CDRG_T = 0.0,
-    double CDRG_N = 0.0,
-    double CDRG_RDOT = 0.0,
-    double CDRG_TDOT = 0.0,
-    double CDRG_NDOT = 0.0,
-    double CDRG_DRG = 0.0,
-    double CSRP_R = 0.0,
-    double CSRP_T = 0.0,
-    double CSRP_N = 0.0,
-    double CSRP_RDOT = 0.0,
-    double CSRP_TDOT = 0.0,
-    double CSRP_NDOT = 0.0,
-    double CSRP_DRG = 0.0,
-    double CSRP_SRP = 0.0,
-    double CTHR_R = 0.0,
-    double CTHR_T = 0.0,
-    double CTHR_N = 0.0,
-    double CTHR_RDOT = 0.0,
-    double CTHR_TDOT = 0.0,
-    double CTHR_NDOT = 0.0,
-    double CTHR_DRG = 0.0,
-    double CTHR_SRP = 0.0,
-    double CTHR_THR = 0.0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0) {
   CDMObjectBuilder builder_(_fbb);
-  builder_.add_CTHR_THR(CTHR_THR);
-  builder_.add_CTHR_SRP(CTHR_SRP);
-  builder_.add_CTHR_DRG(CTHR_DRG);
-  builder_.add_CTHR_NDOT(CTHR_NDOT);
-  builder_.add_CTHR_TDOT(CTHR_TDOT);
-  builder_.add_CTHR_RDOT(CTHR_RDOT);
-  builder_.add_CTHR_N(CTHR_N);
-  builder_.add_CTHR_T(CTHR_T);
-  builder_.add_CTHR_R(CTHR_R);
-  builder_.add_CSRP_SRP(CSRP_SRP);
-  builder_.add_CSRP_DRG(CSRP_DRG);
-  builder_.add_CSRP_NDOT(CSRP_NDOT);
-  builder_.add_CSRP_TDOT(CSRP_TDOT);
-  builder_.add_CSRP_RDOT(CSRP_RDOT);
-  builder_.add_CSRP_N(CSRP_N);
-  builder_.add_CSRP_T(CSRP_T);
-  builder_.add_CSRP_R(CSRP_R);
-  builder_.add_CDRG_DRG(CDRG_DRG);
-  builder_.add_CDRG_NDOT(CDRG_NDOT);
-  builder_.add_CDRG_TDOT(CDRG_TDOT);
-  builder_.add_CDRG_RDOT(CDRG_RDOT);
-  builder_.add_CDRG_N(CDRG_N);
-  builder_.add_CDRG_T(CDRG_T);
-  builder_.add_CDRG_R(CDRG_R);
-  builder_.add_CNDOT_NDOT(CNDOT_NDOT);
-  builder_.add_CNDOT_TDOT(CNDOT_TDOT);
-  builder_.add_CNDOT_RDOT(CNDOT_RDOT);
-  builder_.add_CNDOT_N(CNDOT_N);
-  builder_.add_CNDOT_T(CNDOT_T);
-  builder_.add_CNDOT_R(CNDOT_R);
-  builder_.add_CTDOT_TDOT(CTDOT_TDOT);
-  builder_.add_CTDOT_RDOT(CTDOT_RDOT);
-  builder_.add_CTDOT_N(CTDOT_N);
-  builder_.add_CTDOT_T(CTDOT_T);
-  builder_.add_CTDOT_R(CTDOT_R);
-  builder_.add_CRDOT_RDOT(CRDOT_RDOT);
-  builder_.add_CRDOT_N(CRDOT_N);
-  builder_.add_CRDOT_T(CRDOT_T);
-  builder_.add_CRDOT_R(CRDOT_R);
-  builder_.add_CN_N(CN_N);
-  builder_.add_CN_T(CN_T);
-  builder_.add_CN_R(CN_R);
-  builder_.add_CT_T(CT_T);
-  builder_.add_CT_R(CT_R);
-  builder_.add_CR_R(CR_R);
   builder_.add_Z_DOT(Z_DOT);
   builder_.add_Y_DOT(Y_DOT);
   builder_.add_X_DOT(X_DOT);
@@ -994,6 +516,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_RESIDUALS_ACCEPTED(RESIDUALS_ACCEPTED);
   builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
   builder_.add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN);
+  builder_.add_COVARIANCE(COVARIANCE);
   builder_.add_TRACKS_USED(TRACKS_USED);
   builder_.add_TRACKS_AVAILABLE(TRACKS_AVAILABLE);
   builder_.add_OBS_USED(OBS_USED);
@@ -1055,51 +578,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     double X_DOT = 0.0,
     double Y_DOT = 0.0,
     double Z_DOT = 0.0,
-    double CR_R = 0.0,
-    double CT_R = 0.0,
-    double CT_T = 0.0,
-    double CN_R = 0.0,
-    double CN_T = 0.0,
-    double CN_N = 0.0,
-    double CRDOT_R = 0.0,
-    double CRDOT_T = 0.0,
-    double CRDOT_N = 0.0,
-    double CRDOT_RDOT = 0.0,
-    double CTDOT_R = 0.0,
-    double CTDOT_T = 0.0,
-    double CTDOT_N = 0.0,
-    double CTDOT_RDOT = 0.0,
-    double CTDOT_TDOT = 0.0,
-    double CNDOT_R = 0.0,
-    double CNDOT_T = 0.0,
-    double CNDOT_N = 0.0,
-    double CNDOT_RDOT = 0.0,
-    double CNDOT_TDOT = 0.0,
-    double CNDOT_NDOT = 0.0,
-    double CDRG_R = 0.0,
-    double CDRG_T = 0.0,
-    double CDRG_N = 0.0,
-    double CDRG_RDOT = 0.0,
-    double CDRG_TDOT = 0.0,
-    double CDRG_NDOT = 0.0,
-    double CDRG_DRG = 0.0,
-    double CSRP_R = 0.0,
-    double CSRP_T = 0.0,
-    double CSRP_N = 0.0,
-    double CSRP_RDOT = 0.0,
-    double CSRP_TDOT = 0.0,
-    double CSRP_NDOT = 0.0,
-    double CSRP_DRG = 0.0,
-    double CSRP_SRP = 0.0,
-    double CTHR_R = 0.0,
-    double CTHR_T = 0.0,
-    double CTHR_N = 0.0,
-    double CTHR_RDOT = 0.0,
-    double CTHR_TDOT = 0.0,
-    double CTHR_NDOT = 0.0,
-    double CTHR_DRG = 0.0,
-    double CTHR_SRP = 0.0,
-    double CTHR_THR = 0.0) {
+    const std::vector<double> *COVARIANCE = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto OPERATOR_CONTACT_POSITION__ = OPERATOR_CONTACT_POSITION ? _fbb.CreateString(OPERATOR_CONTACT_POSITION) : 0;
   auto OPERATOR_ORGANIZATION__ = OPERATOR_ORGANIZATION ? _fbb.CreateString(OPERATOR_ORGANIZATION) : 0;
@@ -1109,6 +588,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
   auto N_BODY_PERTURBATIONS__ = N_BODY_PERTURBATIONS ? _fbb.CreateString(N_BODY_PERTURBATIONS) : 0;
   auto TIME_LASTOB_START__ = TIME_LASTOB_START ? _fbb.CreateString(TIME_LASTOB_START) : 0;
   auto TIME_LASTOB_END__ = TIME_LASTOB_END ? _fbb.CreateString(TIME_LASTOB_END) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
   return CreateCDMObject(
       _fbb,
       COMMENT__,
@@ -1147,51 +627,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
       X_DOT,
       Y_DOT,
       Z_DOT,
-      CR_R,
-      CT_R,
-      CT_T,
-      CN_R,
-      CN_T,
-      CN_N,
-      CRDOT_R,
-      CRDOT_T,
-      CRDOT_N,
-      CRDOT_RDOT,
-      CTDOT_R,
-      CTDOT_T,
-      CTDOT_N,
-      CTDOT_RDOT,
-      CTDOT_TDOT,
-      CNDOT_R,
-      CNDOT_T,
-      CNDOT_N,
-      CNDOT_RDOT,
-      CNDOT_TDOT,
-      CNDOT_NDOT,
-      CDRG_R,
-      CDRG_T,
-      CDRG_N,
-      CDRG_RDOT,
-      CDRG_TDOT,
-      CDRG_NDOT,
-      CDRG_DRG,
-      CSRP_R,
-      CSRP_T,
-      CSRP_N,
-      CSRP_RDOT,
-      CSRP_TDOT,
-      CSRP_NDOT,
-      CSRP_DRG,
-      CSRP_SRP,
-      CTHR_R,
-      CTHR_T,
-      CTHR_N,
-      CTHR_RDOT,
-      CTHR_TDOT,
-      CTHR_NDOT,
-      CTHR_DRG,
-      CTHR_SRP,
-      CTHR_THR);
+      COVARIANCE__);
 }
 
 /// Conjunction Data Message

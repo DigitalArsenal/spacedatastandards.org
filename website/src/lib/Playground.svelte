@@ -736,21 +736,13 @@
         }
       });
 
-      // Add dark base layer - local tiles for zoom 0-2, remote for 3+
-      // Local tiles reduce external dependencies for initial view
-      viewer.imageryLayers.addImageryProvider(
-        new Cesium.UrlTemplateImageryProvider({
-          url: "/tiles/dark/{z}/{x}/{y}.png",
-          maximumLevel: 2,
-          credit: "CartoDB, OpenStreetMap contributors"
-        })
-      );
-      // Remote tiles for higher zoom levels
+      // Add dark base layer (CartoDB dark tiles)
+      // Limit max level to reduce tile requests for orbit visualization
       viewer.imageryLayers.addImageryProvider(
         new Cesium.UrlTemplateImageryProvider({
           url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
           subdomains: ['a', 'b', 'c', 'd'],
-          minimumLevel: 3,
+          maximumLevel: 5,
           credit: "CartoDB, OpenStreetMap contributors"
         })
       );

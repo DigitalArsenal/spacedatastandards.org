@@ -61,36 +61,88 @@ class OCM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # State vector data.
+    # Time interval between state vectors in seconds (required for time-series data).
     # OCM
-    def STATE_DATA(self, j):
+    def STATE_STEP_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from StateVector import StateVector
-            obj = StateVector()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of components per state vector.
+    # 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+    # 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    # OCM
+    def STATE_VECTOR_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 6
+
+    # State data as row-major array of doubles.
+    # Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+    # Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    # Length must be divisible by STATE_VECTOR_SIZE.
+    # OCM
+    def STATE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OCM
+    def STATE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # OCM
     def STATE_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OCM
     def STATE_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+    # Time alignment matches STATE_DATA epochs.
+    # OCM
+    def COVARIANCE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OCM
+    def COVARIANCE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OCM
+    def COVARIANCE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COVARIANCE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
     # Physical properties of the space object.
     # OCM
     def PHYSICAL_PROPERTIES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from PhysicalProperties import PhysicalProperties
@@ -99,36 +151,10 @@ class OCM(object):
             return obj
         return None
 
-    # Covariance data associated with the state vectors.
-    # OCM
-    def COVARIANCE_DATA(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from StateVector import StateVector
-            obj = StateVector()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # OCM
-    def COVARIANCE_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OCM
-    def COVARIANCE_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        return o == 0
-
     # Maneuver data.
     # OCM
     def MANEUVER_DATA(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -141,20 +167,20 @@ class OCM(object):
 
     # OCM
     def MANEUVER_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OCM
     def MANEUVER_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
     # Perturbations parameters used.
     # OCM
     def PERTURBATIONS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from Perturbations import Perturbations
@@ -166,7 +192,7 @@ class OCM(object):
     # Orbit determination data.
     # OCM
     def ORBIT_DETERMINATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from OrbitDetermination import OrbitDetermination
@@ -178,7 +204,7 @@ class OCM(object):
     # User-defined parameters and supplemental comments.
     # OCM
     def USER_DEFINED_PARAMETERS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -191,18 +217,18 @@ class OCM(object):
 
     # OCM
     def USER_DEFINED_PARAMETERSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OCM
     def USER_DEFINED_PARAMETERSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
 def OCMStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(12)
 
 def Start(builder):
     OCMStart(builder)
@@ -225,38 +251,50 @@ def OCMAddTRAJ_TYPE(builder, TRAJ_TYPE):
 def AddTRAJ_TYPE(builder, TRAJ_TYPE):
     OCMAddTRAJ_TYPE(builder, TRAJ_TYPE)
 
+def OCMAddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE):
+    builder.PrependFloat64Slot(3, STATE_STEP_SIZE, 0.0)
+
+def AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE):
+    OCMAddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE)
+
+def OCMAddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE):
+    builder.PrependUint8Slot(4, STATE_VECTOR_SIZE, 6)
+
+def AddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE):
+    OCMAddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
+
 def OCMAddSTATE_DATA(builder, STATE_DATA):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_DATA), 0)
 
 def AddSTATE_DATA(builder, STATE_DATA):
     OCMAddSTATE_DATA(builder, STATE_DATA)
 
 def OCMStartSTATE_DATAVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSTATE_DATAVector(builder, numElems):
     return OCMStartSTATE_DATAVector(builder, numElems)
 
-def OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PHYSICAL_PROPERTIES), 0)
-
-def AddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
-    OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
-
 def OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
 
 def AddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
     OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
 
 def OCMStartCOVARIANCE_DATAVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartCOVARIANCE_DATAVector(builder, numElems):
     return OCMStartCOVARIANCE_DATAVector(builder, numElems)
 
+def OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PHYSICAL_PROPERTIES), 0)
+
+def AddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
+    OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
+
 def OCMAddMANEUVER_DATA(builder, MANEUVER_DATA):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVER_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVER_DATA), 0)
 
 def AddMANEUVER_DATA(builder, MANEUVER_DATA):
     OCMAddMANEUVER_DATA(builder, MANEUVER_DATA)
@@ -268,19 +306,19 @@ def StartMANEUVER_DATAVector(builder, numElems):
     return OCMStartMANEUVER_DATAVector(builder, numElems)
 
 def OCMAddPERTURBATIONS(builder, PERTURBATIONS):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PERTURBATIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PERTURBATIONS), 0)
 
 def AddPERTURBATIONS(builder, PERTURBATIONS):
     OCMAddPERTURBATIONS(builder, PERTURBATIONS)
 
 def OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_DETERMINATION), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_DETERMINATION), 0)
 
 def AddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
     OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
 
 def OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
 
 def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
     OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
@@ -303,7 +341,6 @@ import Metadata
 import OrbitDetermination
 import Perturbations
 import PhysicalProperties
-import StateVector
 import UserDefinedParameters
 try:
     from typing import List, Optional
@@ -317,9 +354,11 @@ class OCMT(object):
         self.HEADER = None  # type: Optional[Header.HeaderT]
         self.METADATA = None  # type: Optional[Metadata.MetadataT]
         self.TRAJ_TYPE = None  # type: str
-        self.STATE_DATA = None  # type: List[StateVector.StateVectorT]
+        self.STATE_STEP_SIZE = 0.0  # type: float
+        self.STATE_VECTOR_SIZE = 6  # type: int
+        self.STATE_DATA = None  # type: List[float]
+        self.COVARIANCE_DATA = None  # type: List[float]
         self.PHYSICAL_PROPERTIES = None  # type: Optional[PhysicalProperties.PhysicalPropertiesT]
-        self.COVARIANCE_DATA = None  # type: List[StateVector.StateVectorT]
         self.MANEUVER_DATA = None  # type: List[Maneuver.ManeuverT]
         self.PERTURBATIONS = None  # type: Optional[Perturbations.PerturbationsT]
         self.ORBIT_DETERMINATION = None  # type: Optional[OrbitDetermination.OrbitDeterminationT]
@@ -351,24 +390,24 @@ class OCMT(object):
         if OCM.METADATA() is not None:
             self.METADATA = Metadata.MetadataT.InitFromObj(OCM.METADATA())
         self.TRAJ_TYPE = OCM.TRAJ_TYPE()
+        self.STATE_STEP_SIZE = OCM.STATE_STEP_SIZE()
+        self.STATE_VECTOR_SIZE = OCM.STATE_VECTOR_SIZE()
         if not OCM.STATE_DATAIsNone():
-            self.STATE_DATA = []
-            for i in range(OCM.STATE_DATALength()):
-                if OCM.STATE_DATA(i) is None:
-                    self.STATE_DATA.append(None)
-                else:
-                    stateVector_ = StateVector.StateVectorT.InitFromObj(OCM.STATE_DATA(i))
-                    self.STATE_DATA.append(stateVector_)
+            if np is None:
+                self.STATE_DATA = []
+                for i in range(OCM.STATE_DATALength()):
+                    self.STATE_DATA.append(OCM.STATE_DATA(i))
+            else:
+                self.STATE_DATA = OCM.STATE_DATAAsNumpy()
+        if not OCM.COVARIANCE_DATAIsNone():
+            if np is None:
+                self.COVARIANCE_DATA = []
+                for i in range(OCM.COVARIANCE_DATALength()):
+                    self.COVARIANCE_DATA.append(OCM.COVARIANCE_DATA(i))
+            else:
+                self.COVARIANCE_DATA = OCM.COVARIANCE_DATAAsNumpy()
         if OCM.PHYSICAL_PROPERTIES() is not None:
             self.PHYSICAL_PROPERTIES = PhysicalProperties.PhysicalPropertiesT.InitFromObj(OCM.PHYSICAL_PROPERTIES())
-        if not OCM.COVARIANCE_DATAIsNone():
-            self.COVARIANCE_DATA = []
-            for i in range(OCM.COVARIANCE_DATALength()):
-                if OCM.COVARIANCE_DATA(i) is None:
-                    self.COVARIANCE_DATA.append(None)
-                else:
-                    stateVector_ = StateVector.StateVectorT.InitFromObj(OCM.COVARIANCE_DATA(i))
-                    self.COVARIANCE_DATA.append(stateVector_)
         if not OCM.MANEUVER_DATAIsNone():
             self.MANEUVER_DATA = []
             for i in range(OCM.MANEUVER_DATALength()):
@@ -399,23 +438,23 @@ class OCMT(object):
         if self.TRAJ_TYPE is not None:
             TRAJ_TYPE = builder.CreateString(self.TRAJ_TYPE)
         if self.STATE_DATA is not None:
-            STATE_DATAlist = []
-            for i in range(len(self.STATE_DATA)):
-                STATE_DATAlist.append(self.STATE_DATA[i].Pack(builder))
-            OCMStartSTATE_DATAVector(builder, len(self.STATE_DATA))
-            for i in reversed(range(len(self.STATE_DATA))):
-                builder.PrependUOffsetTRelative(STATE_DATAlist[i])
-            STATE_DATA = builder.EndVector()
+            if np is not None and type(self.STATE_DATA) is np.ndarray:
+                STATE_DATA = builder.CreateNumpyVector(self.STATE_DATA)
+            else:
+                OCMStartSTATE_DATAVector(builder, len(self.STATE_DATA))
+                for i in reversed(range(len(self.STATE_DATA))):
+                    builder.PrependFloat64(self.STATE_DATA[i])
+                STATE_DATA = builder.EndVector()
+        if self.COVARIANCE_DATA is not None:
+            if np is not None and type(self.COVARIANCE_DATA) is np.ndarray:
+                COVARIANCE_DATA = builder.CreateNumpyVector(self.COVARIANCE_DATA)
+            else:
+                OCMStartCOVARIANCE_DATAVector(builder, len(self.COVARIANCE_DATA))
+                for i in reversed(range(len(self.COVARIANCE_DATA))):
+                    builder.PrependFloat64(self.COVARIANCE_DATA[i])
+                COVARIANCE_DATA = builder.EndVector()
         if self.PHYSICAL_PROPERTIES is not None:
             PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES.Pack(builder)
-        if self.COVARIANCE_DATA is not None:
-            COVARIANCE_DATAlist = []
-            for i in range(len(self.COVARIANCE_DATA)):
-                COVARIANCE_DATAlist.append(self.COVARIANCE_DATA[i].Pack(builder))
-            OCMStartCOVARIANCE_DATAVector(builder, len(self.COVARIANCE_DATA))
-            for i in reversed(range(len(self.COVARIANCE_DATA))):
-                builder.PrependUOffsetTRelative(COVARIANCE_DATAlist[i])
-            COVARIANCE_DATA = builder.EndVector()
         if self.MANEUVER_DATA is not None:
             MANEUVER_DATAlist = []
             for i in range(len(self.MANEUVER_DATA)):
@@ -443,12 +482,14 @@ class OCMT(object):
             OCMAddMETADATA(builder, METADATA)
         if self.TRAJ_TYPE is not None:
             OCMAddTRAJ_TYPE(builder, TRAJ_TYPE)
+        OCMAddSTATE_STEP_SIZE(builder, self.STATE_STEP_SIZE)
+        OCMAddSTATE_VECTOR_SIZE(builder, self.STATE_VECTOR_SIZE)
         if self.STATE_DATA is not None:
             OCMAddSTATE_DATA(builder, STATE_DATA)
-        if self.PHYSICAL_PROPERTIES is not None:
-            OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
         if self.COVARIANCE_DATA is not None:
             OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
+        if self.PHYSICAL_PROPERTIES is not None:
+            OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
         if self.MANEUVER_DATA is not None:
             OCMAddMANEUVER_DATA(builder, MANEUVER_DATA)
         if self.PERTURBATIONS is not None:

@@ -49,37 +49,36 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ENVIRONMENT = 56,
     VT_ENVIRONMENT_CONF = 58,
     VT_TRK_CONF = 60,
-    VT_ECEF_POS = 62,
-    VT_ECEF_VEL = 64,
-    VT_ECEF_ACC = 66,
-    VT_LAT = 68,
-    VT_LON = 70,
-    VT_ALT = 72,
-    VT_SPD = 74,
-    VT_HDNG = 76,
-    VT_COURSE = 78,
-    VT_LCO = 80,
-    VT_LCS = 82,
-    VT_LC_POS = 84,
-    VT_LC_VEL = 86,
-    VT_LC_ACC = 88,
-    VT_E_NUVEL = 90,
-    VT_E_NUPOS = 92,
-    VT_COV = 94,
-    VT_ERR_ELLP = 96,
-    VT_SRC_TYPS = 98,
-    VT_SRC_IDS = 100,
-    VT_CALL_SIGN = 102,
-    VT_MULTI_SOURCE = 104,
-    VT_J_SERIES = 106,
-    VT_STRENGTH = 108,
-    VT_M1 = 110,
-    VT_M1V = 112,
-    VT_M2 = 114,
-    VT_M2V = 116,
-    VT_M3A = 118,
-    VT_M3AV = 120,
-    VT_TAGS = 122
+    VT_LAT = 62,
+    VT_LON = 64,
+    VT_ALT = 66,
+    VT_SPD = 68,
+    VT_HDNG = 70,
+    VT_COURSE = 72,
+    VT_SRC_TYPS = 74,
+    VT_SRC_IDS = 76,
+    VT_CALL_SIGN = 78,
+    VT_MULTI_SOURCE = 80,
+    VT_J_SERIES = 82,
+    VT_STRENGTH = 84,
+    VT_M1 = 86,
+    VT_M1V = 88,
+    VT_M2 = 90,
+    VT_M2V = 92,
+    VT_M3A = 94,
+    VT_M3AV = 96,
+    VT_TAGS = 98,
+    VT_TRACK_START_TIME = 100,
+    VT_TRACK_STEP_SIZE = 102,
+    VT_TRACK_COMPONENTS = 104,
+    VT_ECEF_POS = 106,
+    VT_ECEF_VEL = 108,
+    VT_ECEF_ACC = 110,
+    VT_LC_POS = 112,
+    VT_LC_VEL = 114,
+    VT_LC_ACC = 116,
+    VT_COV = 118,
+    VT_ERR_ELLP = 120
   };
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
@@ -168,15 +167,6 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TRK_CONF() const {
     return GetField<double>(VT_TRK_CONF, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_POS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ECEF_POS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_VEL() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ECEF_VEL);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_ACC() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ECEF_ACC);
-  }
   double LAT() const {
     return GetField<double>(VT_LAT, 0.0);
   }
@@ -194,33 +184,6 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   double COURSE() const {
     return GetField<double>(VT_COURSE, 0.0);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LCO() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LCO);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LCS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LCS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_POS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LC_POS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_VEL() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LC_VEL);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_ACC() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LC_ACC);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *E_NUVEL() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_E_NUVEL);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *E_NUPOS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_E_NUPOS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ERR_ELLP() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ERR_ELLP);
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_TYPS);
@@ -260,6 +223,50 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
+  }
+  /// Start time for track data (ISO 8601 UTC format).
+  const ::flatbuffers::String *TRACK_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_START_TIME);
+  }
+  /// Time interval between track points in seconds.
+  double TRACK_STEP_SIZE() const {
+    return GetField<double>(VT_TRACK_STEP_SIZE, 0.0);
+  }
+  /// Number of components per point (default 3 for X, Y, Z).
+  uint8_t TRACK_COMPONENTS() const {
+    return GetField<uint8_t>(VT_TRACK_COMPONENTS, 3);
+  }
+  /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+  const ::flatbuffers::Vector<double> *ECEF_POS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ECEF_POS);
+  }
+  /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+  const ::flatbuffers::Vector<double> *ECEF_VEL() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ECEF_VEL);
+  }
+  /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+  const ::flatbuffers::Vector<double> *ECEF_ACC() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ECEF_ACC);
+  }
+  /// Local coordinate position as flat array
+  const ::flatbuffers::Vector<double> *LC_POS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_LC_POS);
+  }
+  /// Local coordinate velocity as flat array
+  const ::flatbuffers::Vector<double> *LC_VEL() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_LC_VEL);
+  }
+  /// Local coordinate acceleration as flat array
+  const ::flatbuffers::Vector<double> *LC_ACC() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_LC_ACC);
+  }
+  /// Covariance data (21 elements per point for 6x6 lower triangular)
+  const ::flatbuffers::Vector<double> *COV() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COV);
+  }
+  /// Error ellipse data (6 elements per point)
+  const ::flatbuffers::Vector<double> *ERR_ELLP() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ERR_ELLP);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -316,48 +323,12 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ENVIRONMENT()) &&
            VerifyField<double>(verifier, VT_ENVIRONMENT_CONF, 8) &&
            VerifyField<double>(verifier, VT_TRK_CONF, 8) &&
-           VerifyOffset(verifier, VT_ECEF_POS) &&
-           verifier.VerifyVector(ECEF_POS()) &&
-           verifier.VerifyVectorOfStrings(ECEF_POS()) &&
-           VerifyOffset(verifier, VT_ECEF_VEL) &&
-           verifier.VerifyVector(ECEF_VEL()) &&
-           verifier.VerifyVectorOfStrings(ECEF_VEL()) &&
-           VerifyOffset(verifier, VT_ECEF_ACC) &&
-           verifier.VerifyVector(ECEF_ACC()) &&
-           verifier.VerifyVectorOfStrings(ECEF_ACC()) &&
            VerifyField<double>(verifier, VT_LAT, 8) &&
            VerifyField<double>(verifier, VT_LON, 8) &&
            VerifyField<double>(verifier, VT_ALT, 8) &&
            VerifyField<double>(verifier, VT_SPD, 8) &&
            VerifyField<double>(verifier, VT_HDNG, 8) &&
            VerifyField<double>(verifier, VT_COURSE, 8) &&
-           VerifyOffset(verifier, VT_LCO) &&
-           verifier.VerifyVector(LCO()) &&
-           verifier.VerifyVectorOfStrings(LCO()) &&
-           VerifyOffset(verifier, VT_LCS) &&
-           verifier.VerifyVector(LCS()) &&
-           verifier.VerifyVectorOfStrings(LCS()) &&
-           VerifyOffset(verifier, VT_LC_POS) &&
-           verifier.VerifyVector(LC_POS()) &&
-           verifier.VerifyVectorOfStrings(LC_POS()) &&
-           VerifyOffset(verifier, VT_LC_VEL) &&
-           verifier.VerifyVector(LC_VEL()) &&
-           verifier.VerifyVectorOfStrings(LC_VEL()) &&
-           VerifyOffset(verifier, VT_LC_ACC) &&
-           verifier.VerifyVector(LC_ACC()) &&
-           verifier.VerifyVectorOfStrings(LC_ACC()) &&
-           VerifyOffset(verifier, VT_E_NUVEL) &&
-           verifier.VerifyVector(E_NUVEL()) &&
-           verifier.VerifyVectorOfStrings(E_NUVEL()) &&
-           VerifyOffset(verifier, VT_E_NUPOS) &&
-           verifier.VerifyVector(E_NUPOS()) &&
-           verifier.VerifyVectorOfStrings(E_NUPOS()) &&
-           VerifyOffset(verifier, VT_COV) &&
-           verifier.VerifyVector(COV()) &&
-           verifier.VerifyVectorOfStrings(COV()) &&
-           VerifyOffset(verifier, VT_ERR_ELLP) &&
-           verifier.VerifyVector(ERR_ELLP()) &&
-           verifier.VerifyVectorOfStrings(ERR_ELLP()) &&
            VerifyOffset(verifier, VT_SRC_TYPS) &&
            verifier.VerifyVector(SRC_TYPS()) &&
            verifier.VerifyVectorOfStrings(SRC_TYPS()) &&
@@ -379,6 +350,26 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_TAGS) &&
            verifier.VerifyVector(TAGS()) &&
            verifier.VerifyVectorOfStrings(TAGS()) &&
+           VerifyOffset(verifier, VT_TRACK_START_TIME) &&
+           verifier.VerifyString(TRACK_START_TIME()) &&
+           VerifyField<double>(verifier, VT_TRACK_STEP_SIZE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_TRACK_COMPONENTS, 1) &&
+           VerifyOffset(verifier, VT_ECEF_POS) &&
+           verifier.VerifyVector(ECEF_POS()) &&
+           VerifyOffset(verifier, VT_ECEF_VEL) &&
+           verifier.VerifyVector(ECEF_VEL()) &&
+           VerifyOffset(verifier, VT_ECEF_ACC) &&
+           verifier.VerifyVector(ECEF_ACC()) &&
+           VerifyOffset(verifier, VT_LC_POS) &&
+           verifier.VerifyVector(LC_POS()) &&
+           VerifyOffset(verifier, VT_LC_VEL) &&
+           verifier.VerifyVector(LC_VEL()) &&
+           VerifyOffset(verifier, VT_LC_ACC) &&
+           verifier.VerifyVector(LC_ACC()) &&
+           VerifyOffset(verifier, VT_COV) &&
+           verifier.VerifyVector(COV()) &&
+           VerifyOffset(verifier, VT_ERR_ELLP) &&
+           verifier.VerifyVector(ERR_ELLP()) &&
            verifier.EndTable();
   }
 };
@@ -474,15 +465,6 @@ struct TRKBuilder {
   void add_TRK_CONF(double TRK_CONF) {
     fbb_.AddElement<double>(TRK::VT_TRK_CONF, TRK_CONF, 0.0);
   }
-  void add_ECEF_POS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_POS) {
-    fbb_.AddOffset(TRK::VT_ECEF_POS, ECEF_POS);
-  }
-  void add_ECEF_VEL(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_VEL) {
-    fbb_.AddOffset(TRK::VT_ECEF_VEL, ECEF_VEL);
-  }
-  void add_ECEF_ACC(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_ACC) {
-    fbb_.AddOffset(TRK::VT_ECEF_ACC, ECEF_ACC);
-  }
   void add_LAT(double LAT) {
     fbb_.AddElement<double>(TRK::VT_LAT, LAT, 0.0);
   }
@@ -500,33 +482,6 @@ struct TRKBuilder {
   }
   void add_COURSE(double COURSE) {
     fbb_.AddElement<double>(TRK::VT_COURSE, COURSE, 0.0);
-  }
-  void add_LCO(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LCO) {
-    fbb_.AddOffset(TRK::VT_LCO, LCO);
-  }
-  void add_LCS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LCS) {
-    fbb_.AddOffset(TRK::VT_LCS, LCS);
-  }
-  void add_LC_POS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_POS) {
-    fbb_.AddOffset(TRK::VT_LC_POS, LC_POS);
-  }
-  void add_LC_VEL(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_VEL) {
-    fbb_.AddOffset(TRK::VT_LC_VEL, LC_VEL);
-  }
-  void add_LC_ACC(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_ACC) {
-    fbb_.AddOffset(TRK::VT_LC_ACC, LC_ACC);
-  }
-  void add_E_NUVEL(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> E_NUVEL) {
-    fbb_.AddOffset(TRK::VT_E_NUVEL, E_NUVEL);
-  }
-  void add_E_NUPOS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> E_NUPOS) {
-    fbb_.AddOffset(TRK::VT_E_NUPOS, E_NUPOS);
-  }
-  void add_COV(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV) {
-    fbb_.AddOffset(TRK::VT_COV, COV);
-  }
-  void add_ERR_ELLP(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ERR_ELLP) {
-    fbb_.AddOffset(TRK::VT_ERR_ELLP, ERR_ELLP);
   }
   void add_SRC_TYPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_TYPS) {
     fbb_.AddOffset(TRK::VT_SRC_TYPS, SRC_TYPS);
@@ -566,6 +521,39 @@ struct TRKBuilder {
   }
   void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
     fbb_.AddOffset(TRK::VT_TAGS, TAGS);
+  }
+  void add_TRACK_START_TIME(::flatbuffers::Offset<::flatbuffers::String> TRACK_START_TIME) {
+    fbb_.AddOffset(TRK::VT_TRACK_START_TIME, TRACK_START_TIME);
+  }
+  void add_TRACK_STEP_SIZE(double TRACK_STEP_SIZE) {
+    fbb_.AddElement<double>(TRK::VT_TRACK_STEP_SIZE, TRACK_STEP_SIZE, 0.0);
+  }
+  void add_TRACK_COMPONENTS(uint8_t TRACK_COMPONENTS) {
+    fbb_.AddElement<uint8_t>(TRK::VT_TRACK_COMPONENTS, TRACK_COMPONENTS, 3);
+  }
+  void add_ECEF_POS(::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_POS) {
+    fbb_.AddOffset(TRK::VT_ECEF_POS, ECEF_POS);
+  }
+  void add_ECEF_VEL(::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_VEL) {
+    fbb_.AddOffset(TRK::VT_ECEF_VEL, ECEF_VEL);
+  }
+  void add_ECEF_ACC(::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_ACC) {
+    fbb_.AddOffset(TRK::VT_ECEF_ACC, ECEF_ACC);
+  }
+  void add_LC_POS(::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_POS) {
+    fbb_.AddOffset(TRK::VT_LC_POS, LC_POS);
+  }
+  void add_LC_VEL(::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_VEL) {
+    fbb_.AddOffset(TRK::VT_LC_VEL, LC_VEL);
+  }
+  void add_LC_ACC(::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_ACC) {
+    fbb_.AddOffset(TRK::VT_LC_ACC, LC_ACC);
+  }
+  void add_COV(::flatbuffers::Offset<::flatbuffers::Vector<double>> COV) {
+    fbb_.AddOffset(TRK::VT_COV, COV);
+  }
+  void add_ERR_ELLP(::flatbuffers::Offset<::flatbuffers::Vector<double>> ERR_ELLP) {
+    fbb_.AddOffset(TRK::VT_ERR_ELLP, ERR_ELLP);
   }
   explicit TRKBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -609,24 +597,12 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     ::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENT = 0,
     double ENVIRONMENT_CONF = 0.0,
     double TRK_CONF = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_POS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_VEL = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ECEF_ACC = 0,
     double LAT = 0.0,
     double LON = 0.0,
     double ALT = 0.0,
     double SPD = 0.0,
     double HDNG = 0.0,
     double COURSE = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LCO = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LCS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_POS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_VEL = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LC_ACC = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> E_NUVEL = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> E_NUPOS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ERR_ELLP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_TYPS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_IDS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CALL_SIGN = 0,
@@ -639,8 +615,20 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     int32_t M2V = 0,
     int32_t M3A = 0,
     int32_t M3AV = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRACK_START_TIME = 0,
+    double TRACK_STEP_SIZE = 0.0,
+    uint8_t TRACK_COMPONENTS = 3,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_POS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_VEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ECEF_ACC = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_POS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_VEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> LC_ACC = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COV = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ERR_ELLP = 0) {
   TRKBuilder builder_(_fbb);
+  builder_.add_TRACK_STEP_SIZE(TRACK_STEP_SIZE);
   builder_.add_COURSE(COURSE);
   builder_.add_HDNG(HDNG);
   builder_.add_SPD(SPD);
@@ -649,6 +637,15 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
   builder_.add_LAT(LAT);
   builder_.add_TRK_CONF(TRK_CONF);
   builder_.add_ENVIRONMENT_CONF(ENVIRONMENT_CONF);
+  builder_.add_ERR_ELLP(ERR_ELLP);
+  builder_.add_COV(COV);
+  builder_.add_LC_ACC(LC_ACC);
+  builder_.add_LC_VEL(LC_VEL);
+  builder_.add_LC_POS(LC_POS);
+  builder_.add_ECEF_ACC(ECEF_ACC);
+  builder_.add_ECEF_VEL(ECEF_VEL);
+  builder_.add_ECEF_POS(ECEF_POS);
+  builder_.add_TRACK_START_TIME(TRACK_START_TIME);
   builder_.add_TAGS(TAGS);
   builder_.add_M3AV(M3AV);
   builder_.add_M3A(M3A);
@@ -661,18 +658,6 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
   builder_.add_CALL_SIGN(CALL_SIGN);
   builder_.add_SRC_IDS(SRC_IDS);
   builder_.add_SRC_TYPS(SRC_TYPS);
-  builder_.add_ERR_ELLP(ERR_ELLP);
-  builder_.add_COV(COV);
-  builder_.add_E_NUPOS(E_NUPOS);
-  builder_.add_E_NUVEL(E_NUVEL);
-  builder_.add_LC_ACC(LC_ACC);
-  builder_.add_LC_VEL(LC_VEL);
-  builder_.add_LC_POS(LC_POS);
-  builder_.add_LCS(LCS);
-  builder_.add_LCO(LCO);
-  builder_.add_ECEF_ACC(ECEF_ACC);
-  builder_.add_ECEF_VEL(ECEF_VEL);
-  builder_.add_ECEF_POS(ECEF_POS);
   builder_.add_ENVIRONMENT(ENVIRONMENT);
   builder_.add_IDENT_AMP(IDENT_AMP);
   builder_.add_IDENT_REL(IDENT_REL);
@@ -700,6 +685,7 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
   builder_.add_MSG_TS(MSG_TS);
   builder_.add_CNTCT(CNTCT);
   builder_.add_ID(ID);
+  builder_.add_TRACK_COMPONENTS(TRACK_COMPONENTS);
   builder_.add_MULTI_SOURCE(MULTI_SOURCE);
   return builder_.Finish();
 }
@@ -735,24 +721,12 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     const char *ENVIRONMENT = nullptr,
     double ENVIRONMENT_CONF = 0.0,
     double TRK_CONF = 0.0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_POS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_VEL = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ECEF_ACC = nullptr,
     double LAT = 0.0,
     double LON = 0.0,
     double ALT = 0.0,
     double SPD = 0.0,
     double HDNG = 0.0,
     double COURSE = 0.0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LCO = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LCS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_POS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_VEL = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LC_ACC = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *E_NUVEL = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *E_NUPOS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ERR_ELLP = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS = nullptr,
     const char *CALL_SIGN = nullptr,
@@ -765,7 +739,18 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     int32_t M2V = 0,
     int32_t M3A = 0,
     int32_t M3AV = 0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
+    const char *TRACK_START_TIME = nullptr,
+    double TRACK_STEP_SIZE = 0.0,
+    uint8_t TRACK_COMPONENTS = 3,
+    const std::vector<double> *ECEF_POS = nullptr,
+    const std::vector<double> *ECEF_VEL = nullptr,
+    const std::vector<double> *ECEF_ACC = nullptr,
+    const std::vector<double> *LC_POS = nullptr,
+    const std::vector<double> *LC_VEL = nullptr,
+    const std::vector<double> *LC_ACC = nullptr,
+    const std::vector<double> *COV = nullptr,
+    const std::vector<double> *ERR_ELLP = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto CNTCT__ = CNTCT ? _fbb.CreateString(CNTCT) : 0;
   auto MSG_TS__ = MSG_TS ? _fbb.CreateString(MSG_TS) : 0;
@@ -790,23 +775,20 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
   auto OBJ_IDENT__ = OBJ_IDENT ? _fbb.CreateString(OBJ_IDENT) : 0;
   auto IDENT_AMP__ = IDENT_AMP ? _fbb.CreateString(IDENT_AMP) : 0;
   auto ENVIRONMENT__ = ENVIRONMENT ? _fbb.CreateString(ENVIRONMENT) : 0;
-  auto ECEF_POS__ = ECEF_POS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ECEF_POS) : 0;
-  auto ECEF_VEL__ = ECEF_VEL ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ECEF_VEL) : 0;
-  auto ECEF_ACC__ = ECEF_ACC ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ECEF_ACC) : 0;
-  auto LCO__ = LCO ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LCO) : 0;
-  auto LCS__ = LCS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LCS) : 0;
-  auto LC_POS__ = LC_POS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LC_POS) : 0;
-  auto LC_VEL__ = LC_VEL ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LC_VEL) : 0;
-  auto LC_ACC__ = LC_ACC ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LC_ACC) : 0;
-  auto E_NUVEL__ = E_NUVEL ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*E_NUVEL) : 0;
-  auto E_NUPOS__ = E_NUPOS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*E_NUPOS) : 0;
-  auto COV__ = COV ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COV) : 0;
-  auto ERR_ELLP__ = ERR_ELLP ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ERR_ELLP) : 0;
   auto SRC_TYPS__ = SRC_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_TYPS) : 0;
   auto SRC_IDS__ = SRC_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_IDS) : 0;
   auto CALL_SIGN__ = CALL_SIGN ? _fbb.CreateString(CALL_SIGN) : 0;
   auto J_SERIES__ = J_SERIES ? _fbb.CreateString(J_SERIES) : 0;
   auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
+  auto TRACK_START_TIME__ = TRACK_START_TIME ? _fbb.CreateString(TRACK_START_TIME) : 0;
+  auto ECEF_POS__ = ECEF_POS ? _fbb.CreateVector<double>(*ECEF_POS) : 0;
+  auto ECEF_VEL__ = ECEF_VEL ? _fbb.CreateVector<double>(*ECEF_VEL) : 0;
+  auto ECEF_ACC__ = ECEF_ACC ? _fbb.CreateVector<double>(*ECEF_ACC) : 0;
+  auto LC_POS__ = LC_POS ? _fbb.CreateVector<double>(*LC_POS) : 0;
+  auto LC_VEL__ = LC_VEL ? _fbb.CreateVector<double>(*LC_VEL) : 0;
+  auto LC_ACC__ = LC_ACC ? _fbb.CreateVector<double>(*LC_ACC) : 0;
+  auto COV__ = COV ? _fbb.CreateVector<double>(*COV) : 0;
+  auto ERR_ELLP__ = ERR_ELLP ? _fbb.CreateVector<double>(*ERR_ELLP) : 0;
   return CreateTRK(
       _fbb,
       ID__,
@@ -838,24 +820,12 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
       ENVIRONMENT__,
       ENVIRONMENT_CONF,
       TRK_CONF,
-      ECEF_POS__,
-      ECEF_VEL__,
-      ECEF_ACC__,
       LAT,
       LON,
       ALT,
       SPD,
       HDNG,
       COURSE,
-      LCO__,
-      LCS__,
-      LC_POS__,
-      LC_VEL__,
-      LC_ACC__,
-      E_NUVEL__,
-      E_NUPOS__,
-      COV__,
-      ERR_ELLP__,
       SRC_TYPS__,
       SRC_IDS__,
       CALL_SIGN__,
@@ -868,7 +838,18 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
       M2V,
       M3A,
       M3AV,
-      TAGS__);
+      TAGS__,
+      TRACK_START_TIME__,
+      TRACK_STEP_SIZE,
+      TRACK_COMPONENTS,
+      ECEF_POS__,
+      ECEF_VEL__,
+      ECEF_ACC__,
+      LC_POS__,
+      LC_VEL__,
+      LC_ACC__,
+      COV__,
+      ERR_ELLP__);
 }
 
 inline const TRK *GetTRK(const void *buf) {

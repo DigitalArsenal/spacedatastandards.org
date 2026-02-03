@@ -37,186 +37,193 @@ class TDM : flatbuffers.handle
     /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 22)
+    /// Time interval between observations in seconds (required).
+    /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+    def OBSERVATION_STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Start time for observation time reconstruction (ISO 8601 UTC format).
+    def OBSERVATION_START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
     /// TDM version number -  CCSDS 503.0-B-1, Page D-9
     def CCSDS_TDM_VERS() -> string:
-        return flatbuffers.field_string(buf_, pos_, 24)
+        return flatbuffers.field_string(buf_, pos_, 28)
     /// Comments regarding TDM -  various sections, e.g., Page D-9
     def COMMENT(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 4)
     def COMMENT_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 26)
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
     /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
     def CREATION_DATE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 32)
     /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
     def ORIGINATOR() -> string:
-        return flatbuffers.field_string(buf_, pos_, 30)
+        return flatbuffers.field_string(buf_, pos_, 34)
     /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9
     def META_START() -> string:
-        return flatbuffers.field_string(buf_, pos_, 32)
+        return flatbuffers.field_string(buf_, pos_, 36)
     /// Time system used -  CCSDS 503.0-B-1, Page D-9
     def TIME_SYSTEM() -> string:
-        return flatbuffers.field_string(buf_, pos_, 34)
+        return flatbuffers.field_string(buf_, pos_, 38)
     /// Start time of the data -  CCSDS 503.0-B-1, Page D-9
     def START_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 36)
+        return flatbuffers.field_string(buf_, pos_, 40)
     /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9
     def STOP_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 38)
+        return flatbuffers.field_string(buf_, pos_, 42)
     /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
     def PARTICIPANT_1() -> string:
-        return flatbuffers.field_string(buf_, pos_, 40)
+        return flatbuffers.field_string(buf_, pos_, 44)
     /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
     def PARTICIPANT_2() -> string:
-        return flatbuffers.field_string(buf_, pos_, 42)
+        return flatbuffers.field_string(buf_, pos_, 46)
     /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     def PARTICIPANT_3() -> string:
-        return flatbuffers.field_string(buf_, pos_, 44)
+        return flatbuffers.field_string(buf_, pos_, 48)
     /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     def PARTICIPANT_4() -> string:
-        return flatbuffers.field_string(buf_, pos_, 46)
+        return flatbuffers.field_string(buf_, pos_, 50)
     /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
     def PARTICIPANT_5() -> string:
-        return flatbuffers.field_string(buf_, pos_, 48)
+        return flatbuffers.field_string(buf_, pos_, 52)
     /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
     def MODE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 50)
+        return flatbuffers.field_string(buf_, pos_, 54)
     /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
     def PATH_1() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 52, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 56, 0)
     /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
     def PATH_2() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 54, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 58, 0)
     /// Transmit band -  CCSDS 503.0-B-1, Page D-9
     def TRANSMIT_BAND() -> string:
-        return flatbuffers.field_string(buf_, pos_, 56)
+        return flatbuffers.field_string(buf_, pos_, 60)
     /// Receive band -  CCSDS 503.0-B-1, Page D-9
     def RECEIVE_BAND() -> string:
-        return flatbuffers.field_string(buf_, pos_, 58)
+        return flatbuffers.field_string(buf_, pos_, 62)
     /// Integration interval -  CCSDS 503.0-B-1, Page D-9
     def INTEGRATION_INTERVAL() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 60, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 64, 0.0)
     /// Integration reference -  CCSDS 503.0-B-1, Page D-9
     def INTEGRATION_REF() -> string:
-        return flatbuffers.field_string(buf_, pos_, 62)
+        return flatbuffers.field_string(buf_, pos_, 66)
     /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
     def RECEIVE_DELAY_2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
     def RECEIVE_DELAY_3() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
     /// Data quality -  CCSDS 503.0-B-1, Page D-9
     def DATA_QUALITY() -> string:
-        return flatbuffers.field_string(buf_, pos_, 68)
+        return flatbuffers.field_string(buf_, pos_, 72)
     /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
     def META_STOP() -> string:
-        return flatbuffers.field_string(buf_, pos_, 70)
+        return flatbuffers.field_string(buf_, pos_, 74)
     /// Start of data section -  CCSDS 503.0-B-1, Page D-9
     def DATA_START() -> string:
-        return flatbuffers.field_string(buf_, pos_, 72)
+        return flatbuffers.field_string(buf_, pos_, 76)
     /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
     def TRANSMIT_FREQ_1() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
     /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
     def RECEIVE_FREQ(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 76) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 80) + i * 8)
     def RECEIVE_FREQ_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 76)
+        return flatbuffers.field_vector_len(buf_, pos_, 80)
     /// End of data section -  CCSDS 503.0-B-1, Page D-9
     def DATA_STOP() -> string:
-        return flatbuffers.field_string(buf_, pos_, 78)
+        return flatbuffers.field_string(buf_, pos_, 82)
     /// Additional properties as required by the specific application of the TDM...
     /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
     def TIMETAG_REF() -> string:
-        return flatbuffers.field_string(buf_, pos_, 80)
+        return flatbuffers.field_string(buf_, pos_, 84)
     /// Type of angle data -  CCSDS 503.0-B-1, Page D-12
     /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
     def ANGLE_TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 82)
+        return flatbuffers.field_string(buf_, pos_, 86)
     /// First angle value -  CCSDS 503.0-B-1, Page D-12
     def ANGLE_1(i:int) -> float:
-        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 84) + i * 4)
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 88) + i * 4)
     def ANGLE_1_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 84)
+        return flatbuffers.field_vector_len(buf_, pos_, 88)
     /// Second angle value -  CCSDS 503.0-B-1, Page D-12
     def ANGLE_2(i:int) -> float:
-        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 4)
     def ANGLE_2_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 86)
+        return flatbuffers.field_vector_len(buf_, pos_, 90)
     /// Uncertainty of first angle -  CCSDS 503.0-B-1
     def ANGLE_UNCERTAINTY_1() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 88, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 92, 0.0)
     /// Uncertainty of second angle -  CCSDS 503.0-B-1
     def ANGLE_UNCERTAINTY_2() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 90, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 94, 0.0)
     /// Rate of change of range -  CCSDS 503.0-B-1
     def RANGE_RATE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
     /// Uncertainty in range -  CCSDS 503.0-B-1
     def RANGE_UNCERTAINTY() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
     /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
     def RANGE_MODE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 96)
+        return flatbuffers.field_string(buf_, pos_, 100)
     /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
     def RANGE_MODULUS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 102, 0.0)
     /// First correction angle -  CCSDS 503.0-B-1, Page D-12
     def CORRECTION_ANGLE_1() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 100, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 104, 0.0)
     /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
     def CORRECTION_ANGLE_2() -> float:
-        return flatbuffers.field_float32(buf_, pos_, 102, 0.0)
+        return flatbuffers.field_float32(buf_, pos_, 106, 0.0)
     /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
     def CORRECTIONS_APPLIED() -> string:
-        return flatbuffers.field_string(buf_, pos_, 104)
+        return flatbuffers.field_string(buf_, pos_, 108)
     /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
     def TROPO_DRY(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 106) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 110) + i * 8)
     def TROPO_DRY_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 106)
+        return flatbuffers.field_vector_len(buf_, pos_, 110)
     /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
     def TROPO_WET(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 108) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 112) + i * 8)
     def TROPO_WET_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 108)
+        return flatbuffers.field_vector_len(buf_, pos_, 112)
     /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
     def STEC(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 110) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 114) + i * 8)
     def STEC_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 110)
+        return flatbuffers.field_vector_len(buf_, pos_, 114)
     /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
     def PRESSURE(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 112) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 116) + i * 8)
     def PRESSURE_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 112)
+        return flatbuffers.field_vector_len(buf_, pos_, 116)
     /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
     def RHUMIDITY(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 114) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 118) + i * 8)
     def RHUMIDITY_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 114)
+        return flatbuffers.field_vector_len(buf_, pos_, 118)
     /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
     def TEMPERATURE(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 116) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 120) + i * 8)
     def TEMPERATURE_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 116)
+        return flatbuffers.field_vector_len(buf_, pos_, 120)
     /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
     def CLOCK_BIAS(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 118) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 122) + i * 8)
     def CLOCK_BIAS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 118)
+        return flatbuffers.field_vector_len(buf_, pos_, 122)
     /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
     def CLOCK_DRIFT(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 120) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 124) + i * 8)
     def CLOCK_DRIFT_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 120)
+        return flatbuffers.field_vector_len(buf_, pos_, 124)
 
 def GetRootAsTDM(buf:string): return TDM { buf, flatbuffers.indirect(buf, 0) }
 
 struct TDMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(59)
+        b_.StartObject(61)
         return this
     def add_OBSERVER_ID(OBSERVER_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBSERVER_ID)
@@ -248,152 +255,158 @@ struct TDMBuilder:
     def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, EPOCH)
         return this
+    def add_OBSERVATION_STEP_SIZE(OBSERVATION_STEP_SIZE:float):
+        b_.PrependFloat64Slot(10, OBSERVATION_STEP_SIZE, 0.0)
+        return this
+    def add_OBSERVATION_START_TIME(OBSERVATION_START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, OBSERVATION_START_TIME)
+        return this
     def add_CCSDS_TDM_VERS(CCSDS_TDM_VERS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, CCSDS_TDM_VERS)
+        b_.PrependUOffsetTRelativeSlot(12, CCSDS_TDM_VERS)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, COMMENT)
+        b_.PrependUOffsetTRelativeSlot(13, COMMENT)
         return this
     def add_CREATION_DATE(CREATION_DATE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, CREATION_DATE)
+        b_.PrependUOffsetTRelativeSlot(14, CREATION_DATE)
         return this
     def add_ORIGINATOR(ORIGINATOR:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, ORIGINATOR)
+        b_.PrependUOffsetTRelativeSlot(15, ORIGINATOR)
         return this
     def add_META_START(META_START:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, META_START)
+        b_.PrependUOffsetTRelativeSlot(16, META_START)
         return this
     def add_TIME_SYSTEM(TIME_SYSTEM:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, TIME_SYSTEM)
+        b_.PrependUOffsetTRelativeSlot(17, TIME_SYSTEM)
         return this
     def add_START_TIME(START_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(16, START_TIME)
+        b_.PrependUOffsetTRelativeSlot(18, START_TIME)
         return this
     def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(17, STOP_TIME)
+        b_.PrependUOffsetTRelativeSlot(19, STOP_TIME)
         return this
     def add_PARTICIPANT_1(PARTICIPANT_1:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(18, PARTICIPANT_1)
+        b_.PrependUOffsetTRelativeSlot(20, PARTICIPANT_1)
         return this
     def add_PARTICIPANT_2(PARTICIPANT_2:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(19, PARTICIPANT_2)
+        b_.PrependUOffsetTRelativeSlot(21, PARTICIPANT_2)
         return this
     def add_PARTICIPANT_3(PARTICIPANT_3:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(20, PARTICIPANT_3)
+        b_.PrependUOffsetTRelativeSlot(22, PARTICIPANT_3)
         return this
     def add_PARTICIPANT_4(PARTICIPANT_4:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(21, PARTICIPANT_4)
+        b_.PrependUOffsetTRelativeSlot(23, PARTICIPANT_4)
         return this
     def add_PARTICIPANT_5(PARTICIPANT_5:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(22, PARTICIPANT_5)
+        b_.PrependUOffsetTRelativeSlot(24, PARTICIPANT_5)
         return this
     def add_MODE(MODE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(23, MODE)
+        b_.PrependUOffsetTRelativeSlot(25, MODE)
         return this
     def add_PATH_1(PATH_1:int):
-        b_.PrependUint16Slot(24, PATH_1, 0)
+        b_.PrependUint16Slot(26, PATH_1, 0)
         return this
     def add_PATH_2(PATH_2:int):
-        b_.PrependUint16Slot(25, PATH_2, 0)
+        b_.PrependUint16Slot(27, PATH_2, 0)
         return this
     def add_TRANSMIT_BAND(TRANSMIT_BAND:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(26, TRANSMIT_BAND)
+        b_.PrependUOffsetTRelativeSlot(28, TRANSMIT_BAND)
         return this
     def add_RECEIVE_BAND(RECEIVE_BAND:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(27, RECEIVE_BAND)
+        b_.PrependUOffsetTRelativeSlot(29, RECEIVE_BAND)
         return this
     def add_INTEGRATION_INTERVAL(INTEGRATION_INTERVAL:float):
-        b_.PrependFloat32Slot(28, INTEGRATION_INTERVAL, 0.0)
+        b_.PrependFloat32Slot(30, INTEGRATION_INTERVAL, 0.0)
         return this
     def add_INTEGRATION_REF(INTEGRATION_REF:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(29, INTEGRATION_REF)
+        b_.PrependUOffsetTRelativeSlot(31, INTEGRATION_REF)
         return this
     def add_RECEIVE_DELAY_2(RECEIVE_DELAY_2:float):
-        b_.PrependFloat64Slot(30, RECEIVE_DELAY_2, 0.0)
+        b_.PrependFloat64Slot(32, RECEIVE_DELAY_2, 0.0)
         return this
     def add_RECEIVE_DELAY_3(RECEIVE_DELAY_3:float):
-        b_.PrependFloat64Slot(31, RECEIVE_DELAY_3, 0.0)
+        b_.PrependFloat64Slot(33, RECEIVE_DELAY_3, 0.0)
         return this
     def add_DATA_QUALITY(DATA_QUALITY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(32, DATA_QUALITY)
+        b_.PrependUOffsetTRelativeSlot(34, DATA_QUALITY)
         return this
     def add_META_STOP(META_STOP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(33, META_STOP)
+        b_.PrependUOffsetTRelativeSlot(35, META_STOP)
         return this
     def add_DATA_START(DATA_START:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(34, DATA_START)
+        b_.PrependUOffsetTRelativeSlot(36, DATA_START)
         return this
     def add_TRANSMIT_FREQ_1(TRANSMIT_FREQ_1:float):
-        b_.PrependFloat64Slot(35, TRANSMIT_FREQ_1, 0.0)
+        b_.PrependFloat64Slot(37, TRANSMIT_FREQ_1, 0.0)
         return this
     def add_RECEIVE_FREQ(RECEIVE_FREQ:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(36, RECEIVE_FREQ)
+        b_.PrependUOffsetTRelativeSlot(38, RECEIVE_FREQ)
         return this
     def add_DATA_STOP(DATA_STOP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(37, DATA_STOP)
+        b_.PrependUOffsetTRelativeSlot(39, DATA_STOP)
         return this
     def add_TIMETAG_REF(TIMETAG_REF:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(38, TIMETAG_REF)
+        b_.PrependUOffsetTRelativeSlot(40, TIMETAG_REF)
         return this
     def add_ANGLE_TYPE(ANGLE_TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(39, ANGLE_TYPE)
+        b_.PrependUOffsetTRelativeSlot(41, ANGLE_TYPE)
         return this
     def add_ANGLE_1(ANGLE_1:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(40, ANGLE_1)
+        b_.PrependUOffsetTRelativeSlot(42, ANGLE_1)
         return this
     def add_ANGLE_2(ANGLE_2:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(41, ANGLE_2)
+        b_.PrependUOffsetTRelativeSlot(43, ANGLE_2)
         return this
     def add_ANGLE_UNCERTAINTY_1(ANGLE_UNCERTAINTY_1:float):
-        b_.PrependFloat32Slot(42, ANGLE_UNCERTAINTY_1, 0.0)
+        b_.PrependFloat32Slot(44, ANGLE_UNCERTAINTY_1, 0.0)
         return this
     def add_ANGLE_UNCERTAINTY_2(ANGLE_UNCERTAINTY_2:float):
-        b_.PrependFloat32Slot(43, ANGLE_UNCERTAINTY_2, 0.0)
+        b_.PrependFloat32Slot(45, ANGLE_UNCERTAINTY_2, 0.0)
         return this
     def add_RANGE_RATE(RANGE_RATE:float):
-        b_.PrependFloat64Slot(44, RANGE_RATE, 0.0)
+        b_.PrependFloat64Slot(46, RANGE_RATE, 0.0)
         return this
     def add_RANGE_UNCERTAINTY(RANGE_UNCERTAINTY:float):
-        b_.PrependFloat64Slot(45, RANGE_UNCERTAINTY, 0.0)
+        b_.PrependFloat64Slot(47, RANGE_UNCERTAINTY, 0.0)
         return this
     def add_RANGE_MODE(RANGE_MODE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(46, RANGE_MODE)
+        b_.PrependUOffsetTRelativeSlot(48, RANGE_MODE)
         return this
     def add_RANGE_MODULUS(RANGE_MODULUS:float):
-        b_.PrependFloat64Slot(47, RANGE_MODULUS, 0.0)
+        b_.PrependFloat64Slot(49, RANGE_MODULUS, 0.0)
         return this
     def add_CORRECTION_ANGLE_1(CORRECTION_ANGLE_1:float):
-        b_.PrependFloat32Slot(48, CORRECTION_ANGLE_1, 0.0)
+        b_.PrependFloat32Slot(50, CORRECTION_ANGLE_1, 0.0)
         return this
     def add_CORRECTION_ANGLE_2(CORRECTION_ANGLE_2:float):
-        b_.PrependFloat32Slot(49, CORRECTION_ANGLE_2, 0.0)
+        b_.PrependFloat32Slot(51, CORRECTION_ANGLE_2, 0.0)
         return this
     def add_CORRECTIONS_APPLIED(CORRECTIONS_APPLIED:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(50, CORRECTIONS_APPLIED)
+        b_.PrependUOffsetTRelativeSlot(52, CORRECTIONS_APPLIED)
         return this
     def add_TROPO_DRY(TROPO_DRY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(51, TROPO_DRY)
+        b_.PrependUOffsetTRelativeSlot(53, TROPO_DRY)
         return this
     def add_TROPO_WET(TROPO_WET:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(52, TROPO_WET)
+        b_.PrependUOffsetTRelativeSlot(54, TROPO_WET)
         return this
     def add_STEC(STEC:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(53, STEC)
+        b_.PrependUOffsetTRelativeSlot(55, STEC)
         return this
     def add_PRESSURE(PRESSURE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(54, PRESSURE)
+        b_.PrependUOffsetTRelativeSlot(56, PRESSURE)
         return this
     def add_RHUMIDITY(RHUMIDITY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(55, RHUMIDITY)
+        b_.PrependUOffsetTRelativeSlot(57, RHUMIDITY)
         return this
     def add_TEMPERATURE(TEMPERATURE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(56, TEMPERATURE)
+        b_.PrependUOffsetTRelativeSlot(58, TEMPERATURE)
         return this
     def add_CLOCK_BIAS(CLOCK_BIAS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(57, CLOCK_BIAS)
+        b_.PrependUOffsetTRelativeSlot(59, CLOCK_BIAS)
         return this
     def add_CLOCK_DRIFT(CLOCK_DRIFT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(58, CLOCK_DRIFT)
+        b_.PrependUOffsetTRelativeSlot(60, CLOCK_DRIFT)
         return this
     def end():
         return b_.EndObject()

@@ -165,32 +165,12 @@ impl<'a> OMM<'a> {
   pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 66;
   pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 68;
   pub const VT_COV_REFERENCE_FRAME: flatbuffers::VOffsetT = 70;
-  pub const VT_CX_X: flatbuffers::VOffsetT = 72;
-  pub const VT_CY_X: flatbuffers::VOffsetT = 74;
-  pub const VT_CY_Y: flatbuffers::VOffsetT = 76;
-  pub const VT_CZ_X: flatbuffers::VOffsetT = 78;
-  pub const VT_CZ_Y: flatbuffers::VOffsetT = 80;
-  pub const VT_CZ_Z: flatbuffers::VOffsetT = 82;
-  pub const VT_CX_DOT_X: flatbuffers::VOffsetT = 84;
-  pub const VT_CX_DOT_Y: flatbuffers::VOffsetT = 86;
-  pub const VT_CX_DOT_Z: flatbuffers::VOffsetT = 88;
-  pub const VT_CX_DOT_X_DOT: flatbuffers::VOffsetT = 90;
-  pub const VT_CY_DOT_X: flatbuffers::VOffsetT = 92;
-  pub const VT_CY_DOT_Y: flatbuffers::VOffsetT = 94;
-  pub const VT_CY_DOT_Z: flatbuffers::VOffsetT = 96;
-  pub const VT_CY_DOT_X_DOT: flatbuffers::VOffsetT = 98;
-  pub const VT_CY_DOT_Y_DOT: flatbuffers::VOffsetT = 100;
-  pub const VT_CZ_DOT_X: flatbuffers::VOffsetT = 102;
-  pub const VT_CZ_DOT_Y: flatbuffers::VOffsetT = 104;
-  pub const VT_CZ_DOT_Z: flatbuffers::VOffsetT = 106;
-  pub const VT_CZ_DOT_X_DOT: flatbuffers::VOffsetT = 108;
-  pub const VT_CZ_DOT_Y_DOT: flatbuffers::VOffsetT = 110;
-  pub const VT_CZ_DOT_Z_DOT: flatbuffers::VOffsetT = 112;
-  pub const VT_USER_DEFINED_BIP_0044_TYPE: flatbuffers::VOffsetT = 114;
-  pub const VT_USER_DEFINED_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 116;
-  pub const VT_USER_DEFINED_EARTH_MODEL: flatbuffers::VOffsetT = 118;
-  pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: flatbuffers::VOffsetT = 120;
-  pub const VT_USER_DEFINED_MICROSECONDS: flatbuffers::VOffsetT = 122;
+  pub const VT_COVARIANCE: flatbuffers::VOffsetT = 72;
+  pub const VT_USER_DEFINED_BIP_0044_TYPE: flatbuffers::VOffsetT = 74;
+  pub const VT_USER_DEFINED_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 76;
+  pub const VT_USER_DEFINED_EARTH_MODEL: flatbuffers::VOffsetT = 78;
+  pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: flatbuffers::VOffsetT = 80;
+  pub const VT_USER_DEFINED_MICROSECONDS: flatbuffers::VOffsetT = 82;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -204,27 +184,6 @@ impl<'a> OMM<'a> {
     let mut builder = OMMBuilder::new(_fbb);
     builder.add_USER_DEFINED_MICROSECONDS(args.USER_DEFINED_MICROSECONDS);
     builder.add_USER_DEFINED_EPOCH_TIMESTAMP(args.USER_DEFINED_EPOCH_TIMESTAMP);
-    builder.add_CZ_DOT_Z_DOT(args.CZ_DOT_Z_DOT);
-    builder.add_CZ_DOT_Y_DOT(args.CZ_DOT_Y_DOT);
-    builder.add_CZ_DOT_X_DOT(args.CZ_DOT_X_DOT);
-    builder.add_CZ_DOT_Z(args.CZ_DOT_Z);
-    builder.add_CZ_DOT_Y(args.CZ_DOT_Y);
-    builder.add_CZ_DOT_X(args.CZ_DOT_X);
-    builder.add_CY_DOT_Y_DOT(args.CY_DOT_Y_DOT);
-    builder.add_CY_DOT_X_DOT(args.CY_DOT_X_DOT);
-    builder.add_CY_DOT_Z(args.CY_DOT_Z);
-    builder.add_CY_DOT_Y(args.CY_DOT_Y);
-    builder.add_CY_DOT_X(args.CY_DOT_X);
-    builder.add_CX_DOT_X_DOT(args.CX_DOT_X_DOT);
-    builder.add_CX_DOT_Z(args.CX_DOT_Z);
-    builder.add_CX_DOT_Y(args.CX_DOT_Y);
-    builder.add_CX_DOT_X(args.CX_DOT_X);
-    builder.add_CZ_Z(args.CZ_Z);
-    builder.add_CZ_Y(args.CZ_Y);
-    builder.add_CZ_X(args.CZ_X);
-    builder.add_CY_Y(args.CY_Y);
-    builder.add_CY_X(args.CY_X);
-    builder.add_CX_X(args.CX_X);
     builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
     builder.add_MEAN_MOTION_DOT(args.MEAN_MOTION_DOT);
     builder.add_BSTAR(args.BSTAR);
@@ -246,6 +205,7 @@ impl<'a> OMM<'a> {
     if let Some(x) = args.USER_DEFINED_EARTH_MODEL { builder.add_USER_DEFINED_EARTH_MODEL(x); }
     if let Some(x) = args.USER_DEFINED_OBJECT_DESIGNATOR { builder.add_USER_DEFINED_OBJECT_DESIGNATOR(x); }
     builder.add_USER_DEFINED_BIP_0044_TYPE(args.USER_DEFINED_BIP_0044_TYPE);
+    if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
     if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
     builder.add_ELEMENT_SET_NO(args.ELEMENT_SET_NO);
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
@@ -322,27 +282,9 @@ impl<'a> OMM<'a> {
     let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
       Box::new(x.unpack())
     });
-    let CX_X = self.CX_X();
-    let CY_X = self.CY_X();
-    let CY_Y = self.CY_Y();
-    let CZ_X = self.CZ_X();
-    let CZ_Y = self.CZ_Y();
-    let CZ_Z = self.CZ_Z();
-    let CX_DOT_X = self.CX_DOT_X();
-    let CX_DOT_Y = self.CX_DOT_Y();
-    let CX_DOT_Z = self.CX_DOT_Z();
-    let CX_DOT_X_DOT = self.CX_DOT_X_DOT();
-    let CY_DOT_X = self.CY_DOT_X();
-    let CY_DOT_Y = self.CY_DOT_Y();
-    let CY_DOT_Z = self.CY_DOT_Z();
-    let CY_DOT_X_DOT = self.CY_DOT_X_DOT();
-    let CY_DOT_Y_DOT = self.CY_DOT_Y_DOT();
-    let CZ_DOT_X = self.CZ_DOT_X();
-    let CZ_DOT_Y = self.CZ_DOT_Y();
-    let CZ_DOT_Z = self.CZ_DOT_Z();
-    let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT();
-    let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT();
-    let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT();
+    let COVARIANCE = self.COVARIANCE().map(|x| {
+      x.into_iter().collect()
+    });
     let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE();
     let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR().map(|x| {
       x.to_string()
@@ -387,27 +329,7 @@ impl<'a> OMM<'a> {
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME,
-      CX_X,
-      CY_X,
-      CY_Y,
-      CZ_X,
-      CZ_Y,
-      CZ_Z,
-      CX_DOT_X,
-      CX_DOT_Y,
-      CX_DOT_Z,
-      CX_DOT_X_DOT,
-      CY_DOT_X,
-      CY_DOT_Y,
-      CY_DOT_Z,
-      CY_DOT_X_DOT,
-      CY_DOT_Y_DOT,
-      CZ_DOT_X,
-      CZ_DOT_Y,
-      CZ_DOT_Z,
-      CZ_DOT_X_DOT,
-      CZ_DOT_Y_DOT,
-      CZ_DOT_Z_DOT,
+      COVARIANCE,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR,
       USER_DEFINED_EARTH_MODEL,
@@ -416,7 +338,7 @@ impl<'a> OMM<'a> {
     }
   }
 
-  /// CCSDS OMM Version 
+  /// CCSDS OMM Version
   #[inline]
   pub fn CCSDS_OMM_VERS(&self) -> f64 {
     // Safety:
@@ -424,7 +346,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_CCSDS_OMM_VERS, Some(0.0)).unwrap()}
   }
-  /// Creation Date (ISO 8601 UTC format) 
+  /// Creation Date (ISO 8601 UTC format)
   #[inline]
   pub fn CREATION_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -432,7 +354,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CREATION_DATE, None)}
   }
-  /// Originator 
+  /// Originator
   #[inline]
   pub fn ORIGINATOR(&self) -> Option<&'a str> {
     // Safety:
@@ -658,7 +580,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
   }
-  /// BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
   #[inline]
   pub fn BSTAR(&self) -> f64 {
     // Safety:
@@ -666,7 +588,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_BSTAR, Some(0.0)).unwrap()}
   }
-  /// MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   #[inline]
   pub fn MEAN_MOTION_DOT(&self) -> f64 {
     // Safety:
@@ -674,7 +596,7 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
   }
-  /// MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   #[inline]
   pub fn MEAN_MOTION_DDOT(&self) -> f64 {
     // Safety:
@@ -692,173 +614,18 @@ impl<'a> OMM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, None)}
   }
-  /// CX_X [km**2]
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
   #[inline]
-  pub fn CX_X(&self) -> f64 {
+  pub fn COVARIANCE(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CX_X, Some(0.0)).unwrap()}
-  }
-  /// CY_X [km**2]
-  #[inline]
-  pub fn CY_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_X, Some(0.0)).unwrap()}
-  }
-  /// CY_Y [km**2]
-  #[inline]
-  pub fn CY_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_Y, Some(0.0)).unwrap()}
-  }
-  /// CZ_X [km**2]
-  #[inline]
-  pub fn CZ_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_X, Some(0.0)).unwrap()}
-  }
-  /// CZ_Y [km**2]
-  #[inline]
-  pub fn CZ_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_Y, Some(0.0)).unwrap()}
-  }
-  /// CZ_Z [km**2]
-  #[inline]
-  pub fn CZ_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_Z, Some(0.0)).unwrap()}
-  }
-  /// CX_DOT_X [km**2/s]
-  #[inline]
-  pub fn CX_DOT_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_X, Some(0.0)).unwrap()}
-  }
-  /// CX_DOT_Y [km**2/s]
-  #[inline]
-  pub fn CX_DOT_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_Y, Some(0.0)).unwrap()}
-  }
-  /// CX_DOT_Z [km**2/s]
-  #[inline]
-  pub fn CX_DOT_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_Z, Some(0.0)).unwrap()}
-  }
-  /// CX_DOT_X_DOT [km**2/s**2]
-  #[inline]
-  pub fn CX_DOT_X_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CX_DOT_X_DOT, Some(0.0)).unwrap()}
-  }
-  /// CY_DOT_X [km**2/s]
-  #[inline]
-  pub fn CY_DOT_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_X, Some(0.0)).unwrap()}
-  }
-  /// CY_DOT_Y [km**2/s]
-  #[inline]
-  pub fn CY_DOT_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Y, Some(0.0)).unwrap()}
-  }
-  /// CY_DOT_Z [km**2/s]
-  #[inline]
-  pub fn CY_DOT_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Z, Some(0.0)).unwrap()}
-  }
-  /// CY_DOT_X_DOT [km**2/s**2]
-  #[inline]
-  pub fn CY_DOT_X_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_X_DOT, Some(0.0)).unwrap()}
-  }
-  /// CY_DOT_Y_DOT [km**2/s**2]
-  #[inline]
-  pub fn CY_DOT_Y_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CY_DOT_Y_DOT, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_X [km**2/s]
-  #[inline]
-  pub fn CZ_DOT_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_X, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_Y [km**2/s]
-  #[inline]
-  pub fn CZ_DOT_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Y, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_Z [km**2/s]
-  #[inline]
-  pub fn CZ_DOT_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Z, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_X_DOT [km**2/s**2]
-  #[inline]
-  pub fn CZ_DOT_X_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_X_DOT, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_Y_DOT [km**2/s**2]
-  #[inline]
-  pub fn CZ_DOT_Y_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Y_DOT, Some(0.0)).unwrap()}
-  }
-  /// CZ_DOT_Z_DOT [km**2/s**2]
-  #[inline]
-  pub fn CZ_DOT_Z_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OMM::VT_CZ_DOT_Z_DOT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OMM::VT_COVARIANCE, None)}
   }
   /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
   #[inline]
@@ -943,27 +710,7 @@ impl flatbuffers::Verifiable for OMM<'_> {
      .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
      .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
-     .visit_field::<f64>("CX_X", Self::VT_CX_X, false)?
-     .visit_field::<f64>("CY_X", Self::VT_CY_X, false)?
-     .visit_field::<f64>("CY_Y", Self::VT_CY_Y, false)?
-     .visit_field::<f64>("CZ_X", Self::VT_CZ_X, false)?
-     .visit_field::<f64>("CZ_Y", Self::VT_CZ_Y, false)?
-     .visit_field::<f64>("CZ_Z", Self::VT_CZ_Z, false)?
-     .visit_field::<f64>("CX_DOT_X", Self::VT_CX_DOT_X, false)?
-     .visit_field::<f64>("CX_DOT_Y", Self::VT_CX_DOT_Y, false)?
-     .visit_field::<f64>("CX_DOT_Z", Self::VT_CX_DOT_Z, false)?
-     .visit_field::<f64>("CX_DOT_X_DOT", Self::VT_CX_DOT_X_DOT, false)?
-     .visit_field::<f64>("CY_DOT_X", Self::VT_CY_DOT_X, false)?
-     .visit_field::<f64>("CY_DOT_Y", Self::VT_CY_DOT_Y, false)?
-     .visit_field::<f64>("CY_DOT_Z", Self::VT_CY_DOT_Z, false)?
-     .visit_field::<f64>("CY_DOT_X_DOT", Self::VT_CY_DOT_X_DOT, false)?
-     .visit_field::<f64>("CY_DOT_Y_DOT", Self::VT_CY_DOT_Y_DOT, false)?
-     .visit_field::<f64>("CZ_DOT_X", Self::VT_CZ_DOT_X, false)?
-     .visit_field::<f64>("CZ_DOT_Y", Self::VT_CZ_DOT_Y, false)?
-     .visit_field::<f64>("CZ_DOT_Z", Self::VT_CZ_DOT_Z, false)?
-     .visit_field::<f64>("CZ_DOT_X_DOT", Self::VT_CZ_DOT_X_DOT, false)?
-     .visit_field::<f64>("CZ_DOT_Y_DOT", Self::VT_CZ_DOT_Y_DOT, false)?
-     .visit_field::<f64>("CZ_DOT_Z_DOT", Self::VT_CZ_DOT_Z_DOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
      .visit_field::<u32>("USER_DEFINED_BIP_0044_TYPE", Self::VT_USER_DEFINED_BIP_0044_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_OBJECT_DESIGNATOR", Self::VT_USER_DEFINED_OBJECT_DESIGNATOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_EARTH_MODEL", Self::VT_USER_DEFINED_EARTH_MODEL, false)?
@@ -1008,27 +755,7 @@ pub struct OMMArgs<'a> {
     pub MEAN_MOTION_DOT: f64,
     pub MEAN_MOTION_DDOT: f64,
     pub COV_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<RFM<'a>>>,
-    pub CX_X: f64,
-    pub CY_X: f64,
-    pub CY_Y: f64,
-    pub CZ_X: f64,
-    pub CZ_Y: f64,
-    pub CZ_Z: f64,
-    pub CX_DOT_X: f64,
-    pub CX_DOT_Y: f64,
-    pub CX_DOT_Z: f64,
-    pub CX_DOT_X_DOT: f64,
-    pub CY_DOT_X: f64,
-    pub CY_DOT_Y: f64,
-    pub CY_DOT_Z: f64,
-    pub CY_DOT_X_DOT: f64,
-    pub CY_DOT_Y_DOT: f64,
-    pub CZ_DOT_X: f64,
-    pub CZ_DOT_Y: f64,
-    pub CZ_DOT_Z: f64,
-    pub CZ_DOT_X_DOT: f64,
-    pub CZ_DOT_Y_DOT: f64,
-    pub CZ_DOT_Z_DOT: f64,
+    pub COVARIANCE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub USER_DEFINED_BIP_0044_TYPE: u32,
     pub USER_DEFINED_OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub USER_DEFINED_EARTH_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1073,27 +800,7 @@ impl<'a> Default for OMMArgs<'a> {
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
       COV_REFERENCE_FRAME: None,
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CY_Y: 0.0,
-      CZ_X: 0.0,
-      CZ_Y: 0.0,
-      CZ_Z: 0.0,
-      CX_DOT_X: 0.0,
-      CX_DOT_Y: 0.0,
-      CX_DOT_Z: 0.0,
-      CX_DOT_X_DOT: 0.0,
-      CY_DOT_X: 0.0,
-      CY_DOT_Y: 0.0,
-      CY_DOT_Z: 0.0,
-      CY_DOT_X_DOT: 0.0,
-      CY_DOT_Y_DOT: 0.0,
-      CZ_DOT_X: 0.0,
-      CZ_DOT_Y: 0.0,
-      CZ_DOT_Z: 0.0,
-      CZ_DOT_X_DOT: 0.0,
-      CZ_DOT_Y_DOT: 0.0,
-      CZ_DOT_Z_DOT: 0.0,
+      COVARIANCE: None,
       USER_DEFINED_BIP_0044_TYPE: 0,
       USER_DEFINED_OBJECT_DESIGNATOR: None,
       USER_DEFINED_EARTH_MODEL: None,
@@ -1245,88 +952,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<RFM>>(OMM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_CX_X(&mut self, CX_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CX_X, CX_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_X(&mut self, CY_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_X, CY_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_Y(&mut self, CY_Y: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_Y, CY_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_X(&mut self, CZ_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_X, CZ_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_Y(&mut self, CZ_Y: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_Y, CZ_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_Z(&mut self, CZ_Z: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_Z, CZ_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_X(&mut self, CX_DOT_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CX_DOT_X, CX_DOT_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_Y(&mut self, CX_DOT_Y: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CX_DOT_Y, CX_DOT_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_Z(&mut self, CX_DOT_Z: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CX_DOT_Z, CX_DOT_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_CX_DOT_X_DOT(&mut self, CX_DOT_X_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CX_DOT_X_DOT, CX_DOT_X_DOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_DOT_X(&mut self, CY_DOT_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_DOT_X, CY_DOT_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_DOT_Y(&mut self, CY_DOT_Y: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_DOT_Y, CY_DOT_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_DOT_Z(&mut self, CY_DOT_Z: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_DOT_Z, CY_DOT_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_DOT_X_DOT(&mut self, CY_DOT_X_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_DOT_X_DOT, CY_DOT_X_DOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CY_DOT_Y_DOT(&mut self, CY_DOT_Y_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CY_DOT_Y_DOT, CY_DOT_Y_DOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_X(&mut self, CZ_DOT_X: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_X, CZ_DOT_X, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_Y(&mut self, CZ_DOT_Y: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_Y, CZ_DOT_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_Z(&mut self, CZ_DOT_Z: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_Z, CZ_DOT_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_X_DOT(&mut self, CZ_DOT_X_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_X_DOT, CZ_DOT_X_DOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_Y_DOT(&mut self, CZ_DOT_Y_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_Y_DOT, CZ_DOT_Y_DOT, 0.0);
-  }
-  #[inline]
-  pub fn add_CZ_DOT_Z_DOT(&mut self, CZ_DOT_Z_DOT: f64) {
-    self.fbb_.push_slot::<f64>(OMM::VT_CZ_DOT_Z_DOT, CZ_DOT_Z_DOT, 0.0);
+  pub fn add_COVARIANCE(&mut self, COVARIANCE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OMM::VT_COVARIANCE, COVARIANCE);
   }
   #[inline]
   pub fn add_USER_DEFINED_BIP_0044_TYPE(&mut self, USER_DEFINED_BIP_0044_TYPE: u32) {
@@ -1400,27 +1027,7 @@ impl core::fmt::Debug for OMM<'_> {
       ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
       ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
       ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
-      ds.field("CX_X", &self.CX_X());
-      ds.field("CY_X", &self.CY_X());
-      ds.field("CY_Y", &self.CY_Y());
-      ds.field("CZ_X", &self.CZ_X());
-      ds.field("CZ_Y", &self.CZ_Y());
-      ds.field("CZ_Z", &self.CZ_Z());
-      ds.field("CX_DOT_X", &self.CX_DOT_X());
-      ds.field("CX_DOT_Y", &self.CX_DOT_Y());
-      ds.field("CX_DOT_Z", &self.CX_DOT_Z());
-      ds.field("CX_DOT_X_DOT", &self.CX_DOT_X_DOT());
-      ds.field("CY_DOT_X", &self.CY_DOT_X());
-      ds.field("CY_DOT_Y", &self.CY_DOT_Y());
-      ds.field("CY_DOT_Z", &self.CY_DOT_Z());
-      ds.field("CY_DOT_X_DOT", &self.CY_DOT_X_DOT());
-      ds.field("CY_DOT_Y_DOT", &self.CY_DOT_Y_DOT());
-      ds.field("CZ_DOT_X", &self.CZ_DOT_X());
-      ds.field("CZ_DOT_Y", &self.CZ_DOT_Y());
-      ds.field("CZ_DOT_Z", &self.CZ_DOT_Z());
-      ds.field("CZ_DOT_X_DOT", &self.CZ_DOT_X_DOT());
-      ds.field("CZ_DOT_Y_DOT", &self.CZ_DOT_Y_DOT());
-      ds.field("CZ_DOT_Z_DOT", &self.CZ_DOT_Z_DOT());
+      ds.field("COVARIANCE", &self.COVARIANCE());
       ds.field("USER_DEFINED_BIP_0044_TYPE", &self.USER_DEFINED_BIP_0044_TYPE());
       ds.field("USER_DEFINED_OBJECT_DESIGNATOR", &self.USER_DEFINED_OBJECT_DESIGNATOR());
       ds.field("USER_DEFINED_EARTH_MODEL", &self.USER_DEFINED_EARTH_MODEL());
@@ -1466,27 +1073,7 @@ pub struct OMMT {
   pub MEAN_MOTION_DOT: f64,
   pub MEAN_MOTION_DDOT: f64,
   pub COV_REFERENCE_FRAME: Option<Box<RFMT>>,
-  pub CX_X: f64,
-  pub CY_X: f64,
-  pub CY_Y: f64,
-  pub CZ_X: f64,
-  pub CZ_Y: f64,
-  pub CZ_Z: f64,
-  pub CX_DOT_X: f64,
-  pub CX_DOT_Y: f64,
-  pub CX_DOT_Z: f64,
-  pub CX_DOT_X_DOT: f64,
-  pub CY_DOT_X: f64,
-  pub CY_DOT_Y: f64,
-  pub CY_DOT_Z: f64,
-  pub CY_DOT_X_DOT: f64,
-  pub CY_DOT_Y_DOT: f64,
-  pub CZ_DOT_X: f64,
-  pub CZ_DOT_Y: f64,
-  pub CZ_DOT_Z: f64,
-  pub CZ_DOT_X_DOT: f64,
-  pub CZ_DOT_Y_DOT: f64,
-  pub CZ_DOT_Z_DOT: f64,
+  pub COVARIANCE: Option<Vec<f64>>,
   pub USER_DEFINED_BIP_0044_TYPE: u32,
   pub USER_DEFINED_OBJECT_DESIGNATOR: Option<String>,
   pub USER_DEFINED_EARTH_MODEL: Option<String>,
@@ -1530,27 +1117,7 @@ impl Default for OMMT {
       MEAN_MOTION_DOT: 0.0,
       MEAN_MOTION_DDOT: 0.0,
       COV_REFERENCE_FRAME: None,
-      CX_X: 0.0,
-      CY_X: 0.0,
-      CY_Y: 0.0,
-      CZ_X: 0.0,
-      CZ_Y: 0.0,
-      CZ_Z: 0.0,
-      CX_DOT_X: 0.0,
-      CX_DOT_Y: 0.0,
-      CX_DOT_Z: 0.0,
-      CX_DOT_X_DOT: 0.0,
-      CY_DOT_X: 0.0,
-      CY_DOT_Y: 0.0,
-      CY_DOT_Z: 0.0,
-      CY_DOT_X_DOT: 0.0,
-      CY_DOT_Y_DOT: 0.0,
-      CZ_DOT_X: 0.0,
-      CZ_DOT_Y: 0.0,
-      CZ_DOT_Z: 0.0,
-      CZ_DOT_X_DOT: 0.0,
-      CZ_DOT_Y_DOT: 0.0,
-      CZ_DOT_Z_DOT: 0.0,
+      COVARIANCE: None,
       USER_DEFINED_BIP_0044_TYPE: 0,
       USER_DEFINED_OBJECT_DESIGNATOR: None,
       USER_DEFINED_EARTH_MODEL: None,
@@ -1620,27 +1187,9 @@ impl OMMT {
     let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
       x.pack(_fbb)
     });
-    let CX_X = self.CX_X;
-    let CY_X = self.CY_X;
-    let CY_Y = self.CY_Y;
-    let CZ_X = self.CZ_X;
-    let CZ_Y = self.CZ_Y;
-    let CZ_Z = self.CZ_Z;
-    let CX_DOT_X = self.CX_DOT_X;
-    let CX_DOT_Y = self.CX_DOT_Y;
-    let CX_DOT_Z = self.CX_DOT_Z;
-    let CX_DOT_X_DOT = self.CX_DOT_X_DOT;
-    let CY_DOT_X = self.CY_DOT_X;
-    let CY_DOT_Y = self.CY_DOT_Y;
-    let CY_DOT_Z = self.CY_DOT_Z;
-    let CY_DOT_X_DOT = self.CY_DOT_X_DOT;
-    let CY_DOT_Y_DOT = self.CY_DOT_Y_DOT;
-    let CZ_DOT_X = self.CZ_DOT_X;
-    let CZ_DOT_Y = self.CZ_DOT_Y;
-    let CZ_DOT_Z = self.CZ_DOT_Z;
-    let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT;
-    let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT;
-    let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT;
+    let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let USER_DEFINED_BIP_0044_TYPE = self.USER_DEFINED_BIP_0044_TYPE;
     let USER_DEFINED_OBJECT_DESIGNATOR = self.USER_DEFINED_OBJECT_DESIGNATOR.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1685,27 +1234,7 @@ impl OMMT {
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME,
-      CX_X,
-      CY_X,
-      CY_Y,
-      CZ_X,
-      CZ_Y,
-      CZ_Z,
-      CX_DOT_X,
-      CX_DOT_Y,
-      CX_DOT_Z,
-      CX_DOT_X_DOT,
-      CY_DOT_X,
-      CY_DOT_Y,
-      CY_DOT_Z,
-      CY_DOT_X_DOT,
-      CY_DOT_Y_DOT,
-      CZ_DOT_X,
-      CZ_DOT_Y,
-      CZ_DOT_Z,
-      CZ_DOT_X_DOT,
-      CZ_DOT_Y_DOT,
-      CZ_DOT_Z_DOT,
+      COVARIANCE,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR,
       USER_DEFINED_EARTH_MODEL,

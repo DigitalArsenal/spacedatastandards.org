@@ -178,100 +178,18 @@ class Cdmobject {
   double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
   ///  Z-coordinate of the object's position in RTN
   double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  ///  Covariance Matrix component
-  double get CR_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  ///  Covariance Matrix component
-  double get CT_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  ///  Covariance Matrix component
-  double get CT_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  ///  Covariance Matrix component
-  double get CN_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  ///  Covariance Matrix component
-  double get CN_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  ///  Covariance Matrix component
-  double get CN_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  ///  Covariance Matrix component
-  double get CRDOT_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  ///  Covariance Matrix component
-  double get CRDOT_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  ///  Covariance Matrix component
-  double get CRDOT_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  ///  Covariance Matrix component
-  double get CRDOT_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  ///  Covariance Matrix component
-  double get CTDOT_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  ///  Covariance Matrix component
-  double get CTDOT_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  ///  Covariance Matrix component
-  double get CTDOT_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  ///  Covariance Matrix component
-  double get CTDOT_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  ///  Covariance Matrix component
-  double get CTDOT_TDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_TDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
-  ///  Covariance Matrix component
-  double get CNDOT_NDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 116, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_TDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_NDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
-  ///  Covariance Matrix component
-  double get CDRG_DRG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_TDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_NDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_DRG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
-  ///  Covariance Matrix component
-  double get CSRP_SRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_R => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 150, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_RDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 154, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_TDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 156, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_NDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 158, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_DRG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 160, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_SRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 162, 0.0);
-  ///  Covariance Matrix component
-  double get CTHR_THR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 164, 0.0);
+  ///  Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  ///  Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///          CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///          CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///          CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///          CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///          CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  List<double>? get COVARIANCE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 76);
 
   @override
   String toString() {
-    return 'Cdmobject{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, POC: ${POC}, OPERATOR_CONTACT_POSITION: ${OPERATOR_CONTACT_POSITION}, OPERATOR_ORGANIZATION: ${OPERATOR_ORGANIZATION}, EPHEMERIS_NAME: ${EPHEMERIS_NAME}, COVARIANCE_METHOD: ${COVARIANCE_METHOD}, REFERENCE_FRAME: ${REFERENCE_FRAME}, GRAVITY_MODEL: ${GRAVITY_MODEL}, ATMOSPHERIC_MODEL: ${ATMOSPHERIC_MODEL}, N_BODY_PERTURBATIONS: ${N_BODY_PERTURBATIONS}, SOLAR_RAD_PRESSURE: ${SOLAR_RAD_PRESSURE}, EARTH_TIDES: ${EARTH_TIDES}, INTRACK_THRUST: ${INTRACK_THRUST}, TIME_LASTOB_START: ${TIME_LASTOB_START}, TIME_LASTOB_END: ${TIME_LASTOB_END}, RECOMMENDED_OD_SPAN: ${RECOMMENDED_OD_SPAN}, ACTUAL_OD_SPAN: ${ACTUAL_OD_SPAN}, OBS_AVAILABLE: ${OBS_AVAILABLE}, OBS_USED: ${OBS_USED}, TRACKS_AVAILABLE: ${TRACKS_AVAILABLE}, TRACKS_USED: ${TRACKS_USED}, RESIDUALS_ACCEPTED: ${RESIDUALS_ACCEPTED}, WEIGHTED_RMS: ${WEIGHTED_RMS}, AREA_PC: ${AREA_PC}, AREA_DRG: ${AREA_DRG}, AREA_SRP: ${AREA_SRP}, CR_AREA_OVER_MASS: ${CR_AREA_OVER_MASS}, THRUST_ACCELERATION: ${THRUST_ACCELERATION}, SEDR: ${SEDR}, X: ${X}, Y: ${Y}, Z: ${Z}, X_DOT: ${X_DOT}, Y_DOT: ${Y_DOT}, Z_DOT: ${Z_DOT}, CR_R: ${CR_R}, CT_R: ${CT_R}, CT_T: ${CT_T}, CN_R: ${CN_R}, CN_T: ${CN_T}, CN_N: ${CN_N}, CRDOT_R: ${CRDOT_R}, CRDOT_T: ${CRDOT_T}, CRDOT_N: ${CRDOT_N}, CRDOT_RDOT: ${CRDOT_RDOT}, CTDOT_R: ${CTDOT_R}, CTDOT_T: ${CTDOT_T}, CTDOT_N: ${CTDOT_N}, CTDOT_RDOT: ${CTDOT_RDOT}, CTDOT_TDOT: ${CTDOT_TDOT}, CNDOT_R: ${CNDOT_R}, CNDOT_T: ${CNDOT_T}, CNDOT_N: ${CNDOT_N}, CNDOT_RDOT: ${CNDOT_RDOT}, CNDOT_TDOT: ${CNDOT_TDOT}, CNDOT_NDOT: ${CNDOT_NDOT}, CDRG_R: ${CDRG_R}, CDRG_T: ${CDRG_T}, CDRG_N: ${CDRG_N}, CDRG_RDOT: ${CDRG_RDOT}, CDRG_TDOT: ${CDRG_TDOT}, CDRG_NDOT: ${CDRG_NDOT}, CDRG_DRG: ${CDRG_DRG}, CSRP_R: ${CSRP_R}, CSRP_T: ${CSRP_T}, CSRP_N: ${CSRP_N}, CSRP_RDOT: ${CSRP_RDOT}, CSRP_TDOT: ${CSRP_TDOT}, CSRP_NDOT: ${CSRP_NDOT}, CSRP_DRG: ${CSRP_DRG}, CSRP_SRP: ${CSRP_SRP}, CTHR_R: ${CTHR_R}, CTHR_T: ${CTHR_T}, CTHR_N: ${CTHR_N}, CTHR_RDOT: ${CTHR_RDOT}, CTHR_TDOT: ${CTHR_TDOT}, CTHR_NDOT: ${CTHR_NDOT}, CTHR_DRG: ${CTHR_DRG}, CTHR_SRP: ${CTHR_SRP}, CTHR_THR: ${CTHR_THR}}';
+    return 'Cdmobject{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, POC: ${POC}, OPERATOR_CONTACT_POSITION: ${OPERATOR_CONTACT_POSITION}, OPERATOR_ORGANIZATION: ${OPERATOR_ORGANIZATION}, EPHEMERIS_NAME: ${EPHEMERIS_NAME}, COVARIANCE_METHOD: ${COVARIANCE_METHOD}, REFERENCE_FRAME: ${REFERENCE_FRAME}, GRAVITY_MODEL: ${GRAVITY_MODEL}, ATMOSPHERIC_MODEL: ${ATMOSPHERIC_MODEL}, N_BODY_PERTURBATIONS: ${N_BODY_PERTURBATIONS}, SOLAR_RAD_PRESSURE: ${SOLAR_RAD_PRESSURE}, EARTH_TIDES: ${EARTH_TIDES}, INTRACK_THRUST: ${INTRACK_THRUST}, TIME_LASTOB_START: ${TIME_LASTOB_START}, TIME_LASTOB_END: ${TIME_LASTOB_END}, RECOMMENDED_OD_SPAN: ${RECOMMENDED_OD_SPAN}, ACTUAL_OD_SPAN: ${ACTUAL_OD_SPAN}, OBS_AVAILABLE: ${OBS_AVAILABLE}, OBS_USED: ${OBS_USED}, TRACKS_AVAILABLE: ${TRACKS_AVAILABLE}, TRACKS_USED: ${TRACKS_USED}, RESIDUALS_ACCEPTED: ${RESIDUALS_ACCEPTED}, WEIGHTED_RMS: ${WEIGHTED_RMS}, AREA_PC: ${AREA_PC}, AREA_DRG: ${AREA_DRG}, AREA_SRP: ${AREA_SRP}, CR_AREA_OVER_MASS: ${CR_AREA_OVER_MASS}, THRUST_ACCELERATION: ${THRUST_ACCELERATION}, SEDR: ${SEDR}, X: ${X}, Y: ${Y}, Z: ${Z}, X_DOT: ${X_DOT}, Y_DOT: ${Y_DOT}, Z_DOT: ${Z_DOT}, COVARIANCE: ${COVARIANCE}}';
   }
 }
 
@@ -289,7 +207,7 @@ class CdmobjectBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(81);
+    fbBuilder.startTable(37);
   }
 
   int addCommentOffset(int? offset) {
@@ -436,184 +354,8 @@ class CdmobjectBuilder {
     fbBuilder.addFloat64(35, Z_DOT);
     return fbBuilder.offset;
   }
-  int addCrR(double? CR_R) {
-    fbBuilder.addFloat64(36, CR_R);
-    return fbBuilder.offset;
-  }
-  int addCtR(double? CT_R) {
-    fbBuilder.addFloat64(37, CT_R);
-    return fbBuilder.offset;
-  }
-  int addCtT(double? CT_T) {
-    fbBuilder.addFloat64(38, CT_T);
-    return fbBuilder.offset;
-  }
-  int addCnR(double? CN_R) {
-    fbBuilder.addFloat64(39, CN_R);
-    return fbBuilder.offset;
-  }
-  int addCnT(double? CN_T) {
-    fbBuilder.addFloat64(40, CN_T);
-    return fbBuilder.offset;
-  }
-  int addCnN(double? CN_N) {
-    fbBuilder.addFloat64(41, CN_N);
-    return fbBuilder.offset;
-  }
-  int addCrdotR(double? CRDOT_R) {
-    fbBuilder.addFloat64(42, CRDOT_R);
-    return fbBuilder.offset;
-  }
-  int addCrdotT(double? CRDOT_T) {
-    fbBuilder.addFloat64(43, CRDOT_T);
-    return fbBuilder.offset;
-  }
-  int addCrdotN(double? CRDOT_N) {
-    fbBuilder.addFloat64(44, CRDOT_N);
-    return fbBuilder.offset;
-  }
-  int addCrdotRdot(double? CRDOT_RDOT) {
-    fbBuilder.addFloat64(45, CRDOT_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCtdotR(double? CTDOT_R) {
-    fbBuilder.addFloat64(46, CTDOT_R);
-    return fbBuilder.offset;
-  }
-  int addCtdotT(double? CTDOT_T) {
-    fbBuilder.addFloat64(47, CTDOT_T);
-    return fbBuilder.offset;
-  }
-  int addCtdotN(double? CTDOT_N) {
-    fbBuilder.addFloat64(48, CTDOT_N);
-    return fbBuilder.offset;
-  }
-  int addCtdotRdot(double? CTDOT_RDOT) {
-    fbBuilder.addFloat64(49, CTDOT_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCtdotTdot(double? CTDOT_TDOT) {
-    fbBuilder.addFloat64(50, CTDOT_TDOT);
-    return fbBuilder.offset;
-  }
-  int addCndotR(double? CNDOT_R) {
-    fbBuilder.addFloat64(51, CNDOT_R);
-    return fbBuilder.offset;
-  }
-  int addCndotT(double? CNDOT_T) {
-    fbBuilder.addFloat64(52, CNDOT_T);
-    return fbBuilder.offset;
-  }
-  int addCndotN(double? CNDOT_N) {
-    fbBuilder.addFloat64(53, CNDOT_N);
-    return fbBuilder.offset;
-  }
-  int addCndotRdot(double? CNDOT_RDOT) {
-    fbBuilder.addFloat64(54, CNDOT_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCndotTdot(double? CNDOT_TDOT) {
-    fbBuilder.addFloat64(55, CNDOT_TDOT);
-    return fbBuilder.offset;
-  }
-  int addCndotNdot(double? CNDOT_NDOT) {
-    fbBuilder.addFloat64(56, CNDOT_NDOT);
-    return fbBuilder.offset;
-  }
-  int addCdrgR(double? CDRG_R) {
-    fbBuilder.addFloat64(57, CDRG_R);
-    return fbBuilder.offset;
-  }
-  int addCdrgT(double? CDRG_T) {
-    fbBuilder.addFloat64(58, CDRG_T);
-    return fbBuilder.offset;
-  }
-  int addCdrgN(double? CDRG_N) {
-    fbBuilder.addFloat64(59, CDRG_N);
-    return fbBuilder.offset;
-  }
-  int addCdrgRdot(double? CDRG_RDOT) {
-    fbBuilder.addFloat64(60, CDRG_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCdrgTdot(double? CDRG_TDOT) {
-    fbBuilder.addFloat64(61, CDRG_TDOT);
-    return fbBuilder.offset;
-  }
-  int addCdrgNdot(double? CDRG_NDOT) {
-    fbBuilder.addFloat64(62, CDRG_NDOT);
-    return fbBuilder.offset;
-  }
-  int addCdrgDrg(double? CDRG_DRG) {
-    fbBuilder.addFloat64(63, CDRG_DRG);
-    return fbBuilder.offset;
-  }
-  int addCsrpR(double? CSRP_R) {
-    fbBuilder.addFloat64(64, CSRP_R);
-    return fbBuilder.offset;
-  }
-  int addCsrpT(double? CSRP_T) {
-    fbBuilder.addFloat64(65, CSRP_T);
-    return fbBuilder.offset;
-  }
-  int addCsrpN(double? CSRP_N) {
-    fbBuilder.addFloat64(66, CSRP_N);
-    return fbBuilder.offset;
-  }
-  int addCsrpRdot(double? CSRP_RDOT) {
-    fbBuilder.addFloat64(67, CSRP_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCsrpTdot(double? CSRP_TDOT) {
-    fbBuilder.addFloat64(68, CSRP_TDOT);
-    return fbBuilder.offset;
-  }
-  int addCsrpNdot(double? CSRP_NDOT) {
-    fbBuilder.addFloat64(69, CSRP_NDOT);
-    return fbBuilder.offset;
-  }
-  int addCsrpDrg(double? CSRP_DRG) {
-    fbBuilder.addFloat64(70, CSRP_DRG);
-    return fbBuilder.offset;
-  }
-  int addCsrpSrp(double? CSRP_SRP) {
-    fbBuilder.addFloat64(71, CSRP_SRP);
-    return fbBuilder.offset;
-  }
-  int addCthrR(double? CTHR_R) {
-    fbBuilder.addFloat64(72, CTHR_R);
-    return fbBuilder.offset;
-  }
-  int addCthrT(double? CTHR_T) {
-    fbBuilder.addFloat64(73, CTHR_T);
-    return fbBuilder.offset;
-  }
-  int addCthrN(double? CTHR_N) {
-    fbBuilder.addFloat64(74, CTHR_N);
-    return fbBuilder.offset;
-  }
-  int addCthrRdot(double? CTHR_RDOT) {
-    fbBuilder.addFloat64(75, CTHR_RDOT);
-    return fbBuilder.offset;
-  }
-  int addCthrTdot(double? CTHR_TDOT) {
-    fbBuilder.addFloat64(76, CTHR_TDOT);
-    return fbBuilder.offset;
-  }
-  int addCthrNdot(double? CTHR_NDOT) {
-    fbBuilder.addFloat64(77, CTHR_NDOT);
-    return fbBuilder.offset;
-  }
-  int addCthrDrg(double? CTHR_DRG) {
-    fbBuilder.addFloat64(78, CTHR_DRG);
-    return fbBuilder.offset;
-  }
-  int addCthrSrp(double? CTHR_SRP) {
-    fbBuilder.addFloat64(79, CTHR_SRP);
-    return fbBuilder.offset;
-  }
-  int addCthrThr(double? CTHR_THR) {
-    fbBuilder.addFloat64(80, CTHR_THR);
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
     return fbBuilder.offset;
   }
 
@@ -659,51 +401,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
   final double? _X_DOT;
   final double? _Y_DOT;
   final double? _Z_DOT;
-  final double? _CR_R;
-  final double? _CT_R;
-  final double? _CT_T;
-  final double? _CN_R;
-  final double? _CN_T;
-  final double? _CN_N;
-  final double? _CRDOT_R;
-  final double? _CRDOT_T;
-  final double? _CRDOT_N;
-  final double? _CRDOT_RDOT;
-  final double? _CTDOT_R;
-  final double? _CTDOT_T;
-  final double? _CTDOT_N;
-  final double? _CTDOT_RDOT;
-  final double? _CTDOT_TDOT;
-  final double? _CNDOT_R;
-  final double? _CNDOT_T;
-  final double? _CNDOT_N;
-  final double? _CNDOT_RDOT;
-  final double? _CNDOT_TDOT;
-  final double? _CNDOT_NDOT;
-  final double? _CDRG_R;
-  final double? _CDRG_T;
-  final double? _CDRG_N;
-  final double? _CDRG_RDOT;
-  final double? _CDRG_TDOT;
-  final double? _CDRG_NDOT;
-  final double? _CDRG_DRG;
-  final double? _CSRP_R;
-  final double? _CSRP_T;
-  final double? _CSRP_N;
-  final double? _CSRP_RDOT;
-  final double? _CSRP_TDOT;
-  final double? _CSRP_NDOT;
-  final double? _CSRP_DRG;
-  final double? _CSRP_SRP;
-  final double? _CTHR_R;
-  final double? _CTHR_T;
-  final double? _CTHR_N;
-  final double? _CTHR_RDOT;
-  final double? _CTHR_TDOT;
-  final double? _CTHR_NDOT;
-  final double? _CTHR_DRG;
-  final double? _CTHR_SRP;
-  final double? _CTHR_THR;
+  final List<double>? _COVARIANCE;
 
   CdmobjectObjectBuilder({
     String? COMMENT,
@@ -742,51 +440,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
     double? X_DOT,
     double? Y_DOT,
     double? Z_DOT,
-    double? CR_R,
-    double? CT_R,
-    double? CT_T,
-    double? CN_R,
-    double? CN_T,
-    double? CN_N,
-    double? CRDOT_R,
-    double? CRDOT_T,
-    double? CRDOT_N,
-    double? CRDOT_RDOT,
-    double? CTDOT_R,
-    double? CTDOT_T,
-    double? CTDOT_N,
-    double? CTDOT_RDOT,
-    double? CTDOT_TDOT,
-    double? CNDOT_R,
-    double? CNDOT_T,
-    double? CNDOT_N,
-    double? CNDOT_RDOT,
-    double? CNDOT_TDOT,
-    double? CNDOT_NDOT,
-    double? CDRG_R,
-    double? CDRG_T,
-    double? CDRG_N,
-    double? CDRG_RDOT,
-    double? CDRG_TDOT,
-    double? CDRG_NDOT,
-    double? CDRG_DRG,
-    double? CSRP_R,
-    double? CSRP_T,
-    double? CSRP_N,
-    double? CSRP_RDOT,
-    double? CSRP_TDOT,
-    double? CSRP_NDOT,
-    double? CSRP_DRG,
-    double? CSRP_SRP,
-    double? CTHR_R,
-    double? CTHR_T,
-    double? CTHR_N,
-    double? CTHR_RDOT,
-    double? CTHR_TDOT,
-    double? CTHR_NDOT,
-    double? CTHR_DRG,
-    double? CTHR_SRP,
-    double? CTHR_THR,
+    List<double>? COVARIANCE,
   })
       : _COMMENT = COMMENT,
         _OBJECT = OBJECT,
@@ -824,51 +478,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
         _X_DOT = X_DOT,
         _Y_DOT = Y_DOT,
         _Z_DOT = Z_DOT,
-        _CR_R = CR_R,
-        _CT_R = CT_R,
-        _CT_T = CT_T,
-        _CN_R = CN_R,
-        _CN_T = CN_T,
-        _CN_N = CN_N,
-        _CRDOT_R = CRDOT_R,
-        _CRDOT_T = CRDOT_T,
-        _CRDOT_N = CRDOT_N,
-        _CRDOT_RDOT = CRDOT_RDOT,
-        _CTDOT_R = CTDOT_R,
-        _CTDOT_T = CTDOT_T,
-        _CTDOT_N = CTDOT_N,
-        _CTDOT_RDOT = CTDOT_RDOT,
-        _CTDOT_TDOT = CTDOT_TDOT,
-        _CNDOT_R = CNDOT_R,
-        _CNDOT_T = CNDOT_T,
-        _CNDOT_N = CNDOT_N,
-        _CNDOT_RDOT = CNDOT_RDOT,
-        _CNDOT_TDOT = CNDOT_TDOT,
-        _CNDOT_NDOT = CNDOT_NDOT,
-        _CDRG_R = CDRG_R,
-        _CDRG_T = CDRG_T,
-        _CDRG_N = CDRG_N,
-        _CDRG_RDOT = CDRG_RDOT,
-        _CDRG_TDOT = CDRG_TDOT,
-        _CDRG_NDOT = CDRG_NDOT,
-        _CDRG_DRG = CDRG_DRG,
-        _CSRP_R = CSRP_R,
-        _CSRP_T = CSRP_T,
-        _CSRP_N = CSRP_N,
-        _CSRP_RDOT = CSRP_RDOT,
-        _CSRP_TDOT = CSRP_TDOT,
-        _CSRP_NDOT = CSRP_NDOT,
-        _CSRP_DRG = CSRP_DRG,
-        _CSRP_SRP = CSRP_SRP,
-        _CTHR_R = CTHR_R,
-        _CTHR_T = CTHR_T,
-        _CTHR_N = CTHR_N,
-        _CTHR_RDOT = CTHR_RDOT,
-        _CTHR_TDOT = CTHR_TDOT,
-        _CTHR_NDOT = CTHR_NDOT,
-        _CTHR_DRG = CTHR_DRG,
-        _CTHR_SRP = CTHR_SRP,
-        _CTHR_THR = CTHR_THR;
+        _COVARIANCE = COVARIANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -894,7 +504,9 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TIME_LASTOB_START!);
     final int? TIME_LASTOB_ENDOffset = _TIME_LASTOB_END == null ? null
         : fbBuilder.writeString(_TIME_LASTOB_END!);
-    fbBuilder.startTable(81);
+    final int? COVARIANCEOffset = _COVARIANCE == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE!);
+    fbBuilder.startTable(37);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, POCOffset);
@@ -931,51 +543,7 @@ class CdmobjectObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(33, _X_DOT);
     fbBuilder.addFloat64(34, _Y_DOT);
     fbBuilder.addFloat64(35, _Z_DOT);
-    fbBuilder.addFloat64(36, _CR_R);
-    fbBuilder.addFloat64(37, _CT_R);
-    fbBuilder.addFloat64(38, _CT_T);
-    fbBuilder.addFloat64(39, _CN_R);
-    fbBuilder.addFloat64(40, _CN_T);
-    fbBuilder.addFloat64(41, _CN_N);
-    fbBuilder.addFloat64(42, _CRDOT_R);
-    fbBuilder.addFloat64(43, _CRDOT_T);
-    fbBuilder.addFloat64(44, _CRDOT_N);
-    fbBuilder.addFloat64(45, _CRDOT_RDOT);
-    fbBuilder.addFloat64(46, _CTDOT_R);
-    fbBuilder.addFloat64(47, _CTDOT_T);
-    fbBuilder.addFloat64(48, _CTDOT_N);
-    fbBuilder.addFloat64(49, _CTDOT_RDOT);
-    fbBuilder.addFloat64(50, _CTDOT_TDOT);
-    fbBuilder.addFloat64(51, _CNDOT_R);
-    fbBuilder.addFloat64(52, _CNDOT_T);
-    fbBuilder.addFloat64(53, _CNDOT_N);
-    fbBuilder.addFloat64(54, _CNDOT_RDOT);
-    fbBuilder.addFloat64(55, _CNDOT_TDOT);
-    fbBuilder.addFloat64(56, _CNDOT_NDOT);
-    fbBuilder.addFloat64(57, _CDRG_R);
-    fbBuilder.addFloat64(58, _CDRG_T);
-    fbBuilder.addFloat64(59, _CDRG_N);
-    fbBuilder.addFloat64(60, _CDRG_RDOT);
-    fbBuilder.addFloat64(61, _CDRG_TDOT);
-    fbBuilder.addFloat64(62, _CDRG_NDOT);
-    fbBuilder.addFloat64(63, _CDRG_DRG);
-    fbBuilder.addFloat64(64, _CSRP_R);
-    fbBuilder.addFloat64(65, _CSRP_T);
-    fbBuilder.addFloat64(66, _CSRP_N);
-    fbBuilder.addFloat64(67, _CSRP_RDOT);
-    fbBuilder.addFloat64(68, _CSRP_TDOT);
-    fbBuilder.addFloat64(69, _CSRP_NDOT);
-    fbBuilder.addFloat64(70, _CSRP_DRG);
-    fbBuilder.addFloat64(71, _CSRP_SRP);
-    fbBuilder.addFloat64(72, _CTHR_R);
-    fbBuilder.addFloat64(73, _CTHR_T);
-    fbBuilder.addFloat64(74, _CTHR_N);
-    fbBuilder.addFloat64(75, _CTHR_RDOT);
-    fbBuilder.addFloat64(76, _CTHR_TDOT);
-    fbBuilder.addFloat64(77, _CTHR_NDOT);
-    fbBuilder.addFloat64(78, _CTHR_DRG);
-    fbBuilder.addFloat64(79, _CTHR_SRP);
-    fbBuilder.addFloat64(80, _CTHR_THR);
+    fbBuilder.addOffset(36, COVARIANCEOffset);
     return fbBuilder.endTable();
   }
 

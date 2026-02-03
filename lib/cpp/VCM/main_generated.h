@@ -23,9 +23,6 @@ struct propagatorConfigBuilder;
 struct VCMStateVector;
 struct VCMStateVectorBuilder;
 
-struct VCMCovarianceMatrixLine;
-struct VCMCovarianceMatrixLineBuilder;
-
 struct keplerianElements;
 struct keplerianElementsBuilder;
 
@@ -734,78 +731,6 @@ inline ::flatbuffers::Offset<VCMStateVector> CreateVCMStateVectorDirect(
       Z_DOT);
 }
 
-/// VCM Covariance Matrix Line
-struct VCMCovarianceMatrixLine FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef VCMCovarianceMatrixLineBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_CX_X = 4,
-    VT_CY_X = 6,
-    VT_CZ_X = 8,
-    VT_CX_DOT_X = 10
-  };
-  double CX_X() const {
-    return GetField<double>(VT_CX_X, 0.0);
-  }
-  double CY_X() const {
-    return GetField<double>(VT_CY_X, 0.0);
-  }
-  double CZ_X() const {
-    return GetField<double>(VT_CZ_X, 0.0);
-  }
-  double CX_DOT_X() const {
-    return GetField<double>(VT_CX_DOT_X, 0.0);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_CX_X, 8) &&
-           VerifyField<double>(verifier, VT_CY_X, 8) &&
-           VerifyField<double>(verifier, VT_CZ_X, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_X, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct VCMCovarianceMatrixLineBuilder {
-  typedef VCMCovarianceMatrixLine Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_CX_X(double CX_X) {
-    fbb_.AddElement<double>(VCMCovarianceMatrixLine::VT_CX_X, CX_X, 0.0);
-  }
-  void add_CY_X(double CY_X) {
-    fbb_.AddElement<double>(VCMCovarianceMatrixLine::VT_CY_X, CY_X, 0.0);
-  }
-  void add_CZ_X(double CZ_X) {
-    fbb_.AddElement<double>(VCMCovarianceMatrixLine::VT_CZ_X, CZ_X, 0.0);
-  }
-  void add_CX_DOT_X(double CX_DOT_X) {
-    fbb_.AddElement<double>(VCMCovarianceMatrixLine::VT_CX_DOT_X, CX_DOT_X, 0.0);
-  }
-  explicit VCMCovarianceMatrixLineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<VCMCovarianceMatrixLine> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<VCMCovarianceMatrixLine>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<VCMCovarianceMatrixLine> CreateVCMCovarianceMatrixLine(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double CX_X = 0.0,
-    double CY_X = 0.0,
-    double CZ_X = 0.0,
-    double CX_DOT_X = 0.0) {
-  VCMCovarianceMatrixLineBuilder builder_(_fbb);
-  builder_.add_CX_DOT_X(CX_DOT_X);
-  builder_.add_CZ_X(CZ_X);
-  builder_.add_CY_X(CY_X);
-  builder_.add_CX_X(CX_X);
-  return builder_.Finish();
-}
-
 /// Keplerian Elements
 struct keplerianElements FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef keplerianElementsBuilder Builder;
@@ -1222,31 +1147,27 @@ struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GM = 26,
     VT_ATMOSPHERIC_MODEL_DATA = 28,
     VT_PROPAGATOR_SETTINGS = 30,
-    VT_COVARIANCE_MATRIX = 32,
-    VT_UVW_SIGMAS = 34,
-    VT_MASS = 36,
-    VT_SOLAR_RAD_AREA = 38,
-    VT_SOLAR_RAD_COEFF = 40,
-    VT_DRAG_AREA = 42,
-    VT_DRAG_COEFF = 44,
-    VT_SRP = 46,
-    VT_CLASSIFICATION_TYPE = 48,
-    VT_NORAD_CAT_ID = 50,
-    VT_ELEMENT_SET_NO = 52,
-    VT_REV_AT_EPOCH = 54,
-    VT_BSTAR = 56,
-    VT_MEAN_MOTION_DOT = 58,
-    VT_MEAN_MOTION_DDOT = 60,
-    VT_COV_REFERENCE_FRAME = 62,
-    VT_CX_X = 64,
-    VT_CY_X = 66,
-    VT_CZ_X = 68,
-    VT_CX_DOT_X = 70,
-    VT_USER_DEFINED_BIP_0044_TYPE = 72,
-    VT_USER_DEFINED_OBJECT_DESIGNATOR = 74,
-    VT_USER_DEFINED_EARTH_MODEL = 76,
-    VT_USER_DEFINED_EPOCH_TIMESTAMP = 78,
-    VT_USER_DEFINED_MICROSECONDS = 80
+    VT_UVW_SIGMAS = 32,
+    VT_MASS = 34,
+    VT_SOLAR_RAD_AREA = 36,
+    VT_SOLAR_RAD_COEFF = 38,
+    VT_DRAG_AREA = 40,
+    VT_DRAG_COEFF = 42,
+    VT_SRP = 44,
+    VT_CLASSIFICATION_TYPE = 46,
+    VT_NORAD_CAT_ID = 48,
+    VT_ELEMENT_SET_NO = 50,
+    VT_REV_AT_EPOCH = 52,
+    VT_BSTAR = 54,
+    VT_MEAN_MOTION_DOT = 56,
+    VT_MEAN_MOTION_DDOT = 58,
+    VT_COV_REFERENCE_FRAME = 60,
+    VT_COVARIANCE = 62,
+    VT_USER_DEFINED_BIP_0044_TYPE = 64,
+    VT_USER_DEFINED_OBJECT_DESIGNATOR = 66,
+    VT_USER_DEFINED_EARTH_MODEL = 68,
+    VT_USER_DEFINED_EPOCH_TIMESTAMP = 70,
+    VT_USER_DEFINED_MICROSECONDS = 72
   };
   double CCSDS_OMM_VERS() const {
     return GetField<double>(VT_CCSDS_OMM_VERS, 0.0);
@@ -1289,9 +1210,6 @@ struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const propagatorConfig *PROPAGATOR_SETTINGS() const {
     return GetPointer<const propagatorConfig *>(VT_PROPAGATOR_SETTINGS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<VCMCovarianceMatrixLine>> *COVARIANCE_MATRIX() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VCMCovarianceMatrixLine>> *>(VT_COVARIANCE_MATRIX);
   }
   const uvwSigmas *UVW_SIGMAS() const {
     return GetPointer<const uvwSigmas *>(VT_UVW_SIGMAS);
@@ -1338,17 +1256,14 @@ struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COV_REFERENCE_FRAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_REFERENCE_FRAME);
   }
-  double CX_X() const {
-    return GetField<double>(VT_CX_X, 0.0);
-  }
-  double CY_X() const {
-    return GetField<double>(VT_CY_X, 0.0);
-  }
-  double CZ_X() const {
-    return GetField<double>(VT_CZ_X, 0.0);
-  }
-  double CX_DOT_X() const {
-    return GetField<double>(VT_CX_DOT_X, 0.0);
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
   }
   uint32_t USER_DEFINED_BIP_0044_TYPE() const {
     return GetField<uint32_t>(VT_USER_DEFINED_BIP_0044_TYPE, 0);
@@ -1393,9 +1308,6 @@ struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(ATMOSPHERIC_MODEL_DATA()) &&
            VerifyOffset(verifier, VT_PROPAGATOR_SETTINGS) &&
            verifier.VerifyTable(PROPAGATOR_SETTINGS()) &&
-           VerifyOffset(verifier, VT_COVARIANCE_MATRIX) &&
-           verifier.VerifyVector(COVARIANCE_MATRIX()) &&
-           verifier.VerifyVectorOfTables(COVARIANCE_MATRIX()) &&
            VerifyOffset(verifier, VT_UVW_SIGMAS) &&
            verifier.VerifyTable(UVW_SIGMAS()) &&
            VerifyField<double>(verifier, VT_MASS, 8) &&
@@ -1414,10 +1326,8 @@ struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
            VerifyOffset(verifier, VT_COV_REFERENCE_FRAME) &&
            verifier.VerifyString(COV_REFERENCE_FRAME()) &&
-           VerifyField<double>(verifier, VT_CX_X, 8) &&
-           VerifyField<double>(verifier, VT_CY_X, 8) &&
-           VerifyField<double>(verifier, VT_CZ_X, 8) &&
-           VerifyField<double>(verifier, VT_CX_DOT_X, 8) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
            VerifyField<uint32_t>(verifier, VT_USER_DEFINED_BIP_0044_TYPE, 4) &&
            VerifyOffset(verifier, VT_USER_DEFINED_OBJECT_DESIGNATOR) &&
            verifier.VerifyString(USER_DEFINED_OBJECT_DESIGNATOR()) &&
@@ -1475,9 +1385,6 @@ struct VCMBuilder {
   void add_PROPAGATOR_SETTINGS(::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS) {
     fbb_.AddOffset(VCM::VT_PROPAGATOR_SETTINGS, PROPAGATOR_SETTINGS);
   }
-  void add_COVARIANCE_MATRIX(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VCMCovarianceMatrixLine>>> COVARIANCE_MATRIX) {
-    fbb_.AddOffset(VCM::VT_COVARIANCE_MATRIX, COVARIANCE_MATRIX);
-  }
   void add_UVW_SIGMAS(::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS) {
     fbb_.AddOffset(VCM::VT_UVW_SIGMAS, UVW_SIGMAS);
   }
@@ -1523,17 +1430,8 @@ struct VCMBuilder {
   void add_COV_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REFERENCE_FRAME) {
     fbb_.AddOffset(VCM::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
   }
-  void add_CX_X(double CX_X) {
-    fbb_.AddElement<double>(VCM::VT_CX_X, CX_X, 0.0);
-  }
-  void add_CY_X(double CY_X) {
-    fbb_.AddElement<double>(VCM::VT_CY_X, CY_X, 0.0);
-  }
-  void add_CZ_X(double CZ_X) {
-    fbb_.AddElement<double>(VCM::VT_CZ_X, CZ_X, 0.0);
-  }
-  void add_CX_DOT_X(double CX_DOT_X) {
-    fbb_.AddElement<double>(VCM::VT_CX_DOT_X, CX_DOT_X, 0.0);
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(VCM::VT_COVARIANCE, COVARIANCE);
   }
   void add_USER_DEFINED_BIP_0044_TYPE(uint32_t USER_DEFINED_BIP_0044_TYPE) {
     fbb_.AddElement<uint32_t>(VCM::VT_USER_DEFINED_BIP_0044_TYPE, USER_DEFINED_BIP_0044_TYPE, 0);
@@ -1577,7 +1475,6 @@ inline ::flatbuffers::Offset<VCM> CreateVCM(
     double GM = 0.0,
     ::flatbuffers::Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATA = 0,
     ::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VCMCovarianceMatrixLine>>> COVARIANCE_MATRIX = 0,
     ::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS = 0,
     double MASS = 0.0,
     double SOLAR_RAD_AREA = 0.0,
@@ -1593,10 +1490,7 @@ inline ::flatbuffers::Offset<VCM> CreateVCM(
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> COV_REFERENCE_FRAME = 0,
-    double CX_X = 0.0,
-    double CY_X = 0.0,
-    double CZ_X = 0.0,
-    double CX_DOT_X = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
     uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_OBJECT_DESIGNATOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> USER_DEFINED_EARTH_MODEL = 0,
@@ -1605,10 +1499,6 @@ inline ::flatbuffers::Offset<VCM> CreateVCM(
   VCMBuilder builder_(_fbb);
   builder_.add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS);
   builder_.add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP);
-  builder_.add_CX_DOT_X(CX_DOT_X);
-  builder_.add_CZ_X(CZ_X);
-  builder_.add_CY_X(CY_X);
-  builder_.add_CX_X(CX_X);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
   builder_.add_MEAN_MOTION_DOT(MEAN_MOTION_DOT);
   builder_.add_BSTAR(BSTAR);
@@ -1623,12 +1513,12 @@ inline ::flatbuffers::Offset<VCM> CreateVCM(
   builder_.add_USER_DEFINED_EARTH_MODEL(USER_DEFINED_EARTH_MODEL);
   builder_.add_USER_DEFINED_OBJECT_DESIGNATOR(USER_DEFINED_OBJECT_DESIGNATOR);
   builder_.add_USER_DEFINED_BIP_0044_TYPE(USER_DEFINED_BIP_0044_TYPE);
+  builder_.add_COVARIANCE(COVARIANCE);
   builder_.add_COV_REFERENCE_FRAME(COV_REFERENCE_FRAME);
   builder_.add_ELEMENT_SET_NO(ELEMENT_SET_NO);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
   builder_.add_UVW_SIGMAS(UVW_SIGMAS);
-  builder_.add_COVARIANCE_MATRIX(COVARIANCE_MATRIX);
   builder_.add_PROPAGATOR_SETTINGS(PROPAGATOR_SETTINGS);
   builder_.add_ATMOSPHERIC_MODEL_DATA(ATMOSPHERIC_MODEL_DATA);
   builder_.add_EQUINOCTIAL_ELEMENTS(EQUINOCTIAL_ELEMENTS);
@@ -1661,7 +1551,6 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
     double GM = 0.0,
     ::flatbuffers::Offset<VCMAtmosphericModelData> ATMOSPHERIC_MODEL_DATA = 0,
     ::flatbuffers::Offset<propagatorConfig> PROPAGATOR_SETTINGS = 0,
-    const std::vector<::flatbuffers::Offset<VCMCovarianceMatrixLine>> *COVARIANCE_MATRIX = nullptr,
     ::flatbuffers::Offset<uvwSigmas> UVW_SIGMAS = 0,
     double MASS = 0.0,
     double SOLAR_RAD_AREA = 0.0,
@@ -1677,10 +1566,7 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
     double MEAN_MOTION_DOT = 0.0,
     double MEAN_MOTION_DDOT = 0.0,
     const char *COV_REFERENCE_FRAME = nullptr,
-    double CX_X = 0.0,
-    double CY_X = 0.0,
-    double CZ_X = 0.0,
-    double CX_DOT_X = 0.0,
+    const std::vector<double> *COVARIANCE = nullptr,
     uint32_t USER_DEFINED_BIP_0044_TYPE = 0,
     const char *USER_DEFINED_OBJECT_DESIGNATOR = nullptr,
     const char *USER_DEFINED_EARTH_MODEL = nullptr,
@@ -1693,9 +1579,9 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
   auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
-  auto COVARIANCE_MATRIX__ = COVARIANCE_MATRIX ? _fbb.CreateVector<::flatbuffers::Offset<VCMCovarianceMatrixLine>>(*COVARIANCE_MATRIX) : 0;
   auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
   auto COV_REFERENCE_FRAME__ = COV_REFERENCE_FRAME ? _fbb.CreateString(COV_REFERENCE_FRAME) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
   auto USER_DEFINED_OBJECT_DESIGNATOR__ = USER_DEFINED_OBJECT_DESIGNATOR ? _fbb.CreateString(USER_DEFINED_OBJECT_DESIGNATOR) : 0;
   auto USER_DEFINED_EARTH_MODEL__ = USER_DEFINED_EARTH_MODEL ? _fbb.CreateString(USER_DEFINED_EARTH_MODEL) : 0;
   return CreateVCM(
@@ -1714,7 +1600,6 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
       GM,
       ATMOSPHERIC_MODEL_DATA,
       PROPAGATOR_SETTINGS,
-      COVARIANCE_MATRIX__,
       UVW_SIGMAS,
       MASS,
       SOLAR_RAD_AREA,
@@ -1730,10 +1615,7 @@ inline ::flatbuffers::Offset<VCM> CreateVCMDirect(
       MEAN_MOTION_DOT,
       MEAN_MOTION_DDOT,
       COV_REFERENCE_FRAME__,
-      CX_X,
-      CY_X,
-      CZ_X,
-      CX_DOT_X,
+      COVARIANCE__,
       USER_DEFINED_BIP_0044_TYPE,
       USER_DEFINED_OBJECT_DESIGNATOR__,
       USER_DEFINED_EARTH_MODEL__,

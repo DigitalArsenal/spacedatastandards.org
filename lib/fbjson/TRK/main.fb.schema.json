@@ -127,27 +127,6 @@
           "type": "number",
           "x-flatbuffer-type": "double"
         },
-        "ECEF_POS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "ECEF_VEL": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "ECEF_ACC": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
         "LAT": {
           "type": "number",
           "x-flatbuffer-type": "double"
@@ -171,69 +150,6 @@
         "COURSE": {
           "type": "number",
           "x-flatbuffer-type": "double"
-        },
-        "LCO": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "LCS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "LC_POS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "LC_VEL": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "LC_ACC": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "E_NUVEL": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "E_NUPOS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "COV": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "ERR_ELLP": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
         },
         "SRC_TYPS": {
           "type": "array",
@@ -309,6 +225,87 @@
             "type": "string"
           },
           "x-flatbuffer-type": "[string]"
+        },
+        "TRACK_START_TIME": {
+          "type": "string",
+          "description": "Start time for track data (ISO 8601 UTC format).",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_STEP_SIZE": {
+          "type": "number",
+          "description": "Time interval between track points in seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACK_COMPONENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per point (default 3 for X, Y, Z).",
+          "x-flatbuffer-type": "uint8"
+        },
+        "ECEF_POS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ECEF_VEL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ECEF_ACC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_POS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate position as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_VEL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate velocity as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_ACC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate acceleration as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance data (21 elements per point for 6x6 lower triangular)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ERR_ELLP": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Error ellipse data (6 elements per point)",
+          "x-flatbuffer-type": "[double]"
         }
       },
       "additionalProperties": false

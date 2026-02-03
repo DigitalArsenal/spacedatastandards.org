@@ -5,142 +5,6 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class AemattitudeEntry {
-  AemattitudeEntry._(this._bc, this._bcOffset);
-  factory AemattitudeEntry(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<AemattitudeEntry> reader = _AemattitudeEntryReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get RATE_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get RATE_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get RATE_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-
-  @override
-  String toString() {
-    return 'AemattitudeEntry{EPOCH: ${EPOCH}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC: ${QC}, RATE_X: ${RATE_X}, RATE_Y: ${RATE_Y}, RATE_Z: ${RATE_Z}}';
-  }
-}
-
-class _AemattitudeEntryReader extends fb.TableReader<AemattitudeEntry> {
-  const _AemattitudeEntryReader();
-
-  @override
-  AemattitudeEntry createObject(fb.BufferContext bc, int offset) => 
-    AemattitudeEntry._(bc, offset);
-}
-
-class AemattitudeEntryBuilder {
-  AemattitudeEntryBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addEpochOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addQ1(double? Q1) {
-    fbBuilder.addFloat64(1, Q1);
-    return fbBuilder.offset;
-  }
-  int addQ2(double? Q2) {
-    fbBuilder.addFloat64(2, Q2);
-    return fbBuilder.offset;
-  }
-  int addQ3(double? Q3) {
-    fbBuilder.addFloat64(3, Q3);
-    return fbBuilder.offset;
-  }
-  int addQc(double? QC) {
-    fbBuilder.addFloat64(4, QC);
-    return fbBuilder.offset;
-  }
-  int addRateX(double? RATE_X) {
-    fbBuilder.addFloat64(5, RATE_X);
-    return fbBuilder.offset;
-  }
-  int addRateY(double? RATE_Y) {
-    fbBuilder.addFloat64(6, RATE_Y);
-    return fbBuilder.offset;
-  }
-  int addRateZ(double? RATE_Z) {
-    fbBuilder.addFloat64(7, RATE_Z);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AemattitudeEntryObjectBuilder extends fb.ObjectBuilder {
-  final String? _EPOCH;
-  final double? _Q1;
-  final double? _Q2;
-  final double? _Q3;
-  final double? _QC;
-  final double? _RATE_X;
-  final double? _RATE_Y;
-  final double? _RATE_Z;
-
-  AemattitudeEntryObjectBuilder({
-    String? EPOCH,
-    double? Q1,
-    double? Q2,
-    double? Q3,
-    double? QC,
-    double? RATE_X,
-    double? RATE_Y,
-    double? RATE_Z,
-  })
-      : _EPOCH = EPOCH,
-        _Q1 = Q1,
-        _Q2 = Q2,
-        _Q3 = Q3,
-        _QC = QC,
-        _RATE_X = RATE_X,
-        _RATE_Y = RATE_Y,
-        _RATE_Z = RATE_Z;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? EPOCHOffset = _EPOCH == null ? null
-        : fbBuilder.writeString(_EPOCH!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, EPOCHOffset);
-    fbBuilder.addFloat64(1, _Q1);
-    fbBuilder.addFloat64(2, _Q2);
-    fbBuilder.addFloat64(3, _Q3);
-    fbBuilder.addFloat64(4, _QC);
-    fbBuilder.addFloat64(5, _RATE_X);
-    fbBuilder.addFloat64(6, _RATE_Y);
-    fbBuilder.addFloat64(7, _RATE_Z);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
 class Aemsegment {
   Aemsegment._(this._bc, this._bcOffset);
   factory Aemsegment(List<int> bytes) {
@@ -162,11 +26,21 @@ class Aemsegment {
   String? get ATTITUDE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  List<AemattitudeEntry>? get DATA => const fb.ListReader<AemattitudeEntry>(AemattitudeEntry.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Time interval between attitude states in seconds (required).
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Number of components per attitude state.
+  ///  7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  ///  4 = quaternion only (Q1, Q2, Q3, QC)
+  int get ATTITUDE_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 24, 7);
+  ///  Attitude data as row-major array of doubles.
+  ///  Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  ///  Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  ///  Length must be divisible by ATTITUDE_COMPONENTS.
+  List<double>? get ATTITUDE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'Aemsegment{OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, REF_FRAME_A: ${REF_FRAME_A}, REF_FRAME_B: ${REF_FRAME_B}, ATTITUDE_DIR: ${ATTITUDE_DIR}, TIME_SYSTEM: ${TIME_SYSTEM}, ATTITUDE_TYPE: ${ATTITUDE_TYPE}, START_TIME: ${START_TIME}, STOP_TIME: ${STOP_TIME}, DATA: ${DATA}}';
+    return 'Aemsegment{OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, REF_FRAME_A: ${REF_FRAME_A}, REF_FRAME_B: ${REF_FRAME_B}, ATTITUDE_DIR: ${ATTITUDE_DIR}, TIME_SYSTEM: ${TIME_SYSTEM}, ATTITUDE_TYPE: ${ATTITUDE_TYPE}, START_TIME: ${START_TIME}, STOP_TIME: ${STOP_TIME}, STEP_SIZE: ${STEP_SIZE}, ATTITUDE_COMPONENTS: ${ATTITUDE_COMPONENTS}, ATTITUDE_DATA: ${ATTITUDE_DATA}}';
   }
 }
 
@@ -184,7 +58,7 @@ class AemsegmentBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(12);
   }
 
   int addObjectNameOffset(int? offset) {
@@ -223,8 +97,16 @@ class AemsegmentBuilder {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addDataOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+  int addStepSize(double? STEP_SIZE) {
+    fbBuilder.addFloat64(9, STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addAttitudeComponents(int? ATTITUDE_COMPONENTS) {
+    fbBuilder.addUint8(10, ATTITUDE_COMPONENTS);
+    return fbBuilder.offset;
+  }
+  int addAttitudeDataOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
 
@@ -243,7 +125,9 @@ class AemsegmentObjectBuilder extends fb.ObjectBuilder {
   final String? _ATTITUDE_TYPE;
   final String? _START_TIME;
   final String? _STOP_TIME;
-  final List<AemattitudeEntryObjectBuilder>? _DATA;
+  final double? _STEP_SIZE;
+  final int? _ATTITUDE_COMPONENTS;
+  final List<double>? _ATTITUDE_DATA;
 
   AemsegmentObjectBuilder({
     String? OBJECT_NAME,
@@ -255,7 +139,9 @@ class AemsegmentObjectBuilder extends fb.ObjectBuilder {
     String? ATTITUDE_TYPE,
     String? START_TIME,
     String? STOP_TIME,
-    List<AemattitudeEntryObjectBuilder>? DATA,
+    double? STEP_SIZE,
+    int? ATTITUDE_COMPONENTS,
+    List<double>? ATTITUDE_DATA,
   })
       : _OBJECT_NAME = OBJECT_NAME,
         _OBJECT_ID = OBJECT_ID,
@@ -266,7 +152,9 @@ class AemsegmentObjectBuilder extends fb.ObjectBuilder {
         _ATTITUDE_TYPE = ATTITUDE_TYPE,
         _START_TIME = START_TIME,
         _STOP_TIME = STOP_TIME,
-        _DATA = DATA;
+        _STEP_SIZE = STEP_SIZE,
+        _ATTITUDE_COMPONENTS = ATTITUDE_COMPONENTS,
+        _ATTITUDE_DATA = ATTITUDE_DATA;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -289,9 +177,9 @@ class AemsegmentObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_START_TIME!);
     final int? STOP_TIMEOffset = _STOP_TIME == null ? null
         : fbBuilder.writeString(_STOP_TIME!);
-    final int? DATAOffset = _DATA == null ? null
-        : fbBuilder.writeList(_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
+    final int? ATTITUDE_DATAOffset = _ATTITUDE_DATA == null ? null
+        : fbBuilder.writeListFloat64(_ATTITUDE_DATA!);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, OBJECT_NAMEOffset);
     fbBuilder.addOffset(1, OBJECT_IDOffset);
     fbBuilder.addOffset(2, REF_FRAME_AOffset);
@@ -301,7 +189,9 @@ class AemsegmentObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(6, ATTITUDE_TYPEOffset);
     fbBuilder.addOffset(7, START_TIMEOffset);
     fbBuilder.addOffset(8, STOP_TIMEOffset);
-    fbBuilder.addOffset(9, DATAOffset);
+    fbBuilder.addFloat64(9, _STEP_SIZE);
+    fbBuilder.addUint8(10, _ATTITUDE_COMPONENTS);
+    fbBuilder.addOffset(11, ATTITUDE_DATAOffset);
     return fbBuilder.endTable();
   }
 

@@ -29,7 +29,7 @@ class OMM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # CCSDS OMM Version 
+    # CCSDS OMM Version
     # OMM
     def CCSDS_OMM_VERS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,7 +37,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Creation Date (ISO 8601 UTC format) 
+    # Creation Date (ISO 8601 UTC format)
     # OMM
     def CREATION_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class OMM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Originator 
+    # Originator
     # OMM
     def ORIGINATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -275,7 +275,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # BSTAR in 1/Earth radii or BTERM in m²/kg depending on MEAN_ELEMENT_THEORY [C]
+    # BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
     # OMM
     def BSTAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -283,7 +283,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # MEAN_MOTION_DOT in rev/day² [C if SGP or PPT3]
+    # MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
     # OMM
     def MEAN_MOTION_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
@@ -291,7 +291,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # MEAN_MOTION_DDOT in rev/day³ if SGP/PPT3 or AGOM in m²/kg if SGP4-XP [C]
+    # MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     # OMM
     def MEAN_MOTION_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -313,178 +313,43 @@ class OMM(object):
             return obj
         return None
 
-    # CX_X [km**2]
+    # Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+    # Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+    #         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+    #         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    #         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+    # Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
     # OMM
-    def CX_X(self):
+    def COVARIANCE(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
 
-    # CY_X [km**2]
     # OMM
-    def CY_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+    def COVARIANCEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
-    # CY_Y [km**2]
     # OMM
-    def CY_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+    def COVARIANCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.VectorLen(o)
+        return 0
 
-    # CZ_X [km**2]
     # OMM
-    def CZ_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_Y [km**2]
-    # OMM
-    def CZ_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_Z [km**2]
-    # OMM
-    def CZ_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CX_DOT_X [km**2/s]
-    # OMM
-    def CX_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CX_DOT_Y [km**2/s]
-    # OMM
-    def CX_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CX_DOT_Z [km**2/s]
-    # OMM
-    def CX_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CX_DOT_X_DOT [km**2/s**2]
-    # OMM
-    def CX_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CY_DOT_X [km**2/s]
-    # OMM
-    def CY_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CY_DOT_Y [km**2/s]
-    # OMM
-    def CY_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CY_DOT_Z [km**2/s]
-    # OMM
-    def CY_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CY_DOT_X_DOT [km**2/s**2]
-    # OMM
-    def CY_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CY_DOT_Y_DOT [km**2/s**2]
-    # OMM
-    def CY_DOT_Y_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_X [km**2/s]
-    # OMM
-    def CZ_DOT_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_Y [km**2/s]
-    # OMM
-    def CZ_DOT_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_Z [km**2/s]
-    # OMM
-    def CZ_DOT_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_X_DOT [km**2/s**2]
-    # OMM
-    def CZ_DOT_X_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_Y_DOT [km**2/s**2]
-    # OMM
-    def CZ_DOT_Y_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # CZ_DOT_Z_DOT [km**2/s**2]
-    # OMM
-    def CZ_DOT_Z_DOT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+    def COVARIANCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
 
     # USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
     # OMM
     def USER_DEFINED_BIP_0044_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
@@ -492,7 +357,7 @@ class OMM(object):
     # USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
     # OMM
     def USER_DEFINED_OBJECT_DESIGNATOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -500,7 +365,7 @@ class OMM(object):
     # USER_DEFINED_EARTH_MODEL [O, units per ICD]
     # OMM
     def USER_DEFINED_EARTH_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -508,7 +373,7 @@ class OMM(object):
     # USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
     # OMM
     def USER_DEFINED_EPOCH_TIMESTAMP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -516,13 +381,13 @@ class OMM(object):
     # USER_DEFINED_MICROSECONDS [O, units per ICD]
     # OMM
     def USER_DEFINED_MICROSECONDS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
 def OMMStart(builder):
-    builder.StartObject(60)
+    builder.StartObject(40)
 
 def Start(builder):
     OMMStart(builder)
@@ -731,158 +596,44 @@ def OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
 def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
     OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 
-def OMMAddCX_X(builder, CX_X):
-    builder.PrependFloat64Slot(34, CX_X, 0.0)
+def OMMAddCOVARIANCE(builder, COVARIANCE):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
 
-def AddCX_X(builder, CX_X):
-    OMMAddCX_X(builder, CX_X)
+def AddCOVARIANCE(builder, COVARIANCE):
+    OMMAddCOVARIANCE(builder, COVARIANCE)
 
-def OMMAddCY_X(builder, CY_X):
-    builder.PrependFloat64Slot(35, CY_X, 0.0)
+def OMMStartCOVARIANCEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
 
-def AddCY_X(builder, CY_X):
-    OMMAddCY_X(builder, CY_X)
-
-def OMMAddCY_Y(builder, CY_Y):
-    builder.PrependFloat64Slot(36, CY_Y, 0.0)
-
-def AddCY_Y(builder, CY_Y):
-    OMMAddCY_Y(builder, CY_Y)
-
-def OMMAddCZ_X(builder, CZ_X):
-    builder.PrependFloat64Slot(37, CZ_X, 0.0)
-
-def AddCZ_X(builder, CZ_X):
-    OMMAddCZ_X(builder, CZ_X)
-
-def OMMAddCZ_Y(builder, CZ_Y):
-    builder.PrependFloat64Slot(38, CZ_Y, 0.0)
-
-def AddCZ_Y(builder, CZ_Y):
-    OMMAddCZ_Y(builder, CZ_Y)
-
-def OMMAddCZ_Z(builder, CZ_Z):
-    builder.PrependFloat64Slot(39, CZ_Z, 0.0)
-
-def AddCZ_Z(builder, CZ_Z):
-    OMMAddCZ_Z(builder, CZ_Z)
-
-def OMMAddCX_DOT_X(builder, CX_DOT_X):
-    builder.PrependFloat64Slot(40, CX_DOT_X, 0.0)
-
-def AddCX_DOT_X(builder, CX_DOT_X):
-    OMMAddCX_DOT_X(builder, CX_DOT_X)
-
-def OMMAddCX_DOT_Y(builder, CX_DOT_Y):
-    builder.PrependFloat64Slot(41, CX_DOT_Y, 0.0)
-
-def AddCX_DOT_Y(builder, CX_DOT_Y):
-    OMMAddCX_DOT_Y(builder, CX_DOT_Y)
-
-def OMMAddCX_DOT_Z(builder, CX_DOT_Z):
-    builder.PrependFloat64Slot(42, CX_DOT_Z, 0.0)
-
-def AddCX_DOT_Z(builder, CX_DOT_Z):
-    OMMAddCX_DOT_Z(builder, CX_DOT_Z)
-
-def OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
-    builder.PrependFloat64Slot(43, CX_DOT_X_DOT, 0.0)
-
-def AddCX_DOT_X_DOT(builder, CX_DOT_X_DOT):
-    OMMAddCX_DOT_X_DOT(builder, CX_DOT_X_DOT)
-
-def OMMAddCY_DOT_X(builder, CY_DOT_X):
-    builder.PrependFloat64Slot(44, CY_DOT_X, 0.0)
-
-def AddCY_DOT_X(builder, CY_DOT_X):
-    OMMAddCY_DOT_X(builder, CY_DOT_X)
-
-def OMMAddCY_DOT_Y(builder, CY_DOT_Y):
-    builder.PrependFloat64Slot(45, CY_DOT_Y, 0.0)
-
-def AddCY_DOT_Y(builder, CY_DOT_Y):
-    OMMAddCY_DOT_Y(builder, CY_DOT_Y)
-
-def OMMAddCY_DOT_Z(builder, CY_DOT_Z):
-    builder.PrependFloat64Slot(46, CY_DOT_Z, 0.0)
-
-def AddCY_DOT_Z(builder, CY_DOT_Z):
-    OMMAddCY_DOT_Z(builder, CY_DOT_Z)
-
-def OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
-    builder.PrependFloat64Slot(47, CY_DOT_X_DOT, 0.0)
-
-def AddCY_DOT_X_DOT(builder, CY_DOT_X_DOT):
-    OMMAddCY_DOT_X_DOT(builder, CY_DOT_X_DOT)
-
-def OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
-    builder.PrependFloat64Slot(48, CY_DOT_Y_DOT, 0.0)
-
-def AddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT):
-    OMMAddCY_DOT_Y_DOT(builder, CY_DOT_Y_DOT)
-
-def OMMAddCZ_DOT_X(builder, CZ_DOT_X):
-    builder.PrependFloat64Slot(49, CZ_DOT_X, 0.0)
-
-def AddCZ_DOT_X(builder, CZ_DOT_X):
-    OMMAddCZ_DOT_X(builder, CZ_DOT_X)
-
-def OMMAddCZ_DOT_Y(builder, CZ_DOT_Y):
-    builder.PrependFloat64Slot(50, CZ_DOT_Y, 0.0)
-
-def AddCZ_DOT_Y(builder, CZ_DOT_Y):
-    OMMAddCZ_DOT_Y(builder, CZ_DOT_Y)
-
-def OMMAddCZ_DOT_Z(builder, CZ_DOT_Z):
-    builder.PrependFloat64Slot(51, CZ_DOT_Z, 0.0)
-
-def AddCZ_DOT_Z(builder, CZ_DOT_Z):
-    OMMAddCZ_DOT_Z(builder, CZ_DOT_Z)
-
-def OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
-    builder.PrependFloat64Slot(52, CZ_DOT_X_DOT, 0.0)
-
-def AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT):
-    OMMAddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT)
-
-def OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
-    builder.PrependFloat64Slot(53, CZ_DOT_Y_DOT, 0.0)
-
-def AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT):
-    OMMAddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT)
-
-def OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
-    builder.PrependFloat64Slot(54, CZ_DOT_Z_DOT, 0.0)
-
-def AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
-    OMMAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
+def StartCOVARIANCEVector(builder, numElems):
+    return OMMStartCOVARIANCEVector(builder, numElems)
 
 def OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
-    builder.PrependUint32Slot(55, USER_DEFINED_BIP_0044_TYPE, 0)
+    builder.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)
 
 def AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
 
 def OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
-    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_OBJECT_DESIGNATOR), 0)
 
 def AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR):
     OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)
 
 def OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
-    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_EARTH_MODEL), 0)
 
 def AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL):
     OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
 
 def OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
-    builder.PrependFloat64Slot(58, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
+    builder.PrependFloat64Slot(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
 
 def AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP):
     OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
 
 def OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
-    builder.PrependFloat64Slot(59, USER_DEFINED_MICROSECONDS, 0.0)
+    builder.PrependFloat64Slot(39, USER_DEFINED_MICROSECONDS, 0.0)
 
 def AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
     OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
@@ -895,7 +646,7 @@ def End(builder):
 
 import RFM
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -937,27 +688,7 @@ class OMMT(object):
         self.MEAN_MOTION_DOT = 0.0  # type: float
         self.MEAN_MOTION_DDOT = 0.0  # type: float
         self.COV_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.CX_X = 0.0  # type: float
-        self.CY_X = 0.0  # type: float
-        self.CY_Y = 0.0  # type: float
-        self.CZ_X = 0.0  # type: float
-        self.CZ_Y = 0.0  # type: float
-        self.CZ_Z = 0.0  # type: float
-        self.CX_DOT_X = 0.0  # type: float
-        self.CX_DOT_Y = 0.0  # type: float
-        self.CX_DOT_Z = 0.0  # type: float
-        self.CX_DOT_X_DOT = 0.0  # type: float
-        self.CY_DOT_X = 0.0  # type: float
-        self.CY_DOT_Y = 0.0  # type: float
-        self.CY_DOT_Z = 0.0  # type: float
-        self.CY_DOT_X_DOT = 0.0  # type: float
-        self.CY_DOT_Y_DOT = 0.0  # type: float
-        self.CZ_DOT_X = 0.0  # type: float
-        self.CZ_DOT_Y = 0.0  # type: float
-        self.CZ_DOT_Z = 0.0  # type: float
-        self.CZ_DOT_X_DOT = 0.0  # type: float
-        self.CZ_DOT_Y_DOT = 0.0  # type: float
-        self.CZ_DOT_Z_DOT = 0.0  # type: float
+        self.COVARIANCE = None  # type: List[float]
         self.USER_DEFINED_BIP_0044_TYPE = 0  # type: int
         self.USER_DEFINED_OBJECT_DESIGNATOR = None  # type: str
         self.USER_DEFINED_EARTH_MODEL = None  # type: str
@@ -1021,27 +752,13 @@ class OMMT(object):
         self.MEAN_MOTION_DDOT = OMM.MEAN_MOTION_DDOT()
         if OMM.COV_REFERENCE_FRAME() is not None:
             self.COV_REFERENCE_FRAME = RFM.RFMT.InitFromObj(OMM.COV_REFERENCE_FRAME())
-        self.CX_X = OMM.CX_X()
-        self.CY_X = OMM.CY_X()
-        self.CY_Y = OMM.CY_Y()
-        self.CZ_X = OMM.CZ_X()
-        self.CZ_Y = OMM.CZ_Y()
-        self.CZ_Z = OMM.CZ_Z()
-        self.CX_DOT_X = OMM.CX_DOT_X()
-        self.CX_DOT_Y = OMM.CX_DOT_Y()
-        self.CX_DOT_Z = OMM.CX_DOT_Z()
-        self.CX_DOT_X_DOT = OMM.CX_DOT_X_DOT()
-        self.CY_DOT_X = OMM.CY_DOT_X()
-        self.CY_DOT_Y = OMM.CY_DOT_Y()
-        self.CY_DOT_Z = OMM.CY_DOT_Z()
-        self.CY_DOT_X_DOT = OMM.CY_DOT_X_DOT()
-        self.CY_DOT_Y_DOT = OMM.CY_DOT_Y_DOT()
-        self.CZ_DOT_X = OMM.CZ_DOT_X()
-        self.CZ_DOT_Y = OMM.CZ_DOT_Y()
-        self.CZ_DOT_Z = OMM.CZ_DOT_Z()
-        self.CZ_DOT_X_DOT = OMM.CZ_DOT_X_DOT()
-        self.CZ_DOT_Y_DOT = OMM.CZ_DOT_Y_DOT()
-        self.CZ_DOT_Z_DOT = OMM.CZ_DOT_Z_DOT()
+        if not OMM.COVARIANCEIsNone():
+            if np is None:
+                self.COVARIANCE = []
+                for i in range(OMM.COVARIANCELength()):
+                    self.COVARIANCE.append(OMM.COVARIANCE(i))
+            else:
+                self.COVARIANCE = OMM.COVARIANCEAsNumpy()
         self.USER_DEFINED_BIP_0044_TYPE = OMM.USER_DEFINED_BIP_0044_TYPE()
         self.USER_DEFINED_OBJECT_DESIGNATOR = OMM.USER_DEFINED_OBJECT_DESIGNATOR()
         self.USER_DEFINED_EARTH_MODEL = OMM.USER_DEFINED_EARTH_MODEL()
@@ -1072,6 +789,14 @@ class OMMT(object):
             CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
         if self.COV_REFERENCE_FRAME is not None:
             COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.Pack(builder)
+        if self.COVARIANCE is not None:
+            if np is not None and type(self.COVARIANCE) is np.ndarray:
+                COVARIANCE = builder.CreateNumpyVector(self.COVARIANCE)
+            else:
+                OMMStartCOVARIANCEVector(builder, len(self.COVARIANCE))
+                for i in reversed(range(len(self.COVARIANCE))):
+                    builder.PrependFloat64(self.COVARIANCE[i])
+                COVARIANCE = builder.EndVector()
         if self.USER_DEFINED_OBJECT_DESIGNATOR is not None:
             USER_DEFINED_OBJECT_DESIGNATOR = builder.CreateString(self.USER_DEFINED_OBJECT_DESIGNATOR)
         if self.USER_DEFINED_EARTH_MODEL is not None:
@@ -1122,27 +847,8 @@ class OMMT(object):
         OMMAddMEAN_MOTION_DDOT(builder, self.MEAN_MOTION_DDOT)
         if self.COV_REFERENCE_FRAME is not None:
             OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
-        OMMAddCX_X(builder, self.CX_X)
-        OMMAddCY_X(builder, self.CY_X)
-        OMMAddCY_Y(builder, self.CY_Y)
-        OMMAddCZ_X(builder, self.CZ_X)
-        OMMAddCZ_Y(builder, self.CZ_Y)
-        OMMAddCZ_Z(builder, self.CZ_Z)
-        OMMAddCX_DOT_X(builder, self.CX_DOT_X)
-        OMMAddCX_DOT_Y(builder, self.CX_DOT_Y)
-        OMMAddCX_DOT_Z(builder, self.CX_DOT_Z)
-        OMMAddCX_DOT_X_DOT(builder, self.CX_DOT_X_DOT)
-        OMMAddCY_DOT_X(builder, self.CY_DOT_X)
-        OMMAddCY_DOT_Y(builder, self.CY_DOT_Y)
-        OMMAddCY_DOT_Z(builder, self.CY_DOT_Z)
-        OMMAddCY_DOT_X_DOT(builder, self.CY_DOT_X_DOT)
-        OMMAddCY_DOT_Y_DOT(builder, self.CY_DOT_Y_DOT)
-        OMMAddCZ_DOT_X(builder, self.CZ_DOT_X)
-        OMMAddCZ_DOT_Y(builder, self.CZ_DOT_Y)
-        OMMAddCZ_DOT_Z(builder, self.CZ_DOT_Z)
-        OMMAddCZ_DOT_X_DOT(builder, self.CZ_DOT_X_DOT)
-        OMMAddCZ_DOT_Y_DOT(builder, self.CZ_DOT_Y_DOT)
-        OMMAddCZ_DOT_Z_DOT(builder, self.CZ_DOT_Z_DOT)
+        if self.COVARIANCE is not None:
+            OMMAddCOVARIANCE(builder, COVARIANCE)
         OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, self.USER_DEFINED_BIP_0044_TYPE)
         if self.USER_DEFINED_OBJECT_DESIGNATOR is not None:
             OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)

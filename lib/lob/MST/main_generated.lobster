@@ -53,73 +53,86 @@ class MST : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 48)
     def AOU_RPT_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 50)
-    def AOU_RPT_DATA(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 52) + i * 4)
-    def AOU_RPT_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 52)
     def CONTAINMENT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     def TRK_CONF() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
     def TRK_QUAL() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 58, 0)
+        return flatbuffers.field_int32(buf_, pos_, 56, 0)
     def ANG_ELEV() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
     def SEN_MODE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 62)
+        return flatbuffers.field_string(buf_, pos_, 60)
     def INFO_SOURCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 64)
+        return flatbuffers.field_string(buf_, pos_, 62)
     def BOOSTING() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 66, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 64, 0))
     def POLAR_SING_LOC_LAT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
     def POLAR_SING_LOC_LON() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 70, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     def EMG_IND() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 72, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 70, 0))
     def DROP_PT_IND() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 74, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 72, 0))
     def SPACE_AMP_CONF() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 76, 0)
+        return flatbuffers.field_int32(buf_, pos_, 74, 0)
     def LAUNCH_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 78)
+        return flatbuffers.field_string(buf_, pos_, 76)
     def LAUNCH_LAT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
     def LAUNCH_LON() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
     def AZ_CORR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 82, 0.0)
     def BURNOUT_ALT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 86, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
     def LAUNCH_AOU_TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 88)
-    def LAUNCH_AOU_DATA(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 4)
-    def LAUNCH_AOU_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 90)
+        return flatbuffers.field_string(buf_, pos_, 86)
     def IMPACT_TIME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 92)
+        return flatbuffers.field_string(buf_, pos_, 88)
     def IMPACT_LAT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 90, 0.0)
     def IMPACT_LON() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
     def IMPACT_AOU_TYPE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 98)
-    def IMPACT_AOU_DATA(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 100) + i * 4)
-    def IMPACT_AOU_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 100)
-    def VECTORS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 102) + i * 4)
+        return flatbuffers.field_string(buf_, pos_, 94)
+    /// Start time for vector data (ISO 8601 UTC format).
+    def VECTOR_START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 96)
+    /// Time interval between vector points in seconds.
+    def VECTOR_STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 98, 0.0)
+    /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+    def VECTOR_COMPONENTS() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 100, 6)
+    /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
+    def VECTORS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 102) + i * 8)
     def VECTORS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 102)
+    /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+    def AOU_RPT(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 104) + i * 8)
+    def AOU_RPT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 104)
+    /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+    def LAUNCH_AOU(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 106) + i * 8)
+    def LAUNCH_AOU_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 106)
+    /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+    def IMPACT_AOU(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 108) + i * 8)
+    def IMPACT_AOU_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 108)
 
 def GetRootAsMST(buf:string): return MST { buf, flatbuffers.indirect(buf, 0) }
 
 struct MSTBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(50)
+        b_.StartObject(53)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -193,112 +206,121 @@ struct MSTBuilder:
     def add_AOU_RPT_TYPE(AOU_RPT_TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(23, AOU_RPT_TYPE)
         return this
-    def add_AOU_RPT_DATA(AOU_RPT_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(24, AOU_RPT_DATA)
-        return this
     def add_CONTAINMENT(CONTAINMENT:float):
-        b_.PrependFloat64Slot(25, CONTAINMENT, 0.0)
+        b_.PrependFloat64Slot(24, CONTAINMENT, 0.0)
         return this
     def add_TRK_CONF(TRK_CONF:float):
-        b_.PrependFloat64Slot(26, TRK_CONF, 0.0)
+        b_.PrependFloat64Slot(25, TRK_CONF, 0.0)
         return this
     def add_TRK_QUAL(TRK_QUAL:int):
-        b_.PrependInt32Slot(27, TRK_QUAL, 0)
+        b_.PrependInt32Slot(26, TRK_QUAL, 0)
         return this
     def add_ANG_ELEV(ANG_ELEV:float):
-        b_.PrependFloat64Slot(28, ANG_ELEV, 0.0)
+        b_.PrependFloat64Slot(27, ANG_ELEV, 0.0)
         return this
     def add_SEN_MODE(SEN_MODE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(29, SEN_MODE)
+        b_.PrependUOffsetTRelativeSlot(28, SEN_MODE)
         return this
     def add_INFO_SOURCE(INFO_SOURCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(30, INFO_SOURCE)
+        b_.PrependUOffsetTRelativeSlot(29, INFO_SOURCE)
         return this
     def add_BOOSTING(BOOSTING:bool):
-        b_.PrependBoolSlot(31, BOOSTING, 0)
+        b_.PrependBoolSlot(30, BOOSTING, 0)
         return this
     def add_POLAR_SING_LOC_LAT(POLAR_SING_LOC_LAT:float):
-        b_.PrependFloat64Slot(32, POLAR_SING_LOC_LAT, 0.0)
+        b_.PrependFloat64Slot(31, POLAR_SING_LOC_LAT, 0.0)
         return this
     def add_POLAR_SING_LOC_LON(POLAR_SING_LOC_LON:float):
-        b_.PrependFloat64Slot(33, POLAR_SING_LOC_LON, 0.0)
+        b_.PrependFloat64Slot(32, POLAR_SING_LOC_LON, 0.0)
         return this
     def add_EMG_IND(EMG_IND:bool):
-        b_.PrependBoolSlot(34, EMG_IND, 0)
+        b_.PrependBoolSlot(33, EMG_IND, 0)
         return this
     def add_DROP_PT_IND(DROP_PT_IND:bool):
-        b_.PrependBoolSlot(35, DROP_PT_IND, 0)
+        b_.PrependBoolSlot(34, DROP_PT_IND, 0)
         return this
     def add_SPACE_AMP_CONF(SPACE_AMP_CONF:int):
-        b_.PrependInt32Slot(36, SPACE_AMP_CONF, 0)
+        b_.PrependInt32Slot(35, SPACE_AMP_CONF, 0)
         return this
     def add_LAUNCH_TIME(LAUNCH_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(37, LAUNCH_TIME)
+        b_.PrependUOffsetTRelativeSlot(36, LAUNCH_TIME)
         return this
     def add_LAUNCH_LAT(LAUNCH_LAT:float):
-        b_.PrependFloat64Slot(38, LAUNCH_LAT, 0.0)
+        b_.PrependFloat64Slot(37, LAUNCH_LAT, 0.0)
         return this
     def add_LAUNCH_LON(LAUNCH_LON:float):
-        b_.PrependFloat64Slot(39, LAUNCH_LON, 0.0)
+        b_.PrependFloat64Slot(38, LAUNCH_LON, 0.0)
         return this
     def add_AZ_CORR(AZ_CORR:float):
-        b_.PrependFloat64Slot(40, AZ_CORR, 0.0)
+        b_.PrependFloat64Slot(39, AZ_CORR, 0.0)
         return this
     def add_BURNOUT_ALT(BURNOUT_ALT:float):
-        b_.PrependFloat64Slot(41, BURNOUT_ALT, 0.0)
+        b_.PrependFloat64Slot(40, BURNOUT_ALT, 0.0)
         return this
     def add_LAUNCH_AOU_TYPE(LAUNCH_AOU_TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(42, LAUNCH_AOU_TYPE)
-        return this
-    def add_LAUNCH_AOU_DATA(LAUNCH_AOU_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(43, LAUNCH_AOU_DATA)
+        b_.PrependUOffsetTRelativeSlot(41, LAUNCH_AOU_TYPE)
         return this
     def add_IMPACT_TIME(IMPACT_TIME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(44, IMPACT_TIME)
+        b_.PrependUOffsetTRelativeSlot(42, IMPACT_TIME)
         return this
     def add_IMPACT_LAT(IMPACT_LAT:float):
-        b_.PrependFloat64Slot(45, IMPACT_LAT, 0.0)
+        b_.PrependFloat64Slot(43, IMPACT_LAT, 0.0)
         return this
     def add_IMPACT_LON(IMPACT_LON:float):
-        b_.PrependFloat64Slot(46, IMPACT_LON, 0.0)
+        b_.PrependFloat64Slot(44, IMPACT_LON, 0.0)
         return this
     def add_IMPACT_AOU_TYPE(IMPACT_AOU_TYPE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(47, IMPACT_AOU_TYPE)
+        b_.PrependUOffsetTRelativeSlot(45, IMPACT_AOU_TYPE)
         return this
-    def add_IMPACT_AOU_DATA(IMPACT_AOU_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(48, IMPACT_AOU_DATA)
+    def add_VECTOR_START_TIME(VECTOR_START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(46, VECTOR_START_TIME)
+        return this
+    def add_VECTOR_STEP_SIZE(VECTOR_STEP_SIZE:float):
+        b_.PrependFloat64Slot(47, VECTOR_STEP_SIZE, 0.0)
+        return this
+    def add_VECTOR_COMPONENTS(VECTOR_COMPONENTS:int):
+        b_.PrependUint8Slot(48, VECTOR_COMPONENTS, 6)
         return this
     def add_VECTORS(VECTORS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(49, VECTORS)
         return this
+    def add_AOU_RPT(AOU_RPT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(50, AOU_RPT)
+        return this
+    def add_LAUNCH_AOU(LAUNCH_AOU:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(51, LAUNCH_AOU)
+        return this
+    def add_IMPACT_AOU(IMPACT_AOU:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(52, IMPACT_AOU)
+        return this
     def end():
         return b_.EndObject()
 
-def MSTStartAOU_RPT_DATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def MSTCreateAOU_RPT_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def MSTStartLAUNCH_AOU_DATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def MSTCreateLAUNCH_AOU_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
-def MSTStartIMPACT_AOU_DATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def MSTCreateIMPACT_AOU_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
 def MSTStartVECTORSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def MSTCreateVECTORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def MSTCreateVECTORSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def MSTStartAOU_RPTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def MSTCreateAOU_RPTVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def MSTStartLAUNCH_AOUVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def MSTCreateLAUNCH_AOUVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def MSTStartIMPACT_AOUVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def MSTCreateIMPACT_AOUVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 

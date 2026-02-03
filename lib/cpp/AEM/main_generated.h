@@ -13,149 +13,11 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
-struct AEMAttitudeEntry;
-struct AEMAttitudeEntryBuilder;
-
 struct AEMSegment;
 struct AEMSegmentBuilder;
 
 struct AEM;
 struct AEMBuilder;
-
-struct AEMAttitudeEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef AEMAttitudeEntryBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_EPOCH = 4,
-    VT_Q1 = 6,
-    VT_Q2 = 8,
-    VT_Q3 = 10,
-    VT_QC = 12,
-    VT_RATE_X = 14,
-    VT_RATE_Y = 16,
-    VT_RATE_Z = 18
-  };
-  const ::flatbuffers::String *EPOCH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
-  }
-  double Q1() const {
-    return GetField<double>(VT_Q1, 0.0);
-  }
-  double Q2() const {
-    return GetField<double>(VT_Q2, 0.0);
-  }
-  double Q3() const {
-    return GetField<double>(VT_Q3, 0.0);
-  }
-  double QC() const {
-    return GetField<double>(VT_QC, 0.0);
-  }
-  double RATE_X() const {
-    return GetField<double>(VT_RATE_X, 0.0);
-  }
-  double RATE_Y() const {
-    return GetField<double>(VT_RATE_Y, 0.0);
-  }
-  double RATE_Z() const {
-    return GetField<double>(VT_RATE_Z, 0.0);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_EPOCH) &&
-           verifier.VerifyString(EPOCH()) &&
-           VerifyField<double>(verifier, VT_Q1, 8) &&
-           VerifyField<double>(verifier, VT_Q2, 8) &&
-           VerifyField<double>(verifier, VT_Q3, 8) &&
-           VerifyField<double>(verifier, VT_QC, 8) &&
-           VerifyField<double>(verifier, VT_RATE_X, 8) &&
-           VerifyField<double>(verifier, VT_RATE_Y, 8) &&
-           VerifyField<double>(verifier, VT_RATE_Z, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct AEMAttitudeEntryBuilder {
-  typedef AEMAttitudeEntry Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
-    fbb_.AddOffset(AEMAttitudeEntry::VT_EPOCH, EPOCH);
-  }
-  void add_Q1(double Q1) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_Q1, Q1, 0.0);
-  }
-  void add_Q2(double Q2) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_Q2, Q2, 0.0);
-  }
-  void add_Q3(double Q3) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_Q3, Q3, 0.0);
-  }
-  void add_QC(double QC) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_QC, QC, 0.0);
-  }
-  void add_RATE_X(double RATE_X) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_RATE_X, RATE_X, 0.0);
-  }
-  void add_RATE_Y(double RATE_Y) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_RATE_Y, RATE_Y, 0.0);
-  }
-  void add_RATE_Z(double RATE_Z) {
-    fbb_.AddElement<double>(AEMAttitudeEntry::VT_RATE_Z, RATE_Z, 0.0);
-  }
-  explicit AEMAttitudeEntryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<AEMAttitudeEntry> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<AEMAttitudeEntry>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<AEMAttitudeEntry> CreateAEMAttitudeEntry(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
-    double Q1 = 0.0,
-    double Q2 = 0.0,
-    double Q3 = 0.0,
-    double QC = 0.0,
-    double RATE_X = 0.0,
-    double RATE_Y = 0.0,
-    double RATE_Z = 0.0) {
-  AEMAttitudeEntryBuilder builder_(_fbb);
-  builder_.add_RATE_Z(RATE_Z);
-  builder_.add_RATE_Y(RATE_Y);
-  builder_.add_RATE_X(RATE_X);
-  builder_.add_QC(QC);
-  builder_.add_Q3(Q3);
-  builder_.add_Q2(Q2);
-  builder_.add_Q1(Q1);
-  builder_.add_EPOCH(EPOCH);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<AEMAttitudeEntry> CreateAEMAttitudeEntryDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *EPOCH = nullptr,
-    double Q1 = 0.0,
-    double Q2 = 0.0,
-    double Q3 = 0.0,
-    double QC = 0.0,
-    double RATE_X = 0.0,
-    double RATE_Y = 0.0,
-    double RATE_Z = 0.0) {
-  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
-  return CreateAEMAttitudeEntry(
-      _fbb,
-      EPOCH__,
-      Q1,
-      Q2,
-      Q3,
-      QC,
-      RATE_X,
-      RATE_Y,
-      RATE_Z);
-}
 
 struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef AEMSegmentBuilder Builder;
@@ -169,7 +31,9 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ATTITUDE_TYPE = 16,
     VT_START_TIME = 18,
     VT_STOP_TIME = 20,
-    VT_DATA = 22
+    VT_STEP_SIZE = 22,
+    VT_ATTITUDE_COMPONENTS = 24,
+    VT_ATTITUDE_DATA = 26
   };
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
@@ -198,8 +62,22 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *STOP_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<AEMAttitudeEntry>> *DATA() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AEMAttitudeEntry>> *>(VT_DATA);
+  /// Time interval between attitude states in seconds (required).
+  double STEP_SIZE() const {
+    return GetField<double>(VT_STEP_SIZE, 0.0);
+  }
+  /// Number of components per attitude state.
+  /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+  /// 4 = quaternion only (Q1, Q2, Q3, QC)
+  uint8_t ATTITUDE_COMPONENTS() const {
+    return GetField<uint8_t>(VT_ATTITUDE_COMPONENTS, 7);
+  }
+  /// Attitude data as row-major array of doubles.
+  /// Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+  /// Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+  /// Length must be divisible by ATTITUDE_COMPONENTS.
+  const ::flatbuffers::Vector<double> *ATTITUDE_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ATTITUDE_DATA);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -221,9 +99,10 @@ struct AEMSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(START_TIME()) &&
            VerifyOffset(verifier, VT_STOP_TIME) &&
            verifier.VerifyString(STOP_TIME()) &&
-           VerifyOffset(verifier, VT_DATA) &&
-           verifier.VerifyVector(DATA()) &&
-           verifier.VerifyVectorOfTables(DATA()) &&
+           VerifyField<double>(verifier, VT_STEP_SIZE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_ATTITUDE_COMPONENTS, 1) &&
+           VerifyOffset(verifier, VT_ATTITUDE_DATA) &&
+           verifier.VerifyVector(ATTITUDE_DATA()) &&
            verifier.EndTable();
   }
 };
@@ -259,8 +138,14 @@ struct AEMSegmentBuilder {
   void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
     fbb_.AddOffset(AEMSegment::VT_STOP_TIME, STOP_TIME);
   }
-  void add_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<AEMAttitudeEntry>>> DATA) {
-    fbb_.AddOffset(AEMSegment::VT_DATA, DATA);
+  void add_STEP_SIZE(double STEP_SIZE) {
+    fbb_.AddElement<double>(AEMSegment::VT_STEP_SIZE, STEP_SIZE, 0.0);
+  }
+  void add_ATTITUDE_COMPONENTS(uint8_t ATTITUDE_COMPONENTS) {
+    fbb_.AddElement<uint8_t>(AEMSegment::VT_ATTITUDE_COMPONENTS, ATTITUDE_COMPONENTS, 7);
+  }
+  void add_ATTITUDE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> ATTITUDE_DATA) {
+    fbb_.AddOffset(AEMSegment::VT_ATTITUDE_DATA, ATTITUDE_DATA);
   }
   explicit AEMSegmentBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -284,9 +169,12 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegment(
     ::flatbuffers::Offset<::flatbuffers::String> ATTITUDE_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<AEMAttitudeEntry>>> DATA = 0) {
+    double STEP_SIZE = 0.0,
+    uint8_t ATTITUDE_COMPONENTS = 7,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ATTITUDE_DATA = 0) {
   AEMSegmentBuilder builder_(_fbb);
-  builder_.add_DATA(DATA);
+  builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_ATTITUDE_DATA(ATTITUDE_DATA);
   builder_.add_STOP_TIME(STOP_TIME);
   builder_.add_START_TIME(START_TIME);
   builder_.add_ATTITUDE_TYPE(ATTITUDE_TYPE);
@@ -296,6 +184,7 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegment(
   builder_.add_REF_FRAME_A(REF_FRAME_A);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_ATTITUDE_COMPONENTS(ATTITUDE_COMPONENTS);
   return builder_.Finish();
 }
 
@@ -310,7 +199,9 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
     const char *ATTITUDE_TYPE = nullptr,
     const char *START_TIME = nullptr,
     const char *STOP_TIME = nullptr,
-    const std::vector<::flatbuffers::Offset<AEMAttitudeEntry>> *DATA = nullptr) {
+    double STEP_SIZE = 0.0,
+    uint8_t ATTITUDE_COMPONENTS = 7,
+    const std::vector<double> *ATTITUDE_DATA = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto REF_FRAME_A__ = REF_FRAME_A ? _fbb.CreateString(REF_FRAME_A) : 0;
@@ -320,7 +211,7 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
   auto ATTITUDE_TYPE__ = ATTITUDE_TYPE ? _fbb.CreateString(ATTITUDE_TYPE) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
   auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
-  auto DATA__ = DATA ? _fbb.CreateVector<::flatbuffers::Offset<AEMAttitudeEntry>>(*DATA) : 0;
+  auto ATTITUDE_DATA__ = ATTITUDE_DATA ? _fbb.CreateVector<double>(*ATTITUDE_DATA) : 0;
   return CreateAEMSegment(
       _fbb,
       OBJECT_NAME__,
@@ -332,7 +223,9 @@ inline ::flatbuffers::Offset<AEMSegment> CreateAEMSegmentDirect(
       ATTITUDE_TYPE__,
       START_TIME__,
       STOP_TIME__,
-      DATA__);
+      STEP_SIZE,
+      ATTITUDE_COMPONENTS,
+      ATTITUDE_DATA__);
 }
 
 /// Attitude Ephemeris Message

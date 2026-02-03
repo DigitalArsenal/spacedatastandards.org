@@ -103,13 +103,6 @@
           "type": "string",
           "x-flatbuffer-type": "string"
         },
-        "AOU_RPT_DATA": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
         "CONTAINMENT": {
           "type": "number",
           "x-flatbuffer-type": "double"
@@ -186,13 +179,6 @@
           "type": "string",
           "x-flatbuffer-type": "string"
         },
-        "LAUNCH_AOU_DATA": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
         "IMPACT_TIME": {
           "type": "string",
           "x-flatbuffer-type": "string"
@@ -209,19 +195,54 @@
           "type": "string",
           "x-flatbuffer-type": "string"
         },
-        "IMPACT_AOU_DATA": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+        "VECTOR_START_TIME": {
+          "type": "string",
+          "description": "Start time for vector data (ISO 8601 UTC format).",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR_STEP_SIZE": {
+          "type": "number",
+          "description": "Time interval between vector points in seconds.",
+          "x-flatbuffer-type": "double"
+        },
+        "VECTOR_COMPONENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).",
+          "x-flatbuffer-type": "uint8"
         },
         "VECTORS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "AOU_RPT": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LAUNCH_AOU": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "IMPACT_AOU": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).",
+          "x-flatbuffer-type": "[double]"
         }
       },
       "additionalProperties": false

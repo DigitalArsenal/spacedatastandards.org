@@ -52,11 +52,28 @@ public final class AEMSegment extends Table {
   public String STOP_TIME() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public AEMAttitudeEntry DATA(int j) { return DATA(new AEMAttitudeEntry(), j); }
-  public AEMAttitudeEntry DATA(AEMAttitudeEntry obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int DATALength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
-  public AEMAttitudeEntry.Vector dataVector() { return dataVector(new AEMAttitudeEntry.Vector()); }
-  public AEMAttitudeEntry.Vector dataVector(AEMAttitudeEntry.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Time interval between attitude states in seconds (required).
+   */
+  public double STEP_SIZE() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of components per attitude state.
+   * 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+   * 4 = quaternion only (Q1, Q2, Q3, QC)
+   */
+  public int ATTITUDE_COMPONENTS() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 7; }
+  /**
+   * Attitude data as row-major array of doubles.
+   * Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+   * Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+   * Length must be divisible by ATTITUDE_COMPONENTS.
+   */
+  public double ATTITUDE_DATA(int j) { int o = __offset(26); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ATTITUDE_DATALength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector attitudeDataVector() { return attitudeDataVector(new DoubleVector()); }
+  public DoubleVector attitudeDataVector(DoubleVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ATTITUDE_DATAAsByteBuffer() { return __vector_as_bytebuffer(26, 8); }
+  public ByteBuffer ATTITUDE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 8); }
 
   public static int createAEMSegment(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -68,9 +85,12 @@ public final class AEMSegment extends Table {
       int ATTITUDE_TYPEOffset,
       int START_TIMEOffset,
       int STOP_TIMEOffset,
-      int DATAOffset) {
-    builder.startTable(10);
-    AEMSegment.addData(builder, DATAOffset);
+      double STEP_SIZE,
+      int ATTITUDE_COMPONENTS,
+      int ATTITUDE_DATAOffset) {
+    builder.startTable(12);
+    AEMSegment.addStepSize(builder, STEP_SIZE);
+    AEMSegment.addAttitudeData(builder, ATTITUDE_DATAOffset);
     AEMSegment.addStopTime(builder, STOP_TIMEOffset);
     AEMSegment.addStartTime(builder, START_TIMEOffset);
     AEMSegment.addAttitudeType(builder, ATTITUDE_TYPEOffset);
@@ -80,10 +100,11 @@ public final class AEMSegment extends Table {
     AEMSegment.addRefFrameA(builder, REF_FRAME_AOffset);
     AEMSegment.addObjectId(builder, OBJECT_IDOffset);
     AEMSegment.addObjectName(builder, OBJECT_NAMEOffset);
+    AEMSegment.addAttitudeComponents(builder, ATTITUDE_COMPONENTS);
     return AEMSegment.endAEMSegment(builder);
   }
 
-  public static void startAEMSegment(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startAEMSegment(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addRefFrameA(FlatBufferBuilder builder, int REF_FRAME_AOffset) { builder.addOffset(2, REF_FRAME_AOffset, 0); }
@@ -93,9 +114,11 @@ public final class AEMSegment extends Table {
   public static void addAttitudeType(FlatBufferBuilder builder, int ATTITUDE_TYPEOffset) { builder.addOffset(6, ATTITUDE_TYPEOffset, 0); }
   public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(7, START_TIMEOffset, 0); }
   public static void addStopTime(FlatBufferBuilder builder, int STOP_TIMEOffset) { builder.addOffset(8, STOP_TIMEOffset, 0); }
-  public static void addData(FlatBufferBuilder builder, int DATAOffset) { builder.addOffset(9, DATAOffset, 0); }
-  public static int createDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStepSize(FlatBufferBuilder builder, double STEP_SIZE) { builder.addDouble(9, STEP_SIZE, 0.0); }
+  public static void addAttitudeComponents(FlatBufferBuilder builder, int ATTITUDE_COMPONENTS) { builder.addByte(10, (byte) ATTITUDE_COMPONENTS, (byte) 7); }
+  public static void addAttitudeData(FlatBufferBuilder builder, int ATTITUDE_DATAOffset) { builder.addOffset(11, ATTITUDE_DATAOffset, 0); }
+  public static int createAttitudeDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAttitudeDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endAEMSegment(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

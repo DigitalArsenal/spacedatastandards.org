@@ -32,55 +32,57 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OBSERVER_POSITION_REFERENCE_FRAME = 18,
     VT_OBS_REFERENCE_FRAME = 20,
     VT_EPOCH = 22,
-    VT_CCSDS_TDM_VERS = 24,
-    VT_COMMENT = 26,
-    VT_CREATION_DATE = 28,
-    VT_ORIGINATOR = 30,
-    VT_META_START = 32,
-    VT_TIME_SYSTEM = 34,
-    VT_START_TIME = 36,
-    VT_STOP_TIME = 38,
-    VT_PARTICIPANT_1 = 40,
-    VT_PARTICIPANT_2 = 42,
-    VT_PARTICIPANT_3 = 44,
-    VT_PARTICIPANT_4 = 46,
-    VT_PARTICIPANT_5 = 48,
-    VT_MODE = 50,
-    VT_PATH_1 = 52,
-    VT_PATH_2 = 54,
-    VT_TRANSMIT_BAND = 56,
-    VT_RECEIVE_BAND = 58,
-    VT_INTEGRATION_INTERVAL = 60,
-    VT_INTEGRATION_REF = 62,
-    VT_RECEIVE_DELAY_2 = 64,
-    VT_RECEIVE_DELAY_3 = 66,
-    VT_DATA_QUALITY = 68,
-    VT_META_STOP = 70,
-    VT_DATA_START = 72,
-    VT_TRANSMIT_FREQ_1 = 74,
-    VT_RECEIVE_FREQ = 76,
-    VT_DATA_STOP = 78,
-    VT_TIMETAG_REF = 80,
-    VT_ANGLE_TYPE = 82,
-    VT_ANGLE_1 = 84,
-    VT_ANGLE_2 = 86,
-    VT_ANGLE_UNCERTAINTY_1 = 88,
-    VT_ANGLE_UNCERTAINTY_2 = 90,
-    VT_RANGE_RATE = 92,
-    VT_RANGE_UNCERTAINTY = 94,
-    VT_RANGE_MODE = 96,
-    VT_RANGE_MODULUS = 98,
-    VT_CORRECTION_ANGLE_1 = 100,
-    VT_CORRECTION_ANGLE_2 = 102,
-    VT_CORRECTIONS_APPLIED = 104,
-    VT_TROPO_DRY = 106,
-    VT_TROPO_WET = 108,
-    VT_STEC = 110,
-    VT_PRESSURE = 112,
-    VT_RHUMIDITY = 114,
-    VT_TEMPERATURE = 116,
-    VT_CLOCK_BIAS = 118,
-    VT_CLOCK_DRIFT = 120
+    VT_OBSERVATION_STEP_SIZE = 24,
+    VT_OBSERVATION_START_TIME = 26,
+    VT_CCSDS_TDM_VERS = 28,
+    VT_COMMENT = 30,
+    VT_CREATION_DATE = 32,
+    VT_ORIGINATOR = 34,
+    VT_META_START = 36,
+    VT_TIME_SYSTEM = 38,
+    VT_START_TIME = 40,
+    VT_STOP_TIME = 42,
+    VT_PARTICIPANT_1 = 44,
+    VT_PARTICIPANT_2 = 46,
+    VT_PARTICIPANT_3 = 48,
+    VT_PARTICIPANT_4 = 50,
+    VT_PARTICIPANT_5 = 52,
+    VT_MODE = 54,
+    VT_PATH_1 = 56,
+    VT_PATH_2 = 58,
+    VT_TRANSMIT_BAND = 60,
+    VT_RECEIVE_BAND = 62,
+    VT_INTEGRATION_INTERVAL = 64,
+    VT_INTEGRATION_REF = 66,
+    VT_RECEIVE_DELAY_2 = 68,
+    VT_RECEIVE_DELAY_3 = 70,
+    VT_DATA_QUALITY = 72,
+    VT_META_STOP = 74,
+    VT_DATA_START = 76,
+    VT_TRANSMIT_FREQ_1 = 78,
+    VT_RECEIVE_FREQ = 80,
+    VT_DATA_STOP = 82,
+    VT_TIMETAG_REF = 84,
+    VT_ANGLE_TYPE = 86,
+    VT_ANGLE_1 = 88,
+    VT_ANGLE_2 = 90,
+    VT_ANGLE_UNCERTAINTY_1 = 92,
+    VT_ANGLE_UNCERTAINTY_2 = 94,
+    VT_RANGE_RATE = 96,
+    VT_RANGE_UNCERTAINTY = 98,
+    VT_RANGE_MODE = 100,
+    VT_RANGE_MODULUS = 102,
+    VT_CORRECTION_ANGLE_1 = 104,
+    VT_CORRECTION_ANGLE_2 = 106,
+    VT_CORRECTIONS_APPLIED = 108,
+    VT_TROPO_DRY = 110,
+    VT_TROPO_WET = 112,
+    VT_STEC = 114,
+    VT_PRESSURE = 116,
+    VT_RHUMIDITY = 118,
+    VT_TEMPERATURE = 120,
+    VT_CLOCK_BIAS = 122,
+    VT_CLOCK_DRIFT = 124
   };
   /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
   const ::flatbuffers::String *OBSERVER_ID() const {
@@ -121,6 +123,15 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Time interval between observations in seconds (required).
+  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
+  double OBSERVATION_STEP_SIZE() const {
+    return GetField<double>(VT_OBSERVATION_STEP_SIZE, 0.0);
+  }
+  /// Start time for observation time reconstruction (ISO 8601 UTC format).
+  const ::flatbuffers::String *OBSERVATION_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATION_START_TIME);
   }
   /// TDM version number -  CCSDS 503.0-B-1, Page D-9
   const ::flatbuffers::String *CCSDS_TDM_VERS() const {
@@ -336,6 +347,9 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(OBS_REFERENCE_FRAME()) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_OBSERVATION_STEP_SIZE, 8) &&
+           VerifyOffset(verifier, VT_OBSERVATION_START_TIME) &&
+           verifier.VerifyString(OBSERVATION_START_TIME()) &&
            VerifyOffset(verifier, VT_CCSDS_TDM_VERS) &&
            verifier.VerifyString(CCSDS_TDM_VERS()) &&
            VerifyOffset(verifier, VT_COMMENT) &&
@@ -459,6 +473,12 @@ struct TDMBuilder {
   }
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
     fbb_.AddOffset(TDM::VT_EPOCH, EPOCH);
+  }
+  void add_OBSERVATION_STEP_SIZE(double OBSERVATION_STEP_SIZE) {
+    fbb_.AddElement<double>(TDM::VT_OBSERVATION_STEP_SIZE, OBSERVATION_STEP_SIZE, 0.0);
+  }
+  void add_OBSERVATION_START_TIME(::flatbuffers::Offset<::flatbuffers::String> OBSERVATION_START_TIME) {
+    fbb_.AddOffset(TDM::VT_OBSERVATION_START_TIME, OBSERVATION_START_TIME);
   }
   void add_CCSDS_TDM_VERS(::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS) {
     fbb_.AddOffset(TDM::VT_CCSDS_TDM_VERS, CCSDS_TDM_VERS);
@@ -630,6 +650,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double OBSERVATION_STEP_SIZE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBSERVATION_START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
@@ -686,6 +708,7 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_TRANSMIT_FREQ_1(TRANSMIT_FREQ_1);
   builder_.add_RECEIVE_DELAY_3(RECEIVE_DELAY_3);
   builder_.add_RECEIVE_DELAY_2(RECEIVE_DELAY_2);
+  builder_.add_OBSERVATION_STEP_SIZE(OBSERVATION_STEP_SIZE);
   builder_.add_OBSERVER_VZ(OBSERVER_VZ);
   builder_.add_OBSERVER_VY(OBSERVER_VY);
   builder_.add_OBSERVER_VX(OBSERVER_VX);
@@ -733,6 +756,7 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_COMMENT(COMMENT);
   builder_.add_CCSDS_TDM_VERS(CCSDS_TDM_VERS);
+  builder_.add_OBSERVATION_START_TIME(OBSERVATION_START_TIME);
   builder_.add_EPOCH(EPOCH);
   builder_.add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME);
   builder_.add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME);
@@ -754,6 +778,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
     const char *EPOCH = nullptr,
+    double OBSERVATION_STEP_SIZE = 0.0,
+    const char *OBSERVATION_START_TIME = nullptr,
     const char *CCSDS_TDM_VERS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
     const char *CREATION_DATE = nullptr,
@@ -805,6 +831,7 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     const std::vector<double> *CLOCK_DRIFT = nullptr) {
   auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto OBSERVATION_START_TIME__ = OBSERVATION_START_TIME ? _fbb.CreateString(OBSERVATION_START_TIME) : 0;
   auto CCSDS_TDM_VERS__ = CCSDS_TDM_VERS ? _fbb.CreateString(CCSDS_TDM_VERS) : 0;
   auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
@@ -853,6 +880,8 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
       OBSERVER_POSITION_REFERENCE_FRAME,
       OBS_REFERENCE_FRAME,
       EPOCH__,
+      OBSERVATION_STEP_SIZE,
+      OBSERVATION_START_TIME__,
       CCSDS_TDM_VERS__,
       COMMENT__,
       CREATION_DATE__,

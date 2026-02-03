@@ -5140,29 +5140,6 @@
                     },
                     "additionalProperties": false
                 },
-                "VCMCovarianceMatrixLine": {
-                    "type": "object",
-                    "description": "VCM Covariance Matrix Line",
-                    "properties": {
-                        "CX_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "keplerianElements": {
                     "type": "object",
                     "description": "Keplerian Elements",
@@ -5488,13 +5465,6 @@
                             "$ref": "#/definitions/propagatorConfig",
                             "x-flatbuffer-type": "propagatorConfig"
                         },
-                        "COVARIANCE_MATRIX": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/VCMCovarianceMatrixLine"
-                            },
-                            "x-flatbuffer-type": "[VCMCovarianceMatrixLine]"
-                        },
                         "UVW_SIGMAS": {
                             "$ref": "#/definitions/uvwSigmas",
                             "x-flatbuffer-type": "uvwSigmas"
@@ -5568,21 +5538,13 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -10523,230 +10485,13 @@
                             "description": "Z-coordinate of the object's position in RTN",
                             "x-flatbuffer-type": "double"
                         },
-                        "CR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_THR": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -12871,13 +12616,6 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "AOU_RPT_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "CONTAINMENT": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
@@ -12954,13 +12692,6 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "LAUNCH_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "IMPACT_TIME": {
                             "type": "string",
                             "x-flatbuffer-type": "string"
@@ -12977,19 +12708,54 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "IMPACT_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
+                        "VECTOR_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for vector data (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "VECTOR_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between vector points in seconds.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "VECTOR_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).",
+                            "x-flatbuffer-type": "uint8"
                         },
                         "VECTORS": {
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "number"
                             },
-                            "x-flatbuffer-type": "[string]"
+                            "description": "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "AOU_RPT": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE).",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LAUNCH_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "IMPACT_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -18650,44 +18416,6 @@
         "AEM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "AEMAttitudeEntry": {
-                    "type": "object",
-                    "properties": {
-                        "EPOCH": {
-                            "type": "string",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "Q1": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "Q2": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "Q3": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "QC": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_Y": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_Z": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "AEMSegment": {
                     "type": "object",
                     "properties": {
@@ -18727,12 +18455,25 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "DATA": {
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between attitude states in seconds (required).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ATTITUDE_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "ATTITUDE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AEMAttitudeEntry"
+                                "type": "number"
                             },
-                            "x-flatbuffer-type": "[AEMAttitudeEntry]"
+                            "description": "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS.",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -32508,44 +32249,6 @@
                     },
                     "additionalProperties": false
                 },
-                "AEMAttitudeEntry": {
-                    "type": "object",
-                    "properties": {
-                        "EPOCH": {
-                            "type": "string",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "Q1": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "Q2": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "Q3": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "QC": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_Y": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "RATE_Z": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "AEMSegment": {
                     "type": "object",
                     "properties": {
@@ -32585,12 +32288,25 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "DATA": {
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between attitude states in seconds (required).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "ATTITUDE_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "ATTITUDE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AEMAttitudeEntry"
+                                "type": "number"
                             },
-                            "x-flatbuffer-type": "[AEMAttitudeEntry]"
+                            "description": "Attitude data as row-major array of doubles.\nLayout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]\nTime reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)\nLength must be divisible by ATTITUDE_COMPONENTS.",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -35853,230 +35569,13 @@
                             "description": "Z-coordinate of the object's position in RTN",
                             "x-flatbuffer-type": "double"
                         },
-                        "CR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CN_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CRDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CNDOT_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CDRG_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CSRP_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_R": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_T": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_N": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_RDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_TDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_NDOT": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_DRG": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_SRP": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CTHR_THR": {
-                            "type": "number",
-                            "description": "Covariance Matrix component",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -41060,13 +40559,6 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "AOU_RPT_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "CONTAINMENT": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
@@ -41143,13 +40635,6 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "LAUNCH_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "IMPACT_TIME": {
                             "type": "string",
                             "x-flatbuffer-type": "string"
@@ -41166,19 +40651,54 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "IMPACT_AOU_DATA": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
+                        "VECTOR_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for vector data (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "VECTOR_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between vector points in seconds.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "VECTOR_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).",
+                            "x-flatbuffer-type": "uint8"
                         },
                         "VECTORS": {
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "type": "number"
                             },
-                            "x-flatbuffer-type": "[string]"
+                            "description": "Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "AOU_RPT": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE).",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LAUNCH_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "IMPACT_AOU": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -42574,26 +42094,38 @@
                             "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED).",
                             "x-flatbuffer-type": "string"
                         },
+                        "STATE_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between state vectors in seconds (required for time-series data).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
+                            "x-flatbuffer-type": "uint8"
+                        },
                         "STATE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "State vector data.",
-                            "x-flatbuffer-type": "[StateVector]"
+                            "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "COVARIANCE_DATA": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs.",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "PHYSICAL_PROPERTIES": {
                             "$ref": "#/definitions/PhysicalProperties",
                             "description": "Physical properties of the space object.",
                             "x-flatbuffer-type": "PhysicalProperties"
-                        },
-                        "COVARIANCE_DATA": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/StateVector"
-                            },
-                            "description": "Covariance data associated with the state vectors.",
-                            "x-flatbuffer-type": "[StateVector]"
                         },
                         "MANEUVER_DATA": {
                             "type": "array",
@@ -43309,17 +42841,17 @@
                         },
                         "BSTAR": {
                             "type": "number",
-                            "description": "BSTAR in 1/Earth radii or BTERM in m\u00b2/kg depending on MEAN_ELEMENT_THEORY [C]",
+                            "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
                             "x-flatbuffer-type": "double"
                         },
                         "MEAN_MOTION_DOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DOT in rev/day\u00b2 [C if SGP or PPT3]",
+                            "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]",
                             "x-flatbuffer-type": "double"
                         },
                         "MEAN_MOTION_DDOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]",
+                            "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
                             "x-flatbuffer-type": "double"
                         },
                         "COV_REFERENCE_FRAME": {
@@ -43327,110 +42859,13 @@
                             "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW",
                             "x-flatbuffer-type": "RFM"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "description": "CX_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "description": "CY_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_Y": {
-                            "type": "number",
-                            "description": "CY_Y [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "description": "CZ_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_Y": {
-                            "type": "number",
-                            "description": "CZ_Y [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_Z": {
-                            "type": "number",
-                            "description": "CZ_Z [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "description": "CX_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_Y": {
-                            "type": "number",
-                            "description": "CX_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_Z": {
-                            "type": "number",
-                            "description": "CX_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CX_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_X": {
-                            "type": "number",
-                            "description": "CY_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Y": {
-                            "type": "number",
-                            "description": "CY_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Z": {
-                            "type": "number",
-                            "description": "CY_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_Y_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_X": {
-                            "type": "number",
-                            "description": "CZ_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Y": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Z": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Z_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -47936,6 +47371,16 @@
                             "description": "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1",
                             "x-flatbuffer-type": "string"
                         },
+                        "OBSERVATION_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "OBSERVATION_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for observation time reconstruction (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
                         "CCSDS_TDM_VERS": {
                             "type": "string",
                             "description": "TDM version number -  CCSDS 503.0-B-1, Page D-9",
@@ -48609,27 +48054,6 @@
                             "type": "number",
                             "x-flatbuffer-type": "double"
                         },
-                        "ECEF_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ECEF_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ECEF_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "LAT": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
@@ -48653,69 +48077,6 @@
                         "COURSE": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
-                        },
-                        "LCO": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LCS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "E_NUVEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "E_NUPOS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "COV": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ERR_ELLP": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
                         },
                         "SRC_TYPS": {
                             "type": "array",
@@ -48791,6 +48152,87 @@
                                 "type": "string"
                             },
                             "x-flatbuffer-type": "[string]"
+                        },
+                        "TRACK_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for track data (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TRACK_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between track points in seconds.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TRACK_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per point (default 3 for X, Y, Z).",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "ECEF_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ECEF_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ECEF_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate position as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate velocity as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate acceleration as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "COV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data (21 elements per point for 6x6 lower triangular)",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ERR_ELLP": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Error ellipse data (6 elements per point)",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -48949,29 +48391,6 @@
                             "x-flatbuffer-type": "double"
                         },
                         "Z_DOT": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "VCMCovarianceMatrixLine": {
-                    "type": "object",
-                    "description": "VCM Covariance Matrix Line",
-                    "properties": {
-                        "CX_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
                         }
@@ -49303,13 +48722,6 @@
                             "$ref": "#/definitions/propagatorConfig",
                             "x-flatbuffer-type": "propagatorConfig"
                         },
-                        "COVARIANCE_MATRIX": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/VCMCovarianceMatrixLine"
-                            },
-                            "x-flatbuffer-type": "[VCMCovarianceMatrixLine]"
-                        },
                         "UVW_SIGMAS": {
                             "$ref": "#/definitions/uvwSigmas",
                             "x-flatbuffer-type": "uvwSigmas"
@@ -49383,21 +48795,13 @@
                             "type": "string",
                             "x-flatbuffer-type": "string"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -56430,17 +55834,17 @@
                         },
                         "BSTAR": {
                             "type": "number",
-                            "description": "BSTAR in 1/Earth radii or BTERM in m\u00b2/kg depending on MEAN_ELEMENT_THEORY [C]",
+                            "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
                             "x-flatbuffer-type": "double"
                         },
                         "MEAN_MOTION_DOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DOT in rev/day\u00b2 [C if SGP or PPT3]",
+                            "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]",
                             "x-flatbuffer-type": "double"
                         },
                         "MEAN_MOTION_DDOT": {
                             "type": "number",
-                            "description": "MEAN_MOTION_DDOT in rev/day\u00b3 if SGP/PPT3 or AGOM in m\u00b2/kg if SGP4-XP [C]",
+                            "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
                             "x-flatbuffer-type": "double"
                         },
                         "COV_REFERENCE_FRAME": {
@@ -56448,110 +55852,13 @@
                             "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW",
                             "x-flatbuffer-type": "RFM"
                         },
-                        "CX_X": {
-                            "type": "number",
-                            "description": "CX_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_X": {
-                            "type": "number",
-                            "description": "CY_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_Y": {
-                            "type": "number",
-                            "description": "CY_Y [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_X": {
-                            "type": "number",
-                            "description": "CZ_X [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_Y": {
-                            "type": "number",
-                            "description": "CZ_Y [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_Z": {
-                            "type": "number",
-                            "description": "CZ_Z [km**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X": {
-                            "type": "number",
-                            "description": "CX_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_Y": {
-                            "type": "number",
-                            "description": "CX_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_Z": {
-                            "type": "number",
-                            "description": "CX_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CX_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CX_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_X": {
-                            "type": "number",
-                            "description": "CY_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Y": {
-                            "type": "number",
-                            "description": "CY_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Z": {
-                            "type": "number",
-                            "description": "CY_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CY_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CY_DOT_Y_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_X": {
-                            "type": "number",
-                            "description": "CZ_DOT_X [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Y": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Z": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z [km**2/s]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_X_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_X_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Y_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Y_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
-                        },
-                        "CZ_DOT_Z_DOT": {
-                            "type": "number",
-                            "description": "CZ_DOT_Z_DOT [km**2/s**2]",
-                            "x-flatbuffer-type": "double"
+                        "COVARIANCE": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "USER_DEFINED_BIP_0044_TYPE": {
                             "type": "integer",
@@ -66606,27 +65913,6 @@
                             "type": "number",
                             "x-flatbuffer-type": "double"
                         },
-                        "ECEF_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ECEF_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ECEF_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
                         "LAT": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
@@ -66650,69 +65936,6 @@
                         "COURSE": {
                             "type": "number",
                             "x-flatbuffer-type": "double"
-                        },
-                        "LCO": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LCS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_POS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_VEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "LC_ACC": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "E_NUVEL": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "E_NUPOS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "COV": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
-                        },
-                        "ERR_ELLP": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "x-flatbuffer-type": "[string]"
                         },
                         "SRC_TYPS": {
                             "type": "array",
@@ -66788,6 +66011,87 @@
                                 "type": "string"
                             },
                             "x-flatbuffer-type": "[string]"
+                        },
+                        "TRACK_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for track data (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TRACK_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between track points in seconds.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TRACK_COMPONENTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per point (default 3 for X, Y, Z).",
+                            "x-flatbuffer-type": "uint8"
+                        },
+                        "ECEF_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ECEF_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ECEF_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_POS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate position as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_VEL": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate velocity as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "LC_ACC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Local coordinate acceleration as flat array",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "COV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data (21 elements per point for 6x6 lower triangular)",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "ERR_ELLP": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Error ellipse data (6 elements per point)",
+                            "x-flatbuffer-type": "[double]"
                         }
                     },
                     "additionalProperties": false
@@ -76659,6 +75963,16 @@
                             "description": "Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1",
                             "x-flatbuffer-type": "string"
                         },
+                        "OBSERVATION_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "OBSERVATION_START_TIME": {
+                            "type": "string",
+                            "description": "Start time for observation time reconstruction (ISO 8601 UTC format).",
+                            "x-flatbuffer-type": "string"
+                        },
                         "CCSDS_TDM_VERS": {
                             "type": "string",
                             "description": "TDM version number -  CCSDS 503.0-B-1, Page D-9",
@@ -77933,26 +77247,38 @@
                             "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED).",
                             "x-flatbuffer-type": "string"
                         },
+                        "STATE_STEP_SIZE": {
+                            "type": "number",
+                            "description": "Time interval between state vectors in seconds (required for time-series data).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "STATE_VECTOR_SIZE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
+                            "x-flatbuffer-type": "uint8"
+                        },
                         "STATE_DATA": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/StateVector"
+                                "type": "number"
                             },
-                            "description": "State vector data.",
-                            "x-flatbuffer-type": "[StateVector]"
+                            "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "COVARIANCE_DATA": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs.",
+                            "x-flatbuffer-type": "[double]"
                         },
                         "PHYSICAL_PROPERTIES": {
                             "$ref": "#/definitions/PhysicalProperties",
                             "description": "Physical properties of the space object.",
                             "x-flatbuffer-type": "PhysicalProperties"
-                        },
-                        "COVARIANCE_DATA": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/StateVector"
-                            },
-                            "description": "Covariance data associated with the state vectors.",
-                            "x-flatbuffer-type": "[StateVector]"
                         },
                         "MANEUVER_DATA": {
                             "type": "array",
