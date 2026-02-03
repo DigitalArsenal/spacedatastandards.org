@@ -546,7 +546,16 @@ void main() {
 <canvas bind:this={canvas} class="starfield"></canvas>
 
 <section class="hero">
+  <h1 class="hero-title">Space Data Standards</h1>
+  <p class="hero-subtitle">
+    The open-source schema framework for the modern space industry. High-performance
+    <a href="https://digitalarsenal.github.io/flatbuffers/" target="_blank" rel="noopener" class="inline-link">FlatBuffers</a>
+    serialization with JSON Schema compatibility, replacing legacy formats like TLE, VCM, and XML-based CCSDS messages.
+  </p>
   <div class="ci-badges">
+    <a href="/schemas" use:link class="schema-count-badge">
+      <img src="https://img.shields.io/badge/schemas-{schemaCount}+-667eea?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0xNCAySDb2IDIgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOHoiPjwvcGF0aD48cG9seWxpbmUgcG9pbnRzPSIxNCAyIDE0IDggMjAgOCI+PC9wb2x5bGluZT48L3N2Zz4=&labelColor=1a1a2e" alt="Schemas" />
+    </a>
     <a href="https://github.com/DigitalArsenal/spacedatastandards.org/actions" target="_blank" rel="noopener">
       <img src="https://github.com/DigitalArsenal/spacedatastandards.org/actions/workflows/pages/pages-build-deployment/badge.svg" alt="Pages Build" />
     </a>
@@ -557,16 +566,6 @@ void main() {
       <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat&colorB=667eea" alt="License" />
     </a>
   </div>
-  <div class="hero-badge">
-    <span class="badge-count">{schemaCount}</span>
-    <span>Open Schemas</span>
-  </div>
-  <h1 class="hero-title">Space Data Standards</h1>
-  <p class="hero-subtitle">
-    The open-source schema framework for the modern space industry. High-performance
-    <a href="https://digitalarsenal.github.io/flatbuffers/" target="_blank" rel="noopener" class="inline-link">FlatBuffers</a>
-    serialization with JSON Schema compatibility, replacing legacy formats like TLE, VCM, and XML-based CCSDS messages.
-  </p>
   <div class="hero-actions">
     <a href="/schemas" use:link class="btn btn-accent">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1125,7 +1124,7 @@ void main() {
   .ci-badges {
     display: flex;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 32px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -1154,28 +1153,6 @@ void main() {
     text-align: center;
     padding: 120px 24px 80px;
     position: relative;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: var(--ui-bg);
-    border: 1px solid var(--ui-border);
-    border-radius: 28px;
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-    backdrop-filter: blur(10px);
-  }
-
-  .badge-count {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-    color: white;
   }
 
   .hero-title {
