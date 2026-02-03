@@ -69,29 +69,35 @@ public final class EME extends Table {
   public ByteBuffer IVAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer IVInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
+   * Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+   */
+  public String SALT() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SALTAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer SALTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
    * Identifier for the public key used, aiding in recipient key management and message decryption.
    */
-  public String PUBLIC_KEY_IDENTIFIER() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PUBLIC_KEY_IDENTIFIERAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer PUBLIC_KEY_IDENTIFIERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public String PUBLIC_KEY_IDENTIFIER() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PUBLIC_KEY_IDENTIFIERAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer PUBLIC_KEY_IDENTIFIERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
   /**
    * Specifies the set of cryptographic algorithms used in the encryption process.
    */
-  public String CIPHER_SUITE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CIPHER_SUITEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer CIPHER_SUITEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  public String CIPHER_SUITE() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CIPHER_SUITEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer CIPHER_SUITEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
   /**
    * Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
    */
-  public String KDF_PARAMETERS() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer KDF_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer KDF_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  public String KDF_PARAMETERS() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KDF_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer KDF_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
    * Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
    */
-  public String ENCRYPTION_ALGORITHM_PARAMETERS() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ENCRYPTION_ALGORITHM_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer ENCRYPTION_ALGORITHM_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  public String ENCRYPTION_ALGORITHM_PARAMETERS() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENCRYPTION_ALGORITHM_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer ENCRYPTION_ALGORITHM_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
 
   public static int createEME(FlatBufferBuilder builder,
       int ENCRYPTED_BLOBOffset,
@@ -100,15 +106,17 @@ public final class EME extends Table {
       int NONCEOffset,
       int TAGOffset,
       int IVOffset,
+      int SALTOffset,
       int PUBLIC_KEY_IDENTIFIEROffset,
       int CIPHER_SUITEOffset,
       int KDF_PARAMETERSOffset,
       int ENCRYPTION_ALGORITHM_PARAMETERSOffset) {
-    builder.startTable(10);
+    builder.startTable(11);
     EME.addEncryptionAlgorithmParameters(builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset);
     EME.addKdfParameters(builder, KDF_PARAMETERSOffset);
     EME.addCipherSuite(builder, CIPHER_SUITEOffset);
     EME.addPublicKeyIdentifier(builder, PUBLIC_KEY_IDENTIFIEROffset);
+    EME.addSalt(builder, SALTOffset);
     EME.addIv(builder, IVOffset);
     EME.addTag(builder, TAGOffset);
     EME.addNonce(builder, NONCEOffset);
@@ -118,7 +126,7 @@ public final class EME extends Table {
     return EME.endEME(builder);
   }
 
-  public static void startEME(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startEME(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addEncryptedBlob(FlatBufferBuilder builder, int ENCRYPTED_BLOBOffset) { builder.addOffset(0, ENCRYPTED_BLOBOffset, 0); }
   public static int createEncryptedBlobVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createEncryptedBlobVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
@@ -128,10 +136,11 @@ public final class EME extends Table {
   public static void addNonce(FlatBufferBuilder builder, int NONCEOffset) { builder.addOffset(3, NONCEOffset, 0); }
   public static void addTag(FlatBufferBuilder builder, int TAGOffset) { builder.addOffset(4, TAGOffset, 0); }
   public static void addIv(FlatBufferBuilder builder, int IVOffset) { builder.addOffset(5, IVOffset, 0); }
-  public static void addPublicKeyIdentifier(FlatBufferBuilder builder, int PUBLIC_KEY_IDENTIFIEROffset) { builder.addOffset(6, PUBLIC_KEY_IDENTIFIEROffset, 0); }
-  public static void addCipherSuite(FlatBufferBuilder builder, int CIPHER_SUITEOffset) { builder.addOffset(7, CIPHER_SUITEOffset, 0); }
-  public static void addKdfParameters(FlatBufferBuilder builder, int KDF_PARAMETERSOffset) { builder.addOffset(8, KDF_PARAMETERSOffset, 0); }
-  public static void addEncryptionAlgorithmParameters(FlatBufferBuilder builder, int ENCRYPTION_ALGORITHM_PARAMETERSOffset) { builder.addOffset(9, ENCRYPTION_ALGORITHM_PARAMETERSOffset, 0); }
+  public static void addSalt(FlatBufferBuilder builder, int SALTOffset) { builder.addOffset(6, SALTOffset, 0); }
+  public static void addPublicKeyIdentifier(FlatBufferBuilder builder, int PUBLIC_KEY_IDENTIFIEROffset) { builder.addOffset(7, PUBLIC_KEY_IDENTIFIEROffset, 0); }
+  public static void addCipherSuite(FlatBufferBuilder builder, int CIPHER_SUITEOffset) { builder.addOffset(8, CIPHER_SUITEOffset, 0); }
+  public static void addKdfParameters(FlatBufferBuilder builder, int KDF_PARAMETERSOffset) { builder.addOffset(9, KDF_PARAMETERSOffset, 0); }
+  public static void addEncryptionAlgorithmParameters(FlatBufferBuilder builder, int ENCRYPTION_ALGORITHM_PARAMETERSOffset) { builder.addOffset(10, ENCRYPTION_ALGORITHM_PARAMETERSOffset, 0); }
   public static int endEME(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

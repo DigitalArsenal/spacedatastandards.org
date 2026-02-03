@@ -23,10 +23,11 @@ public struct EME: FlatBufferObject, Verifiable {
     case NONCE = 10
     case TAG = 12
     case IV = 14
-    case PUBLIC_KEY_IDENTIFIER = 16
-    case CIPHER_SUITE = 18
-    case KDF_PARAMETERS = 20
-    case ENCRYPTION_ALGORITHM_PARAMETERS = 22
+    case SALT = 16
+    case PUBLIC_KEY_IDENTIFIER = 18
+    case CIPHER_SUITE = 20
+    case KDF_PARAMETERS = 22
+    case ENCRYPTION_ALGORITHM_PARAMETERS = 24
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -51,6 +52,9 @@ public struct EME: FlatBufferObject, Verifiable {
   ///  Initialization vector used to introduce randomness in the encryption process, enhancing security.
   public var IV: String? { let o = _accessor.offset(VTOFFSET.IV.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IVSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IV.v) }
+  ///  Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  public var SALT: String? { let o = _accessor.offset(VTOFFSET.SALT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SALTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SALT.v) }
   ///  Identifier for the public key used, aiding in recipient key management and message decryption.
   public var PUBLIC_KEY_IDENTIFIER: String? { let o = _accessor.offset(VTOFFSET.PUBLIC_KEY_IDENTIFIER.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLIC_KEY_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLIC_KEY_IDENTIFIER.v) }
@@ -63,13 +67,14 @@ public struct EME: FlatBufferObject, Verifiable {
   ///  Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
   public var ENCRYPTION_ALGORITHM_PARAMETERS: String? { let o = _accessor.offset(VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENCRYPTION_ALGORITHM_PARAMETERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENCRYPTION_ALGORITHM_PARAMETERS.v) }
-  public static func startEME(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func startEME(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func addVectorOf(ENCRYPTED_BLOB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_BLOB, at: VTOFFSET.ENCRYPTED_BLOB.p) }
   public static func add(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p) }
   public static func add(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VTOFFSET.MAC.p) }
   public static func add(NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE, at: VTOFFSET.NONCE.p) }
   public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VTOFFSET.TAG.p) }
   public static func add(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VTOFFSET.IV.p) }
+  public static func add(SALT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SALT, at: VTOFFSET.SALT.p) }
   public static func add(PUBLIC_KEY_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY_IDENTIFIER, at: VTOFFSET.PUBLIC_KEY_IDENTIFIER.p) }
   public static func add(CIPHER_SUITE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CIPHER_SUITE, at: VTOFFSET.CIPHER_SUITE.p) }
   public static func add(KDF_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KDF_PARAMETERS, at: VTOFFSET.KDF_PARAMETERS.p) }
@@ -83,6 +88,7 @@ public struct EME: FlatBufferObject, Verifiable {
     NONCEOffset NONCE: Offset = Offset(),
     TAGOffset TAG: Offset = Offset(),
     IVOffset IV: Offset = Offset(),
+    SALTOffset SALT: Offset = Offset(),
     PUBLIC_KEY_IDENTIFIEROffset PUBLIC_KEY_IDENTIFIER: Offset = Offset(),
     CIPHER_SUITEOffset CIPHER_SUITE: Offset = Offset(),
     KDF_PARAMETERSOffset KDF_PARAMETERS: Offset = Offset(),
@@ -95,6 +101,7 @@ public struct EME: FlatBufferObject, Verifiable {
     EME.add(NONCE: NONCE, &fbb)
     EME.add(TAG: TAG, &fbb)
     EME.add(IV: IV, &fbb)
+    EME.add(SALT: SALT, &fbb)
     EME.add(PUBLIC_KEY_IDENTIFIER: PUBLIC_KEY_IDENTIFIER, &fbb)
     EME.add(CIPHER_SUITE: CIPHER_SUITE, &fbb)
     EME.add(KDF_PARAMETERS: KDF_PARAMETERS, &fbb)
@@ -110,6 +117,7 @@ public struct EME: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.NONCE.p, fieldName: "NONCE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TAG.p, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.IV.p, fieldName: "IV", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SALT.p, fieldName: "SALT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PUBLIC_KEY_IDENTIFIER.p, fieldName: "PUBLIC_KEY_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CIPHER_SUITE.p, fieldName: "CIPHER_SUITE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.KDF_PARAMETERS.p, fieldName: "KDF_PARAMETERS", required: false, type: ForwardOffset<String>.self)

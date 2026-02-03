@@ -1,0 +1,61 @@
+import * as flatbuffers from 'flatbuffers';
+import { AEMAttitudeEntry, AEMAttitudeEntryT } from './AEMAttitudeEntry.js';
+export declare class AEMSegment implements flatbuffers.IUnpackableObject<AEMSegmentT> {
+    bb: flatbuffers.ByteBuffer | null;
+    bb_pos: number;
+    __init(i: number, bb: flatbuffers.ByteBuffer): AEMSegment;
+    static getRootAsAEMSegment(bb: flatbuffers.ByteBuffer, obj?: AEMSegment): AEMSegment;
+    static getSizePrefixedRootAsAEMSegment(bb: flatbuffers.ByteBuffer, obj?: AEMSegment): AEMSegment;
+    OBJECT_NAME(): string | null;
+    OBJECT_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    OBJECT_ID(): string | null;
+    OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REF_FRAME_A(): string | null;
+    REF_FRAME_A(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REF_FRAME_B(): string | null;
+    REF_FRAME_B(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ATTITUDE_DIR(): string | null;
+    ATTITUDE_DIR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TIME_SYSTEM(): string | null;
+    TIME_SYSTEM(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ATTITUDE_TYPE(): string | null;
+    ATTITUDE_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    START_TIME(): string | null;
+    START_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    STOP_TIME(): string | null;
+    STOP_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    DATA(index: number, obj?: AEMAttitudeEntry): AEMAttitudeEntry | null;
+    dataLength(): number;
+    static startAEMSegment(builder: flatbuffers.Builder): void;
+    static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
+    static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
+    static addRefFrameA(builder: flatbuffers.Builder, REF_FRAME_AOffset: flatbuffers.Offset): void;
+    static addRefFrameB(builder: flatbuffers.Builder, REF_FRAME_BOffset: flatbuffers.Offset): void;
+    static addAttitudeDir(builder: flatbuffers.Builder, ATTITUDE_DIROffset: flatbuffers.Offset): void;
+    static addTimeSystem(builder: flatbuffers.Builder, TIME_SYSTEMOffset: flatbuffers.Offset): void;
+    static addAttitudeType(builder: flatbuffers.Builder, ATTITUDE_TYPEOffset: flatbuffers.Offset): void;
+    static addStartTime(builder: flatbuffers.Builder, START_TIMEOffset: flatbuffers.Offset): void;
+    static addStopTime(builder: flatbuffers.Builder, STOP_TIMEOffset: flatbuffers.Offset): void;
+    static addData(builder: flatbuffers.Builder, DATAOffset: flatbuffers.Offset): void;
+    static createDataVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startDataVector(builder: flatbuffers.Builder, numElems: number): void;
+    static endAEMSegment(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static createAEMSegment(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, REF_FRAME_AOffset: flatbuffers.Offset, REF_FRAME_BOffset: flatbuffers.Offset, ATTITUDE_DIROffset: flatbuffers.Offset, TIME_SYSTEMOffset: flatbuffers.Offset, ATTITUDE_TYPEOffset: flatbuffers.Offset, START_TIMEOffset: flatbuffers.Offset, STOP_TIMEOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset): flatbuffers.Offset;
+    unpack(): AEMSegmentT;
+    unpackTo(_o: AEMSegmentT): void;
+}
+export declare class AEMSegmentT implements flatbuffers.IGeneratedObject {
+    OBJECT_NAME: string | Uint8Array | null;
+    OBJECT_ID: string | Uint8Array | null;
+    REF_FRAME_A: string | Uint8Array | null;
+    REF_FRAME_B: string | Uint8Array | null;
+    ATTITUDE_DIR: string | Uint8Array | null;
+    TIME_SYSTEM: string | Uint8Array | null;
+    ATTITUDE_TYPE: string | Uint8Array | null;
+    START_TIME: string | Uint8Array | null;
+    STOP_TIME: string | Uint8Array | null;
+    DATA: (AEMAttitudeEntryT)[];
+    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, REF_FRAME_A?: string | Uint8Array | null, REF_FRAME_B?: string | Uint8Array | null, ATTITUDE_DIR?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, ATTITUDE_TYPE?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DATA?: (AEMAttitudeEntryT)[]);
+    pack(builder: flatbuffers.Builder): flatbuffers.Offset;
+}
+//# sourceMappingURL=AEMSegment.d.ts.map

@@ -29,6 +29,10 @@
                 "type" : "string",
                 "description" : "Initialization vector used to introduce randomness in the encryption process, enhancing security."
               },
+        "SALT" : {
+                "type" : "string",
+                "description" : "Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session."
+              },
         "PUBLIC_KEY_IDENTIFIER" : {
                 "type" : "string",
                 "description" : "Identifier for the public key used, aiding in recipient key management and message decryption."

@@ -26,10 +26,11 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NONCE = 10,
     VT_TAG = 12,
     VT_IV = 14,
-    VT_PUBLIC_KEY_IDENTIFIER = 16,
-    VT_CIPHER_SUITE = 18,
-    VT_KDF_PARAMETERS = 20,
-    VT_ENCRYPTION_ALGORITHM_PARAMETERS = 22
+    VT_SALT = 16,
+    VT_PUBLIC_KEY_IDENTIFIER = 18,
+    VT_CIPHER_SUITE = 20,
+    VT_KDF_PARAMETERS = 22,
+    VT_ENCRYPTION_ALGORITHM_PARAMETERS = 24
   };
   /// Encrypted data blob, containing the ciphertext of the original plaintext message.
   const ::flatbuffers::Vector<uint8_t> *ENCRYPTED_BLOB() const {
@@ -54,6 +55,10 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
   const ::flatbuffers::String *IV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IV);
+  }
+  /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  const ::flatbuffers::String *SALT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SALT);
   }
   /// Identifier for the public key used, aiding in recipient key management and message decryption.
   const ::flatbuffers::String *PUBLIC_KEY_IDENTIFIER() const {
@@ -85,6 +90,8 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TAG()) &&
            VerifyOffset(verifier, VT_IV) &&
            verifier.VerifyString(IV()) &&
+           VerifyOffset(verifier, VT_SALT) &&
+           verifier.VerifyString(SALT()) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY_IDENTIFIER) &&
            verifier.VerifyString(PUBLIC_KEY_IDENTIFIER()) &&
            VerifyOffset(verifier, VT_CIPHER_SUITE) &&
@@ -119,6 +126,9 @@ struct EMEBuilder {
   void add_IV(::flatbuffers::Offset<::flatbuffers::String> IV) {
     fbb_.AddOffset(EME::VT_IV, IV);
   }
+  void add_SALT(::flatbuffers::Offset<::flatbuffers::String> SALT) {
+    fbb_.AddOffset(EME::VT_SALT, SALT);
+  }
   void add_PUBLIC_KEY_IDENTIFIER(::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY_IDENTIFIER) {
     fbb_.AddOffset(EME::VT_PUBLIC_KEY_IDENTIFIER, PUBLIC_KEY_IDENTIFIER);
   }
@@ -150,6 +160,7 @@ inline ::flatbuffers::Offset<EME> CreateEME(
     ::flatbuffers::Offset<::flatbuffers::String> NONCE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TAG = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IV = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SALT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY_IDENTIFIER = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CIPHER_SUITE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KDF_PARAMETERS = 0,
@@ -159,6 +170,7 @@ inline ::flatbuffers::Offset<EME> CreateEME(
   builder_.add_KDF_PARAMETERS(KDF_PARAMETERS);
   builder_.add_CIPHER_SUITE(CIPHER_SUITE);
   builder_.add_PUBLIC_KEY_IDENTIFIER(PUBLIC_KEY_IDENTIFIER);
+  builder_.add_SALT(SALT);
   builder_.add_IV(IV);
   builder_.add_TAG(TAG);
   builder_.add_NONCE(NONCE);
@@ -176,6 +188,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
     const char *NONCE = nullptr,
     const char *TAG = nullptr,
     const char *IV = nullptr,
+    const char *SALT = nullptr,
     const char *PUBLIC_KEY_IDENTIFIER = nullptr,
     const char *CIPHER_SUITE = nullptr,
     const char *KDF_PARAMETERS = nullptr,
@@ -186,6 +199,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
   auto NONCE__ = NONCE ? _fbb.CreateString(NONCE) : 0;
   auto TAG__ = TAG ? _fbb.CreateString(TAG) : 0;
   auto IV__ = IV ? _fbb.CreateString(IV) : 0;
+  auto SALT__ = SALT ? _fbb.CreateString(SALT) : 0;
   auto PUBLIC_KEY_IDENTIFIER__ = PUBLIC_KEY_IDENTIFIER ? _fbb.CreateString(PUBLIC_KEY_IDENTIFIER) : 0;
   auto CIPHER_SUITE__ = CIPHER_SUITE ? _fbb.CreateString(CIPHER_SUITE) : 0;
   auto KDF_PARAMETERS__ = KDF_PARAMETERS ? _fbb.CreateString(KDF_PARAMETERS) : 0;
@@ -198,6 +212,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
       NONCE__,
       TAG__,
       IV__,
+      SALT__,
       PUBLIC_KEY_IDENTIFIER__,
       CIPHER_SUITE__,
       KDF_PARAMETERS__,

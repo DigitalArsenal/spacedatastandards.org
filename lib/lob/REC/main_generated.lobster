@@ -4,43 +4,122 @@ import flatbuffers
 enum RecordType:
     RecordType_NONE = 0
     RecordType_ACL = 1
-    RecordType_ATM = 2
-    RecordType_BOV = 3
-    RecordType_CAT = 4
-    RecordType_CDM = 5
-    RecordType_CRM = 6
-    RecordType_CSM = 7
-    RecordType_CTR = 8
-    RecordType_EME = 9
-    RecordType_EOO = 10
-    RecordType_EOP = 11
-    RecordType_EPM = 12
-    RecordType_HYP = 13
-    RecordType_IDM = 14
-    RecordType_LCC = 15
-    RecordType_LDM = 16
-    RecordType_MET = 17
-    RecordType_MPE = 18
-    RecordType_OCM = 19
-    RecordType_OEM = 20
-    RecordType_OMM = 21
-    RecordType_OSM = 22
-    RecordType_PLD = 23
-    RecordType_PLG = 24
-    RecordType_PLK = 25
-    RecordType_PNM = 26
-    RecordType_PRG = 27
-    RecordType_PUR = 28
-    RecordType_REV = 29
-    RecordType_RFM = 30
-    RecordType_ROC = 31
-    RecordType_SCM = 32
-    RecordType_SIT = 33
-    RecordType_STF = 34
-    RecordType_TDM = 35
-    RecordType_TIM = 36
-    RecordType_VCM = 37
-    RecordType_XTC = 38
+    RecordType_ACM = 2
+    RecordType_ACR = 3
+    RecordType_AEM = 4
+    RecordType_AOF = 5
+    RecordType_APM = 6
+    RecordType_ARM = 7
+    RecordType_AST = 8
+    RecordType_ATD = 9
+    RecordType_ATM = 10
+    RecordType_BAL = 11
+    RecordType_BEM = 12
+    RecordType_BMC = 13
+    RecordType_BOV = 14
+    RecordType_CAT = 15
+    RecordType_CDM = 16
+    RecordType_CFP = 17
+    RecordType_CHN = 18
+    RecordType_CLT = 19
+    RecordType_CMS = 20
+    RecordType_COM = 21
+    RecordType_CRD = 22
+    RecordType_CRM = 23
+    RecordType_CSM = 24
+    RecordType_CTR = 25
+    RecordType_DFH = 26
+    RecordType_DMG = 27
+    RecordType_DOA = 28
+    RecordType_EME = 29
+    RecordType_ENV = 30
+    RecordType_EOO = 31
+    RecordType_EOP = 32
+    RecordType_EPM = 33
+    RecordType_EWR = 34
+    RecordType_FCS = 35
+    RecordType_GDI = 36
+    RecordType_GEO = 37
+    RecordType_GNO = 38
+    RecordType_GRV = 39
+    RecordType_GVH = 40
+    RecordType_HEL = 41
+    RecordType_HYP = 42
+    RecordType_IDM = 43
+    RecordType_IRO = 44
+    RecordType_LCC = 45
+    RecordType_LDM = 46
+    RecordType_LKS = 47
+    RecordType_LND = 48
+    RecordType_LNE = 49
+    RecordType_MET = 50
+    RecordType_MFE = 51
+    RecordType_MNF = 52
+    RecordType_MNV = 53
+    RecordType_MPE = 54
+    RecordType_MSL = 55
+    RecordType_MST = 56
+    RecordType_MTI = 57
+    RecordType_NAV = 58
+    RecordType_OBD = 59
+    RecordType_OBT = 60
+    RecordType_OCM = 61
+    RecordType_OEM = 62
+    RecordType_OMM = 63
+    RecordType_OOD = 64
+    RecordType_OOE = 65
+    RecordType_OOI = 66
+    RecordType_OOL = 67
+    RecordType_OON = 68
+    RecordType_OPM = 69
+    RecordType_OSM = 70
+    RecordType_PCF = 71
+    RecordType_PHY = 72
+    RecordType_PLD = 73
+    RecordType_PLG = 74
+    RecordType_PLK = 75
+    RecordType_PNM = 76
+    RecordType_PRG = 77
+    RecordType_PUR = 78
+    RecordType_RAF = 79
+    RecordType_RCF = 80
+    RecordType_RDM = 81
+    RecordType_RDO = 82
+    RecordType_REV = 83
+    RecordType_RFB = 84
+    RecordType_RFE = 85
+    RecordType_RFM = 86
+    RecordType_RFO = 87
+    RecordType_ROC = 88
+    RecordType_SAR = 89
+    RecordType_SCM = 90
+    RecordType_SDL = 91
+    RecordType_SEO = 92
+    RecordType_SEV = 93
+    RecordType_SIT = 94
+    RecordType_SKI = 95
+    RecordType_SNR = 96
+    RecordType_SOI = 97
+    RecordType_SON = 98
+    RecordType_SPP = 99
+    RecordType_SPW = 100
+    RecordType_STF = 101
+    RecordType_STR = 102
+    RecordType_STV = 103
+    RecordType_SWR = 104
+    RecordType_TCF = 105
+    RecordType_TDM = 106
+    RecordType_TIM = 107
+    RecordType_TKG = 108
+    RecordType_TME = 109
+    RecordType_TMF = 110
+    RecordType_TPN = 111
+    RecordType_TRK = 112
+    RecordType_TRN = 113
+    RecordType_VCM = 114
+    RecordType_WPN = 115
+    RecordType_WTH = 116
+    RecordType_XTC = 117
 
 class Record
 
@@ -51,48 +130,148 @@ class Record : flatbuffers.handle
         return RecordType(flatbuffers.field_uint8(buf_, pos_, 4, 0))
     def value_as_ACL():
         return ACL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ACM():
+        return ACM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ACR():
+        return ACR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_AEM():
+        return AEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_AOF():
+        return AOF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_APM():
+        return APM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ARM():
+        return ARM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_AST():
+        return AST { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ATD():
+        return ATD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ATM():
         return ATM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_BAL():
+        return BAL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_BEM():
+        return BEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_BMC():
+        return BMC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_BOV():
         return BOV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CAT():
         return CAT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CDM():
         return CDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CFP():
+        return CFP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CHN():
+        return CHN { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CLT():
+        return CLT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CMS():
+        return CMS { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_COM():
+        return COM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CRD():
+        return CRD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CRM():
         return CRM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CSM():
         return CSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CTR():
         return CTR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_DFH():
+        return DFH { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_DMG():
+        return DMG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_DOA():
+        return DOA { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EME():
         return EME { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_ENV():
+        return ENV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EOO():
         return EOO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EOP():
         return EOP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_EPM():
         return EPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_EWR():
+        return EWR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_FCS():
+        return FCS { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GDI():
+        return GDI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GEO():
+        return GEO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GNO():
+        return GNO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GRV():
+        return GRV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GVH():
+        return GVH { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_HEL():
+        return HEL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_HYP():
         return HYP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_IDM():
         return IDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_IRO():
+        return IRO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LCC():
         return LCC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LDM():
         return LDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_LKS():
+        return LKS { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_LND():
+        return LND { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_LNE():
+        return LNE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_MET():
         return MET { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MFE():
+        return MFE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MNF():
+        return MNF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MNV():
+        return MNV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_MPE():
         return MPE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MSL():
+        return MSL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MST():
+        return MST { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_MTI():
+        return MTI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_NAV():
+        return NAV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OBD():
+        return OBD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OBT():
+        return OBT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OCM():
         return OCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OEM():
         return OEM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OMM():
         return OMM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OOD():
+        return OOD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OOE():
+        return OOE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OOI():
+        return OOI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OOL():
+        return OOL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OON():
+        return OON { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_OPM():
+        return OPM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_OSM():
         return OSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PCF():
+        return PCF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_PHY():
+        return PHY { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PLD():
         return PLD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PLG():
@@ -105,24 +284,82 @@ class Record : flatbuffers.handle
         return PRG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_PUR():
         return PUR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RAF():
+        return RAF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RCF():
+        return RCF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RDM():
+        return RDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RDO():
+        return RDO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_REV():
         return REV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RFB():
+        return RFB { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RFE():
+        return RFE { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_RFM():
         return RFM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_RFO():
+        return RFO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_ROC():
         return ROC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SAR():
+        return SAR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SCM():
         return SCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SDL():
+        return SDL { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SEO():
+        return SEO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SEV():
+        return SEV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_SIT():
         return SIT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SKI():
+        return SKI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SNR():
+        return SNR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SOI():
+        return SOI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SON():
+        return SON { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SPP():
+        return SPP { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SPW():
+        return SPW { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_STF():
         return STF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_STR():
+        return STR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_STV():
+        return STV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_SWR():
+        return SWR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TCF():
+        return TCF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TDM():
         return TDM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_TIM():
         return TIM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TKG():
+        return TKG { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TME():
+        return TME { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TMF():
+        return TMF { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TPN():
+        return TPN { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TRK():
+        return TRK { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_TRN():
+        return TRN { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_VCM():
         return VCM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_WPN():
+        return WPN { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_WTH():
+        return WTH { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_XTC():
         return XTC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def standard() -> string:

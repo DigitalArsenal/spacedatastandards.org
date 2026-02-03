@@ -9,9 +9,77 @@
       "type" : "string",
       "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"]
     },
+    "AircraftType" : {
+      "type" : "string",
+      "enum": ["FIGHTER", "ATTACK", "BOMBER", "TRANSPORT", "TRAINER", "RECON", "TANKER", "AWACS", "UAV", "PROP_SINGLE", "PROP_MULTI", "SEAPLANE"]
+    },
+    "EngineType" : {
+      "type" : "string",
+      "enum": ["TURBOJET", "TURBOFAN_LOW", "TURBOFAN_HIGH", "TURBOPROP", "PISTON", "RAMJET", "SCRAMJET", "ELECTRIC"]
+    },
+    "FlightPhase" : {
+      "type" : "string",
+      "enum": ["PARKED", "TAXI", "TAKEOFF", "CLIMB", "CRUISE", "DESCENT", "APPROACH", "LANDING", "GO_AROUND", "EMERGENCY"]
+    },
+    "GearState" : {
+      "type" : "string",
+      "enum": ["UP", "TRANSIT_DOWN", "DOWN", "TRANSIT_UP", "DAMAGED"]
+    },
+    "ArmorMaterial" : {
+      "type" : "string",
+      "enum": ["RHA", "CHA", "FHA", "HHA", "ALUMINUM", "COMPOSITE", "CERAMIC", "ERA", "NERA", "SPACED", "RUBBER", "STRUCTURAL", "TITANIUM", "KEVLAR", "GLASS"]
+    },
+    "AmmoType" : {
+      "type" : "string",
+      "enum": ["AP", "APC", "APCBC", "APCR", "APDS", "APFSDS", "HEAT", "HEAT_FS", "HESH", "HE", "HE_FRAG", "HEDP", "APHE", "SAP", "ATGM", "TANDEM_HEAT", "TOP_ATTACK", "EFP"]
+    },
+    "PenResult" : {
+      "type" : "string",
+      "enum": ["NO_PENETRATION", "PARTIAL_PEN", "FULL_PEN", "RICOCHET", "SHATTERED", "OVER_MATCH"]
+    },
+    "PropagatorMethod" : {
+      "type" : "string",
+      "enum": ["KEPLER", "SGP4", "SDP4", "HPOP", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST"]
+    },
+    "ForceModel" : {
+      "type" : "string",
+      "enum": ["POINT_MASS", "J2", "J2_J4", "SPHERICAL_HARMONICS", "THIRD_BODY_SUN", "THIRD_BODY_MOON", "ATMOSPHERIC_DRAG", "SOLAR_RADIATION_PRESSURE", "RELATIVISTIC", "SOLID_TIDES", "OCEAN_TIDES", "MANEUVER"]
+    },
+    "OrbitalRegime" : {
+      "type" : "string",
+      "enum": ["LEO", "MEO", "GEO", "HEO", "SSO", "MOLNIYA", "TUNDRA", "POLAR", "EQUATORIAL", "HYPERBOLIC", "PARABOLIC"]
+    },
+    "TimeReference" : {
+      "type" : "string",
+      "enum": ["UTC", "TAI", "TT", "TDB", "GPS_TIME", "JULIAN_DATE", "MODIFIED_JULIAN_DATE"]
+    },
+    "ReferenceFrame" : {
+      "type" : "string",
+      "enum": ["ECI_J2000", "ECEF", "TEME", "GCRF", "ITRF", "RIC", "VNC", "NTW", "SEZ", "LVLH"]
+    },
     "AtmosphericModelFamily" : {
       "type" : "string",
       "enum": ["CIRA_XX", "DTM_XX", "GITM", "GOST", "GRAM_XX", "HP", "JAC_HASDM", "JAC_GILL", "JB08", "JR71", "JXX", "MET_XX", "MSIS_86", "MSISE_90", "NRLMSIS00E", "TIECGM", "USSA_XX"]
+    },
+    "DragModel" : {
+      "type" : "string",
+      "enum": ["G1", "G2", "G5", "G6", "G7", "G8", "GI", "GL", "GS", "RA4", "CUSTOM"]
+    },
+    "BallisticModel" : {
+      "type" : "string",
+      "enum": ["POINT_MASS_2D", "POINT_MASS_3D", "MODIFIED_POINT_MASS", "SIX_DOF"]
+    },
+    "ProjectileType" : {
+      "type" : "string",
+      "enum": ["BALL", "HOLLOW_POINT", "BOAT_TAIL", "ARMOR_PIERCING", "ARMOR_PIERCING_INCENDIARY", "TRACER", "SABOT", "SUBCALIBER", "HEAT", "HESH", "HE", "APFSDS", "ARTILLERY_HE", "MORTAR", "GRENADE", "ROCKET"]
+    },
+    "StabilizationType" : {
+      "type" : "string",
+      "enum": ["SPIN", "FIN", "DUAL"]
+    },
+    "PenetrationModel" : {
+      "type" : "string",
+      "enum": ["DE_MARRE", "THOR", "ODERMATT", "ANDERSON", "BRL"]
     },
     "PolarizationType" : {
       "type" : "string",
@@ -85,6 +153,78 @@
       "type" : "string",
       "enum": ["CALCULATED", "DEFAULT"]
     },
+    "pduType" : {
+      "type" : "string",
+      "enum": ["FILE_DIRECTIVE", "FILE_DATA"]
+    },
+    "transmissionMode" : {
+      "type" : "string",
+      "enum": ["ACKNOWLEDGED", "UNACKNOWLEDGED"]
+    },
+    "cltuPduType" : {
+      "type" : "string",
+      "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_DATA_INVOCATION", "TRANSFER_DATA_RETURN", "PEER_ABORT"]
+    },
+    "ModulationType" : {
+      "type" : "string",
+      "enum": ["AM", "FM", "PM", "BPSK", "QPSK", "PSK8", "QAM16", "QAM64", "QAM256", "FSK", "MSK", "OFDM", "SPREAD_SPECTRUM", "FHSS", "DSSS"]
+    },
+    "BandType" : {
+      "type" : "string",
+      "enum": ["HF", "VHF", "UHF", "L_BAND", "S_BAND", "C_BAND", "X_BAND", "KU_BAND", "K_BAND", "KA_BAND", "V_BAND", "W_BAND", "MM_WAVE"]
+    },
+    "PropagationModel" : {
+      "type" : "string",
+      "enum": ["FREE_SPACE", "TWO_RAY_GROUND", "HATA_URBAN", "HATA_SUBURBAN", "COST231", "ITU_R_P525", "ITU_R_P676", "ITU_R_P838", "ITU_R_P840", "LONGLEY_RICE", "OKUMURA", "LOG_DISTANCE", "TERRAIN_INTEGRATED"]
+    },
+    "DataLinkType" : {
+      "type" : "string",
+      "enum": ["LINK_16", "LINK_11", "LINK_22", "CDL", "TCDL", "SADL", "IFDL", "VMF", "JREAP", "SATCOM", "ADS_B", "AIS", "HAVEQUICK", "SINCGARS", "CUSTOM"]
+    },
+    "AntennaPattern" : {
+      "type" : "string",
+      "enum": ["ISOTROPIC", "DIPOLE", "YAGI", "PARABOLIC", "PHASED_ARRAY", "HORN", "PATCH", "HELICAL", "LOG_PERIODIC", "OMNIDIRECTIONAL", "SECTOR", "CUSTOM_PATTERN"]
+    },
+    "CoordFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "ECI_J2000", "ECI_MOD", "ECI_TOD", "TEME", "NED", "ENU", "BODY", "MOON_CI", "MOON_CF", "MARS_CI", "GEOCENTRIC", "GEODETIC"]
+    },
+    "Ellipsoid" : {
+      "type" : "string",
+      "enum": ["WGS84", "GRS80", "WGS72", "SPHERE", "MOON", "MARS"]
+    },
+    "ModuleType" : {
+      "type" : "string",
+      "enum": ["ENGINE", "TRANSMISSION", "FUEL_TANK", "AMMO_RACK", "AMMO_FIRST_STAGE", "GUN_BREECH", "GUN_BARREL", "TURRET_RING", "TURRET_DRIVE", "TRACKS", "WHEELS", "SUSPENSION", "DRIVER_PORT", "OPTICS_GUNNER", "OPTICS_COMMANDER", "FCS", "RADIO", "HYDRAULICS", "AUTOLOADER", "ERA_BLOCK", "RADAR", "WING_LEFT", "WING_RIGHT", "TAIL", "AILERON_LEFT", "AILERON_RIGHT", "ELEVATOR", "RUDDER", "LANDING_GEAR", "MAIN_ROTOR", "TAIL_ROTOR", "PROPELLER", "BRIDGE", "MAGAZINE"]
+    },
+    "ModuleState" : {
+      "type" : "string",
+      "enum": ["OPERATIONAL", "DAMAGED", "CRITICAL", "DESTROYED", "REPAIRING"]
+    },
+    "CrewRole" : {
+      "type" : "string",
+      "enum": ["COMMANDER", "GUNNER", "DRIVER", "LOADER", "RADIO_OP", "PILOT", "COPILOT", "ENGINEER", "HELMSMAN"]
+    },
+    "CrewState" : {
+      "type" : "string",
+      "enum": ["ALIVE", "WOUNDED", "UNCONSCIOUS", "DEAD", "BAILED"]
+    },
+    "DestructionCause" : {
+      "type" : "string",
+      "enum": ["NONE", "AMMO_DETONATION", "FUEL_FIRE", "CREW_LOST", "STRUCTURAL_FAILURE", "FLOODING"]
+    },
+    "AtmosphereModel" : {
+      "type" : "string",
+      "enum": ["ISA", "US_STD_1976", "NRLMSISE_00", "SIMPLE", "CUSTOM"]
+    },
+    "WeatherCondition" : {
+      "type" : "string",
+      "enum": ["CLEAR", "FEW_CLOUDS", "SCATTERED", "BROKEN", "OVERCAST", "RAIN_LIGHT", "RAIN_MODERATE", "RAIN_HEAVY", "SNOW_LIGHT", "SNOW_MODERATE", "SNOW_HEAVY", "FOG", "MIST", "HAZE", "THUNDERSTORM", "SANDSTORM"]
+    },
+    "TerrainType" : {
+      "type" : "string",
+      "enum": ["OCEAN", "WATER_FRESH", "SAND", "GRASS", "FOREST", "CONCRETE", "ASPHALT", "SNOW", "ICE", "ROCK", "MARSH", "URBAN"]
+    },
     "CollectMethod" : {
       "type" : "string",
       "enum": ["SIDEREAL", "RATE_TRACK", "FIXED_STARE", "OTHER"]
@@ -96,6 +236,70 @@
     "DataType" : {
       "type" : "string",
       "enum": ["OBSERVED", "PREDICTED"]
+    },
+    "JammingType" : {
+      "type" : "string",
+      "enum": ["NOISE_BARRAGE", "NOISE_SPOT", "NOISE_SWEPT", "DECEPTION_RANGE_GATE", "DECEPTION_VELOCITY_GATE", "DECEPTION_ANGLE", "DECEPTION_FALSE_TARGET", "DRFM", "REPEATER", "CROSS_EYE", "CROSS_POLARIZATION", "CHAFF", "FLARE", "TOWED_DECOY"]
+    },
+    "ThreatCategory" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "EARLY_WARNING", "ACQUISITION", "TRACKING", "GUIDANCE", "HEIGHT_FINDER", "GCI", "AIRBORNE_INTERCEPT", "SURFACE_SEARCH", "AIR_SEARCH", "NAVIGATION", "WEATHER", "CIVIL", "FRIENDLY", "IFF"]
+    },
+    "ESMFunction" : {
+      "type" : "string",
+      "enum": ["SEARCH", "CLASSIFICATION", "IDENTIFICATION", "DIRECTION_FINDING", "LOCATION", "RECORDING", "SITUATIONAL_AWARENESS"]
+    },
+    "CountermeasureStatus" : {
+      "type" : "string",
+      "enum": ["READY", "DEPLOYING", "ACTIVE", "EXPENDED", "RELOADING", "FAILED"]
+    },
+    "WaveformType" : {
+      "type" : "string",
+      "enum": ["CW", "PULSED", "PULSE_DOPPLER", "FM_CW", "CHIRP", "PHASE_CODED", "FREQUENCY_AGILE", "PRI_AGILE", "COMPLEX", "LPI"]
+    },
+    "FCSMode" : {
+      "type" : "string",
+      "enum": ["OFF", "STANDBY", "RANGING", "TRACKING", "SOLUTION", "CCIP", "CCRP", "MANUAL"]
+    },
+    "LeadMethod" : {
+      "type" : "string",
+      "enum": ["NONE", "PREDICTIVE", "COLLISION", "CONSTANT_BEARING", "PURSUIT"]
+    },
+    "RangefinderType" : {
+      "type" : "string",
+      "enum": ["STADIAMETRIC", "STEREOSCOPIC", "COINCIDENCE", "LASER", "RADAR"]
+    },
+    "GravityModelType" : {
+      "type" : "string",
+      "enum": ["POINT_MASS", "J2_ONLY", "J2_J4", "J2_J6", "SPHERICAL_HARMONICS", "CUSTOM"]
+    },
+    "GravityModelName" : {
+      "type" : "string",
+      "enum": ["WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL"]
+    },
+    "CentralBody" : {
+      "type" : "string",
+      "enum": ["EARTH", "MOON", "SUN", "MARS", "JUPITER", "SATURN", "VENUS", "MERCURY", "CUSTOM_BODY"]
+    },
+    "VehicleType" : {
+      "type" : "string",
+      "enum": ["MBT", "LIGHT_TANK", "IFV", "APC", "SPAA", "SPG", "MLRS", "RECON", "TRUCK", "JEEP", "MRAP", "ENGINEERING", "RECOVERY", "AAA", "SAM", "RADAR"]
+    },
+    "DriveType" : {
+      "type" : "string",
+      "enum": ["TRACKED", "WHEELED_4X4", "WHEELED_6X6", "WHEELED_8X8", "HALF_TRACK"]
+    },
+    "GVHEngineType" : {
+      "type" : "string",
+      "enum": ["DIESEL", "GASOLINE", "GAS_TURBINE", "MULTIFUEL", "HYBRID", "ELECTRIC"]
+    },
+    "RotorType" : {
+      "type" : "string",
+      "enum": ["MAIN", "TAIL", "TANDEM_FRONT", "TANDEM_REAR", "COAXIAL_UPPER", "COAXIAL_LOWER"]
+    },
+    "RotorFlags" : {
+      "type" : "string",
+      "enum": ["NORMAL", "VRS_WARNING", "VRS_ACTIVE", "RBS_WARNING", "RBS_ACTIVE", "OVERSPEED", "UNDERSPEED"]
     },
     "ScoreType" : {
       "type" : "string",
@@ -113,6 +317,38 @@
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
+    "MissileType" : {
+      "type" : "string",
+      "enum": ["AAM_IR", "AAM_SARH", "AAM_ARH", "SAM_IR", "SAM_SARH", "SAM_COMMAND", "ASM_AR", "ASM_TV", "ASM_LASER", "ATGM_SACLOS", "ATGM_BEAM", "ATGM_TOP", "CRUISE", "BALLISTIC", "TORPEDO"]
+    },
+    "SeekerType" : {
+      "type" : "string",
+      "enum": ["NONE", "IR_UNCOOLED", "IR_COOLED", "IR_IMAGING", "IR_2COLOR", "RADAR_SARH", "RADAR_ARH", "RADAR_PASSIVE", "TV_OPTICAL", "LASER_SH", "GPS_INS", "ACOUSTIC", "WIRE"]
+    },
+    "GuidanceLaw" : {
+      "type" : "string",
+      "enum": ["NONE", "PURE_PURSUIT", "LEAD_PURSUIT", "PROPORTIONAL_NAV", "AUGMENTED_PN", "OPTIMAL_GUIDANCE", "COMMAND_LOS", "BEAM_RIDING", "TVM", "LOFT", "TERRAIN_FOLLOW"]
+    },
+    "MissilePhase" : {
+      "type" : "string",
+      "enum": ["CAPTIVE", "LAUNCH", "BOOST", "SUSTAIN", "COAST", "TERMINAL", "INTERCEPT", "MISS", "SELF_DESTRUCT"]
+    },
+    "SeekerStatus" : {
+      "type" : "string",
+      "enum": ["OFF", "CAGED", "UNCAGED", "ACQUIRING", "TRACKING", "MEMORY", "JAMMED"]
+    },
+    "VesselType" : {
+      "type" : "string",
+      "enum": ["CARRIER", "BATTLESHIP", "CRUISER", "DESTROYER", "FRIGATE", "CORVETTE", "PATROL", "SUBMARINE_SSN", "SUBMARINE_SSBN", "SUBMARINE_SSK", "AMPHIBIOUS", "CARGO", "TANKER", "AUXILIARY", "FAST_ATTACK", "TORPEDO_BOAT"]
+    },
+    "PropulsionType" : {
+      "type" : "string",
+      "enum": ["STEAM", "GAS_TURBINE", "DIESEL", "DIESEL_ELECTRIC", "NUCLEAR", "CODAG", "COGAG", "CODLAG", "AIP"]
+    },
+    "DCState" : {
+      "type" : "string",
+      "enum": ["NORMAL", "MINOR_DAMAGE", "MODERATE_DAMAGE", "SEVERE_DAMAGE", "CRITICAL", "SINKING", "ABANDONED"]
+    },
     "timeSystem" : {
       "type" : "string",
       "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
@@ -121,6 +357,26 @@
       "type" : "string",
       "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
     },
+    "IntegratorType" : {
+      "type" : "string",
+      "enum": ["RK4", "RK45", "RK78", "DOPRI5", "DOPRI853", "ABM", "BS", "ANALYTICAL"]
+    },
+    "IntegrationMethod" : {
+      "type" : "string",
+      "enum": ["EULER", "EULER_IMPROVED", "RK2", "RK4", "RK45", "RK78", "VERLET", "LEAPFROG", "ADAMS_BASHFORTH", "GAUSS_JACKSON"]
+    },
+    "CollisionShape" : {
+      "type" : "string",
+      "enum": ["SPHERE", "BOX", "CYLINDER", "CAPSULE", "CONE", "CONVEX_HULL", "MESH", "COMPOUND"]
+    },
+    "MaterialType" : {
+      "type" : "string",
+      "enum": ["STEEL", "ALUMINUM", "TITANIUM", "CERAMIC", "COMPOSITE", "CONCRETE", "WOOD", "RUBBER", "WATER", "AIR", "CUSTOM"]
+    },
+    "ForceType" : {
+      "type" : "string",
+      "enum": ["GRAVITY", "THRUST", "DRAG", "LIFT", "FRICTION", "SPRING", "DAMPER", "CONTACT", "MAGNETIC", "ELECTRIC", "CUSTOM"]
+    },
     "pluginType" : {
       "type" : "string",
       "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader"]
@@ -128,6 +384,118 @@
     "licenseType" : {
       "type" : "string",
       "enum": ["Trial", "Commercial", "Enterprise", "Educational", "OpenSource", "Internal"]
+    },
+    "rafPduType" : {
+      "type" : "string",
+      "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_BUFFER", "STATUS_REPORT", "PEER_ABORT"]
+    },
+    "rcfPduType" : {
+      "type" : "string",
+      "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_BUFFER", "STATUS_REPORT", "PEER_ABORT"]
+    },
+    "SensorType" : {
+      "type" : "string",
+      "enum": ["RADAR_PULSE", "RADAR_DOPPLER", "RADAR_CW", "RADAR_AESA", "RADAR_PESA", "IR_SEARCH", "IR_IMAGING", "EO_TV", "EO_LLLTV", "LASER_DESIGNATOR", "LASER_RANGEFINDER", "RWR", "MAW", "SONAR_ACTIVE", "SONAR_PASSIVE", "ACOUSTIC"]
+    },
+    "SensorMode" : {
+      "type" : "string",
+      "enum": ["OFF", "STANDBY", "SEARCH", "ACQUISITION", "TRACK", "TRACK_WHILE_SCAN", "DESIGNATE", "JAMMED"]
+    },
+    "TrackQuality" : {
+      "type" : "string",
+      "enum": ["NONE", "TENTATIVE", "FIRM", "LOCKED", "COASTING", "LOST"]
+    },
+    "SonarType" : {
+      "type" : "string",
+      "enum": ["ACTIVE_HULL", "ACTIVE_VDS", "ACTIVE_DIPPING", "PASSIVE_HULL", "PASSIVE_TOWED", "PASSIVE_SONOBUOY", "MINE_HUNTING", "SIDESCAN", "BOTTOM_PROFILER", "INTERCEPT", "TORPEDO"]
+    },
+    "SONPropagationModel" : {
+      "type" : "string",
+      "enum": ["RAY_TRACING", "PARABOLIC_EQUATION", "NORMAL_MODES", "ISOVELOCITY", "RANGE_DEPENDENT", "FAST_FIELD"]
+    },
+    "BottomType" : {
+      "type" : "string",
+      "enum": ["HARD_ROCK", "SOFT_ROCK", "SAND", "SILT", "CLAY", "MUD", "GRAVEL", "CORAL", "MIXED"]
+    },
+    "SeaState" : {
+      "type" : "string",
+      "enum": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9"]
+    },
+    "NoiseSource" : {
+      "type" : "string",
+      "enum": ["AMBIENT", "SHIPPING", "BIOLOGICAL", "WIND", "RAIN", "ICE", "SEISMIC", "MACHINERY", "FLOW", "SELF_NOISE"]
+    },
+    "TargetType" : {
+      "type" : "string",
+      "enum": ["SUBMARINE", "SURFACE_SHIP", "TORPEDO", "MINE", "BIOLOGICAL", "WRECK", "UNKNOWN"]
+    },
+    "TorpedoGuidanceMode" : {
+      "type" : "string",
+      "enum": ["WIRE_GUIDED", "ACTIVE_HOMING", "PASSIVE_HOMING", "WAKE_HOMING", "PATTERN_SEARCH", "SNAKE_SEARCH", "CEILING_BOUNCE"]
+    },
+    "packetType" : {
+      "type" : "string",
+      "enum": ["TM", "TC"]
+    },
+    "FluxQualifier" : {
+      "type" : "string",
+      "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "CELESTRAK_INTERPOLATED"]
+    },
+    "F107DataType" : {
+      "type" : "string",
+      "enum": ["OBS", "INT", "PRD", "PRM"]
+    },
+    "STVReferenceFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ITRF", "EME2000", "TEME", "ICRF", "MOON_CI", "MARS_CI"]
+    },
+    "FilterType" : {
+      "type" : "string",
+      "enum": ["ALPHA_BETA", "ALPHA_BETA_GAMMA", "KALMAN", "EXTENDED_KALMAN", "UNSCENTED_KALMAN", "PARTICLE", "IMM", "JPDA", "MHT", "GNN", "NNKF"]
+    },
+    "MotionModel" : {
+      "type" : "string",
+      "enum": ["CONSTANT_VELOCITY", "CONSTANT_ACCELERATION", "COORDINATED_TURN", "SINGER_ACCELERATION", "JUMP_MARKOV", "BALLISTIC", "ORBITAL", "SURFACE_VEHICLE", "CURVILINEAR"]
+    },
+    "MeasurementType" : {
+      "type" : "string",
+      "enum": ["POSITION_3D", "POSITION_2D", "RANGE_BEARING", "RANGE_BEARING_ELEVATION", "RANGE_ONLY", "BEARING_ONLY", "RANGE_RATE", "ANGLES_ONLY", "TLE", "GPS", "RADAR", "ADSB", "SONAR"]
+    },
+    "TrackStatus" : {
+      "type" : "string",
+      "enum": ["TENTATIVE", "CONFIRMED", "COASTING", "LOST", "DELETED"]
+    },
+    "AssociationMethod" : {
+      "type" : "string",
+      "enum": ["NEAREST_NEIGHBOR", "GLOBAL_NEAREST_NEIGHBOR", "PROBABILISTIC_DATA", "JOINT_PROBABILISTIC", "AUCTION", "HUNGARIAN", "MUNKRES"]
+    },
+    "FusionMethod" : {
+      "type" : "string",
+      "enum": ["SIMPLE_AVERAGE", "WEIGHTED_AVERAGE", "COVARIANCE_INTERSECTION", "BAR_SHALOM_CAMPO", "FEDERATED", "SEQUENTIAL"]
+    },
+    "TimeScale" : {
+      "type" : "string",
+      "enum": ["UTC", "TAI", "TT", "TDB", "TCG", "TCB", "GPS", "GLONASS", "GALILEO", "BEIDOU", "UT1", "LOCAL_MEAN_SOLAR", "LOCAL_APPARENT_SOLAR", "SIDEREAL"]
+    },
+    "DateFormat" : {
+      "type" : "string",
+      "enum": ["ISO8601", "JULIAN_DATE", "MODIFIED_JULIAN_DATE", "GPS_WEEK_SOW", "YEAR_DOY", "UNIX_EPOCH", "MISSION_ELAPSED"]
+    },
+    "ClockType" : {
+      "type" : "string",
+      "enum": ["CESIUM", "RUBIDIUM", "QUARTZ_TCXO", "QUARTZ_OCXO", "HYDROGEN_MASER", "GPS_DISCIPLINED"]
+    },
+    "TerrainDataSource" : {
+      "type" : "string",
+      "enum": ["SRTM", "ASTER", "DTED_0", "DTED_1", "DTED_2", "NED", "LIDAR", "CUSTOM"]
+    },
+    "LandCoverType" : {
+      "type" : "string",
+      "enum": ["WATER", "URBAN", "SUBURBAN", "FOREST_DECIDUOUS", "FOREST_CONIFEROUS", "FOREST_MIXED", "GRASSLAND", "SHRUBLAND", "CROPLAND", "BARREN", "WETLAND", "SNOW_ICE", "DESERT", "ROCK", "ROAD", "RUNWAY", "BUILDING"]
+    },
+    "TerrainInterpolation" : {
+      "type" : "string",
+      "enum": ["NEAREST", "BILINEAR", "BICUBIC", "KRIGING"]
     },
     "elementType" : {
       "type" : "string",
@@ -172,6 +540,18 @@
     "propagatorType" : {
       "type" : "string",
       "enum": ["NONE", "SEMI_ANALYTICAL", "VINTI", "SGP4", "COWELL", "RK4", "NYX", "GMAT", "SPICE", "SGP", "SDP4", "SGP8", "SDP8"]
+    },
+    "WeaponType" : {
+      "type" : "string",
+      "enum": ["MG_SMALL", "MG_HEAVY", "AUTOCANNON", "CANNON", "TANK_GUN", "ARTILLERY", "MORTAR", "ROCKET_UNGUIDED", "BOMB_DUMB", "BOMB_GUIDED", "TORPEDO", "DEPTH_CHARGE", "MINE", "GRENADE"]
+    },
+    "FuzeType" : {
+      "type" : "string",
+      "enum": ["CONTACT", "DELAY", "TIMED", "PROXIMITY", "AIRBURST", "MAGNETIC", "PRESSURE", "SEISMIC"]
+    },
+    "ProjectilePhase" : {
+      "type" : "string",
+      "enum": ["LOADED", "IN_FLIGHT", "DETONATED", "DUD", "IMPACT"]
     },
     "ComparisonOperator" : {
       "type" : "string",
@@ -235,7 +615,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ATM", "BOV", "CAT", "CDM", "CRM", "CSM", "CTR", "EME", "EOO", "EOP", "EPM", "HYP", "IDM", "LCC", "LDM", "MET", "MPE", "OCM", "OEM", "OMM", "OSM", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "REV", "RFM", "ROC", "SCM", "SIT", "STF", "TDM", "TIM", "VCM", "XTC"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "AEM", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "CRD", "CRM", "CSM", "CTR", "DFH", "DMG", "DOA", "EME", "ENV", "EOO", "EOP", "EPM", "EWR", "FCS", "GDI", "GEO", "GNO", "GRV", "GVH", "HEL", "HYP", "IDM", "IRO", "LCC", "LDM", "LKS", "LND", "LNE", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "OBD", "OBT", "OCM", "OEM", "OMM", "OOD", "OOE", "OOI", "OOL", "OON", "OPM", "OSM", "PCF", "PHY", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "RAF", "RCF", "RDM", "RDO", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDL", "SEO", "SEV", "SIT", "SKI", "SNR", "SOI", "SON", "SPP", "SPW", "STF", "STR", "STV", "SWR", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC"]
     },
     "SpatialCoverage" : {
       "type" : "object",
@@ -449,6 +829,466 @@
       "required" : ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
       "additionalProperties" : false
     },
+    "ACM" : {
+      "type" : "object",
+      "description" : "Attitude Comprehensive Message",
+      "properties" : {
+        "CCSDS_ACM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACR" : {
+      "type" : "object",
+      "description" : "Aircraft Dynamics",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "CG_X" : {
+                "type" : "number"
+              },
+        "CG_Z" : {
+                "type" : "number"
+              },
+        "AERO" : {
+                "type" : "string"
+              },
+        "CONTROLS" : {
+                "type" : "string"
+              },
+        "ENGINE" : {
+                "type" : "string"
+              },
+        "GEAR_STATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "GEAR_POSITION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLAP_POSITION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "SPEEDBRAKE_POS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLIGHT_PHASE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "AUTOPILOT_MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "WEIGHT_ON_WHEELS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AEMAttitudeEntry" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              },
+        "RATE_X" : {
+                "type" : "number"
+              },
+        "RATE_Y" : {
+                "type" : "number"
+              },
+        "RATE_Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AEMSegment" : {
+      "type" : "object",
+      "properties" : {
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REF_FRAME_A" : {
+                "type" : "string"
+              },
+        "REF_FRAME_B" : {
+                "type" : "string"
+              },
+        "ATTITUDE_DIR" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "ATTITUDE_TYPE" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "STOP_TIME" : {
+                "type" : "string"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AEMAttitudeEntry"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AEM" : {
+      "type" : "object",
+      "description" : "Attitude Ephemeris Message",
+      "properties" : {
+        "CCSDS_AEM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/AEMSegment"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AOF" : {
+      "type" : "object",
+      "description" : "AOS Transfer Frame (CCSDS 732.0-B-3)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Transfer frame version"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft identifier"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel identifier"
+              },
+        "VIRTUAL_FRAME_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Virtual channel frame count"
+              },
+        "REPLAY_FLAG" : {
+                "type" : "boolean",
+                "description" : "Replay flag"
+              },
+        "VC_FRAME_COUNT_USAGE" : {
+                "type" : "boolean",
+                "description" : "VC frame count usage flag"
+              },
+        "VC_FRAME_COUNT_CYCLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "VC frame count cycle"
+              },
+        "INSERT_ZONE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Insert zone"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data field"
+              },
+        "OCF" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Operational control field"
+              },
+        "FECF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame error control field"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "APM" : {
+      "type" : "object",
+      "description" : "Attitude Parameter Message",
+      "properties" : {
+        "CCSDS_APM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ARM" : {
+      "type" : "object",
+      "description" : "Armor and Protection",
+      "properties" : {
+        "THICKNESS" : {
+                "type" : "number"
+              },
+        "ANGLE" : {
+                "type" : "number"
+              },
+        "MATERIAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "HARDNESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ERA_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ERA_EFFECTIVENESS" : {
+                "type" : "number"
+              },
+        "ERA_VS_KE" : {
+                "type" : "number"
+              },
+        "RHA_EQUIVALENT" : {
+                "type" : "number"
+              },
+        "NORMAL_X" : {
+                "type" : "number"
+              },
+        "NORMAL_Y" : {
+                "type" : "number"
+              },
+        "NORMAL_Z" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "AST" : {
+      "type" : "object",
+      "description" : "Astrodynamics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "PROPAGATION_REQUEST" : {
+                "type" : "string"
+              },
+        "TLE" : {
+                "type" : "string"
+              },
+        "INITIAL_ELEMENTS" : {
+                "type" : "string"
+              },
+        "INITIAL_STATE" : {
+                "type" : "string"
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MANEUVER_PLAN" : {
+                "type" : "string"
+              },
+        "CONJUNCTION_PRIMARY" : {
+                "type" : "string"
+              },
+        "CONJUNCTION_SECONDARY" : {
+                "type" : "string"
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OD_CONFIG" : {
+                "type" : "string"
+              },
+        "GROUND_STATION" : {
+                "type" : "string"
+              },
+        "FORMATION_CONFIG" : {
+                "type" : "string"
+              },
+        "TARGET_ELEMENTS" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ATD" : {
+      "type" : "object",
+      "description" : "Attitude Data Point",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "AS_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "MOTION_TYPE" : {
+                "type" : "string"
+              },
+        "Q1" : {
+                "type" : "number"
+              },
+        "Q2" : {
+                "type" : "number"
+              },
+        "Q3" : {
+                "type" : "number"
+              },
+        "QC" : {
+                "type" : "number"
+              },
+        "Q1_DOT" : {
+                "type" : "number"
+              },
+        "Q2_DOT" : {
+                "type" : "number"
+              },
+        "Q3_DOT" : {
+                "type" : "number"
+              },
+        "QC_DOT" : {
+                "type" : "number"
+              },
+        "X_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Y_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Z_ANGLE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "X_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Y_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "Z_RATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "DECLINATION" : {
+                "type" : "number"
+              },
+        "CONING_ANGLE" : {
+                "type" : "number"
+              },
+        "PREC_PERIOD" : {
+                "type" : "number"
+              },
+        "SPIN_PERIOD" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "ATM" : {
       "type" : "object",
       "description" : "Atmospheric Model Message",
@@ -460,6 +1300,96 @@
         "YEAR" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BAL" : {
+      "type" : "object",
+      "description" : "Ballistics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "TRAJECTORY_REQUEST" : {
+                "type" : "string"
+              },
+        "TABLE_REQUEST" : {
+                "type" : "string"
+              },
+        "FIRE_CONTROL" : {
+                "type" : "string"
+              },
+        "PENETRATION_PROJECTILE" : {
+                "type" : "string"
+              },
+        "PENETRATION_ARMOR" : {
+                "type" : "string"
+              },
+        "IMPACT_VELOCITY_MPS" : {
+                "type" : "number"
+              },
+        "IMPACT_ANGLE_DEG" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BEM" : {
+      "type" : "object",
+      "description" : "Antenna Beam",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "BEAM_NAME" : {
+                "type" : "string"
+              },
+        "NOTES" : {
+                "type" : "string"
+              },
+        "BEAM_CONTOURS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BMC" : {
+      "type" : "object",
+      "description" : "Beam Contour",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "CONTOUR_IDX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GAIN" : {
+                "type" : "number"
+              },
+        "REGION_NAME" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_TEXT" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_JSON" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_TYPE" : {
+                "type" : "string"
+              },
+        "GEOGRAPHY_NDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GEOGRAPHY_SRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
               }
       },
       "additionalProperties" : false
@@ -1491,6 +2421,262 @@
       },
       "additionalProperties" : false
     },
+    "CFP" : {
+      "type" : "object",
+      "description" : "CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "PDU version"
+              },
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/pduType",
+                "description" : "PDU type"
+              },
+        "DIRECTION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Direction (toward receiver or sender)"
+              },
+        "TRANSMISSION_MODE" : {
+                "$ref" : "#/definitions/transmissionMode",
+                "description" : "Transmission mode"
+              },
+        "CRC_FLAG" : {
+                "type" : "boolean",
+                "description" : "CRC present flag"
+              },
+        "LARGE_FILE_FLAG" : {
+                "type" : "boolean",
+                "description" : "Large file flag"
+              },
+        "DATA_FIELD_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Data field length"
+              },
+        "SOURCE_ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Source entity ID"
+              },
+        "TRANSACTION_SEQ_NUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Transaction sequence number"
+              },
+        "DESTINATION_ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Destination entity ID"
+              },
+        "CHECKSUM_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "File checksum type"
+              },
+        "FILE_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "File size"
+              },
+        "SOURCE_FILENAME" : {
+                "type" : "string",
+                "description" : "Source filename"
+              },
+        "DESTINATION_FILENAME" : {
+                "type" : "string",
+                "description" : "Destination filename"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "PDU data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CHN" : {
+      "type" : "object",
+      "description" : "Communications Channel",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "BEAM_NAME" : {
+                "type" : "string"
+              },
+        "ID_RFBAND" : {
+                "type" : "string"
+              },
+        "ENCRYPTION" : {
+                "type" : "string"
+              },
+        "PKG" : {
+                "type" : "string"
+              },
+        "RES" : {
+                "type" : "string"
+              },
+        "COMPRESSION" : {
+                "type" : "string"
+              },
+        "VPID" : {
+                "type" : "string"
+              },
+        "APID" : {
+                "type" : "string"
+              },
+        "SID" : {
+                "type" : "string"
+              },
+        "OWNER" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLT" : {
+      "type" : "object",
+      "description" : "Command Link Transmission Unit Service (CCSDS 912.3-B-2)",
+      "properties" : {
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/cltuPduType",
+                "description" : "PDU type"
+              },
+        "INITIATOR_ID" : {
+                "type" : "string",
+                "description" : "Initiator identifier"
+              },
+        "RESPONDER_PORT_ID" : {
+                "type" : "string",
+                "description" : "Responder port identifier"
+              },
+        "SERVICE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Service type"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Version number"
+              },
+        "INVOKE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Invoke ID"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "CLTU data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMS" : {
+      "type" : "object",
+      "description" : "Communications Payload",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ENTITY" : {
+                "type" : "string"
+              },
+        "TRANSPONDERS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "COM" : {
+      "type" : "object",
+      "description" : "Communications Systems",
+      "properties" : {
+        "SYSTEM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "IS_TRANSMITTING" : {
+                "type" : "boolean"
+              },
+        "IS_RECEIVING" : {
+                "type" : "boolean"
+              },
+        "CURRENT_FREQUENCY_HZ" : {
+                "type" : "number"
+              },
+        "CURRENT_POWER_WATTS" : {
+                "type" : "number"
+              },
+        "CURRENT_DATA_RATE_BPS" : {
+                "type" : "number"
+              },
+        "MESSAGES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MESSAGES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "CONNECTED_NODES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "ACTIVE_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DataLinkType"}
+              },
+        "LAST_UPDATE_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CRD" : {
+      "type" : "object",
+      "description" : "Coordinate Systems",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "VX" : {
+                "type" : "number"
+              },
+        "VY" : {
+                "type" : "number"
+              },
+        "VZ" : {
+                "type" : "number"
+              },
+        "FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ELLIPSOID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
     "CRM" : {
       "type" : "object",
       "description" : "Collection Request Message",
@@ -1892,6 +3078,189 @@
       },
       "additionalProperties" : false
     },
+    "DFH" : {
+      "type" : "object",
+      "description" : "GEO Drift History",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "EFFECTIVE_UNTIL" : {
+                "type" : "string"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DMG" : {
+      "type" : "object",
+      "description" : "Damage Models",
+      "properties" : {
+        "OVERALL_HEALTH" : {
+                "type" : "number"
+              },
+        "MOBILITY" : {
+                "type" : "number"
+              },
+        "FIREPOWER" : {
+                "type" : "number"
+              },
+        "MODULE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FIRE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLOOD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "IS_DESTROYED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DESTRUCTION_CAUSE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "EXTINGUISHERS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "REPAIR_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RELOAD_MULTIPLIER" : {
+                "type" : "number"
+              },
+        "ACCURACY_MULTIPLIER" : {
+                "type" : "number"
+              },
+        "CREW_ALIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_WOUNDED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DOA" : {
+      "type" : "object",
+      "description" : "Difference of Arrival",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR1" : {
+                "type" : "string"
+              },
+        "ID_SENSOR2" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID1" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID2" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "SENSOR1_DELAY" : {
+                "type" : "number"
+              },
+        "SENSOR2_DELAY" : {
+                "type" : "number"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SEN2LAT" : {
+                "type" : "number"
+              },
+        "SEN2LON" : {
+                "type" : "number"
+              },
+        "SEN2ALT" : {
+                "type" : "number"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_UNC" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_RATE" : {
+                "type" : "number"
+              },
+        "DELTA_RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "TDOA" : {
+                "type" : "number"
+              },
+        "TDOA_UNC" : {
+                "type" : "number"
+              },
+        "FDOA" : {
+                "type" : "number"
+              },
+        "FDOA_UNC" : {
+                "type" : "number"
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
     "EME" : {
       "type" : "object",
       "description" : "Encrypted Message Envelope",
@@ -1920,6 +3289,10 @@
                 "type" : "string",
                 "description" : "Initialization vector used to introduce randomness in the encryption process, enhancing security."
               },
+        "SALT" : {
+                "type" : "string",
+                "description" : "Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session."
+              },
         "PUBLIC_KEY_IDENTIFIER" : {
                 "type" : "string",
                 "description" : "Identifier for the public key used, aiding in recipient key management and message decryption."
@@ -1935,6 +3308,49 @@
         "ENCRYPTION_ALGORITHM_PARAMETERS" : {
                 "type" : "string",
                 "description" : "Parameters defining specific settings for the encryption algorithm, such as block size or operation mode."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ENV" : {
+      "type" : "object",
+      "description" : "Atmosphere and Environment",
+      "properties" : {
+        "ATMOSPHERE" : {
+                "type" : "string"
+              },
+        "WEATHER" : {
+                "type" : "string"
+              },
+        "TIME_UTC" : {
+                "type" : "number"
+              },
+        "LATITUDE" : {
+                "type" : "number"
+              },
+        "LONGITUDE" : {
+                "type" : "number"
+              },
+        "SUN_AZIMUTH" : {
+                "type" : "number"
+              },
+        "SUN_ELEVATION" : {
+                "type" : "number"
+              },
+        "MOON_PHASE" : {
+                "type" : "number"
+              },
+        "ILLUMINATION" : {
+                "type" : "number"
+              },
+        "MAGNETIC_DECLINATION" : {
+                "type" : "number"
+              },
+        "MAGNETIC_INCLINATION" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
               }
       },
       "additionalProperties" : false
@@ -2529,6 +3945,428 @@
       },
       "additionalProperties" : false
     },
+    "EWR" : {
+      "type" : "object",
+      "description" : "Electronic Warfare",
+      "properties" : {
+        "SYSTEM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ENTITY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ESM_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "ECM_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "RWR_ACTIVE" : {
+                "type" : "boolean"
+              },
+        "ESM_CONTACTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ACTIVE_JAMMING" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COUNTERMEASURES" : {
+                "type" : "string"
+              },
+        "THREAT_WARNINGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "EMCON_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LAST_UPDATE_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FCS" : {
+      "type" : "object",
+      "description" : "Fire Control Systems",
+      "properties" : {
+        "MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LEAD_METHOD" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RANGEFINDER_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "AMMO_SELECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TARGET" : {
+                "type" : "string"
+              },
+        "SOLUTION" : {
+                "type" : "string"
+              },
+        "LAST_RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "ROUNDS_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "TEMPERATURE" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GDI" : {
+      "type" : "object",
+      "description" : "Ground Imagery",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "IMAGE_TIME" : {
+                "type" : "string"
+              },
+        "FILENAME" : {
+                "type" : "string"
+              },
+        "REGION" : {
+                "type" : "string"
+              },
+        "REGION_TEXT" : {
+                "type" : "string"
+              },
+        "REGION_GEO_JSON" : {
+                "type" : "string"
+              },
+        "REGION_TYPE" : {
+                "type" : "string"
+              },
+        "REGION_NDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "REGION_SRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SUBJECT_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "KEYWORDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOTES" : {
+                "type" : "string"
+              },
+        "FORMAT" : {
+                "type" : "string"
+              },
+        "FILESIZE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "CHECKSUM_VALUE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GEO" : {
+      "type" : "object",
+      "description" : "GEO Spacecraft Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SS" : {
+                "type" : "number"
+              },
+        "SC" : {
+                "type" : "number"
+              },
+        "RELATIVE_ENERGY" : {
+                "type" : "number"
+              },
+        "LONGITUDE_RATE" : {
+                "type" : "number"
+              },
+        "LONGITUDE_MIN" : {
+                "type" : "number"
+              },
+        "LONGITUDE_MAX" : {
+                "type" : "number"
+              },
+        "CONFIDENCE_LEVEL" : {
+                "type" : "string"
+              },
+        "PLANE_CHANGE_STATUS" : {
+                "type" : "string"
+              },
+        "TROUGH_TYPE" : {
+                "type" : "string"
+              },
+        "LOST_FLAG" : {
+                "type" : "boolean"
+              },
+        "SEMI_ANNUAL_CORR_FLAG" : {
+                "type" : "boolean"
+              },
+        "OBJECT_STATUS" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GNO" : {
+      "type" : "object",
+      "description" : "GNSS Observation",
+      "properties" : {
+        "GNSS_SAT_ID" : {
+                "type" : "string"
+              },
+        "TRACKING_STATUS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "AGC_STATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "OBS_CODE_SET" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OB" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GRV" : {
+      "type" : "object",
+      "description" : "Gravity Models",
+      "properties" : {
+        "MODEL_TYPE" : {
+                "$ref" : "#/definitions/GravityModelType"
+              },
+        "MODEL_NAME" : {
+                "$ref" : "#/definitions/GravityModelName"
+              },
+        "CENTRAL_BODY" : {
+                "$ref" : "#/definitions/CentralBody"
+              },
+        "MAX_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MAX_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "INCLUDE_SUN" : {
+                "type" : "boolean"
+              },
+        "INCLUDE_MOON" : {
+                "type" : "boolean"
+              },
+        "INCLUDE_PLANETS" : {
+                "type" : "boolean"
+              },
+        "SOLID_TIDES" : {
+                "type" : "boolean"
+              },
+        "OCEAN_TIDES" : {
+                "type" : "boolean"
+              },
+        "POLE_TIDES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GVH" : {
+      "type" : "object",
+      "description" : "Ground Vehicles",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "SPEED" : {
+                "type" : "number"
+              },
+        "HEADING" : {
+                "type" : "number"
+              },
+        "LATERAL_G" : {
+                "type" : "number"
+              },
+        "LONGITUDINAL_G" : {
+                "type" : "number"
+              },
+        "TURRET" : {
+                "type" : "string"
+              },
+        "DRIVETRAIN" : {
+                "type" : "string"
+              },
+        "SUSPENSION_LF" : {
+                "type" : "string"
+              },
+        "SUSPENSION_RF" : {
+                "type" : "string"
+              },
+        "SUSPENSION_LR" : {
+                "type" : "string"
+              },
+        "SUSPENSION_RR" : {
+                "type" : "string"
+              },
+        "VEHICLE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DRIVE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ENGINE_RUNNING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "LIGHTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FUEL_LEVEL" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "HEL" : {
+      "type" : "object",
+      "description" : "Helicopter Dynamics",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "QUAT_W" : {
+                "type" : "number"
+              },
+        "QUAT_X" : {
+                "type" : "number"
+              },
+        "QUAT_Y" : {
+                "type" : "number"
+              },
+        "QUAT_Z" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_X" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_BODY_Z" : {
+                "type" : "number"
+              },
+        "MAIN_ROTOR" : {
+                "type" : "string"
+              },
+        "TAIL_ROTOR" : {
+                "type" : "string"
+              },
+        "ENGINE_N1" : {
+                "type" : "number"
+              },
+        "ENGINE_TORQUE" : {
+                "type" : "number"
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "Score" : {
       "type" : "object",
       "properties" : {
@@ -2591,6 +4429,28 @@
                 "type" : "string"
               },
         "EVENT_END_TIME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IRO" : {
+      "type" : "object",
+      "description" : "Infrared Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ENTITY" : {
                 "type" : "string"
               }
       },
@@ -2921,12 +4781,564 @@
       },
       "additionalProperties" : false
     },
+    "LKS" : {
+      "type" : "object",
+      "description" : "Link Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ON_ORBIT1" : {
+                "type" : "string"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string"
+              },
+        "CONSTELLATION" : {
+                "type" : "string"
+              },
+        "LINK_NAME" : {
+                "type" : "string"
+              },
+        "LINK_TYPE" : {
+                "type" : "string"
+              },
+        "BAND" : {
+                "type" : "string"
+              },
+        "ID_BEAM1" : {
+                "type" : "string"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number"
+              },
+        "ID_BEAM2" : {
+                "type" : "string"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number"
+              },
+        "LINK_STATE" : {
+                "type" : "string"
+              },
+        "SYS_CAP" : {
+                "type" : "string"
+              },
+        "OPS_CAP" : {
+                "type" : "string"
+              },
+        "SAT_NO1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SAT_NO2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LND" : {
+      "type" : "object",
+      "description" : "Launch Detection",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "LAUNCH_TIME" : {
+                "type" : "string"
+              },
+        "MESSAGE_TYPE" : {
+                "type" : "string"
+              },
+        "LAUNCH_LATITUDE" : {
+                "type" : "number"
+              },
+        "LAUNCH_LONGITUDE" : {
+                "type" : "number"
+              },
+        "LAUNCH_AZIMUTH" : {
+                "type" : "number"
+              },
+        "RAAN" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "OBSERVATION_TIME" : {
+                "type" : "string"
+              },
+        "OBSERVATION_LATITUDE" : {
+                "type" : "number"
+              },
+        "OBSERVATION_LONGITUDE" : {
+                "type" : "number"
+              },
+        "OBSERVATION_ALTITUDE" : {
+                "type" : "number"
+              },
+        "STEREO_FLAG" : {
+                "type" : "boolean"
+              },
+        "HIGH_ZENITH_AZIMUTH" : {
+                "type" : "boolean"
+              },
+        "SEQUENCE_NUMBER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "EVENT_ID" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LNE" : {
+      "type" : "object",
+      "description" : "Launch Event",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "DERIVED_FROM" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_DATE" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_STRING" : {
+                "type" : "string"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string"
+              },
+        "LAUNCH_FAILURE_CODE" : {
+                "type" : "string"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string"
+              },
+        "BE_NUMBER" : {
+                "type" : "string"
+              },
+        "O_SUFFIX" : {
+                "type" : "string"
+              },
+        "LAUNCH_FACILITY_NAME" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
     "MET" : {
       "type" : "object",
       "description" : "Mean Element Theory",
       "properties" : {
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MFE" : {
+      "type" : "object",
+      "description" : "Manifold Element Set",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "TMP_SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RAAN" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERIGEE" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "REV_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "B_STAR" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "PERIOD" : {
+                "type" : "number"
+              },
+        "APOGEE" : {
+                "type" : "number"
+              },
+        "PERIGEE" : {
+                "type" : "number"
+              },
+        "LINE1" : {
+                "type" : "string"
+              },
+        "LINE2" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MNF" : {
+      "type" : "object",
+      "description" : "Orbit Manifold",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string"
+              },
+        "WEIGHT" : {
+                "type" : "number"
+              },
+        "DELTA_V" : {
+                "type" : "number"
+              },
+        "DELTA_T" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MNV" : {
+      "type" : "object",
+      "description" : "Spacecraft Maneuver",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "REPORT_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_START_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_END_TIME" : {
+                "type" : "string"
+              },
+        "TOTAL_BURN_TIME" : {
+                "type" : "number"
+              },
+        "OD_FIT_END_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "MANEUVER_UNC" : {
+                "type" : "number"
+              },
+        "CHARACTERIZATION" : {
+                "type" : "string"
+              },
+        "CHARACTERIZATION_UNC" : {
+                "type" : "number"
+              },
+        "EVENT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "STATUS" : {
+                "type" : "string"
+              },
+        "DELTA_POS" : {
+                "type" : "number"
+              },
+        "DELTA_POS_U" : {
+                "type" : "number"
+              },
+        "DELTA_POS_V" : {
+                "type" : "number"
+              },
+        "DELTA_POS_W" : {
+                "type" : "number"
+              },
+        "DELTA_VEL" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_U" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_V" : {
+                "type" : "number"
+              },
+        "DELTA_VEL_W" : {
+                "type" : "number"
+              },
+        "DELTA_MASS" : {
+                "type" : "number"
+              },
+        "PRE_EVENT_ID_ELSET" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_ELSET" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "PRE_EVENT_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "PRE_POS_X" : {
+                "type" : "number"
+              },
+        "PRE_POS_Y" : {
+                "type" : "number"
+              },
+        "PRE_POS_Z" : {
+                "type" : "number"
+              },
+        "PRE_VEL_X" : {
+                "type" : "number"
+              },
+        "PRE_VEL_Y" : {
+                "type" : "number"
+              },
+        "PRE_VEL_Z" : {
+                "type" : "number"
+              },
+        "PRE_RADIATION_PRESS_COEFF" : {
+                "type" : "number"
+              },
+        "PRE_BALLISTIC_COEFF" : {
+                "type" : "number"
+              },
+        "PRE_APOGEE" : {
+                "type" : "number"
+              },
+        "PRE_PERIGEE" : {
+                "type" : "number"
+              },
+        "PRE_INCLINATION" : {
+                "type" : "number"
+              },
+        "PRE_ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "PRE_PERIOD" : {
+                "type" : "number"
+              },
+        "PRE_RAAN" : {
+                "type" : "number"
+              },
+        "PRE_SMA" : {
+                "type" : "number"
+              },
+        "PRE_GEO_LONGITUDE" : {
+                "type" : "number"
+              },
+        "PRE_DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_U" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_V" : {
+                "type" : "number"
+              },
+        "PRE_SIGMA_W" : {
+                "type" : "number"
+              },
+        "POST_EVENT_ID_ELSET" : {
+                "type" : "string"
+              },
+        "POST_EVENT_ELSET" : {
+                "type" : "string"
+              },
+        "POST_EVENT_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "POST_EVENT_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "POST_POS_X" : {
+                "type" : "number"
+              },
+        "POST_POS_Y" : {
+                "type" : "number"
+              },
+        "POST_POS_Z" : {
+                "type" : "number"
+              },
+        "POST_VEL_X" : {
+                "type" : "number"
+              },
+        "POST_VEL_Y" : {
+                "type" : "number"
+              },
+        "POST_VEL_Z" : {
+                "type" : "number"
+              },
+        "POST_RADIATION_PRESS_COEFF" : {
+                "type" : "number"
+              },
+        "POST_BALLISTIC_COEFF" : {
+                "type" : "number"
+              },
+        "POST_APOGEE" : {
+                "type" : "number"
+              },
+        "POST_PERIGEE" : {
+                "type" : "number"
+              },
+        "POST_INCLINATION" : {
+                "type" : "number"
+              },
+        "POST_ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "POST_PERIOD" : {
+                "type" : "number"
+              },
+        "POST_RAAN" : {
+                "type" : "number"
+              },
+        "POST_SMA" : {
+                "type" : "number"
+              },
+        "POST_GEO_LONGITUDE" : {
+                "type" : "number"
+              },
+        "POST_DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_U" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_V" : {
+                "type" : "number"
+              },
+        "POST_SIGMA_W" : {
+                "type" : "number"
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "POST_MASS" : {
+                "type" : "number"
+              },
+        "POST_AREA" : {
+                "type" : "number"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "STATE_MODEL" : {
+                "type" : "string"
+              },
+        "STATE_MODEL_VERSION" : {
+                "type" : "number"
+              },
+        "NUM_ACCEL_POINTS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MNVR_ACCEL_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MNVR_ACCELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MNVR_ACCEL_UNCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ALGORITHM" : {
+                "type" : "string"
+              },
+        "SOURCED_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SOURCED_DATA_TYPES" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
               }
       },
       "additionalProperties" : false
@@ -2974,6 +5386,660 @@
         "MEAN_ELEMENT_THEORY" : {
                 "$ref" : "#/definitions/meanElementTheory",
                 "description" : "Description of the Mean Element Theory (SGP4, DSST, USM)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MSL" : {
+      "type" : "object",
+      "description" : "Guided Missiles",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "MASS_INITIAL" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_X" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_Y" : {
+                "type" : "number"
+              },
+        "TARGET_POSITION_Z" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_X" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "TARGET_VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "MISS_DISTANCE" : {
+                "type" : "number"
+              },
+        "SEEKER" : {
+                "type" : "string"
+              },
+        "MOTOR" : {
+                "type" : "string"
+              },
+        "GUIDANCE_CMD" : {
+                "type" : "string"
+              },
+        "PHASE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "GUIDANCE_LAW" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "ARMED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TIME_OF_FLIGHT" : {
+                "type" : "number"
+              },
+        "MAX_G" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MST" : {
+      "type" : "object",
+      "description" : "Missile Track",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "MSG_TYPE" : {
+                "type" : "string"
+              },
+        "MSG_SUB_TYPE" : {
+                "type" : "string"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT" : {
+                "type" : "string"
+              },
+        "OBJ_TYPE" : {
+                "type" : "string"
+              },
+        "OBJ_TYPE_CONF" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "OBJ_PLAT" : {
+                "type" : "string"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string"
+              },
+        "SPACE_AMP" : {
+                "type" : "string"
+              },
+        "OBJ_ACT" : {
+                "type" : "string"
+              },
+        "SPACE_SPEC_TYPE" : {
+                "type" : "string"
+              },
+        "ACFT_SUB_TYPE" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "CALL_SIGN" : {
+                "type" : "string"
+              },
+        "LOST_TRK_IND" : {
+                "type" : "boolean"
+              },
+        "TRACK_ID" : {
+                "type" : "string"
+              },
+        "PARENT_TRACK_ID" : {
+                "type" : "string"
+              },
+        "MUID_SRC_TRK" : {
+                "type" : "string"
+              },
+        "MUID_SRC" : {
+                "type" : "string"
+              },
+        "ALERT" : {
+                "type" : "string"
+              },
+        "MSL_STATUS" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "AOU_RPT_TYPE" : {
+                "type" : "string"
+              },
+        "AOU_RPT_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CONTAINMENT" : {
+                "type" : "number"
+              },
+        "TRK_CONF" : {
+                "type" : "number"
+              },
+        "TRK_QUAL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ANG_ELEV" : {
+                "type" : "number"
+              },
+        "SEN_MODE" : {
+                "type" : "string"
+              },
+        "INFO_SOURCE" : {
+                "type" : "string"
+              },
+        "BOOSTING" : {
+                "type" : "boolean"
+              },
+        "POLAR_SING_LOC_LAT" : {
+                "type" : "number"
+              },
+        "POLAR_SING_LOC_LON" : {
+                "type" : "number"
+              },
+        "EMG_IND" : {
+                "type" : "boolean"
+              },
+        "DROP_PT_IND" : {
+                "type" : "boolean"
+              },
+        "SPACE_AMP_CONF" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LAUNCH_TIME" : {
+                "type" : "string"
+              },
+        "LAUNCH_LAT" : {
+                "type" : "number"
+              },
+        "LAUNCH_LON" : {
+                "type" : "number"
+              },
+        "AZ_CORR" : {
+                "type" : "number"
+              },
+        "BURNOUT_ALT" : {
+                "type" : "number"
+              },
+        "LAUNCH_AOU_TYPE" : {
+                "type" : "string"
+              },
+        "LAUNCH_AOU_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "IMPACT_TIME" : {
+                "type" : "string"
+              },
+        "IMPACT_LAT" : {
+                "type" : "number"
+              },
+        "IMPACT_LON" : {
+                "type" : "number"
+              },
+        "IMPACT_AOU_TYPE" : {
+                "type" : "string"
+              },
+        "IMPACT_AOU_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "VECTORS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MTI" : {
+      "type" : "object",
+      "description" : "Moving Target Indicator",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "P3" : {
+                "type" : "string"
+              },
+        "P6" : {
+                "type" : "string"
+              },
+        "P7" : {
+                "type" : "string"
+              },
+        "P8" : {
+                "type" : "string"
+              },
+        "P9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "P10" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MISSIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DWELLS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "HRRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "JOB_DEFS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FREE_TEXTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "PLATFORM_LOCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "JOB_REQUESTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NAV" : {
+      "type" : "object",
+      "description" : "Naval Vessels",
+      "properties" : {
+        "POSITION_X" : {
+                "type" : "number"
+              },
+        "POSITION_Y" : {
+                "type" : "number"
+              },
+        "POSITION_Z" : {
+                "type" : "number"
+              },
+        "VELOCITY_X" : {
+                "type" : "number"
+              },
+        "VELOCITY_Y" : {
+                "type" : "number"
+              },
+        "VELOCITY_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_X" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Y" : {
+                "type" : "number"
+              },
+        "ATTITUDE_Z" : {
+                "type" : "number"
+              },
+        "ATTITUDE_W" : {
+                "type" : "number"
+              },
+        "OMEGA_X" : {
+                "type" : "number"
+              },
+        "OMEGA_Y" : {
+                "type" : "number"
+              },
+        "OMEGA_Z" : {
+                "type" : "number"
+              },
+        "SPEED_KNOTS" : {
+                "type" : "number"
+              },
+        "HEADING" : {
+                "type" : "number"
+              },
+        "COURSE" : {
+                "type" : "number"
+              },
+        "RUDDER_ANGLE" : {
+                "type" : "number"
+              },
+        "HULL" : {
+                "type" : "string"
+              },
+        "PROPULSION" : {
+                "type" : "string"
+              },
+        "DC_STATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FIRES_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLOODING_ACTIVE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "CREW_CASUALTIES" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "HULL_INTEGRITY" : {
+                "type" : "number"
+              },
+        "POWER_AVAILABLE" : {
+                "type" : "number"
+              },
+        "WEAPONS_ONLINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "SENSORS_ONLINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              },
+        "AMMO_MAIN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MISSILES_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "TORPEDOES_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "VESSEL_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "PROPULSION_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OBD" : {
+      "type" : "object",
+      "description" : "Orbit Determination Results",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "APRIORI_ID_ELSET" : {
+                "type" : "string"
+              },
+        "APRIORI_ELSET" : {
+                "type" : "string"
+              },
+        "APRIORI_ID_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "APRIORI_STATE_VECTOR" : {
+                "type" : "string"
+              },
+        "INITIAL_OD" : {
+                "type" : "boolean"
+              },
+        "LAST_OB_START" : {
+                "type" : "string"
+              },
+        "LAST_OB_END" : {
+                "type" : "string"
+              },
+        "TIME_SPAN" : {
+                "type" : "number"
+              },
+        "EFFECTIVE_FROM" : {
+                "type" : "string"
+              },
+        "EFFECTIVE_UNTIL" : {
+                "type" : "string"
+              },
+        "WRMS" : {
+                "type" : "number"
+              },
+        "PREVIOUS_WRMS" : {
+                "type" : "number"
+              },
+        "FIRST_PASS_WRMS" : {
+                "type" : "number"
+              },
+        "BEST_PASS_WRMS" : {
+                "type" : "number"
+              },
+        "ERROR_GROWTH_RATE" : {
+                "type" : "number"
+              },
+        "EDR" : {
+                "type" : "number"
+              },
+        "METHOD" : {
+                "type" : "string"
+              },
+        "METHOD_SOURCE" : {
+                "type" : "string"
+              },
+        "FIT_SPAN" : {
+                "type" : "number"
+              },
+        "BALLISTIC_COEFF_EST" : {
+                "type" : "boolean"
+              },
+        "BALLISTIC_COEFF_MODEL" : {
+                "type" : "string"
+              },
+        "AGOM_EST" : {
+                "type" : "boolean"
+              },
+        "AGOM_MODEL" : {
+                "type" : "string"
+              },
+        "RMS_CONVERGENCE_CRITERIA" : {
+                "type" : "number"
+              },
+        "NUM_ITERATIONS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ACCEPTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ACCEPTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REJECTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REJECTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SENSOR_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OBT" : {
+      "type" : "object",
+      "description" : "Orbit Track",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "RDF_RF" : {
+                "type" : "number"
+              },
+        "CALL_SIGN" : {
+                "type" : "string"
+              },
+        "RPT_NUM" : {
+                "type" : "string"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string"
+              },
+        "IDENT_AMP" : {
+                "type" : "string"
+              },
+        "SAT_STATUS" : {
+                "type" : "string"
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string"
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string"
+              },
+        "DECAY" : {
+                "type" : "number"
+              },
+        "CHARLIE_LINE" : {
+                "type" : "string"
+              },
+        "AOU_TYPE" : {
+                "type" : "string"
+              },
+        "AOU_DATA" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPD" : {
+                "type" : "number"
+              },
+        "ANG_ELEV" : {
+                "type" : "number"
+              },
+        "CNTNMNT" : {
+                "type" : "number"
+              },
+        "XREF" : {
+                "type" : "string"
+              },
+        "CH_XREF" : {
+                "type" : "string"
+              },
+        "AMPLIFICATION" : {
+                "type" : "string"
+              },
+        "IFF" : {
+                "type" : "string"
+              },
+        "REINFORCED" : {
+                "type" : "boolean"
+              },
+        "REDUCED" : {
+                "type" : "boolean"
+              },
+        "HQ" : {
+                "type" : "boolean"
+              },
+        "DUMMY" : {
+                "type" : "boolean"
+              },
+        "TASK_FORCE" : {
+                "type" : "boolean"
+              },
+        "FEINT" : {
+                "type" : "boolean"
+              },
+        "INSTALLATION" : {
+                "type" : "boolean"
+              },
+        "VEH_TYPE" : {
+                "type" : "string"
+              },
+        "TRK_ID" : {
+                "type" : "string"
+              },
+        "TRACK_SENSORS" : {
+                "type" : "array", "items" : {"type" : "string"}
               }
       },
       "additionalProperties" : false
@@ -4114,6 +7180,576 @@
       },
       "additionalProperties" : false
     },
+    "OOD" : {
+      "type" : "object",
+      "description" : "On-Orbit Object Details",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string"
+              },
+        "VISMAG" : {
+                "type" : "number"
+              },
+        "VISMAG_MIN" : {
+                "type" : "number"
+              },
+        "VISMAG_MAX" : {
+                "type" : "number"
+              },
+        "VISMAG_MEAN" : {
+                "type" : "number"
+              },
+        "RCS" : {
+                "type" : "number"
+              },
+        "RCS_MIN" : {
+                "type" : "number"
+              },
+        "RCS_MAX" : {
+                "type" : "number"
+              },
+        "RCS_MEAN" : {
+                "type" : "number"
+              },
+        "BOL_DELTA_V" : {
+                "type" : "number"
+              },
+        "MAX_DELTA_V" : {
+                "type" : "number"
+              },
+        "DELTA_VUNC" : {
+                "type" : "number"
+              },
+        "EST_DELTA_VDURATION" : {
+                "type" : "number"
+              },
+        "NUM_MISSION" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MISSION_TYPES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "BUS_TYPE" : {
+                "type" : "string"
+              },
+        "GEO_SLOT" : {
+                "type" : "number"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number"
+              },
+        "DRY_MASS" : {
+                "type" : "number"
+              },
+        "ADDITIONAL_MASS" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS_MIN" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS" : {
+                "type" : "number"
+              },
+        "LAUNCH_MASS_MAX" : {
+                "type" : "number"
+              },
+        "BOL_FUEL_MASS" : {
+                "type" : "number"
+              },
+        "CURRENT_MASS" : {
+                "type" : "number"
+              },
+        "TOTAL_MASS_UNC" : {
+                "type" : "number"
+              },
+        "SOLAR_ARRAY_AREA" : {
+                "type" : "number"
+              },
+        "MANEUVERABLE" : {
+                "type" : "boolean"
+              },
+        "FUEL_REMAINING" : {
+                "type" : "number"
+              },
+        "CROSS_SECTION" : {
+                "type" : "number"
+              },
+        "BUS_CROSS_SECTION" : {
+                "type" : "number"
+              },
+        "MAX_RADIUS" : {
+                "type" : "number"
+              },
+        "COLA_RADIUS" : {
+                "type" : "number"
+              },
+        "ADEPT_RADIUS" : {
+                "type" : "number"
+              },
+        "NUM_DEPLOYABLE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "DEP_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DEP_EST_MASSES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DEP_MASS_UNCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LAST_OB_SOURCE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OOE" : {
+      "type" : "object",
+      "description" : "On-Orbit Event",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "DERIVED_FROM" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_DATE" : {
+                "type" : "string"
+              },
+        "DECLASSIFICATION_STRING" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "EVENT_TIME" : {
+                "type" : "string"
+              },
+        "EVENT_TIME_NOTES" : {
+                "type" : "string"
+              },
+        "OPERATOR_ORG_ID" : {
+                "type" : "string"
+              },
+        "OWNER_ORG_ID" : {
+                "type" : "string"
+              },
+        "LESSEE_ORG_ID" : {
+                "type" : "string"
+              },
+        "OPERATED_ON_BEHALF_OF_ORG_ID" : {
+                "type" : "string"
+              },
+        "GEO_POSITION" : {
+                "type" : "number"
+              },
+        "PLANE_SLOT" : {
+                "type" : "string"
+              },
+        "PLANE_NUMBER" : {
+                "type" : "string"
+              },
+        "POSITION_STATUS" : {
+                "type" : "string"
+              },
+        "UNTIL_TIME" : {
+                "type" : "string"
+              },
+        "OFFICIAL_LOSS_DATE" : {
+                "type" : "string"
+              },
+        "NET_AMOUNT" : {
+                "type" : "number"
+              },
+        "UNDERLYING_CAUSE" : {
+                "type" : "string"
+              },
+        "CAPABILITY_LOSS" : {
+                "type" : "number"
+              },
+        "CAPACITY_LOSS" : {
+                "type" : "number"
+              },
+        "INSURANCE_LOSS" : {
+                "type" : "number"
+              },
+        "THIRD_PARTY_INSURANCE_LOSS" : {
+                "type" : "number"
+              },
+        "INJURED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "KILLED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LIFE_LOST" : {
+                "type" : "number"
+              },
+        "AGE_AT_EVENT" : {
+                "type" : "number"
+              },
+        "ACHIEVED_FLIGHT_PHASE" : {
+                "type" : "string"
+              },
+        "OCCURRENCE_FLIGHT_PHASE" : {
+                "type" : "string"
+              },
+        "STAGE_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_TYPE_AT_FAULT" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_PART_AT_FAULT" : {
+                "type" : "string"
+              },
+        "CONSEQUENTIAL_EQUIPMENT_FAILURE" : {
+                "type" : "string"
+              },
+        "INCLINED" : {
+                "type" : "boolean"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "REMARKS" : {
+                "type" : "string"
+              },
+        "INSURANCE_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "CAPABILITY_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "INSURANCE_CARRIED_NOTES" : {
+                "type" : "string"
+              },
+        "EQUIPMENT_CAUSING_LOSS_NOTES" : {
+                "type" : "string"
+              },
+        "EVENT_TYPE" : {
+                "type" : "string"
+              },
+        "EVENT_RESULT" : {
+                "type" : "string"
+              },
+        "OBJECT_STATUS" : {
+                "type" : "string"
+              },
+        "SATELLITE_POSITION" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OOI" : {
+      "type" : "object",
+      "description" : "Object of Interest",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SENSOR_TASKING_START_TIME" : {
+                "type" : "string"
+              },
+        "SENSOR_TASKING_STOP_TIME" : {
+                "type" : "string"
+              },
+        "PRIORITY" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "STATUS" : {
+                "type" : "string"
+              },
+        "STATUS_DATE" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string"
+              },
+        "MISSED_OB_TIME" : {
+                "type" : "string"
+              },
+        "DELTA_VS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DELTA_TS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SV_EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "XVEL" : {
+                "type" : "number"
+              },
+        "YVEL" : {
+                "type" : "number"
+              },
+        "ZVEL" : {
+                "type" : "number"
+              },
+        "ELSET_EPOCH" : {
+                "type" : "string"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RAAN" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERIGEE" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "REV_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "B_STAR" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "PERIOD" : {
+                "type" : "number"
+              },
+        "APOGEE" : {
+                "type" : "number"
+              },
+        "PERIGEE" : {
+                "type" : "number"
+              },
+        "AFFECTED_OBJECTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "MANIFOLDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OOL" : {
+      "type" : "object",
+      "description" : "On-Orbit Object List",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "ONORBITS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OON" : {
+      "type" : "object",
+      "description" : "On-Orbit Object",
+      "properties" : {
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "COMMON_NAME" : {
+                "type" : "string"
+              },
+        "CONSTELLATION" : {
+                "type" : "string"
+              },
+        "INTL_DES" : {
+                "type" : "string"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string"
+              },
+        "DECAY_DATE" : {
+                "type" : "string"
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string"
+              },
+        "MISSION_NUMBER" : {
+                "type" : "string"
+              },
+        "CATEGORY" : {
+                "type" : "string"
+              },
+        "LIFETIME_YEARS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ALT_NAME" : {
+                "type" : "string"
+              },
+        "LAUNCH_SITE_ID" : {
+                "type" : "string"
+              },
+        "ANTENNAS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "BATTERIES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SOLAR_ARRAYS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "THRUSTERS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ONORBIT_DETAILS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string"
+              },
+        "ENTITY_COLLECTION" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OPM" : {
+      "type" : "object",
+      "description" : "Orbit Parameter Message",
+      "properties" : {
+        "CCSDS_OPM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "CENTER_NAME" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "TRUE_ANOMALY" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "GM" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number"
+              },
+        "DRAG_AREA" : {
+                "type" : "number"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "OSM" : {
       "type" : "object",
       "description" : "Observation Stability Message",
@@ -4141,6 +7777,104 @@
         "PASS_DURATION" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "Duration of the observation pass in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCF" : {
+      "type" : "object",
+      "description" : "Propagator Configuration",
+      "properties" : {
+        "STEP_SIZE" : {
+                "type" : "number"
+              },
+        "TOLERANCE" : {
+                "type" : "number"
+              },
+        "MIN_STEP" : {
+                "type" : "number"
+              },
+        "MAX_STEP" : {
+                "type" : "number"
+              },
+        "MAX_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GRAVITY_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "GRAVITY_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "INTEGRATOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "OUTPUT_FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FORCE_FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "DRAG_COEFFICIENT" : {
+                "type" : "number"
+              },
+        "SRP_COEFFICIENT" : {
+                "type" : "number"
+              },
+        "AREA_MASS_RATIO" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PHY" : {
+      "type" : "object",
+      "description" : "Physics and Rigid Body Dynamics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "SIMULATION_STEP" : {
+                "type" : "string"
+              },
+        "RIGID_BODY" : {
+                "type" : "string"
+              },
+        "INTEGRATION_CONFIG" : {
+                "type" : "string"
+              },
+        "COLLISION_QUERY_A" : {
+                "type" : "string"
+              },
+        "COLLISION_QUERY_B" : {
+                "type" : "string"
+              },
+        "TRANSFORM_A" : {
+                "type" : "string"
+              },
+        "TRANSFORM_B" : {
+                "type" : "string"
+              },
+        "POSITION_A" : {
+                "type" : "string"
+              },
+        "POSITION_B" : {
+                "type" : "string"
+              },
+        "FLUID" : {
+                "type" : "string"
+              },
+        "AERO_QUERY" : {
+                "type" : "string"
+              },
+        "DRAG_MODEL" : {
+                "type" : "string"
+              },
+        "THERMAL_STATE" : {
+                "type" : "string"
               }
       },
       "additionalProperties" : false
@@ -4478,6 +8212,282 @@
       "required" : ["REQUEST_ID", "LISTING_ID", "TIER_NAME", "BUYER_PEER_ID"],
       "additionalProperties" : false
     },
+    "RAF" : {
+      "type" : "object",
+      "description" : "Return All Frames Service (CCSDS 913.1-B-2)",
+      "properties" : {
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/rafPduType",
+                "description" : "PDU type"
+              },
+        "INITIATOR_ID" : {
+                "type" : "string",
+                "description" : "Initiator identifier"
+              },
+        "RESPONDER_PORT_ID" : {
+                "type" : "string",
+                "description" : "Responder port identifier"
+              },
+        "SERVICE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Service type"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Version number"
+              },
+        "INVOKE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Invoke ID"
+              },
+        "FRAME_QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Frame quality"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RCF" : {
+      "type" : "object",
+      "description" : "Return Channel Frames Service (CCSDS 913.5-B-2)",
+      "properties" : {
+        "PDU_TYPE" : {
+                "$ref" : "#/definitions/rcfPduType",
+                "description" : "PDU type"
+              },
+        "INITIATOR_ID" : {
+                "type" : "string",
+                "description" : "Initiator identifier"
+              },
+        "RESPONDER_PORT_ID" : {
+                "type" : "string",
+                "description" : "Responder port identifier"
+              },
+        "SERVICE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Service type"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Version number"
+              },
+        "INVOKE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Invoke ID"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft ID filter"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel ID filter"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDM" : {
+      "type" : "object",
+      "description" : "Reentry Data Message",
+      "properties" : {
+        "CCSDS_RDM_VERS" : {
+                "type" : "string"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REENTRY_EPOCH" : {
+                "type" : "string"
+              },
+        "REENTRY_LATITUDE" : {
+                "type" : "number"
+              },
+        "REENTRY_LONGITUDE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDO" : {
+      "type" : "object",
+      "description" : "Radar Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TRACK_ID" : {
+                "type" : "string"
+              },
+        "OB_POSITION" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "AZIMUTH" : {
+                "type" : "number"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number"
+              },
+        "AZIMUTH_BIAS" : {
+                "type" : "number"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION" : {
+                "type" : "number"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number"
+              },
+        "ELEVATION_BIAS" : {
+                "type" : "number"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number"
+              },
+        "RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_ACCEL" : {
+                "type" : "number"
+              },
+        "RANGE_ACCEL_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_BIAS" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "DOPPLER" : {
+                "type" : "number"
+              },
+        "DOPPLER_UNC" : {
+                "type" : "number"
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "DECLINATION" : {
+                "type" : "number"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "XVEL" : {
+                "type" : "number"
+              },
+        "YVEL" : {
+                "type" : "number"
+              },
+        "ZVEL" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "RCS" : {
+                "type" : "number"
+              },
+        "RCS_UNC" : {
+                "type" : "number"
+              },
+        "ORTHOGONAL_RCS" : {
+                "type" : "number"
+              },
+        "ORTHOGONAL_RCS_UNC" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "BEAM" : {
+                "type" : "number"
+              },
+        "TIMING_BIAS" : {
+                "type" : "number"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
     "REV" : {
       "type" : "object",
       "description" : "Review - User review of a storefront listing",
@@ -4522,6 +8532,505 @@
       "required" : ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],
       "additionalProperties" : false
     },
+    "RFB" : {
+      "type" : "object",
+      "description" : "RF Band",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "BAND" : {
+                "type" : "string"
+              },
+        "MODE" : {
+                "type" : "string"
+              },
+        "PURPOSE" : {
+                "type" : "string"
+              },
+        "FREQ_MIN" : {
+                "type" : "number"
+              },
+        "FREQ_MAX" : {
+                "type" : "number"
+              },
+        "CENTER_FREQ" : {
+                "type" : "number"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number"
+              },
+        "POLARIZATION" : {
+                "type" : "string"
+              },
+        "ERP" : {
+                "type" : "number"
+              },
+        "EIRP" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFE" : {
+      "type" : "object",
+      "description" : "RF Emitter",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_ENTITY" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "ENTITY" : {
+                "type" : "string"
+              },
+        "RF_EMITTER_DETAILS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFO" : {
+      "type" : "object",
+      "description" : "RF Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TASK_ID" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TRACK_ID" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "TRANSPONDER" : {
+                "type" : "string"
+              },
+        "AZIMUTH" : {
+                "type" : "number"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION" : {
+                "type" : "number"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number"
+              },
+        "RANGE" : {
+                "type" : "number"
+              },
+        "RANGE_UNC" : {
+                "type" : "number"
+              },
+        "RANGE_RATE" : {
+                "type" : "number"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number"
+              },
+        "TRACK_RANGE" : {
+                "type" : "number"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "ELNOT" : {
+                "type" : "string"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "NOMINAL_FREQUENCY" : {
+                "type" : "number"
+              },
+        "START_FREQUENCY" : {
+                "type" : "number"
+              },
+        "END_FREQUENCY" : {
+                "type" : "number"
+              },
+        "RELATIVE_CARRIER_POWER" : {
+                "type" : "number"
+              },
+        "SPECTRUM_ANALYZER_POWER" : {
+                "type" : "number"
+              },
+        "RELATIVE_NOISE_FLOOR" : {
+                "type" : "number"
+              },
+        "REFERENCE_LEVEL" : {
+                "type" : "number"
+              },
+        "PGRI" : {
+                "type" : "number"
+              },
+        "CONFIDENCE" : {
+                "type" : "number"
+              },
+        "INCOMING" : {
+                "type" : "boolean"
+              },
+        "SWITCH_POINT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "BAUD_RATE" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "NOMINAL_SNR" : {
+                "type" : "number"
+              },
+        "POLARITY" : {
+                "type" : "number"
+              },
+        "POLARITY_TYPE" : {
+                "type" : "string"
+              },
+        "CHANNEL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "POWER_OVER_NOISE" : {
+                "type" : "number"
+              },
+        "NOMINAL_POWER_OVER_NOISE" : {
+                "type" : "number"
+              },
+        "BANDWIDTH" : {
+                "type" : "number"
+              },
+        "NOMINAL_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "RESOLUTION_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "VIDEO_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "EIRP" : {
+                "type" : "number"
+              },
+        "NOMINAL_EIRP" : {
+                "type" : "number"
+              },
+        "MIN_PSD" : {
+                "type" : "number"
+              },
+        "MAX_PSD" : {
+                "type" : "number"
+              },
+        "FREQUENCY_SHIFT" : {
+                "type" : "number"
+              },
+        "PEAK" : {
+                "type" : "boolean"
+              },
+        "ANTENNA_NAME" : {
+                "type" : "string"
+              },
+        "DETECTION_STATUS" : {
+                "type" : "string"
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOISE_PWR_DENSITY" : {
+                "type" : "number"
+              },
+        "CARRIER_STANDARD" : {
+                "type" : "string"
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "INNER_CODING_RATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "OUTER_CODING_RATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TRANSMIT_FILTER_TYPE" : {
+                "type" : "string"
+              },
+        "TRANSMIT_FILTER_ROLL_OFF" : {
+                "type" : "number"
+              },
+        "SYMBOL_TO_NOISE_RATIO" : {
+                "type" : "number"
+              },
+        "BIT_ERROR_RATE" : {
+                "type" : "number"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "URL" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SAR" : {
+      "type" : "object",
+      "description" : "SAR Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "EXTERNAL_ID" : {
+                "type" : "string"
+              },
+        "COLLECTION_ID" : {
+                "type" : "string"
+              },
+        "DETECTION_ID" : {
+                "type" : "string"
+              },
+        "COLLECTION_START" : {
+                "type" : "string"
+              },
+        "COLLECTION_END" : {
+                "type" : "string"
+              },
+        "CENTER_TIME" : {
+                "type" : "string"
+              },
+        "DETECTION_START" : {
+                "type" : "string"
+              },
+        "DETECTION_END" : {
+                "type" : "string"
+              },
+        "DWELL_TIME" : {
+                "type" : "number"
+              },
+        "ORBIT_STATE" : {
+                "type" : "string"
+              },
+        "SAR_MODE" : {
+                "type" : "string"
+              },
+        "OPERATING_BAND" : {
+                "type" : "string"
+              },
+        "OPERATING_FREQ" : {
+                "type" : "number"
+              },
+        "SNR" : {
+                "type" : "number"
+              },
+        "TX_POLARIZATION" : {
+                "type" : "string"
+              },
+        "RX_POLARIZATION" : {
+                "type" : "string"
+              },
+        "GRAZE_ANGLE" : {
+                "type" : "number"
+              },
+        "INCIDENCE_ANGLE" : {
+                "type" : "number"
+              },
+        "SQUINT_ANGLE" : {
+                "type" : "number"
+              },
+        "PULSE_BANDWIDTH" : {
+                "type" : "number"
+              },
+        "PULSE_DURATION" : {
+                "type" : "number"
+              },
+        "CONTINUOUS_SPOT_ANGLE" : {
+                "type" : "number"
+              },
+        "SLANT_RANGE" : {
+                "type" : "number"
+              },
+        "NEAR_RANGE" : {
+                "type" : "number"
+              },
+        "FAR_RANGE" : {
+                "type" : "number"
+              },
+        "SWATH_LENGTH" : {
+                "type" : "number"
+              },
+        "AREA" : {
+                "type" : "string"
+              },
+        "ATEXT" : {
+                "type" : "string"
+              },
+        "AGJSON" : {
+                "type" : "string"
+              },
+        "ATYPE" : {
+                "type" : "string"
+              },
+        "ANDIMS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ASRID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SPACING_RANGE" : {
+                "type" : "number"
+              },
+        "SPACING_AZIMUTH" : {
+                "type" : "number"
+              },
+        "LOOKS_AZIMUTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LOOKS_RANGE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "RESOLUTION_RANGE" : {
+                "type" : "number"
+              },
+        "RESOLUTION_AZIMUTH" : {
+                "type" : "number"
+              },
+        "OB_DIRECTION" : {
+                "type" : "string"
+              },
+        "COORD_SYS" : {
+                "type" : "string"
+              },
+        "TARGETPOSX" : {
+                "type" : "number"
+              },
+        "TARGETPOSY" : {
+                "type" : "number"
+              },
+        "TARGETPOSZ" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENVELX" : {
+                "type" : "number"
+              },
+        "SENVELY" : {
+                "type" : "number"
+              },
+        "SENVELZ" : {
+                "type" : "number"
+              },
+        "SENLAT_START" : {
+                "type" : "number"
+              },
+        "SENLON_START" : {
+                "type" : "number"
+              },
+        "SENLAT_END" : {
+                "type" : "number"
+              },
+        "SENLON_END" : {
+                "type" : "number"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCHEMA_STANDARD" : {
       "type" : "object",
       "description" : "Schema Standard Definition",
@@ -4552,6 +9061,1022 @@
         "RECORDS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCHEMA_STANDARD"},
                 "description" : "Standards Dictionary"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDL" : {
+      "type" : "object",
+      "description" : "Space Data Link Security (CCSDS 355.0-B-1)",
+      "properties" : {
+        "SPI" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Security Parameter Index"
+              },
+        "IV_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Initialization vector length in bytes"
+              },
+        "IV" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Initialization vector"
+              },
+        "MAC_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "MAC length in bytes"
+              },
+        "MAC" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Message authentication code"
+              },
+        "PAD_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Pad length"
+              },
+        "PAYLOAD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Security payload"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SEO" : {
+      "type" : "object",
+      "description" : "Space Environment Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "MSG_TYPE" : {
+                "type" : "string"
+              },
+        "GEN_SYSTEM" : {
+                "type" : "string"
+              },
+        "EXTERNAL_ID" : {
+                "type" : "string"
+              },
+        "DATA_TYPE" : {
+                "type" : "string"
+              },
+        "GEN_TIME" : {
+                "type" : "string"
+              },
+        "FORECAST" : {
+                "type" : "boolean"
+              },
+        "DERIVED" : {
+                "type" : "boolean"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_TYPE" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_NAME" : {
+                "type" : "string"
+              },
+        "OBSERVATORY_NOTES" : {
+                "type" : "string"
+              },
+        "INSTRUMENT_TYPE" : {
+                "type" : "string"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "SEN_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SEN_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "MEAS_TYPE" : {
+                "type" : "string"
+              },
+        "SEN_ENERGY_LEVEL" : {
+                "type" : "string"
+              },
+        "OB_SET_ID" : {
+                "type" : "string"
+              },
+        "PARTICLE_TYPE" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "SEO_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "QUALITY" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string"
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SEV" : {
+      "type" : "object",
+      "description" : "Space Environment Observation Detail",
+      "properties" : {
+        "OB_TYPE" : {
+                "type" : "string"
+              },
+        "OB_UO_M" : {
+                "type" : "string"
+              },
+        "OB_VALUE" : {
+                "type" : "number"
+              },
+        "OB_STRING" : {
+                "type" : "string"
+              },
+        "OB_ARRAY" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "OB_BOOL" : {
+                "type" : "boolean"
+              },
+        "OB_QUALITY" : {
+                "type" : "string"
+              },
+        "OB_DESCRIPTION" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKI" : {
+      "type" : "object",
+      "description" : "Sky Imagery",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "SEN_QUAT" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SEN_QUAT_DOT" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "IMAGE_TYPE" : {
+                "type" : "string"
+              },
+        "EXP_START_TIME" : {
+                "type" : "string"
+              },
+        "EXP_END_TIME" : {
+                "type" : "string"
+              },
+        "IMAGE_SOURCE_INFO" : {
+                "type" : "string"
+              },
+        "TOP_LEFT_START_AZ" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_START_EL" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_STOP_AZ" : {
+                "type" : "number"
+              },
+        "TOP_LEFT_STOP_EL" : {
+                "type" : "number"
+              },
+        "IMAGE_SET_ID" : {
+                "type" : "string"
+              },
+        "IMAGE_SET_LENGTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SEQUENCE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FRAME_FOVWIDTH" : {
+                "type" : "number"
+              },
+        "FRAME_FOVHEIGHT" : {
+                "type" : "number"
+              },
+        "PIXEL_FOVWIDTH" : {
+                "type" : "number"
+              },
+        "PIXEL_FOVHEIGHT" : {
+                "type" : "number"
+              },
+        "FRAME_WIDTH_PIXELS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FRAME_HEIGHT_PIXELS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_BIT_DEPTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ANNOTATION_KEY" : {
+                "type" : "string"
+              },
+        "CALIBRATION_KEY" : {
+                "type" : "string"
+              },
+        "FILENAME" : {
+                "type" : "string"
+              },
+        "FILESIZE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "CHECKSUM_VALUE" : {
+                "type" : "string"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "EO_OBSERVATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SNR" : {
+      "type" : "object",
+      "description" : "Sensor Systems",
+      "properties" : {
+        "TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "MODE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "MAX_RANGE" : {
+                "type" : "number"
+              },
+        "MIN_RANGE" : {
+                "type" : "number"
+              },
+        "FOV_AZIMUTH" : {
+                "type" : "number"
+              },
+        "FOV_ELEVATION" : {
+                "type" : "number"
+              },
+        "ANGULAR_RESOLUTION" : {
+                "type" : "number"
+              },
+        "RANGE_RESOLUTION" : {
+                "type" : "number"
+              },
+        "UPDATE_RATE" : {
+                "type" : "number"
+              },
+        "DETECTION_THRESHOLD" : {
+                "type" : "number"
+              },
+        "AZIMUTH_SCAN_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION_SCAN_RATE" : {
+                "type" : "number"
+              },
+        "POWER" : {
+                "type" : "number"
+              },
+        "FREQUENCY" : {
+                "type" : "number"
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SOI" : {
+      "type" : "object",
+      "description" : "Space Object Identification Observation Set",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "SENSOR_AS_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SENLAT" : {
+                "type" : "number"
+              },
+        "SENLON" : {
+                "type" : "number"
+              },
+        "SENALT" : {
+                "type" : "number"
+              },
+        "SENX" : {
+                "type" : "number"
+              },
+        "SENY" : {
+                "type" : "number"
+              },
+        "SENZ" : {
+                "type" : "number"
+              },
+        "SENVELX" : {
+                "type" : "number"
+              },
+        "SENVELY" : {
+                "type" : "number"
+              },
+        "SENVELZ" : {
+                "type" : "number"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TYPE" : {
+                "type" : "string"
+              },
+        "POLAR_ANGLE_START" : {
+                "type" : "number"
+              },
+        "POLAR_ANGLE_END" : {
+                "type" : "number"
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "LOS_DECLINATION_START" : {
+                "type" : "number"
+              },
+        "LOS_DECLINATION_END" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_AZ_START" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_AZ_END" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_EL_START" : {
+                "type" : "number"
+              },
+        "POINTING_ANGLE_EL_END" : {
+                "type" : "number"
+              },
+        "PIXEL_ARRAY_WIDTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_ARRAY_HEIGHT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NUM_SPECTRAL_FILTERS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SPECTRAL_FILTERS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string"
+              },
+        "GAIN" : {
+                "type" : "number"
+              },
+        "BINNING_HORIZ" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "BINNING_VERT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SOLAR_MAG" : {
+                "type" : "number"
+              },
+        "PIXEL_MIN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PIXEL_MAX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SOFTWARE_VERSION" : {
+                "type" : "string"
+              },
+        "SATELLITE_NAME" : {
+                "type" : "string"
+              },
+        "STAR_CAT_NAME" : {
+                "type" : "string"
+              },
+        "CORR_QUALITY" : {
+                "type" : "number"
+              },
+        "UCT" : {
+                "type" : "boolean"
+              },
+        "VALID_CALIBRATIONS" : {
+                "type" : "string"
+              },
+        "CALIBRATION_TYPE" : {
+                "type" : "string"
+              },
+        "PERCENT_SAT_THRESHOLD" : {
+                "type" : "number"
+              },
+        "CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "PERIODICITY_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "BRIGHTNESS_VARIANCE_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED" : {
+                "type" : "boolean"
+              },
+        "CHANGE_CONF" : {
+                "type" : "string"
+              },
+        "COLLECTION_DENSITY_CONF" : {
+                "type" : "string"
+              },
+        "PERIODICITY_SAMPLING_CONF" : {
+                "type" : "string"
+              },
+        "PERIODICITY_DETECTION_CONF" : {
+                "type" : "string"
+              },
+        "COLLECTION_ID" : {
+                "type" : "string"
+              },
+        "CALIBRATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string"
+              },
+        "OPTICAL_SOIOBSERVATION_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RADAR_SOIOBSERVATION_LIST" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SON" : {
+      "type" : "object",
+      "description" : "Sonar and Underwater Acoustics",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "ACTIVE_CONFIG" : {
+                "type" : "string"
+              },
+        "PASSIVE_CONFIG" : {
+                "type" : "string"
+              },
+        "TL_REQUEST" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT" : {
+                "type" : "string"
+              },
+        "TARGET_SIGNATURE" : {
+                "type" : "string"
+              },
+        "TMA_INPUT" : {
+                "type" : "string"
+              },
+        "TORPEDO_SEEKER" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SPP" : {
+      "type" : "object",
+      "description" : "Space Packet Protocol (CCSDS 133.0-B-1)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Packet version number"
+              },
+        "PACKET_TYPE" : {
+                "$ref" : "#/definitions/packetType",
+                "description" : "Packet type (TM or TC)"
+              },
+        "SEC_HDR_FLAG" : {
+                "type" : "boolean",
+                "description" : "Secondary header flag"
+              },
+        "APID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Application Process Identifier"
+              },
+        "SEQUENCE_FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)"
+              },
+        "SEQUENCE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Sequence count"
+              },
+        "DATA_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Data length minus 1"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Packet data zone"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SPW" : {
+      "type" : "object",
+      "description" : "Space Weather Data Record",
+      "properties" : {
+        "DATE" : {
+                "type" : "string",
+                "description" : "Date in ISO 8601 format"
+              },
+        "BSRN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Bartels Solar Rotation Number"
+              },
+        "ND" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Day within Bartels cycle (1-27)"
+              },
+        "KP1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10"
+              },
+        "KP2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10"
+              },
+        "KP3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10"
+              },
+        "KP4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10"
+              },
+        "KP5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10"
+              },
+        "KP6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10"
+              },
+        "KP7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10"
+              },
+        "KP8" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10"
+              },
+        "KP_SUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sum of the 8 Kp indices for the day"
+              },
+        "AP1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT"
+              },
+        "AP2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT"
+              },
+        "AP3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT"
+              },
+        "AP4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT"
+              },
+        "AP5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT"
+              },
+        "AP6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT"
+              },
+        "AP7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT"
+              },
+        "AP8" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT"
+              },
+        "AP_AVG" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Arithmetic average of the 8 Ap indices for the day"
+              },
+        "CP" : {
+                "type" : "number",
+                "description" : "Planetary Daily Character Figure (0.0 to 2.5)"
+              },
+        "C9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "C9 index (0-9)"
+              },
+        "ISN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "International Sunspot Number"
+              },
+        "F107_OBS" : {
+                "type" : "number",
+                "description" : "Observed 10.7cm Solar Radio Flux"
+              },
+        "F107_ADJ" : {
+                "type" : "number",
+                "description" : "Adjusted 10.7cm Solar Radio Flux (to 1 AU)"
+              },
+        "F107_DATA_TYPE" : {
+                "$ref" : "#/definitions/F107DataType",
+                "description" : "F10.7 Data Type"
+              },
+        "F107_OBS_CENTER81" : {
+                "type" : "number",
+                "description" : "81-day centered average of observed F10.7"
+              },
+        "F107_OBS_LAST81" : {
+                "type" : "number",
+                "description" : "81-day trailing average of observed F10.7"
+              },
+        "F107_ADJ_CENTER81" : {
+                "type" : "number",
+                "description" : "81-day centered average of adjusted F10.7"
+              },
+        "F107_ADJ_LAST81" : {
+                "type" : "number",
+                "description" : "81-day trailing average of adjusted F10.7"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SPWCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SPW"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "STR" : {
+      "type" : "object",
+      "description" : "Star Catalog Entry",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "CS_ID" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "GNC_CAT_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "GAIADR3_CAT_ID" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "HIP_CAT_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "CAT_VERSION" : {
+                "type" : "string"
+              },
+        "RA" : {
+                "type" : "number"
+              },
+        "RA_UNC" : {
+                "type" : "number"
+              },
+        "DEC" : {
+                "type" : "number"
+              },
+        "DEC_UNC" : {
+                "type" : "number"
+              },
+        "POS_UNC_FLAG" : {
+                "type" : "boolean"
+              },
+        "PARALLAX" : {
+                "type" : "number"
+              },
+        "PARALLAX_UNC" : {
+                "type" : "number"
+              },
+        "PMRA" : {
+                "type" : "number"
+              },
+        "PMRA_UNC" : {
+                "type" : "number"
+              },
+        "PMDEC" : {
+                "type" : "number"
+              },
+        "PMDEC_UNC" : {
+                "type" : "number"
+              },
+        "PM_UNC_FLAG" : {
+                "type" : "boolean"
+              },
+        "ASTROMETRY_ORIGIN" : {
+                "type" : "string"
+              },
+        "STAR_EPOCH" : {
+                "type" : "number"
+              },
+        "GMAG" : {
+                "type" : "number"
+              },
+        "GMAG_UNC" : {
+                "type" : "number"
+              },
+        "BPMAG" : {
+                "type" : "number"
+              },
+        "BPMAG_UNC" : {
+                "type" : "number"
+              },
+        "RPMAG" : {
+                "type" : "number"
+              },
+        "RPMAG_UNC" : {
+                "type" : "number"
+              },
+        "JMAG" : {
+                "type" : "number"
+              },
+        "JMAG_UNC" : {
+                "type" : "number"
+              },
+        "KMAG" : {
+                "type" : "number"
+              },
+        "KMAG_UNC" : {
+                "type" : "number"
+              },
+        "HMAG" : {
+                "type" : "number"
+              },
+        "HMAG_UNC" : {
+                "type" : "number"
+              },
+        "VAR_FLAG" : {
+                "type" : "boolean"
+              },
+        "MULT_FLAG" : {
+                "type" : "boolean"
+              },
+        "NEIGHBOR_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NEIGHBOR_FLAG" : {
+                "type" : "boolean"
+              },
+        "NEIGHBOR_DISTANCE" : {
+                "type" : "number"
+              },
+        "SHIFT_FLAG" : {
+                "type" : "boolean"
+              },
+        "SHIFT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "STV" : {
+      "type" : "object",
+      "description" : "State Vector",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "number"
+              },
+        "POS_X" : {
+                "type" : "number"
+              },
+        "POS_Y" : {
+                "type" : "number"
+              },
+        "POS_Z" : {
+                "type" : "number"
+              },
+        "VEL_X" : {
+                "type" : "number"
+              },
+        "VEL_Y" : {
+                "type" : "number"
+              },
+        "VEL_Z" : {
+                "type" : "number"
+              },
+        "REF_FRAME" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SWR" : {
+      "type" : "object",
+      "description" : "Short-Wave Infrared",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ON_ORBIT" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "SOLAR_PHASE_ANGLE" : {
+                "type" : "number"
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "LOCATION_NAME" : {
+                "type" : "string"
+              },
+        "BAD_WAVE" : {
+                "type" : "string"
+              },
+        "WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ABS_FLUXES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RATIO_WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FLUX_RATIOS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TCF" : {
+      "type" : "object",
+      "description" : "Telecommand Transfer Frame (CCSDS 232.0-B-3)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Transfer frame version"
+              },
+        "BYPASS_FLAG" : {
+                "type" : "boolean",
+                "description" : "Bypass flag"
+              },
+        "CONTROL_CMD_FLAG" : {
+                "type" : "boolean",
+                "description" : "Control command flag"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft identifier"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel identifier"
+              },
+        "FRAME_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame length"
+              },
+        "FRAME_SEQUENCE_NUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Frame sequence number"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data field"
+              },
+        "FECF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame error control field"
               }
       },
       "additionalProperties" : false
@@ -4795,6 +10320,392 @@
         "CLOCK_DRIFT" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Clock drift values -  CCSDS 503.0-B-1, Page D-15"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TKG" : {
+      "type" : "object",
+      "description" : "Tracking and Data Fusion",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "FILTER_CONFIG" : {
+                "type" : "string"
+              },
+        "IMM_CONFIG" : {
+                "type" : "string"
+              },
+        "MHT_CONFIG" : {
+                "type" : "string"
+              },
+        "JPDA_CONFIG" : {
+                "type" : "string"
+              },
+        "FUSION_CONFIG" : {
+                "type" : "string"
+              },
+        "MEASUREMENTS" : {
+                "type" : "string"
+              },
+        "INITIAL_STATE" : {
+                "type" : "string"
+              },
+        "TRACK_TO_UPDATE" : {
+                "type" : "string"
+              },
+        "TRACKS_TO_CORRELATE" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TME" : {
+      "type" : "object",
+      "description" : "Time Systems",
+      "properties" : {
+        "COMMAND" : {
+                "type" : "string"
+              },
+        "CONVERSION_REQUEST" : {
+                "type" : "string"
+              },
+        "LEAP_SECOND_QUERY" : {
+                "type" : "string"
+              },
+        "EOP_QUERY" : {
+                "type" : "string"
+              },
+        "SIDEREAL_QUERY" : {
+                "type" : "string"
+              },
+        "INTERVAL_REQUEST" : {
+                "type" : "string"
+              },
+        "SOLAR_POSITION_QUERY" : {
+                "type" : "string"
+              },
+        "LUNAR_POSITION_QUERY" : {
+                "type" : "string"
+              },
+        "SUNRISE_SUNSET_QUERY" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CLOCK_PROPAGATION" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TMF" : {
+      "type" : "object",
+      "description" : "Telemetry Transfer Frame (CCSDS 132.0-B-2)",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Transfer frame version"
+              },
+        "SPACECRAFT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Spacecraft identifier"
+              },
+        "VIRTUAL_CHANNEL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel identifier"
+              },
+        "OCF_FLAG" : {
+                "type" : "boolean",
+                "description" : "Operational control field flag"
+              },
+        "MASTER_FRAME_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Master channel frame count"
+              },
+        "VIRTUAL_FRAME_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Virtual channel frame count"
+              },
+        "SEC_HDR_FLAG" : {
+                "type" : "boolean",
+                "description" : "Secondary header flag"
+              },
+        "SYNCH_FLAG" : {
+                "type" : "boolean",
+                "description" : "Synchronization flag"
+              },
+        "PACKET_ORDER_FLAG" : {
+                "type" : "boolean",
+                "description" : "Packet order flag"
+              },
+        "SEGMENT_LENGTH_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Segment length identifier"
+              },
+        "FIRST_HDR_POINTER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "First header pointer"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Data field"
+              },
+        "OCF" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Operational control field"
+              },
+        "FECF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame error control field"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TPN" : {
+      "type" : "object",
+      "description" : "Transponder",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "NID" : {
+                "type" : "string"
+              },
+        "TID" : {
+                "type" : "string"
+              },
+        "TTF" : {
+                "type" : "number"
+              },
+        "SYMBOL_RATE" : {
+                "type" : "number"
+              },
+        "FEC" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MODULATION" : {
+                "type" : "string"
+              },
+        "FORMAT" : {
+                "type" : "string"
+              },
+        "SYSTEM" : {
+                "type" : "string"
+              },
+        "CHANNELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRK" : {
+      "type" : "object",
+      "description" : "Track",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "CNTCT" : {
+                "type" : "string"
+              },
+        "MSG_TS" : {
+                "type" : "string"
+              },
+        "MSN_ID" : {
+                "type" : "string"
+              },
+        "ASSET_NAT" : {
+                "type" : "string"
+              },
+        "ASSET" : {
+                "type" : "string"
+              },
+        "SEN" : {
+                "type" : "string"
+              },
+        "SEN_QUAL" : {
+                "type" : "string"
+              },
+        "TRK_ID" : {
+                "type" : "string"
+              },
+        "TRK_NUM" : {
+                "type" : "string"
+              },
+        "TRK_STAT" : {
+                "type" : "string"
+              },
+        "OBJ_NAT" : {
+                "type" : "string"
+              },
+        "OBJ_ID" : {
+                "type" : "string"
+              },
+        "OBJ_TYPE" : {
+                "type" : "string"
+              },
+        "OBJ_SPEC" : {
+                "type" : "string"
+              },
+        "OBJ_PLAT" : {
+                "type" : "string"
+              },
+        "OBJ_ACT" : {
+                "type" : "string"
+              },
+        "MOD_TYPE" : {
+                "type" : "string"
+              },
+        "TRK_ITM_ID" : {
+                "type" : "string"
+              },
+        "TS" : {
+                "type" : "string"
+              },
+        "TRK_QUAL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TRK_PT_TYPE" : {
+                "type" : "string"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string"
+              },
+        "IDENT_CRED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "IDENT_REL" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "IDENT_AMP" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT" : {
+                "type" : "string"
+              },
+        "ENVIRONMENT_CONF" : {
+                "type" : "number"
+              },
+        "TRK_CONF" : {
+                "type" : "number"
+              },
+        "ECEF_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ECEF_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ECEF_ACC" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LAT" : {
+                "type" : "number"
+              },
+        "LON" : {
+                "type" : "number"
+              },
+        "ALT" : {
+                "type" : "number"
+              },
+        "SPD" : {
+                "type" : "number"
+              },
+        "HDNG" : {
+                "type" : "number"
+              },
+        "COURSE" : {
+                "type" : "number"
+              },
+        "LCO" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LCS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_POS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_VEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LC_ACC" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "E_NUVEL" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "E_NUPOS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "ERR_ELLP" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CALL_SIGN" : {
+                "type" : "string"
+              },
+        "MULTI_SOURCE" : {
+                "type" : "boolean"
+              },
+        "J_SERIES" : {
+                "type" : "string"
+              },
+        "STRENGTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M1V" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M2V" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M3A" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "M3AV" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TRN" : {
+      "type" : "object",
+      "description" : "Terrain Models",
+      "properties" : {
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TerrainDataSource"}
+              },
+        "INTERPOLATION" : {
+                "$ref" : "#/definitions/TerrainInterpolation"
+              },
+        "CACHE_ENABLED" : {
+                "type" : "boolean"
+              },
+        "MAX_CACHE_TILES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "VERTICAL_EXAGGERATION" : {
+                "type" : "number"
               }
       },
       "additionalProperties" : false
@@ -5100,6 +11011,167 @@
               },
         "USER_DEFINED_MICROSECONDS" : {
                 "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WPN" : {
+      "type" : "object",
+      "description" : "Weapons and Munitions",
+      "properties" : {
+        "CALIBER" : {
+                "type" : "number"
+              },
+        "MUZZLE_VELOCITY" : {
+                "type" : "number"
+              },
+        "RATE_OF_FIRE" : {
+                "type" : "number"
+              },
+        "DISPERSION" : {
+                "type" : "number"
+              },
+        "AMMO_CAPACITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "BURST_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "RELOAD_TIME" : {
+                "type" : "number"
+              },
+        "OVERHEAT_ROUNDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "COOLDOWN_RATE" : {
+                "type" : "number"
+              },
+        "ELEVATION_MIN" : {
+                "type" : "number"
+              },
+        "ELEVATION_MAX" : {
+                "type" : "number"
+              },
+        "TRAVERSE_MIN" : {
+                "type" : "number"
+              },
+        "TRAVERSE_MAX" : {
+                "type" : "number"
+              },
+        "SLEW_RATE" : {
+                "type" : "number"
+              },
+        "WEAPON_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "FUZE_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "RESERVED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WTH" : {
+      "type" : "object",
+      "description" : "Weather Data",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "ID_SENSOR" : {
+                "type" : "string"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string"
+              },
+        "OB_TIME" : {
+                "type" : "string"
+              },
+        "SIG_PWRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOISE_LVLS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPEC_WIDTHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "FIRST_GUESS_AVGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "QC_VALUE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "FILE_CREATION" : {
+                "type" : "string"
+              },
+        "TERM_ALT" : {
+                "type" : "number"
+              },
+        "AVG_TX_PWR" : {
+                "type" : "number"
+              },
+        "AVG_REF_PWR" : {
+                "type" : "number"
+              },
+        "SECTOR_NUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NUM_ELEMENTS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "TD_AVG_SAMPLE_NUMS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CHECKSUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "CO_INTEGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SPEC_AVGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "INTERPULSE_PERIODS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DOPP_VELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CONS_RECS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SNRS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SIG_STRENGTH" : {
+                "type" : "number"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "SEMI_MINOR_AXIS" : {
+                "type" : "number"
+              },
+        "ANGLE_ORIENTATION" : {
+                "type" : "number"
+              },
+        "LIGHT_EVENT_NUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "LIGHT_DET_SENSORS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "POS_CONFIDENCE" : {
+                "type" : "number"
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
               }
       },
       "additionalProperties" : false
@@ -7209,7 +13281,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/XTC" }]
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" }]
               },
         "standard" : {
                 "type" : "string"

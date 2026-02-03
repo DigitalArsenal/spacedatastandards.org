@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "PropagatorType" : {
+    "PropagatorMethod" : {
       "type" : "string",
       "enum": ["KEPLER", "SGP4", "SDP4", "HPOP", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST"]
     },
@@ -9,11 +9,11 @@
       "type" : "string",
       "enum": ["POINT_MASS", "J2", "J2_J4", "SPHERICAL_HARMONICS", "THIRD_BODY_SUN", "THIRD_BODY_MOON", "ATMOSPHERIC_DRAG", "SOLAR_RADIATION_PRESSURE", "RELATIVISTIC", "SOLID_TIDES", "OCEAN_TIDES", "MANEUVER"]
     },
-    "OrbitType" : {
+    "OrbitalRegime" : {
       "type" : "string",
       "enum": ["LEO", "MEO", "GEO", "HEO", "SSO", "MOLNIYA", "TUNDRA", "POLAR", "EQUATORIAL", "HYPERBOLIC", "PARABOLIC"]
     },
-    "TimeSystem" : {
+    "TimeReference" : {
       "type" : "string",
       "enum": ["UTC", "TAI", "TT", "TDB", "GPS_TIME", "JULIAN_DATE", "MODIFIED_JULIAN_DATE"]
     },

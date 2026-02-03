@@ -1,0 +1,17 @@
+export declare enum TimeScale {
+    UTC = 0,
+    TAI = 1,
+    TT = 2,
+    TDB = 3,
+    TCG = 4,
+    TCB = 5,
+    GPS = 6,
+    GLONASS = 7,
+    GALILEO = 8,
+    BEIDOU = 9,
+    UT1 = 10,
+    LOCAL_MEAN_SOLAR = 11,
+    LOCAL_APPARENT_SOLAR = 12,
+    SIDEREAL = 13
+}
+//# sourceMappingURL=TimeScale.d.ts.map

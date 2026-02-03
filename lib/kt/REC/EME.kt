@@ -117,9 +117,9 @@ class EME : Table() {
     val IVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun IVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Identifier for the public key used, aiding in recipient key management and message decryption.
+     * Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
      */
-    val PUBLIC_KEY_IDENTIFIER : String?
+    val SALT : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -128,12 +128,12 @@ class EME : Table() {
                 null
             }
         }
-    val PUBLIC_KEY_IDENTIFIERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun PUBLIC_KEY_IDENTIFIERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val SALTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun SALTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
     /**
-     * Specifies the set of cryptographic algorithms used in the encryption process.
+     * Identifier for the public key used, aiding in recipient key management and message decryption.
      */
-    val CIPHER_SUITE : String?
+    val PUBLIC_KEY_IDENTIFIER : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -142,12 +142,12 @@ class EME : Table() {
                 null
             }
         }
-    val CIPHER_SUITEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun CIPHER_SUITEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val PUBLIC_KEY_IDENTIFIERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun PUBLIC_KEY_IDENTIFIERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     /**
-     * Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
+     * Specifies the set of cryptographic algorithms used in the encryption process.
      */
-    val KDF_PARAMETERS : String?
+    val CIPHER_SUITE : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -156,12 +156,12 @@ class EME : Table() {
                 null
             }
         }
-    val KDF_PARAMETERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun KDF_PARAMETERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val CIPHER_SUITEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun CIPHER_SUITEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
     /**
-     * Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
+     * Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
      */
-    val ENCRYPTION_ALGORITHM_PARAMETERS : String?
+    val KDF_PARAMETERS : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -170,8 +170,22 @@ class EME : Table() {
                 null
             }
         }
-    val ENCRYPTION_ALGORITHM_PARAMETERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ENCRYPTION_ALGORITHM_PARAMETERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val KDF_PARAMETERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun KDF_PARAMETERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
+     */
+    val ENCRYPTION_ALGORITHM_PARAMETERS : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ENCRYPTION_ALGORITHM_PARAMETERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun ENCRYPTION_ALGORITHM_PARAMETERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEME(_bb: ByteBuffer): EME = getRootAsEME(_bb, EME())
@@ -180,12 +194,13 @@ class EME : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EME")
-        fun createEME(builder: FlatBufferBuilder, ENCRYPTED_BLOBOffset: Int, EPHEMERAL_PUBLIC_KEYOffset: Int, MACOffset: Int, NONCEOffset: Int, TAGOffset: Int, IVOffset: Int, PUBLIC_KEY_IDENTIFIEROffset: Int, CIPHER_SUITEOffset: Int, KDF_PARAMETERSOffset: Int, ENCRYPTION_ALGORITHM_PARAMETERSOffset: Int) : Int {
-            builder.startTable(10)
+        fun createEME(builder: FlatBufferBuilder, ENCRYPTED_BLOBOffset: Int, EPHEMERAL_PUBLIC_KEYOffset: Int, MACOffset: Int, NONCEOffset: Int, TAGOffset: Int, IVOffset: Int, SALTOffset: Int, PUBLIC_KEY_IDENTIFIEROffset: Int, CIPHER_SUITEOffset: Int, KDF_PARAMETERSOffset: Int, ENCRYPTION_ALGORITHM_PARAMETERSOffset: Int) : Int {
+            builder.startTable(11)
             addENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset)
             addKDF_PARAMETERS(builder, KDF_PARAMETERSOffset)
             addCIPHER_SUITE(builder, CIPHER_SUITEOffset)
             addPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIEROffset)
+            addSALT(builder, SALTOffset)
             addIV(builder, IVOffset)
             addTAG(builder, TAGOffset)
             addNONCE(builder, NONCEOffset)
@@ -194,7 +209,7 @@ class EME : Table() {
             addENCRYPTED_BLOB(builder, ENCRYPTED_BLOBOffset)
             return endEME(builder)
         }
-        fun startEME(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startEME(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addENCRYPTED_BLOB(builder: FlatBufferBuilder, ENCRYPTED_BLOB: Int) = builder.addOffset(0, ENCRYPTED_BLOB, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createEncryptedBlobVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
@@ -210,10 +225,11 @@ class EME : Table() {
         fun addNONCE(builder: FlatBufferBuilder, NONCE: Int) = builder.addOffset(3, NONCE, 0)
         fun addTAG(builder: FlatBufferBuilder, TAG: Int) = builder.addOffset(4, TAG, 0)
         fun addIV(builder: FlatBufferBuilder, IV: Int) = builder.addOffset(5, IV, 0)
-        fun addPUBLIC_KEY_IDENTIFIER(builder: FlatBufferBuilder, PUBLIC_KEY_IDENTIFIER: Int) = builder.addOffset(6, PUBLIC_KEY_IDENTIFIER, 0)
-        fun addCIPHER_SUITE(builder: FlatBufferBuilder, CIPHER_SUITE: Int) = builder.addOffset(7, CIPHER_SUITE, 0)
-        fun addKDF_PARAMETERS(builder: FlatBufferBuilder, KDF_PARAMETERS: Int) = builder.addOffset(8, KDF_PARAMETERS, 0)
-        fun addENCRYPTION_ALGORITHM_PARAMETERS(builder: FlatBufferBuilder, ENCRYPTION_ALGORITHM_PARAMETERS: Int) = builder.addOffset(9, ENCRYPTION_ALGORITHM_PARAMETERS, 0)
+        fun addSALT(builder: FlatBufferBuilder, SALT: Int) = builder.addOffset(6, SALT, 0)
+        fun addPUBLIC_KEY_IDENTIFIER(builder: FlatBufferBuilder, PUBLIC_KEY_IDENTIFIER: Int) = builder.addOffset(7, PUBLIC_KEY_IDENTIFIER, 0)
+        fun addCIPHER_SUITE(builder: FlatBufferBuilder, CIPHER_SUITE: Int) = builder.addOffset(8, CIPHER_SUITE, 0)
+        fun addKDF_PARAMETERS(builder: FlatBufferBuilder, KDF_PARAMETERS: Int) = builder.addOffset(9, KDF_PARAMETERS, 0)
+        fun addENCRYPTION_ALGORITHM_PARAMETERS(builder: FlatBufferBuilder, ENCRYPTION_ALGORITHM_PARAMETERS: Int) = builder.addOffset(10, ENCRYPTION_ALGORITHM_PARAMETERS, 0)
         fun endEME(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

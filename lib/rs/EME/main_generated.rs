@@ -32,10 +32,11 @@ impl<'a> EME<'a> {
   pub const VT_NONCE: flatbuffers::VOffsetT = 10;
   pub const VT_TAG: flatbuffers::VOffsetT = 12;
   pub const VT_IV: flatbuffers::VOffsetT = 14;
-  pub const VT_PUBLIC_KEY_IDENTIFIER: flatbuffers::VOffsetT = 16;
-  pub const VT_CIPHER_SUITE: flatbuffers::VOffsetT = 18;
-  pub const VT_KDF_PARAMETERS: flatbuffers::VOffsetT = 20;
-  pub const VT_ENCRYPTION_ALGORITHM_PARAMETERS: flatbuffers::VOffsetT = 22;
+  pub const VT_SALT: flatbuffers::VOffsetT = 16;
+  pub const VT_PUBLIC_KEY_IDENTIFIER: flatbuffers::VOffsetT = 18;
+  pub const VT_CIPHER_SUITE: flatbuffers::VOffsetT = 20;
+  pub const VT_KDF_PARAMETERS: flatbuffers::VOffsetT = 22;
+  pub const VT_ENCRYPTION_ALGORITHM_PARAMETERS: flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -51,6 +52,7 @@ impl<'a> EME<'a> {
     if let Some(x) = args.KDF_PARAMETERS { builder.add_KDF_PARAMETERS(x); }
     if let Some(x) = args.CIPHER_SUITE { builder.add_CIPHER_SUITE(x); }
     if let Some(x) = args.PUBLIC_KEY_IDENTIFIER { builder.add_PUBLIC_KEY_IDENTIFIER(x); }
+    if let Some(x) = args.SALT { builder.add_SALT(x); }
     if let Some(x) = args.IV { builder.add_IV(x); }
     if let Some(x) = args.TAG { builder.add_TAG(x); }
     if let Some(x) = args.NONCE { builder.add_NONCE(x); }
@@ -79,6 +81,9 @@ impl<'a> EME<'a> {
     let IV = self.IV().map(|x| {
       x.to_string()
     });
+    let SALT = self.SALT().map(|x| {
+      x.to_string()
+    });
     let PUBLIC_KEY_IDENTIFIER = self.PUBLIC_KEY_IDENTIFIER().map(|x| {
       x.to_string()
     });
@@ -98,6 +103,7 @@ impl<'a> EME<'a> {
       NONCE,
       TAG,
       IV,
+      SALT,
       PUBLIC_KEY_IDENTIFIER,
       CIPHER_SUITE,
       KDF_PARAMETERS,
@@ -153,6 +159,14 @@ impl<'a> EME<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EME::VT_IV, None)}
   }
+  /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  #[inline]
+  pub fn SALT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EME::VT_SALT, None)}
+  }
   /// Identifier for the public key used, aiding in recipient key management and message decryption.
   #[inline]
   pub fn PUBLIC_KEY_IDENTIFIER(&self) -> Option<&'a str> {
@@ -200,6 +214,7 @@ impl flatbuffers::Verifiable for EME<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NONCE", Self::VT_NONCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TAG", Self::VT_TAG, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IV", Self::VT_IV, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SALT", Self::VT_SALT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PUBLIC_KEY_IDENTIFIER", Self::VT_PUBLIC_KEY_IDENTIFIER, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CIPHER_SUITE", Self::VT_CIPHER_SUITE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KDF_PARAMETERS", Self::VT_KDF_PARAMETERS, false)?
@@ -215,6 +230,7 @@ pub struct EMEArgs<'a> {
     pub NONCE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TAG: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IV: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SALT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PUBLIC_KEY_IDENTIFIER: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CIPHER_SUITE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub KDF_PARAMETERS: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -230,6 +246,7 @@ impl<'a> Default for EMEArgs<'a> {
       NONCE: None,
       TAG: None,
       IV: None,
+      SALT: None,
       PUBLIC_KEY_IDENTIFIER: None,
       CIPHER_SUITE: None,
       KDF_PARAMETERS: None,
@@ -266,6 +283,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EMEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_IV(&mut self, IV: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_IV, IV);
+  }
+  #[inline]
+  pub fn add_SALT(&mut self, SALT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_SALT, SALT);
   }
   #[inline]
   pub fn add_PUBLIC_KEY_IDENTIFIER(&mut self, PUBLIC_KEY_IDENTIFIER: flatbuffers::WIPOffset<&'b  str>) {
@@ -307,6 +328,7 @@ impl core::fmt::Debug for EME<'_> {
       ds.field("NONCE", &self.NONCE());
       ds.field("TAG", &self.TAG());
       ds.field("IV", &self.IV());
+      ds.field("SALT", &self.SALT());
       ds.field("PUBLIC_KEY_IDENTIFIER", &self.PUBLIC_KEY_IDENTIFIER());
       ds.field("CIPHER_SUITE", &self.CIPHER_SUITE());
       ds.field("KDF_PARAMETERS", &self.KDF_PARAMETERS());
@@ -323,6 +345,7 @@ pub struct EMET {
   pub NONCE: Option<String>,
   pub TAG: Option<String>,
   pub IV: Option<String>,
+  pub SALT: Option<String>,
   pub PUBLIC_KEY_IDENTIFIER: Option<String>,
   pub CIPHER_SUITE: Option<String>,
   pub KDF_PARAMETERS: Option<String>,
@@ -337,6 +360,7 @@ impl Default for EMET {
       NONCE: None,
       TAG: None,
       IV: None,
+      SALT: None,
       PUBLIC_KEY_IDENTIFIER: None,
       CIPHER_SUITE: None,
       KDF_PARAMETERS: None,
@@ -367,6 +391,9 @@ impl EMET {
     let IV = self.IV.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SALT = self.SALT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let PUBLIC_KEY_IDENTIFIER = self.PUBLIC_KEY_IDENTIFIER.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -386,6 +413,7 @@ impl EMET {
       NONCE,
       TAG,
       IV,
+      SALT,
       PUBLIC_KEY_IDENTIFIER,
       CIPHER_SUITE,
       KDF_PARAMETERS,

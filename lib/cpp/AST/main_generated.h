@@ -16,40 +16,40 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct AST;
 struct ASTBuilder;
 
-enum PropagatorType : int8_t {
-  PropagatorType_KEPLER = 0,
-  PropagatorType_SGP4 = 1,
-  PropagatorType_SDP4 = 2,
-  PropagatorType_HPOP = 3,
-  PropagatorType_COWELL = 4,
-  PropagatorType_ENCKE = 5,
-  PropagatorType_GAUSS_JACKSON = 6,
-  PropagatorType_RK78 = 7,
-  PropagatorType_BROUWER = 8,
-  PropagatorType_KOZAI = 9,
-  PropagatorType_DSST = 10,
-  PropagatorType_MIN = PropagatorType_KEPLER,
-  PropagatorType_MAX = PropagatorType_DSST
+enum PropagatorMethod : int8_t {
+  PropagatorMethod_KEPLER = 0,
+  PropagatorMethod_SGP4 = 1,
+  PropagatorMethod_SDP4 = 2,
+  PropagatorMethod_HPOP = 3,
+  PropagatorMethod_COWELL = 4,
+  PropagatorMethod_ENCKE = 5,
+  PropagatorMethod_GAUSS_JACKSON = 6,
+  PropagatorMethod_RK78 = 7,
+  PropagatorMethod_BROUWER = 8,
+  PropagatorMethod_KOZAI = 9,
+  PropagatorMethod_DSST = 10,
+  PropagatorMethod_MIN = PropagatorMethod_KEPLER,
+  PropagatorMethod_MAX = PropagatorMethod_DSST
 };
 
-inline const PropagatorType (&EnumValuesPropagatorType())[11] {
-  static const PropagatorType values[] = {
-    PropagatorType_KEPLER,
-    PropagatorType_SGP4,
-    PropagatorType_SDP4,
-    PropagatorType_HPOP,
-    PropagatorType_COWELL,
-    PropagatorType_ENCKE,
-    PropagatorType_GAUSS_JACKSON,
-    PropagatorType_RK78,
-    PropagatorType_BROUWER,
-    PropagatorType_KOZAI,
-    PropagatorType_DSST
+inline const PropagatorMethod (&EnumValuesPropagatorMethod())[11] {
+  static const PropagatorMethod values[] = {
+    PropagatorMethod_KEPLER,
+    PropagatorMethod_SGP4,
+    PropagatorMethod_SDP4,
+    PropagatorMethod_HPOP,
+    PropagatorMethod_COWELL,
+    PropagatorMethod_ENCKE,
+    PropagatorMethod_GAUSS_JACKSON,
+    PropagatorMethod_RK78,
+    PropagatorMethod_BROUWER,
+    PropagatorMethod_KOZAI,
+    PropagatorMethod_DSST
   };
   return values;
 }
 
-inline const char * const *EnumNamesPropagatorType() {
+inline const char * const *EnumNamesPropagatorMethod() {
   static const char * const names[12] = {
     "KEPLER",
     "SGP4",
@@ -67,10 +67,10 @@ inline const char * const *EnumNamesPropagatorType() {
   return names;
 }
 
-inline const char *EnumNamePropagatorType(PropagatorType e) {
-  if (::flatbuffers::IsOutRange(e, PropagatorType_KEPLER, PropagatorType_DSST)) return "";
+inline const char *EnumNamePropagatorMethod(PropagatorMethod e) {
+  if (::flatbuffers::IsOutRange(e, PropagatorMethod_KEPLER, PropagatorMethod_DSST)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesPropagatorType()[index];
+  return EnumNamesPropagatorMethod()[index];
 }
 
 enum ForceModel : int8_t {
@@ -133,40 +133,40 @@ inline const char *EnumNameForceModel(ForceModel e) {
   return EnumNamesForceModel()[index];
 }
 
-enum OrbitType : int8_t {
-  OrbitType_LEO = 0,
-  OrbitType_MEO = 1,
-  OrbitType_GEO = 2,
-  OrbitType_HEO = 3,
-  OrbitType_SSO = 4,
-  OrbitType_MOLNIYA = 5,
-  OrbitType_TUNDRA = 6,
-  OrbitType_POLAR = 7,
-  OrbitType_EQUATORIAL = 8,
-  OrbitType_HYPERBOLIC = 9,
-  OrbitType_PARABOLIC = 10,
-  OrbitType_MIN = OrbitType_LEO,
-  OrbitType_MAX = OrbitType_PARABOLIC
+enum OrbitalRegime : int8_t {
+  OrbitalRegime_LEO = 0,
+  OrbitalRegime_MEO = 1,
+  OrbitalRegime_GEO = 2,
+  OrbitalRegime_HEO = 3,
+  OrbitalRegime_SSO = 4,
+  OrbitalRegime_MOLNIYA = 5,
+  OrbitalRegime_TUNDRA = 6,
+  OrbitalRegime_POLAR = 7,
+  OrbitalRegime_EQUATORIAL = 8,
+  OrbitalRegime_HYPERBOLIC = 9,
+  OrbitalRegime_PARABOLIC = 10,
+  OrbitalRegime_MIN = OrbitalRegime_LEO,
+  OrbitalRegime_MAX = OrbitalRegime_PARABOLIC
 };
 
-inline const OrbitType (&EnumValuesOrbitType())[11] {
-  static const OrbitType values[] = {
-    OrbitType_LEO,
-    OrbitType_MEO,
-    OrbitType_GEO,
-    OrbitType_HEO,
-    OrbitType_SSO,
-    OrbitType_MOLNIYA,
-    OrbitType_TUNDRA,
-    OrbitType_POLAR,
-    OrbitType_EQUATORIAL,
-    OrbitType_HYPERBOLIC,
-    OrbitType_PARABOLIC
+inline const OrbitalRegime (&EnumValuesOrbitalRegime())[11] {
+  static const OrbitalRegime values[] = {
+    OrbitalRegime_LEO,
+    OrbitalRegime_MEO,
+    OrbitalRegime_GEO,
+    OrbitalRegime_HEO,
+    OrbitalRegime_SSO,
+    OrbitalRegime_MOLNIYA,
+    OrbitalRegime_TUNDRA,
+    OrbitalRegime_POLAR,
+    OrbitalRegime_EQUATORIAL,
+    OrbitalRegime_HYPERBOLIC,
+    OrbitalRegime_PARABOLIC
   };
   return values;
 }
 
-inline const char * const *EnumNamesOrbitType() {
+inline const char * const *EnumNamesOrbitalRegime() {
   static const char * const names[12] = {
     "LEO",
     "MEO",
@@ -184,38 +184,38 @@ inline const char * const *EnumNamesOrbitType() {
   return names;
 }
 
-inline const char *EnumNameOrbitType(OrbitType e) {
-  if (::flatbuffers::IsOutRange(e, OrbitType_LEO, OrbitType_PARABOLIC)) return "";
+inline const char *EnumNameOrbitalRegime(OrbitalRegime e) {
+  if (::flatbuffers::IsOutRange(e, OrbitalRegime_LEO, OrbitalRegime_PARABOLIC)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesOrbitType()[index];
+  return EnumNamesOrbitalRegime()[index];
 }
 
-enum TimeSystem : int8_t {
-  TimeSystem_UTC = 0,
-  TimeSystem_TAI = 1,
-  TimeSystem_TT = 2,
-  TimeSystem_TDB = 3,
-  TimeSystem_GPS_TIME = 4,
-  TimeSystem_JULIAN_DATE = 5,
-  TimeSystem_MODIFIED_JULIAN_DATE = 6,
-  TimeSystem_MIN = TimeSystem_UTC,
-  TimeSystem_MAX = TimeSystem_MODIFIED_JULIAN_DATE
+enum TimeReference : int8_t {
+  TimeReference_UTC = 0,
+  TimeReference_TAI = 1,
+  TimeReference_TT = 2,
+  TimeReference_TDB = 3,
+  TimeReference_GPS_TIME = 4,
+  TimeReference_JULIAN_DATE = 5,
+  TimeReference_MODIFIED_JULIAN_DATE = 6,
+  TimeReference_MIN = TimeReference_UTC,
+  TimeReference_MAX = TimeReference_MODIFIED_JULIAN_DATE
 };
 
-inline const TimeSystem (&EnumValuesTimeSystem())[7] {
-  static const TimeSystem values[] = {
-    TimeSystem_UTC,
-    TimeSystem_TAI,
-    TimeSystem_TT,
-    TimeSystem_TDB,
-    TimeSystem_GPS_TIME,
-    TimeSystem_JULIAN_DATE,
-    TimeSystem_MODIFIED_JULIAN_DATE
+inline const TimeReference (&EnumValuesTimeReference())[7] {
+  static const TimeReference values[] = {
+    TimeReference_UTC,
+    TimeReference_TAI,
+    TimeReference_TT,
+    TimeReference_TDB,
+    TimeReference_GPS_TIME,
+    TimeReference_JULIAN_DATE,
+    TimeReference_MODIFIED_JULIAN_DATE
   };
   return values;
 }
 
-inline const char * const *EnumNamesTimeSystem() {
+inline const char * const *EnumNamesTimeReference() {
   static const char * const names[8] = {
     "UTC",
     "TAI",
@@ -229,10 +229,10 @@ inline const char * const *EnumNamesTimeSystem() {
   return names;
 }
 
-inline const char *EnumNameTimeSystem(TimeSystem e) {
-  if (::flatbuffers::IsOutRange(e, TimeSystem_UTC, TimeSystem_MODIFIED_JULIAN_DATE)) return "";
+inline const char *EnumNameTimeReference(TimeReference e) {
+  if (::flatbuffers::IsOutRange(e, TimeReference_UTC, TimeReference_MODIFIED_JULIAN_DATE)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesTimeSystem()[index];
+  return EnumNamesTimeReference()[index];
 }
 
 enum ReferenceFrame : int8_t {

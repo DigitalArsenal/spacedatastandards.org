@@ -19,42 +19,121 @@ public struct Record : IFlatbufferObject
   public RecordType ValueType { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
   public TTable? Value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
   public ACL ValueAsACL() { return Value<ACL>().Value; }
+  public ACM ValueAsACM() { return Value<ACM>().Value; }
+  public ACR ValueAsACR() { return Value<ACR>().Value; }
+  public AEM ValueAsAEM() { return Value<AEM>().Value; }
+  public AOF ValueAsAOF() { return Value<AOF>().Value; }
+  public APM ValueAsAPM() { return Value<APM>().Value; }
+  public ARM ValueAsARM() { return Value<ARM>().Value; }
+  public AST ValueAsAST() { return Value<AST>().Value; }
+  public ATD ValueAsATD() { return Value<ATD>().Value; }
   public ATM ValueAsATM() { return Value<ATM>().Value; }
+  public BAL ValueAsBAL() { return Value<BAL>().Value; }
+  public BEM ValueAsBEM() { return Value<BEM>().Value; }
+  public BMC ValueAsBMC() { return Value<BMC>().Value; }
   public BOV ValueAsBOV() { return Value<BOV>().Value; }
   public CAT ValueAsCAT() { return Value<CAT>().Value; }
   public CDM ValueAsCDM() { return Value<CDM>().Value; }
+  public CFP ValueAsCFP() { return Value<CFP>().Value; }
+  public CHN ValueAsCHN() { return Value<CHN>().Value; }
+  public CLT ValueAsCLT() { return Value<CLT>().Value; }
+  public CMS ValueAsCMS() { return Value<CMS>().Value; }
+  public COM ValueAsCOM() { return Value<COM>().Value; }
+  public CRD ValueAsCRD() { return Value<CRD>().Value; }
   public CRM ValueAsCRM() { return Value<CRM>().Value; }
   public CSM ValueAsCSM() { return Value<CSM>().Value; }
   public CTR ValueAsCTR() { return Value<CTR>().Value; }
+  public DFH ValueAsDFH() { return Value<DFH>().Value; }
+  public DMG ValueAsDMG() { return Value<DMG>().Value; }
+  public DOA ValueAsDOA() { return Value<DOA>().Value; }
   public EME ValueAsEME() { return Value<EME>().Value; }
+  public ENV ValueAsENV() { return Value<ENV>().Value; }
   public EOO ValueAsEOO() { return Value<EOO>().Value; }
   public EOP ValueAsEOP() { return Value<EOP>().Value; }
   public EPM ValueAsEPM() { return Value<EPM>().Value; }
+  public EWR ValueAsEWR() { return Value<EWR>().Value; }
+  public FCS ValueAsFCS() { return Value<FCS>().Value; }
+  public GDI ValueAsGDI() { return Value<GDI>().Value; }
+  public GEO ValueAsGEO() { return Value<GEO>().Value; }
+  public GNO ValueAsGNO() { return Value<GNO>().Value; }
+  public GRV ValueAsGRV() { return Value<GRV>().Value; }
+  public GVH ValueAsGVH() { return Value<GVH>().Value; }
+  public HEL ValueAsHEL() { return Value<HEL>().Value; }
   public HYP ValueAsHYP() { return Value<HYP>().Value; }
   public IDM ValueAsIDM() { return Value<IDM>().Value; }
+  public IRO ValueAsIRO() { return Value<IRO>().Value; }
   public LCC ValueAsLCC() { return Value<LCC>().Value; }
   public LDM ValueAsLDM() { return Value<LDM>().Value; }
+  public LKS ValueAsLKS() { return Value<LKS>().Value; }
+  public LND ValueAsLND() { return Value<LND>().Value; }
+  public LNE ValueAsLNE() { return Value<LNE>().Value; }
   public MET ValueAsMET() { return Value<MET>().Value; }
+  public MFE ValueAsMFE() { return Value<MFE>().Value; }
+  public MNF ValueAsMNF() { return Value<MNF>().Value; }
+  public MNV ValueAsMNV() { return Value<MNV>().Value; }
   public MPE ValueAsMPE() { return Value<MPE>().Value; }
+  public MSL ValueAsMSL() { return Value<MSL>().Value; }
+  public MST ValueAsMST() { return Value<MST>().Value; }
+  public MTI ValueAsMTI() { return Value<MTI>().Value; }
+  public NAV ValueAsNAV() { return Value<NAV>().Value; }
+  public OBD ValueAsOBD() { return Value<OBD>().Value; }
+  public OBT ValueAsOBT() { return Value<OBT>().Value; }
   public OCM ValueAsOCM() { return Value<OCM>().Value; }
   public OEM ValueAsOEM() { return Value<OEM>().Value; }
   public OMM ValueAsOMM() { return Value<OMM>().Value; }
+  public OOD ValueAsOOD() { return Value<OOD>().Value; }
+  public OOE ValueAsOOE() { return Value<OOE>().Value; }
+  public OOI ValueAsOOI() { return Value<OOI>().Value; }
+  public OOL ValueAsOOL() { return Value<OOL>().Value; }
+  public OON ValueAsOON() { return Value<OON>().Value; }
+  public OPM ValueAsOPM() { return Value<OPM>().Value; }
   public OSM ValueAsOSM() { return Value<OSM>().Value; }
+  public PCF ValueAsPCF() { return Value<PCF>().Value; }
+  public PHY ValueAsPHY() { return Value<PHY>().Value; }
   public PLD ValueAsPLD() { return Value<PLD>().Value; }
   public PLG ValueAsPLG() { return Value<PLG>().Value; }
   public PLK ValueAsPLK() { return Value<PLK>().Value; }
   public PNM ValueAsPNM() { return Value<PNM>().Value; }
   public PRG ValueAsPRG() { return Value<PRG>().Value; }
   public PUR ValueAsPUR() { return Value<PUR>().Value; }
+  public RAF ValueAsRAF() { return Value<RAF>().Value; }
+  public RCF ValueAsRCF() { return Value<RCF>().Value; }
+  public RDM ValueAsRDM() { return Value<RDM>().Value; }
+  public RDO ValueAsRDO() { return Value<RDO>().Value; }
   public REV ValueAsREV() { return Value<REV>().Value; }
+  public RFB ValueAsRFB() { return Value<RFB>().Value; }
+  public RFE ValueAsRFE() { return Value<RFE>().Value; }
   public RFM ValueAsRFM() { return Value<RFM>().Value; }
+  public RFO ValueAsRFO() { return Value<RFO>().Value; }
   public ROC ValueAsROC() { return Value<ROC>().Value; }
+  public SAR ValueAsSAR() { return Value<SAR>().Value; }
   public SCM ValueAsSCM() { return Value<SCM>().Value; }
+  public SDL ValueAsSDL() { return Value<SDL>().Value; }
+  public SEO ValueAsSEO() { return Value<SEO>().Value; }
+  public SEV ValueAsSEV() { return Value<SEV>().Value; }
   public SIT ValueAsSIT() { return Value<SIT>().Value; }
+  public SKI ValueAsSKI() { return Value<SKI>().Value; }
+  public SNR ValueAsSNR() { return Value<SNR>().Value; }
+  public SOI ValueAsSOI() { return Value<SOI>().Value; }
+  public SON ValueAsSON() { return Value<SON>().Value; }
+  public SPP ValueAsSPP() { return Value<SPP>().Value; }
+  public SPW ValueAsSPW() { return Value<SPW>().Value; }
   public STF ValueAsSTF() { return Value<STF>().Value; }
+  public STR ValueAsSTR() { return Value<STR>().Value; }
+  public STV ValueAsSTV() { return Value<STV>().Value; }
+  public SWR ValueAsSWR() { return Value<SWR>().Value; }
+  public TCF ValueAsTCF() { return Value<TCF>().Value; }
   public TDM ValueAsTDM() { return Value<TDM>().Value; }
   public TIM ValueAsTIM() { return Value<TIM>().Value; }
+  public TKG ValueAsTKG() { return Value<TKG>().Value; }
+  public TME ValueAsTME() { return Value<TME>().Value; }
+  public TMF ValueAsTMF() { return Value<TMF>().Value; }
+  public TPN ValueAsTPN() { return Value<TPN>().Value; }
+  public TRK ValueAsTRK() { return Value<TRK>().Value; }
+  public TRN ValueAsTRN() { return Value<TRN>().Value; }
   public VCM ValueAsVCM() { return Value<VCM>().Value; }
+  public WPN ValueAsWPN() { return Value<WPN>().Value; }
+  public WTH ValueAsWTH() { return Value<WTH>().Value; }
   public XTC ValueAsXTC() { return Value<XTC>().Value; }
   public string Standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -96,8 +175,41 @@ public struct Record : IFlatbufferObject
       case RecordType.ACL:
         _o.Value.Value = this.Value<ACL>().HasValue ? this.Value<ACL>().Value.UnPack() : null;
         break;
+      case RecordType.ACM:
+        _o.Value.Value = this.Value<ACM>().HasValue ? this.Value<ACM>().Value.UnPack() : null;
+        break;
+      case RecordType.ACR:
+        _o.Value.Value = this.Value<ACR>().HasValue ? this.Value<ACR>().Value.UnPack() : null;
+        break;
+      case RecordType.AEM:
+        _o.Value.Value = this.Value<AEM>().HasValue ? this.Value<AEM>().Value.UnPack() : null;
+        break;
+      case RecordType.AOF:
+        _o.Value.Value = this.Value<AOF>().HasValue ? this.Value<AOF>().Value.UnPack() : null;
+        break;
+      case RecordType.APM:
+        _o.Value.Value = this.Value<APM>().HasValue ? this.Value<APM>().Value.UnPack() : null;
+        break;
+      case RecordType.ARM:
+        _o.Value.Value = this.Value<ARM>().HasValue ? this.Value<ARM>().Value.UnPack() : null;
+        break;
+      case RecordType.AST:
+        _o.Value.Value = this.Value<AST>().HasValue ? this.Value<AST>().Value.UnPack() : null;
+        break;
+      case RecordType.ATD:
+        _o.Value.Value = this.Value<ATD>().HasValue ? this.Value<ATD>().Value.UnPack() : null;
+        break;
       case RecordType.ATM:
         _o.Value.Value = this.Value<ATM>().HasValue ? this.Value<ATM>().Value.UnPack() : null;
+        break;
+      case RecordType.BAL:
+        _o.Value.Value = this.Value<BAL>().HasValue ? this.Value<BAL>().Value.UnPack() : null;
+        break;
+      case RecordType.BEM:
+        _o.Value.Value = this.Value<BEM>().HasValue ? this.Value<BEM>().Value.UnPack() : null;
+        break;
+      case RecordType.BMC:
+        _o.Value.Value = this.Value<BMC>().HasValue ? this.Value<BMC>().Value.UnPack() : null;
         break;
       case RecordType.BOV:
         _o.Value.Value = this.Value<BOV>().HasValue ? this.Value<BOV>().Value.UnPack() : null;
@@ -108,6 +220,24 @@ public struct Record : IFlatbufferObject
       case RecordType.CDM:
         _o.Value.Value = this.Value<CDM>().HasValue ? this.Value<CDM>().Value.UnPack() : null;
         break;
+      case RecordType.CFP:
+        _o.Value.Value = this.Value<CFP>().HasValue ? this.Value<CFP>().Value.UnPack() : null;
+        break;
+      case RecordType.CHN:
+        _o.Value.Value = this.Value<CHN>().HasValue ? this.Value<CHN>().Value.UnPack() : null;
+        break;
+      case RecordType.CLT:
+        _o.Value.Value = this.Value<CLT>().HasValue ? this.Value<CLT>().Value.UnPack() : null;
+        break;
+      case RecordType.CMS:
+        _o.Value.Value = this.Value<CMS>().HasValue ? this.Value<CMS>().Value.UnPack() : null;
+        break;
+      case RecordType.COM:
+        _o.Value.Value = this.Value<COM>().HasValue ? this.Value<COM>().Value.UnPack() : null;
+        break;
+      case RecordType.CRD:
+        _o.Value.Value = this.Value<CRD>().HasValue ? this.Value<CRD>().Value.UnPack() : null;
+        break;
       case RecordType.CRM:
         _o.Value.Value = this.Value<CRM>().HasValue ? this.Value<CRM>().Value.UnPack() : null;
         break;
@@ -117,8 +247,20 @@ public struct Record : IFlatbufferObject
       case RecordType.CTR:
         _o.Value.Value = this.Value<CTR>().HasValue ? this.Value<CTR>().Value.UnPack() : null;
         break;
+      case RecordType.DFH:
+        _o.Value.Value = this.Value<DFH>().HasValue ? this.Value<DFH>().Value.UnPack() : null;
+        break;
+      case RecordType.DMG:
+        _o.Value.Value = this.Value<DMG>().HasValue ? this.Value<DMG>().Value.UnPack() : null;
+        break;
+      case RecordType.DOA:
+        _o.Value.Value = this.Value<DOA>().HasValue ? this.Value<DOA>().Value.UnPack() : null;
+        break;
       case RecordType.EME:
         _o.Value.Value = this.Value<EME>().HasValue ? this.Value<EME>().Value.UnPack() : null;
+        break;
+      case RecordType.ENV:
+        _o.Value.Value = this.Value<ENV>().HasValue ? this.Value<ENV>().Value.UnPack() : null;
         break;
       case RecordType.EOO:
         _o.Value.Value = this.Value<EOO>().HasValue ? this.Value<EOO>().Value.UnPack() : null;
@@ -129,11 +271,38 @@ public struct Record : IFlatbufferObject
       case RecordType.EPM:
         _o.Value.Value = this.Value<EPM>().HasValue ? this.Value<EPM>().Value.UnPack() : null;
         break;
+      case RecordType.EWR:
+        _o.Value.Value = this.Value<EWR>().HasValue ? this.Value<EWR>().Value.UnPack() : null;
+        break;
+      case RecordType.FCS:
+        _o.Value.Value = this.Value<FCS>().HasValue ? this.Value<FCS>().Value.UnPack() : null;
+        break;
+      case RecordType.GDI:
+        _o.Value.Value = this.Value<GDI>().HasValue ? this.Value<GDI>().Value.UnPack() : null;
+        break;
+      case RecordType.GEO:
+        _o.Value.Value = this.Value<GEO>().HasValue ? this.Value<GEO>().Value.UnPack() : null;
+        break;
+      case RecordType.GNO:
+        _o.Value.Value = this.Value<GNO>().HasValue ? this.Value<GNO>().Value.UnPack() : null;
+        break;
+      case RecordType.GRV:
+        _o.Value.Value = this.Value<GRV>().HasValue ? this.Value<GRV>().Value.UnPack() : null;
+        break;
+      case RecordType.GVH:
+        _o.Value.Value = this.Value<GVH>().HasValue ? this.Value<GVH>().Value.UnPack() : null;
+        break;
+      case RecordType.HEL:
+        _o.Value.Value = this.Value<HEL>().HasValue ? this.Value<HEL>().Value.UnPack() : null;
+        break;
       case RecordType.HYP:
         _o.Value.Value = this.Value<HYP>().HasValue ? this.Value<HYP>().Value.UnPack() : null;
         break;
       case RecordType.IDM:
         _o.Value.Value = this.Value<IDM>().HasValue ? this.Value<IDM>().Value.UnPack() : null;
+        break;
+      case RecordType.IRO:
+        _o.Value.Value = this.Value<IRO>().HasValue ? this.Value<IRO>().Value.UnPack() : null;
         break;
       case RecordType.LCC:
         _o.Value.Value = this.Value<LCC>().HasValue ? this.Value<LCC>().Value.UnPack() : null;
@@ -141,11 +310,47 @@ public struct Record : IFlatbufferObject
       case RecordType.LDM:
         _o.Value.Value = this.Value<LDM>().HasValue ? this.Value<LDM>().Value.UnPack() : null;
         break;
+      case RecordType.LKS:
+        _o.Value.Value = this.Value<LKS>().HasValue ? this.Value<LKS>().Value.UnPack() : null;
+        break;
+      case RecordType.LND:
+        _o.Value.Value = this.Value<LND>().HasValue ? this.Value<LND>().Value.UnPack() : null;
+        break;
+      case RecordType.LNE:
+        _o.Value.Value = this.Value<LNE>().HasValue ? this.Value<LNE>().Value.UnPack() : null;
+        break;
       case RecordType.MET:
         _o.Value.Value = this.Value<MET>().HasValue ? this.Value<MET>().Value.UnPack() : null;
         break;
+      case RecordType.MFE:
+        _o.Value.Value = this.Value<MFE>().HasValue ? this.Value<MFE>().Value.UnPack() : null;
+        break;
+      case RecordType.MNF:
+        _o.Value.Value = this.Value<MNF>().HasValue ? this.Value<MNF>().Value.UnPack() : null;
+        break;
+      case RecordType.MNV:
+        _o.Value.Value = this.Value<MNV>().HasValue ? this.Value<MNV>().Value.UnPack() : null;
+        break;
       case RecordType.MPE:
         _o.Value.Value = this.Value<MPE>().HasValue ? this.Value<MPE>().Value.UnPack() : null;
+        break;
+      case RecordType.MSL:
+        _o.Value.Value = this.Value<MSL>().HasValue ? this.Value<MSL>().Value.UnPack() : null;
+        break;
+      case RecordType.MST:
+        _o.Value.Value = this.Value<MST>().HasValue ? this.Value<MST>().Value.UnPack() : null;
+        break;
+      case RecordType.MTI:
+        _o.Value.Value = this.Value<MTI>().HasValue ? this.Value<MTI>().Value.UnPack() : null;
+        break;
+      case RecordType.NAV:
+        _o.Value.Value = this.Value<NAV>().HasValue ? this.Value<NAV>().Value.UnPack() : null;
+        break;
+      case RecordType.OBD:
+        _o.Value.Value = this.Value<OBD>().HasValue ? this.Value<OBD>().Value.UnPack() : null;
+        break;
+      case RecordType.OBT:
+        _o.Value.Value = this.Value<OBT>().HasValue ? this.Value<OBT>().Value.UnPack() : null;
         break;
       case RecordType.OCM:
         _o.Value.Value = this.Value<OCM>().HasValue ? this.Value<OCM>().Value.UnPack() : null;
@@ -156,8 +361,32 @@ public struct Record : IFlatbufferObject
       case RecordType.OMM:
         _o.Value.Value = this.Value<OMM>().HasValue ? this.Value<OMM>().Value.UnPack() : null;
         break;
+      case RecordType.OOD:
+        _o.Value.Value = this.Value<OOD>().HasValue ? this.Value<OOD>().Value.UnPack() : null;
+        break;
+      case RecordType.OOE:
+        _o.Value.Value = this.Value<OOE>().HasValue ? this.Value<OOE>().Value.UnPack() : null;
+        break;
+      case RecordType.OOI:
+        _o.Value.Value = this.Value<OOI>().HasValue ? this.Value<OOI>().Value.UnPack() : null;
+        break;
+      case RecordType.OOL:
+        _o.Value.Value = this.Value<OOL>().HasValue ? this.Value<OOL>().Value.UnPack() : null;
+        break;
+      case RecordType.OON:
+        _o.Value.Value = this.Value<OON>().HasValue ? this.Value<OON>().Value.UnPack() : null;
+        break;
+      case RecordType.OPM:
+        _o.Value.Value = this.Value<OPM>().HasValue ? this.Value<OPM>().Value.UnPack() : null;
+        break;
       case RecordType.OSM:
         _o.Value.Value = this.Value<OSM>().HasValue ? this.Value<OSM>().Value.UnPack() : null;
+        break;
+      case RecordType.PCF:
+        _o.Value.Value = this.Value<PCF>().HasValue ? this.Value<PCF>().Value.UnPack() : null;
+        break;
+      case RecordType.PHY:
+        _o.Value.Value = this.Value<PHY>().HasValue ? this.Value<PHY>().Value.UnPack() : null;
         break;
       case RecordType.PLD:
         _o.Value.Value = this.Value<PLD>().HasValue ? this.Value<PLD>().Value.UnPack() : null;
@@ -177,23 +406,86 @@ public struct Record : IFlatbufferObject
       case RecordType.PUR:
         _o.Value.Value = this.Value<PUR>().HasValue ? this.Value<PUR>().Value.UnPack() : null;
         break;
+      case RecordType.RAF:
+        _o.Value.Value = this.Value<RAF>().HasValue ? this.Value<RAF>().Value.UnPack() : null;
+        break;
+      case RecordType.RCF:
+        _o.Value.Value = this.Value<RCF>().HasValue ? this.Value<RCF>().Value.UnPack() : null;
+        break;
+      case RecordType.RDM:
+        _o.Value.Value = this.Value<RDM>().HasValue ? this.Value<RDM>().Value.UnPack() : null;
+        break;
+      case RecordType.RDO:
+        _o.Value.Value = this.Value<RDO>().HasValue ? this.Value<RDO>().Value.UnPack() : null;
+        break;
       case RecordType.REV:
         _o.Value.Value = this.Value<REV>().HasValue ? this.Value<REV>().Value.UnPack() : null;
+        break;
+      case RecordType.RFB:
+        _o.Value.Value = this.Value<RFB>().HasValue ? this.Value<RFB>().Value.UnPack() : null;
+        break;
+      case RecordType.RFE:
+        _o.Value.Value = this.Value<RFE>().HasValue ? this.Value<RFE>().Value.UnPack() : null;
         break;
       case RecordType.RFM:
         _o.Value.Value = this.Value<RFM>().HasValue ? this.Value<RFM>().Value.UnPack() : null;
         break;
+      case RecordType.RFO:
+        _o.Value.Value = this.Value<RFO>().HasValue ? this.Value<RFO>().Value.UnPack() : null;
+        break;
       case RecordType.ROC:
         _o.Value.Value = this.Value<ROC>().HasValue ? this.Value<ROC>().Value.UnPack() : null;
+        break;
+      case RecordType.SAR:
+        _o.Value.Value = this.Value<SAR>().HasValue ? this.Value<SAR>().Value.UnPack() : null;
         break;
       case RecordType.SCM:
         _o.Value.Value = this.Value<SCM>().HasValue ? this.Value<SCM>().Value.UnPack() : null;
         break;
+      case RecordType.SDL:
+        _o.Value.Value = this.Value<SDL>().HasValue ? this.Value<SDL>().Value.UnPack() : null;
+        break;
+      case RecordType.SEO:
+        _o.Value.Value = this.Value<SEO>().HasValue ? this.Value<SEO>().Value.UnPack() : null;
+        break;
+      case RecordType.SEV:
+        _o.Value.Value = this.Value<SEV>().HasValue ? this.Value<SEV>().Value.UnPack() : null;
+        break;
       case RecordType.SIT:
         _o.Value.Value = this.Value<SIT>().HasValue ? this.Value<SIT>().Value.UnPack() : null;
         break;
+      case RecordType.SKI:
+        _o.Value.Value = this.Value<SKI>().HasValue ? this.Value<SKI>().Value.UnPack() : null;
+        break;
+      case RecordType.SNR:
+        _o.Value.Value = this.Value<SNR>().HasValue ? this.Value<SNR>().Value.UnPack() : null;
+        break;
+      case RecordType.SOI:
+        _o.Value.Value = this.Value<SOI>().HasValue ? this.Value<SOI>().Value.UnPack() : null;
+        break;
+      case RecordType.SON:
+        _o.Value.Value = this.Value<SON>().HasValue ? this.Value<SON>().Value.UnPack() : null;
+        break;
+      case RecordType.SPP:
+        _o.Value.Value = this.Value<SPP>().HasValue ? this.Value<SPP>().Value.UnPack() : null;
+        break;
+      case RecordType.SPW:
+        _o.Value.Value = this.Value<SPW>().HasValue ? this.Value<SPW>().Value.UnPack() : null;
+        break;
       case RecordType.STF:
         _o.Value.Value = this.Value<STF>().HasValue ? this.Value<STF>().Value.UnPack() : null;
+        break;
+      case RecordType.STR:
+        _o.Value.Value = this.Value<STR>().HasValue ? this.Value<STR>().Value.UnPack() : null;
+        break;
+      case RecordType.STV:
+        _o.Value.Value = this.Value<STV>().HasValue ? this.Value<STV>().Value.UnPack() : null;
+        break;
+      case RecordType.SWR:
+        _o.Value.Value = this.Value<SWR>().HasValue ? this.Value<SWR>().Value.UnPack() : null;
+        break;
+      case RecordType.TCF:
+        _o.Value.Value = this.Value<TCF>().HasValue ? this.Value<TCF>().Value.UnPack() : null;
         break;
       case RecordType.TDM:
         _o.Value.Value = this.Value<TDM>().HasValue ? this.Value<TDM>().Value.UnPack() : null;
@@ -201,8 +493,32 @@ public struct Record : IFlatbufferObject
       case RecordType.TIM:
         _o.Value.Value = this.Value<TIM>().HasValue ? this.Value<TIM>().Value.UnPack() : null;
         break;
+      case RecordType.TKG:
+        _o.Value.Value = this.Value<TKG>().HasValue ? this.Value<TKG>().Value.UnPack() : null;
+        break;
+      case RecordType.TME:
+        _o.Value.Value = this.Value<TME>().HasValue ? this.Value<TME>().Value.UnPack() : null;
+        break;
+      case RecordType.TMF:
+        _o.Value.Value = this.Value<TMF>().HasValue ? this.Value<TMF>().Value.UnPack() : null;
+        break;
+      case RecordType.TPN:
+        _o.Value.Value = this.Value<TPN>().HasValue ? this.Value<TPN>().Value.UnPack() : null;
+        break;
+      case RecordType.TRK:
+        _o.Value.Value = this.Value<TRK>().HasValue ? this.Value<TRK>().Value.UnPack() : null;
+        break;
+      case RecordType.TRN:
+        _o.Value.Value = this.Value<TRN>().HasValue ? this.Value<TRN>().Value.UnPack() : null;
+        break;
       case RecordType.VCM:
         _o.Value.Value = this.Value<VCM>().HasValue ? this.Value<VCM>().Value.UnPack() : null;
+        break;
+      case RecordType.WPN:
+        _o.Value.Value = this.Value<WPN>().HasValue ? this.Value<WPN>().Value.UnPack() : null;
+        break;
+      case RecordType.WTH:
+        _o.Value.Value = this.Value<WTH>().HasValue ? this.Value<WTH>().Value.UnPack() : null;
         break;
       case RecordType.XTC:
         _o.Value.Value = this.Value<XTC>().HasValue ? this.Value<XTC>().Value.UnPack() : null;

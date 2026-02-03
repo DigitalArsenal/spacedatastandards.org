@@ -30,18 +30,20 @@ class EME {
   String? get TAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Initialization vector used to introduce randomness in the encryption process, enhancing security.
   String? get IV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  String? get SALT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  Identifier for the public key used, aiding in recipient key management and message decryption.
-  String? get PUBLIC_KEY_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get PUBLIC_KEY_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Specifies the set of cryptographic algorithms used in the encryption process.
-  String? get CIPHER_SUITE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get CIPHER_SUITE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
   ///  Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
-  String? get KDF_PARAMETERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get KDF_PARAMETERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
-  String? get ENCRYPTION_ALGORITHM_PARAMETERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get ENCRYPTION_ALGORITHM_PARAMETERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
 
   @override
   String toString() {
-    return 'EME{ENCRYPTED_BLOB: ${ENCRYPTED_BLOB}, EPHEMERAL_PUBLIC_KEY: ${EPHEMERAL_PUBLIC_KEY}, MAC: ${MAC}, NONCE: ${NONCE}, TAG: ${TAG}, IV: ${IV}, PUBLIC_KEY_IDENTIFIER: ${PUBLIC_KEY_IDENTIFIER}, CIPHER_SUITE: ${CIPHER_SUITE}, KDF_PARAMETERS: ${KDF_PARAMETERS}, ENCRYPTION_ALGORITHM_PARAMETERS: ${ENCRYPTION_ALGORITHM_PARAMETERS}}';
+    return 'EME{ENCRYPTED_BLOB: ${ENCRYPTED_BLOB}, EPHEMERAL_PUBLIC_KEY: ${EPHEMERAL_PUBLIC_KEY}, MAC: ${MAC}, NONCE: ${NONCE}, TAG: ${TAG}, IV: ${IV}, SALT: ${SALT}, PUBLIC_KEY_IDENTIFIER: ${PUBLIC_KEY_IDENTIFIER}, CIPHER_SUITE: ${CIPHER_SUITE}, KDF_PARAMETERS: ${KDF_PARAMETERS}, ENCRYPTION_ALGORITHM_PARAMETERS: ${ENCRYPTION_ALGORITHM_PARAMETERS}}';
   }
 }
 
@@ -59,7 +61,7 @@ class EMEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
   }
 
   int addEncryptedBlobOffset(int? offset) {
@@ -86,20 +88,24 @@ class EMEBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addPublicKeyIdentifierOffset(int? offset) {
+  int addSaltOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addCipherSuiteOffset(int? offset) {
+  int addPublicKeyIdentifierOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addKdfParametersOffset(int? offset) {
+  int addCipherSuiteOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addEncryptionAlgorithmParametersOffset(int? offset) {
+  int addKdfParametersOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addEncryptionAlgorithmParametersOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
 
@@ -115,6 +121,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
   final String? _NONCE;
   final String? _TAG;
   final String? _IV;
+  final String? _SALT;
   final String? _PUBLIC_KEY_IDENTIFIER;
   final String? _CIPHER_SUITE;
   final String? _KDF_PARAMETERS;
@@ -127,6 +134,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
     String? NONCE,
     String? TAG,
     String? IV,
+    String? SALT,
     String? PUBLIC_KEY_IDENTIFIER,
     String? CIPHER_SUITE,
     String? KDF_PARAMETERS,
@@ -138,6 +146,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
         _NONCE = NONCE,
         _TAG = TAG,
         _IV = IV,
+        _SALT = SALT,
         _PUBLIC_KEY_IDENTIFIER = PUBLIC_KEY_IDENTIFIER,
         _CIPHER_SUITE = CIPHER_SUITE,
         _KDF_PARAMETERS = KDF_PARAMETERS,
@@ -158,6 +167,8 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TAG!);
     final int? IVOffset = _IV == null ? null
         : fbBuilder.writeString(_IV!);
+    final int? SALTOffset = _SALT == null ? null
+        : fbBuilder.writeString(_SALT!);
     final int? PUBLIC_KEY_IDENTIFIEROffset = _PUBLIC_KEY_IDENTIFIER == null ? null
         : fbBuilder.writeString(_PUBLIC_KEY_IDENTIFIER!);
     final int? CIPHER_SUITEOffset = _CIPHER_SUITE == null ? null
@@ -166,17 +177,18 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_KDF_PARAMETERS!);
     final int? ENCRYPTION_ALGORITHM_PARAMETERSOffset = _ENCRYPTION_ALGORITHM_PARAMETERS == null ? null
         : fbBuilder.writeString(_ENCRYPTION_ALGORITHM_PARAMETERS!);
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
     fbBuilder.addOffset(0, ENCRYPTED_BLOBOffset);
     fbBuilder.addOffset(1, EPHEMERAL_PUBLIC_KEYOffset);
     fbBuilder.addOffset(2, MACOffset);
     fbBuilder.addOffset(3, NONCEOffset);
     fbBuilder.addOffset(4, TAGOffset);
     fbBuilder.addOffset(5, IVOffset);
-    fbBuilder.addOffset(6, PUBLIC_KEY_IDENTIFIEROffset);
-    fbBuilder.addOffset(7, CIPHER_SUITEOffset);
-    fbBuilder.addOffset(8, KDF_PARAMETERSOffset);
-    fbBuilder.addOffset(9, ENCRYPTION_ALGORITHM_PARAMETERSOffset);
+    fbBuilder.addOffset(6, SALTOffset);
+    fbBuilder.addOffset(7, PUBLIC_KEY_IDENTIFIEROffset);
+    fbBuilder.addOffset(8, CIPHER_SUITEOffset);
+    fbBuilder.addOffset(9, KDF_PARAMETERSOffset);
+    fbBuilder.addOffset(10, ENCRYPTION_ALGORITHM_PARAMETERSOffset);
     return fbBuilder.endTable();
   }
 

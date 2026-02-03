@@ -1,0 +1,13 @@
+export declare enum SeaState {
+    SS0 = 0,
+    SS1 = 1,
+    SS2 = 2,
+    SS3 = 3,
+    SS4 = 4,
+    SS5 = 5,
+    SS6 = 6,
+    SS7 = 7,
+    SS8 = 8,
+    SS9 = 9
+}
+//# sourceMappingURL=SeaState.d.ts.map

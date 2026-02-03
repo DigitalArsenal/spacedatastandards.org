@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "PropagatorType": {
+    "PropagatorMethod": {
       "type": "string",
       "enum": [
         "KEPLER",
@@ -111,7 +111,7 @@
         }
       }
     },
-    "OrbitType": {
+    "OrbitalRegime": {
       "type": "string",
       "enum": [
         "LEO",
@@ -164,7 +164,7 @@
         }
       }
     },
-    "TimeSystem": {
+    "TimeReference": {
       "type": "string",
       "enum": [
         "UTC",

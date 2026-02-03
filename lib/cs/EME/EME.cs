@@ -68,38 +68,46 @@ public struct EME : IFlatbufferObject
   public ArraySegment<byte>? GetIVBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetIVArray() { return __p.__vector_as_array<byte>(14); }
+  /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  public string SALT { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSALTBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetSALTBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetSALTArray() { return __p.__vector_as_array<byte>(16); }
   /// Identifier for the public key used, aiding in recipient key management and message decryption.
-  public string PUBLIC_KEY_IDENTIFIER { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string PUBLIC_KEY_IDENTIFIER { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPUBLIC_KEY_IDENTIFIERBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetPUBLIC_KEY_IDENTIFIERBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetPUBLIC_KEY_IDENTIFIERBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetPUBLIC_KEY_IDENTIFIERBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetPUBLIC_KEY_IDENTIFIERArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetPUBLIC_KEY_IDENTIFIERArray() { return __p.__vector_as_array<byte>(18); }
   /// Specifies the set of cryptographic algorithms used in the encryption process.
-  public string CIPHER_SUITE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CIPHER_SUITE { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCIPHER_SUITEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetCIPHER_SUITEBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetCIPHER_SUITEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetCIPHER_SUITEBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetCIPHER_SUITEArray() { return __p.__vector_as_array<byte>(18); }
+  public byte[] GetCIPHER_SUITEArray() { return __p.__vector_as_array<byte>(20); }
   /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
-  public string KDF_PARAMETERS { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string KDF_PARAMETERS { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetKDF_PARAMETERSBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetKDF_PARAMETERSBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetKDF_PARAMETERSBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetKDF_PARAMETERSBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetKDF_PARAMETERSArray() { return __p.__vector_as_array<byte>(20); }
+  public byte[] GetKDF_PARAMETERSArray() { return __p.__vector_as_array<byte>(22); }
   /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
-  public string ENCRYPTION_ALGORITHM_PARAMETERS { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ENCRYPTION_ALGORITHM_PARAMETERS { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetENCRYPTION_ALGORITHM_PARAMETERSBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetENCRYPTION_ALGORITHM_PARAMETERSBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetENCRYPTION_ALGORITHM_PARAMETERSBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetENCRYPTION_ALGORITHM_PARAMETERSBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetENCRYPTION_ALGORITHM_PARAMETERSArray() { return __p.__vector_as_array<byte>(22); }
+  public byte[] GetENCRYPTION_ALGORITHM_PARAMETERSArray() { return __p.__vector_as_array<byte>(24); }
 
   public static Offset<EME> CreateEME(FlatBufferBuilder builder,
       VectorOffset ENCRYPTED_BLOBOffset = default(VectorOffset),
@@ -108,15 +116,17 @@ public struct EME : IFlatbufferObject
       StringOffset NONCEOffset = default(StringOffset),
       StringOffset TAGOffset = default(StringOffset),
       StringOffset IVOffset = default(StringOffset),
+      StringOffset SALTOffset = default(StringOffset),
       StringOffset PUBLIC_KEY_IDENTIFIEROffset = default(StringOffset),
       StringOffset CIPHER_SUITEOffset = default(StringOffset),
       StringOffset KDF_PARAMETERSOffset = default(StringOffset),
       StringOffset ENCRYPTION_ALGORITHM_PARAMETERSOffset = default(StringOffset)) {
-    builder.StartTable(10);
+    builder.StartTable(11);
     EME.AddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset);
     EME.AddKDF_PARAMETERS(builder, KDF_PARAMETERSOffset);
     EME.AddCIPHER_SUITE(builder, CIPHER_SUITEOffset);
     EME.AddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIEROffset);
+    EME.AddSALT(builder, SALTOffset);
     EME.AddIV(builder, IVOffset);
     EME.AddTAG(builder, TAGOffset);
     EME.AddNONCE(builder, NONCEOffset);
@@ -126,7 +136,7 @@ public struct EME : IFlatbufferObject
     return EME.EndEME(builder);
   }
 
-  public static void StartEME(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartEME(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddENCRYPTED_BLOB(FlatBufferBuilder builder, VectorOffset ENCRYPTED_BLOBOffset) { builder.AddOffset(0, ENCRYPTED_BLOBOffset.Value, 0); }
   public static VectorOffset CreateENCRYPTED_BLOBVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateENCRYPTED_BLOBVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
@@ -138,10 +148,11 @@ public struct EME : IFlatbufferObject
   public static void AddNONCE(FlatBufferBuilder builder, StringOffset NONCEOffset) { builder.AddOffset(3, NONCEOffset.Value, 0); }
   public static void AddTAG(FlatBufferBuilder builder, StringOffset TAGOffset) { builder.AddOffset(4, TAGOffset.Value, 0); }
   public static void AddIV(FlatBufferBuilder builder, StringOffset IVOffset) { builder.AddOffset(5, IVOffset.Value, 0); }
-  public static void AddPUBLIC_KEY_IDENTIFIER(FlatBufferBuilder builder, StringOffset PUBLIC_KEY_IDENTIFIEROffset) { builder.AddOffset(6, PUBLIC_KEY_IDENTIFIEROffset.Value, 0); }
-  public static void AddCIPHER_SUITE(FlatBufferBuilder builder, StringOffset CIPHER_SUITEOffset) { builder.AddOffset(7, CIPHER_SUITEOffset.Value, 0); }
-  public static void AddKDF_PARAMETERS(FlatBufferBuilder builder, StringOffset KDF_PARAMETERSOffset) { builder.AddOffset(8, KDF_PARAMETERSOffset.Value, 0); }
-  public static void AddENCRYPTION_ALGORITHM_PARAMETERS(FlatBufferBuilder builder, StringOffset ENCRYPTION_ALGORITHM_PARAMETERSOffset) { builder.AddOffset(9, ENCRYPTION_ALGORITHM_PARAMETERSOffset.Value, 0); }
+  public static void AddSALT(FlatBufferBuilder builder, StringOffset SALTOffset) { builder.AddOffset(6, SALTOffset.Value, 0); }
+  public static void AddPUBLIC_KEY_IDENTIFIER(FlatBufferBuilder builder, StringOffset PUBLIC_KEY_IDENTIFIEROffset) { builder.AddOffset(7, PUBLIC_KEY_IDENTIFIEROffset.Value, 0); }
+  public static void AddCIPHER_SUITE(FlatBufferBuilder builder, StringOffset CIPHER_SUITEOffset) { builder.AddOffset(8, CIPHER_SUITEOffset.Value, 0); }
+  public static void AddKDF_PARAMETERS(FlatBufferBuilder builder, StringOffset KDF_PARAMETERSOffset) { builder.AddOffset(9, KDF_PARAMETERSOffset.Value, 0); }
+  public static void AddENCRYPTION_ALGORITHM_PARAMETERS(FlatBufferBuilder builder, StringOffset ENCRYPTION_ALGORITHM_PARAMETERSOffset) { builder.AddOffset(10, ENCRYPTION_ALGORITHM_PARAMETERSOffset.Value, 0); }
   public static Offset<EME> EndEME(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EME>(o);
@@ -161,6 +172,7 @@ public struct EME : IFlatbufferObject
     _o.NONCE = this.NONCE;
     _o.TAG = this.TAG;
     _o.IV = this.IV;
+    _o.SALT = this.SALT;
     _o.PUBLIC_KEY_IDENTIFIER = this.PUBLIC_KEY_IDENTIFIER;
     _o.CIPHER_SUITE = this.CIPHER_SUITE;
     _o.KDF_PARAMETERS = this.KDF_PARAMETERS;
@@ -178,6 +190,7 @@ public struct EME : IFlatbufferObject
     var _NONCE = _o.NONCE == null ? default(StringOffset) : builder.CreateString(_o.NONCE);
     var _TAG = _o.TAG == null ? default(StringOffset) : builder.CreateString(_o.TAG);
     var _IV = _o.IV == null ? default(StringOffset) : builder.CreateString(_o.IV);
+    var _SALT = _o.SALT == null ? default(StringOffset) : builder.CreateString(_o.SALT);
     var _PUBLIC_KEY_IDENTIFIER = _o.PUBLIC_KEY_IDENTIFIER == null ? default(StringOffset) : builder.CreateString(_o.PUBLIC_KEY_IDENTIFIER);
     var _CIPHER_SUITE = _o.CIPHER_SUITE == null ? default(StringOffset) : builder.CreateString(_o.CIPHER_SUITE);
     var _KDF_PARAMETERS = _o.KDF_PARAMETERS == null ? default(StringOffset) : builder.CreateString(_o.KDF_PARAMETERS);
@@ -190,6 +203,7 @@ public struct EME : IFlatbufferObject
       _NONCE,
       _TAG,
       _IV,
+      _SALT,
       _PUBLIC_KEY_IDENTIFIER,
       _CIPHER_SUITE,
       _KDF_PARAMETERS,
@@ -205,6 +219,7 @@ public class EMET
   public string NONCE { get; set; }
   public string TAG { get; set; }
   public string IV { get; set; }
+  public string SALT { get; set; }
   public string PUBLIC_KEY_IDENTIFIER { get; set; }
   public string CIPHER_SUITE { get; set; }
   public string KDF_PARAMETERS { get; set; }
@@ -217,6 +232,7 @@ public class EMET
     this.NONCE = null;
     this.TAG = null;
     this.IV = null;
+    this.SALT = null;
     this.PUBLIC_KEY_IDENTIFIER = null;
     this.CIPHER_SUITE = null;
     this.KDF_PARAMETERS = null;
@@ -244,10 +260,11 @@ static public class EMEVerify
       && verifier.VerifyString(tablePos, 10 /*NONCE*/, false)
       && verifier.VerifyString(tablePos, 12 /*TAG*/, false)
       && verifier.VerifyString(tablePos, 14 /*IV*/, false)
-      && verifier.VerifyString(tablePos, 16 /*PUBLIC_KEY_IDENTIFIER*/, false)
-      && verifier.VerifyString(tablePos, 18 /*CIPHER_SUITE*/, false)
-      && verifier.VerifyString(tablePos, 20 /*KDF_PARAMETERS*/, false)
-      && verifier.VerifyString(tablePos, 22 /*ENCRYPTION_ALGORITHM_PARAMETERS*/, false)
+      && verifier.VerifyString(tablePos, 16 /*SALT*/, false)
+      && verifier.VerifyString(tablePos, 18 /*PUBLIC_KEY_IDENTIFIER*/, false)
+      && verifier.VerifyString(tablePos, 20 /*CIPHER_SUITE*/, false)
+      && verifier.VerifyString(tablePos, 22 /*KDF_PARAMETERS*/, false)
+      && verifier.VerifyString(tablePos, 24 /*ENCRYPTION_ALGORITHM_PARAMETERS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

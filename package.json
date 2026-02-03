@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.66.0+1769860290588",
+    "version": "1.68.0+1770127049880",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -120,7 +120,9 @@
         "buffer": "^6.0.3",
         "esbuild": "^0.20.2",
         "flatbuffers": "23.3.3",
-        "flatc-wasm": "^25.12.19-wasm.5"
+        "flatc-wasm": "^25.12.19-wasm.5",
+        "hd-wallet-ui": "^1.1.5",
+        "hd-wallet-wasm": "^1.1.5"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",

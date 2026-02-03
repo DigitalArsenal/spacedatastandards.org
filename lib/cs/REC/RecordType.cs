@@ -6,43 +6,122 @@ public enum RecordType : byte
 {
   NONE = 0,
   ACL = 1,
-  ATM = 2,
-  BOV = 3,
-  CAT = 4,
-  CDM = 5,
-  CRM = 6,
-  CSM = 7,
-  CTR = 8,
-  EME = 9,
-  EOO = 10,
-  EOP = 11,
-  EPM = 12,
-  HYP = 13,
-  IDM = 14,
-  LCC = 15,
-  LDM = 16,
-  MET = 17,
-  MPE = 18,
-  OCM = 19,
-  OEM = 20,
-  OMM = 21,
-  OSM = 22,
-  PLD = 23,
-  PLG = 24,
-  PLK = 25,
-  PNM = 26,
-  PRG = 27,
-  PUR = 28,
-  REV = 29,
-  RFM = 30,
-  ROC = 31,
-  SCM = 32,
-  SIT = 33,
-  STF = 34,
-  TDM = 35,
-  TIM = 36,
-  VCM = 37,
-  XTC = 38,
+  ACM = 2,
+  ACR = 3,
+  AEM = 4,
+  AOF = 5,
+  APM = 6,
+  ARM = 7,
+  AST = 8,
+  ATD = 9,
+  ATM = 10,
+  BAL = 11,
+  BEM = 12,
+  BMC = 13,
+  BOV = 14,
+  CAT = 15,
+  CDM = 16,
+  CFP = 17,
+  CHN = 18,
+  CLT = 19,
+  CMS = 20,
+  COM = 21,
+  CRD = 22,
+  CRM = 23,
+  CSM = 24,
+  CTR = 25,
+  DFH = 26,
+  DMG = 27,
+  DOA = 28,
+  EME = 29,
+  ENV = 30,
+  EOO = 31,
+  EOP = 32,
+  EPM = 33,
+  EWR = 34,
+  FCS = 35,
+  GDI = 36,
+  GEO = 37,
+  GNO = 38,
+  GRV = 39,
+  GVH = 40,
+  HEL = 41,
+  HYP = 42,
+  IDM = 43,
+  IRO = 44,
+  LCC = 45,
+  LDM = 46,
+  LKS = 47,
+  LND = 48,
+  LNE = 49,
+  MET = 50,
+  MFE = 51,
+  MNF = 52,
+  MNV = 53,
+  MPE = 54,
+  MSL = 55,
+  MST = 56,
+  MTI = 57,
+  NAV = 58,
+  OBD = 59,
+  OBT = 60,
+  OCM = 61,
+  OEM = 62,
+  OMM = 63,
+  OOD = 64,
+  OOE = 65,
+  OOI = 66,
+  OOL = 67,
+  OON = 68,
+  OPM = 69,
+  OSM = 70,
+  PCF = 71,
+  PHY = 72,
+  PLD = 73,
+  PLG = 74,
+  PLK = 75,
+  PNM = 76,
+  PRG = 77,
+  PUR = 78,
+  RAF = 79,
+  RCF = 80,
+  RDM = 81,
+  RDO = 82,
+  REV = 83,
+  RFB = 84,
+  RFE = 85,
+  RFM = 86,
+  RFO = 87,
+  ROC = 88,
+  SAR = 89,
+  SCM = 90,
+  SDL = 91,
+  SEO = 92,
+  SEV = 93,
+  SIT = 94,
+  SKI = 95,
+  SNR = 96,
+  SOI = 97,
+  SON = 98,
+  SPP = 99,
+  SPW = 100,
+  STF = 101,
+  STR = 102,
+  STV = 103,
+  SWR = 104,
+  TCF = 105,
+  TDM = 106,
+  TIM = 107,
+  TKG = 108,
+  TME = 109,
+  TMF = 110,
+  TPN = 111,
+  TRK = 112,
+  TRN = 113,
+  VCM = 114,
+  WPN = 115,
+  WTH = 116,
+  XTC = 117,
 };
 
 public class RecordTypeUnion {
@@ -57,48 +136,148 @@ public class RecordTypeUnion {
   public T As<T>() where T : class { return this.Value as T; }
   public ACLT AsACL() { return this.As<ACLT>(); }
   public static RecordTypeUnion FromACL(ACLT _acl) { return new RecordTypeUnion{ Type = RecordType.ACL, Value = _acl }; }
+  public ACMT AsACM() { return this.As<ACMT>(); }
+  public static RecordTypeUnion FromACM(ACMT _acm) { return new RecordTypeUnion{ Type = RecordType.ACM, Value = _acm }; }
+  public ACRT AsACR() { return this.As<ACRT>(); }
+  public static RecordTypeUnion FromACR(ACRT _acr) { return new RecordTypeUnion{ Type = RecordType.ACR, Value = _acr }; }
+  public AEMT AsAEM() { return this.As<AEMT>(); }
+  public static RecordTypeUnion FromAEM(AEMT _aem) { return new RecordTypeUnion{ Type = RecordType.AEM, Value = _aem }; }
+  public AOFT AsAOF() { return this.As<AOFT>(); }
+  public static RecordTypeUnion FromAOF(AOFT _aof) { return new RecordTypeUnion{ Type = RecordType.AOF, Value = _aof }; }
+  public APMT AsAPM() { return this.As<APMT>(); }
+  public static RecordTypeUnion FromAPM(APMT _apm) { return new RecordTypeUnion{ Type = RecordType.APM, Value = _apm }; }
+  public ARMT AsARM() { return this.As<ARMT>(); }
+  public static RecordTypeUnion FromARM(ARMT _arm) { return new RecordTypeUnion{ Type = RecordType.ARM, Value = _arm }; }
+  public ASTT AsAST() { return this.As<ASTT>(); }
+  public static RecordTypeUnion FromAST(ASTT _ast) { return new RecordTypeUnion{ Type = RecordType.AST, Value = _ast }; }
+  public ATDT AsATD() { return this.As<ATDT>(); }
+  public static RecordTypeUnion FromATD(ATDT _atd) { return new RecordTypeUnion{ Type = RecordType.ATD, Value = _atd }; }
   public ATMT AsATM() { return this.As<ATMT>(); }
   public static RecordTypeUnion FromATM(ATMT _atm) { return new RecordTypeUnion{ Type = RecordType.ATM, Value = _atm }; }
+  public BALT AsBAL() { return this.As<BALT>(); }
+  public static RecordTypeUnion FromBAL(BALT _bal) { return new RecordTypeUnion{ Type = RecordType.BAL, Value = _bal }; }
+  public BEMT AsBEM() { return this.As<BEMT>(); }
+  public static RecordTypeUnion FromBEM(BEMT _bem) { return new RecordTypeUnion{ Type = RecordType.BEM, Value = _bem }; }
+  public BMCT AsBMC() { return this.As<BMCT>(); }
+  public static RecordTypeUnion FromBMC(BMCT _bmc) { return new RecordTypeUnion{ Type = RecordType.BMC, Value = _bmc }; }
   public BOVT AsBOV() { return this.As<BOVT>(); }
   public static RecordTypeUnion FromBOV(BOVT _bov) { return new RecordTypeUnion{ Type = RecordType.BOV, Value = _bov }; }
   public CATT AsCAT() { return this.As<CATT>(); }
   public static RecordTypeUnion FromCAT(CATT _cat) { return new RecordTypeUnion{ Type = RecordType.CAT, Value = _cat }; }
   public CDMT AsCDM() { return this.As<CDMT>(); }
   public static RecordTypeUnion FromCDM(CDMT _cdm) { return new RecordTypeUnion{ Type = RecordType.CDM, Value = _cdm }; }
+  public CFPT AsCFP() { return this.As<CFPT>(); }
+  public static RecordTypeUnion FromCFP(CFPT _cfp) { return new RecordTypeUnion{ Type = RecordType.CFP, Value = _cfp }; }
+  public CHNT AsCHN() { return this.As<CHNT>(); }
+  public static RecordTypeUnion FromCHN(CHNT _chn) { return new RecordTypeUnion{ Type = RecordType.CHN, Value = _chn }; }
+  public CLTT AsCLT() { return this.As<CLTT>(); }
+  public static RecordTypeUnion FromCLT(CLTT _clt) { return new RecordTypeUnion{ Type = RecordType.CLT, Value = _clt }; }
+  public CMST AsCMS() { return this.As<CMST>(); }
+  public static RecordTypeUnion FromCMS(CMST _cms) { return new RecordTypeUnion{ Type = RecordType.CMS, Value = _cms }; }
+  public COMT AsCOM() { return this.As<COMT>(); }
+  public static RecordTypeUnion FromCOM(COMT _com) { return new RecordTypeUnion{ Type = RecordType.COM, Value = _com }; }
+  public CRDT AsCRD() { return this.As<CRDT>(); }
+  public static RecordTypeUnion FromCRD(CRDT _crd) { return new RecordTypeUnion{ Type = RecordType.CRD, Value = _crd }; }
   public CRMT AsCRM() { return this.As<CRMT>(); }
   public static RecordTypeUnion FromCRM(CRMT _crm) { return new RecordTypeUnion{ Type = RecordType.CRM, Value = _crm }; }
   public CSMT AsCSM() { return this.As<CSMT>(); }
   public static RecordTypeUnion FromCSM(CSMT _csm) { return new RecordTypeUnion{ Type = RecordType.CSM, Value = _csm }; }
   public CTRT AsCTR() { return this.As<CTRT>(); }
   public static RecordTypeUnion FromCTR(CTRT _ctr) { return new RecordTypeUnion{ Type = RecordType.CTR, Value = _ctr }; }
+  public DFHT AsDFH() { return this.As<DFHT>(); }
+  public static RecordTypeUnion FromDFH(DFHT _dfh) { return new RecordTypeUnion{ Type = RecordType.DFH, Value = _dfh }; }
+  public DMGT AsDMG() { return this.As<DMGT>(); }
+  public static RecordTypeUnion FromDMG(DMGT _dmg) { return new RecordTypeUnion{ Type = RecordType.DMG, Value = _dmg }; }
+  public DOAT AsDOA() { return this.As<DOAT>(); }
+  public static RecordTypeUnion FromDOA(DOAT _doa) { return new RecordTypeUnion{ Type = RecordType.DOA, Value = _doa }; }
   public EMET AsEME() { return this.As<EMET>(); }
   public static RecordTypeUnion FromEME(EMET _eme) { return new RecordTypeUnion{ Type = RecordType.EME, Value = _eme }; }
+  public ENVT AsENV() { return this.As<ENVT>(); }
+  public static RecordTypeUnion FromENV(ENVT _env) { return new RecordTypeUnion{ Type = RecordType.ENV, Value = _env }; }
   public EOOT AsEOO() { return this.As<EOOT>(); }
   public static RecordTypeUnion FromEOO(EOOT _eoo) { return new RecordTypeUnion{ Type = RecordType.EOO, Value = _eoo }; }
   public EOPT AsEOP() { return this.As<EOPT>(); }
   public static RecordTypeUnion FromEOP(EOPT _eop) { return new RecordTypeUnion{ Type = RecordType.EOP, Value = _eop }; }
   public EPMT AsEPM() { return this.As<EPMT>(); }
   public static RecordTypeUnion FromEPM(EPMT _epm) { return new RecordTypeUnion{ Type = RecordType.EPM, Value = _epm }; }
+  public EWRT AsEWR() { return this.As<EWRT>(); }
+  public static RecordTypeUnion FromEWR(EWRT _ewr) { return new RecordTypeUnion{ Type = RecordType.EWR, Value = _ewr }; }
+  public FCST AsFCS() { return this.As<FCST>(); }
+  public static RecordTypeUnion FromFCS(FCST _fcs) { return new RecordTypeUnion{ Type = RecordType.FCS, Value = _fcs }; }
+  public GDIT AsGDI() { return this.As<GDIT>(); }
+  public static RecordTypeUnion FromGDI(GDIT _gdi) { return new RecordTypeUnion{ Type = RecordType.GDI, Value = _gdi }; }
+  public GEOT AsGEO() { return this.As<GEOT>(); }
+  public static RecordTypeUnion FromGEO(GEOT _geo) { return new RecordTypeUnion{ Type = RecordType.GEO, Value = _geo }; }
+  public GNOT AsGNO() { return this.As<GNOT>(); }
+  public static RecordTypeUnion FromGNO(GNOT _gno) { return new RecordTypeUnion{ Type = RecordType.GNO, Value = _gno }; }
+  public GRVT AsGRV() { return this.As<GRVT>(); }
+  public static RecordTypeUnion FromGRV(GRVT _grv) { return new RecordTypeUnion{ Type = RecordType.GRV, Value = _grv }; }
+  public GVHT AsGVH() { return this.As<GVHT>(); }
+  public static RecordTypeUnion FromGVH(GVHT _gvh) { return new RecordTypeUnion{ Type = RecordType.GVH, Value = _gvh }; }
+  public HELT AsHEL() { return this.As<HELT>(); }
+  public static RecordTypeUnion FromHEL(HELT _hel) { return new RecordTypeUnion{ Type = RecordType.HEL, Value = _hel }; }
   public HYPT AsHYP() { return this.As<HYPT>(); }
   public static RecordTypeUnion FromHYP(HYPT _hyp) { return new RecordTypeUnion{ Type = RecordType.HYP, Value = _hyp }; }
   public IDMT AsIDM() { return this.As<IDMT>(); }
   public static RecordTypeUnion FromIDM(IDMT _idm) { return new RecordTypeUnion{ Type = RecordType.IDM, Value = _idm }; }
+  public IROT AsIRO() { return this.As<IROT>(); }
+  public static RecordTypeUnion FromIRO(IROT _iro) { return new RecordTypeUnion{ Type = RecordType.IRO, Value = _iro }; }
   public LCCT AsLCC() { return this.As<LCCT>(); }
   public static RecordTypeUnion FromLCC(LCCT _lcc) { return new RecordTypeUnion{ Type = RecordType.LCC, Value = _lcc }; }
   public LDMT AsLDM() { return this.As<LDMT>(); }
   public static RecordTypeUnion FromLDM(LDMT _ldm) { return new RecordTypeUnion{ Type = RecordType.LDM, Value = _ldm }; }
+  public LKST AsLKS() { return this.As<LKST>(); }
+  public static RecordTypeUnion FromLKS(LKST _lks) { return new RecordTypeUnion{ Type = RecordType.LKS, Value = _lks }; }
+  public LNDT AsLND() { return this.As<LNDT>(); }
+  public static RecordTypeUnion FromLND(LNDT _lnd) { return new RecordTypeUnion{ Type = RecordType.LND, Value = _lnd }; }
+  public LNET AsLNE() { return this.As<LNET>(); }
+  public static RecordTypeUnion FromLNE(LNET _lne) { return new RecordTypeUnion{ Type = RecordType.LNE, Value = _lne }; }
   public METT AsMET() { return this.As<METT>(); }
   public static RecordTypeUnion FromMET(METT _met) { return new RecordTypeUnion{ Type = RecordType.MET, Value = _met }; }
+  public MFET AsMFE() { return this.As<MFET>(); }
+  public static RecordTypeUnion FromMFE(MFET _mfe) { return new RecordTypeUnion{ Type = RecordType.MFE, Value = _mfe }; }
+  public MNFT AsMNF() { return this.As<MNFT>(); }
+  public static RecordTypeUnion FromMNF(MNFT _mnf) { return new RecordTypeUnion{ Type = RecordType.MNF, Value = _mnf }; }
+  public MNVT AsMNV() { return this.As<MNVT>(); }
+  public static RecordTypeUnion FromMNV(MNVT _mnv) { return new RecordTypeUnion{ Type = RecordType.MNV, Value = _mnv }; }
   public MPET AsMPE() { return this.As<MPET>(); }
   public static RecordTypeUnion FromMPE(MPET _mpe) { return new RecordTypeUnion{ Type = RecordType.MPE, Value = _mpe }; }
+  public MSLT AsMSL() { return this.As<MSLT>(); }
+  public static RecordTypeUnion FromMSL(MSLT _msl) { return new RecordTypeUnion{ Type = RecordType.MSL, Value = _msl }; }
+  public MSTT AsMST() { return this.As<MSTT>(); }
+  public static RecordTypeUnion FromMST(MSTT _mst) { return new RecordTypeUnion{ Type = RecordType.MST, Value = _mst }; }
+  public MTIT AsMTI() { return this.As<MTIT>(); }
+  public static RecordTypeUnion FromMTI(MTIT _mti) { return new RecordTypeUnion{ Type = RecordType.MTI, Value = _mti }; }
+  public NAVT AsNAV() { return this.As<NAVT>(); }
+  public static RecordTypeUnion FromNAV(NAVT _nav) { return new RecordTypeUnion{ Type = RecordType.NAV, Value = _nav }; }
+  public OBDT AsOBD() { return this.As<OBDT>(); }
+  public static RecordTypeUnion FromOBD(OBDT _obd) { return new RecordTypeUnion{ Type = RecordType.OBD, Value = _obd }; }
+  public OBTT AsOBT() { return this.As<OBTT>(); }
+  public static RecordTypeUnion FromOBT(OBTT _obt) { return new RecordTypeUnion{ Type = RecordType.OBT, Value = _obt }; }
   public OCMT AsOCM() { return this.As<OCMT>(); }
   public static RecordTypeUnion FromOCM(OCMT _ocm) { return new RecordTypeUnion{ Type = RecordType.OCM, Value = _ocm }; }
   public OEMT AsOEM() { return this.As<OEMT>(); }
   public static RecordTypeUnion FromOEM(OEMT _oem) { return new RecordTypeUnion{ Type = RecordType.OEM, Value = _oem }; }
   public OMMT AsOMM() { return this.As<OMMT>(); }
   public static RecordTypeUnion FromOMM(OMMT _omm) { return new RecordTypeUnion{ Type = RecordType.OMM, Value = _omm }; }
+  public OODT AsOOD() { return this.As<OODT>(); }
+  public static RecordTypeUnion FromOOD(OODT _ood) { return new RecordTypeUnion{ Type = RecordType.OOD, Value = _ood }; }
+  public OOET AsOOE() { return this.As<OOET>(); }
+  public static RecordTypeUnion FromOOE(OOET _ooe) { return new RecordTypeUnion{ Type = RecordType.OOE, Value = _ooe }; }
+  public OOIT AsOOI() { return this.As<OOIT>(); }
+  public static RecordTypeUnion FromOOI(OOIT _ooi) { return new RecordTypeUnion{ Type = RecordType.OOI, Value = _ooi }; }
+  public OOLT AsOOL() { return this.As<OOLT>(); }
+  public static RecordTypeUnion FromOOL(OOLT _ool) { return new RecordTypeUnion{ Type = RecordType.OOL, Value = _ool }; }
+  public OONT AsOON() { return this.As<OONT>(); }
+  public static RecordTypeUnion FromOON(OONT _oon) { return new RecordTypeUnion{ Type = RecordType.OON, Value = _oon }; }
+  public OPMT AsOPM() { return this.As<OPMT>(); }
+  public static RecordTypeUnion FromOPM(OPMT _opm) { return new RecordTypeUnion{ Type = RecordType.OPM, Value = _opm }; }
   public OSMT AsOSM() { return this.As<OSMT>(); }
   public static RecordTypeUnion FromOSM(OSMT _osm) { return new RecordTypeUnion{ Type = RecordType.OSM, Value = _osm }; }
+  public PCFT AsPCF() { return this.As<PCFT>(); }
+  public static RecordTypeUnion FromPCF(PCFT _pcf) { return new RecordTypeUnion{ Type = RecordType.PCF, Value = _pcf }; }
+  public PHYT AsPHY() { return this.As<PHYT>(); }
+  public static RecordTypeUnion FromPHY(PHYT _phy) { return new RecordTypeUnion{ Type = RecordType.PHY, Value = _phy }; }
   public PLDT AsPLD() { return this.As<PLDT>(); }
   public static RecordTypeUnion FromPLD(PLDT _pld) { return new RecordTypeUnion{ Type = RecordType.PLD, Value = _pld }; }
   public PLGT AsPLG() { return this.As<PLGT>(); }
@@ -111,24 +290,82 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPRG(PRGT _prg) { return new RecordTypeUnion{ Type = RecordType.PRG, Value = _prg }; }
   public PURT AsPUR() { return this.As<PURT>(); }
   public static RecordTypeUnion FromPUR(PURT _pur) { return new RecordTypeUnion{ Type = RecordType.PUR, Value = _pur }; }
+  public RAFT AsRAF() { return this.As<RAFT>(); }
+  public static RecordTypeUnion FromRAF(RAFT _raf) { return new RecordTypeUnion{ Type = RecordType.RAF, Value = _raf }; }
+  public RCFT AsRCF() { return this.As<RCFT>(); }
+  public static RecordTypeUnion FromRCF(RCFT _rcf) { return new RecordTypeUnion{ Type = RecordType.RCF, Value = _rcf }; }
+  public RDMT AsRDM() { return this.As<RDMT>(); }
+  public static RecordTypeUnion FromRDM(RDMT _rdm) { return new RecordTypeUnion{ Type = RecordType.RDM, Value = _rdm }; }
+  public RDOT AsRDO() { return this.As<RDOT>(); }
+  public static RecordTypeUnion FromRDO(RDOT _rdo) { return new RecordTypeUnion{ Type = RecordType.RDO, Value = _rdo }; }
   public REVT AsREV() { return this.As<REVT>(); }
   public static RecordTypeUnion FromREV(REVT _rev) { return new RecordTypeUnion{ Type = RecordType.REV, Value = _rev }; }
+  public RFBT AsRFB() { return this.As<RFBT>(); }
+  public static RecordTypeUnion FromRFB(RFBT _rfb) { return new RecordTypeUnion{ Type = RecordType.RFB, Value = _rfb }; }
+  public RFET AsRFE() { return this.As<RFET>(); }
+  public static RecordTypeUnion FromRFE(RFET _rfe) { return new RecordTypeUnion{ Type = RecordType.RFE, Value = _rfe }; }
   public RFMT AsRFM() { return this.As<RFMT>(); }
   public static RecordTypeUnion FromRFM(RFMT _rfm) { return new RecordTypeUnion{ Type = RecordType.RFM, Value = _rfm }; }
+  public RFOT AsRFO() { return this.As<RFOT>(); }
+  public static RecordTypeUnion FromRFO(RFOT _rfo) { return new RecordTypeUnion{ Type = RecordType.RFO, Value = _rfo }; }
   public ROCT AsROC() { return this.As<ROCT>(); }
   public static RecordTypeUnion FromROC(ROCT _roc) { return new RecordTypeUnion{ Type = RecordType.ROC, Value = _roc }; }
+  public SART AsSAR() { return this.As<SART>(); }
+  public static RecordTypeUnion FromSAR(SART _sar) { return new RecordTypeUnion{ Type = RecordType.SAR, Value = _sar }; }
   public SCMT AsSCM() { return this.As<SCMT>(); }
   public static RecordTypeUnion FromSCM(SCMT _scm) { return new RecordTypeUnion{ Type = RecordType.SCM, Value = _scm }; }
+  public SDLT AsSDL() { return this.As<SDLT>(); }
+  public static RecordTypeUnion FromSDL(SDLT _sdl) { return new RecordTypeUnion{ Type = RecordType.SDL, Value = _sdl }; }
+  public SEOT AsSEO() { return this.As<SEOT>(); }
+  public static RecordTypeUnion FromSEO(SEOT _seo) { return new RecordTypeUnion{ Type = RecordType.SEO, Value = _seo }; }
+  public SEVT AsSEV() { return this.As<SEVT>(); }
+  public static RecordTypeUnion FromSEV(SEVT _sev) { return new RecordTypeUnion{ Type = RecordType.SEV, Value = _sev }; }
   public SITT AsSIT() { return this.As<SITT>(); }
   public static RecordTypeUnion FromSIT(SITT _sit) { return new RecordTypeUnion{ Type = RecordType.SIT, Value = _sit }; }
+  public SKIT AsSKI() { return this.As<SKIT>(); }
+  public static RecordTypeUnion FromSKI(SKIT _ski) { return new RecordTypeUnion{ Type = RecordType.SKI, Value = _ski }; }
+  public SNRT AsSNR() { return this.As<SNRT>(); }
+  public static RecordTypeUnion FromSNR(SNRT _snr) { return new RecordTypeUnion{ Type = RecordType.SNR, Value = _snr }; }
+  public SOIT AsSOI() { return this.As<SOIT>(); }
+  public static RecordTypeUnion FromSOI(SOIT _soi) { return new RecordTypeUnion{ Type = RecordType.SOI, Value = _soi }; }
+  public SONT AsSON() { return this.As<SONT>(); }
+  public static RecordTypeUnion FromSON(SONT _son) { return new RecordTypeUnion{ Type = RecordType.SON, Value = _son }; }
+  public SPPT AsSPP() { return this.As<SPPT>(); }
+  public static RecordTypeUnion FromSPP(SPPT _spp) { return new RecordTypeUnion{ Type = RecordType.SPP, Value = _spp }; }
+  public SPWT AsSPW() { return this.As<SPWT>(); }
+  public static RecordTypeUnion FromSPW(SPWT _spw) { return new RecordTypeUnion{ Type = RecordType.SPW, Value = _spw }; }
   public STFT AsSTF() { return this.As<STFT>(); }
   public static RecordTypeUnion FromSTF(STFT _stf) { return new RecordTypeUnion{ Type = RecordType.STF, Value = _stf }; }
+  public STRT AsSTR() { return this.As<STRT>(); }
+  public static RecordTypeUnion FromSTR(STRT _str) { return new RecordTypeUnion{ Type = RecordType.STR, Value = _str }; }
+  public STVT AsSTV() { return this.As<STVT>(); }
+  public static RecordTypeUnion FromSTV(STVT _stv) { return new RecordTypeUnion{ Type = RecordType.STV, Value = _stv }; }
+  public SWRT AsSWR() { return this.As<SWRT>(); }
+  public static RecordTypeUnion FromSWR(SWRT _swr) { return new RecordTypeUnion{ Type = RecordType.SWR, Value = _swr }; }
+  public TCFT AsTCF() { return this.As<TCFT>(); }
+  public static RecordTypeUnion FromTCF(TCFT _tcf) { return new RecordTypeUnion{ Type = RecordType.TCF, Value = _tcf }; }
   public TDMT AsTDM() { return this.As<TDMT>(); }
   public static RecordTypeUnion FromTDM(TDMT _tdm) { return new RecordTypeUnion{ Type = RecordType.TDM, Value = _tdm }; }
   public TIMT AsTIM() { return this.As<TIMT>(); }
   public static RecordTypeUnion FromTIM(TIMT _tim) { return new RecordTypeUnion{ Type = RecordType.TIM, Value = _tim }; }
+  public TKGT AsTKG() { return this.As<TKGT>(); }
+  public static RecordTypeUnion FromTKG(TKGT _tkg) { return new RecordTypeUnion{ Type = RecordType.TKG, Value = _tkg }; }
+  public TMET AsTME() { return this.As<TMET>(); }
+  public static RecordTypeUnion FromTME(TMET _tme) { return new RecordTypeUnion{ Type = RecordType.TME, Value = _tme }; }
+  public TMFT AsTMF() { return this.As<TMFT>(); }
+  public static RecordTypeUnion FromTMF(TMFT _tmf) { return new RecordTypeUnion{ Type = RecordType.TMF, Value = _tmf }; }
+  public TPNT AsTPN() { return this.As<TPNT>(); }
+  public static RecordTypeUnion FromTPN(TPNT _tpn) { return new RecordTypeUnion{ Type = RecordType.TPN, Value = _tpn }; }
+  public TRKT AsTRK() { return this.As<TRKT>(); }
+  public static RecordTypeUnion FromTRK(TRKT _trk) { return new RecordTypeUnion{ Type = RecordType.TRK, Value = _trk }; }
+  public TRNT AsTRN() { return this.As<TRNT>(); }
+  public static RecordTypeUnion FromTRN(TRNT _trn) { return new RecordTypeUnion{ Type = RecordType.TRN, Value = _trn }; }
   public VCMT AsVCM() { return this.As<VCMT>(); }
   public static RecordTypeUnion FromVCM(VCMT _vcm) { return new RecordTypeUnion{ Type = RecordType.VCM, Value = _vcm }; }
+  public WPNT AsWPN() { return this.As<WPNT>(); }
+  public static RecordTypeUnion FromWPN(WPNT _wpn) { return new RecordTypeUnion{ Type = RecordType.WPN, Value = _wpn }; }
+  public WTHT AsWTH() { return this.As<WTHT>(); }
+  public static RecordTypeUnion FromWTH(WTHT _wth) { return new RecordTypeUnion{ Type = RecordType.WTH, Value = _wth }; }
   public XTCT AsXTC() { return this.As<XTCT>(); }
   public static RecordTypeUnion FromXTC(XTCT _xtc) { return new RecordTypeUnion{ Type = RecordType.XTC, Value = _xtc }; }
 
@@ -136,42 +373,121 @@ public class RecordTypeUnion {
     switch (_o.Type) {
       default: return 0;
       case RecordType.ACL: return ACL.Pack(builder, _o.AsACL()).Value;
+      case RecordType.ACM: return ACM.Pack(builder, _o.AsACM()).Value;
+      case RecordType.ACR: return ACR.Pack(builder, _o.AsACR()).Value;
+      case RecordType.AEM: return AEM.Pack(builder, _o.AsAEM()).Value;
+      case RecordType.AOF: return AOF.Pack(builder, _o.AsAOF()).Value;
+      case RecordType.APM: return APM.Pack(builder, _o.AsAPM()).Value;
+      case RecordType.ARM: return ARM.Pack(builder, _o.AsARM()).Value;
+      case RecordType.AST: return AST.Pack(builder, _o.AsAST()).Value;
+      case RecordType.ATD: return ATD.Pack(builder, _o.AsATD()).Value;
       case RecordType.ATM: return ATM.Pack(builder, _o.AsATM()).Value;
+      case RecordType.BAL: return BAL.Pack(builder, _o.AsBAL()).Value;
+      case RecordType.BEM: return BEM.Pack(builder, _o.AsBEM()).Value;
+      case RecordType.BMC: return BMC.Pack(builder, _o.AsBMC()).Value;
       case RecordType.BOV: return BOV.Pack(builder, _o.AsBOV()).Value;
       case RecordType.CAT: return CAT.Pack(builder, _o.AsCAT()).Value;
       case RecordType.CDM: return CDM.Pack(builder, _o.AsCDM()).Value;
+      case RecordType.CFP: return CFP.Pack(builder, _o.AsCFP()).Value;
+      case RecordType.CHN: return CHN.Pack(builder, _o.AsCHN()).Value;
+      case RecordType.CLT: return CLT.Pack(builder, _o.AsCLT()).Value;
+      case RecordType.CMS: return CMS.Pack(builder, _o.AsCMS()).Value;
+      case RecordType.COM: return COM.Pack(builder, _o.AsCOM()).Value;
+      case RecordType.CRD: return CRD.Pack(builder, _o.AsCRD()).Value;
       case RecordType.CRM: return CRM.Pack(builder, _o.AsCRM()).Value;
       case RecordType.CSM: return CSM.Pack(builder, _o.AsCSM()).Value;
       case RecordType.CTR: return CTR.Pack(builder, _o.AsCTR()).Value;
+      case RecordType.DFH: return DFH.Pack(builder, _o.AsDFH()).Value;
+      case RecordType.DMG: return DMG.Pack(builder, _o.AsDMG()).Value;
+      case RecordType.DOA: return DOA.Pack(builder, _o.AsDOA()).Value;
       case RecordType.EME: return EME.Pack(builder, _o.AsEME()).Value;
+      case RecordType.ENV: return ENV.Pack(builder, _o.AsENV()).Value;
       case RecordType.EOO: return EOO.Pack(builder, _o.AsEOO()).Value;
       case RecordType.EOP: return EOP.Pack(builder, _o.AsEOP()).Value;
       case RecordType.EPM: return EPM.Pack(builder, _o.AsEPM()).Value;
+      case RecordType.EWR: return EWR.Pack(builder, _o.AsEWR()).Value;
+      case RecordType.FCS: return FCS.Pack(builder, _o.AsFCS()).Value;
+      case RecordType.GDI: return GDI.Pack(builder, _o.AsGDI()).Value;
+      case RecordType.GEO: return GEO.Pack(builder, _o.AsGEO()).Value;
+      case RecordType.GNO: return GNO.Pack(builder, _o.AsGNO()).Value;
+      case RecordType.GRV: return GRV.Pack(builder, _o.AsGRV()).Value;
+      case RecordType.GVH: return GVH.Pack(builder, _o.AsGVH()).Value;
+      case RecordType.HEL: return HEL.Pack(builder, _o.AsHEL()).Value;
       case RecordType.HYP: return HYP.Pack(builder, _o.AsHYP()).Value;
       case RecordType.IDM: return IDM.Pack(builder, _o.AsIDM()).Value;
+      case RecordType.IRO: return IRO.Pack(builder, _o.AsIRO()).Value;
       case RecordType.LCC: return LCC.Pack(builder, _o.AsLCC()).Value;
       case RecordType.LDM: return LDM.Pack(builder, _o.AsLDM()).Value;
+      case RecordType.LKS: return LKS.Pack(builder, _o.AsLKS()).Value;
+      case RecordType.LND: return LND.Pack(builder, _o.AsLND()).Value;
+      case RecordType.LNE: return LNE.Pack(builder, _o.AsLNE()).Value;
       case RecordType.MET: return MET.Pack(builder, _o.AsMET()).Value;
+      case RecordType.MFE: return MFE.Pack(builder, _o.AsMFE()).Value;
+      case RecordType.MNF: return MNF.Pack(builder, _o.AsMNF()).Value;
+      case RecordType.MNV: return MNV.Pack(builder, _o.AsMNV()).Value;
       case RecordType.MPE: return MPE.Pack(builder, _o.AsMPE()).Value;
+      case RecordType.MSL: return MSL.Pack(builder, _o.AsMSL()).Value;
+      case RecordType.MST: return MST.Pack(builder, _o.AsMST()).Value;
+      case RecordType.MTI: return MTI.Pack(builder, _o.AsMTI()).Value;
+      case RecordType.NAV: return NAV.Pack(builder, _o.AsNAV()).Value;
+      case RecordType.OBD: return OBD.Pack(builder, _o.AsOBD()).Value;
+      case RecordType.OBT: return OBT.Pack(builder, _o.AsOBT()).Value;
       case RecordType.OCM: return OCM.Pack(builder, _o.AsOCM()).Value;
       case RecordType.OEM: return OEM.Pack(builder, _o.AsOEM()).Value;
       case RecordType.OMM: return OMM.Pack(builder, _o.AsOMM()).Value;
+      case RecordType.OOD: return OOD.Pack(builder, _o.AsOOD()).Value;
+      case RecordType.OOE: return OOE.Pack(builder, _o.AsOOE()).Value;
+      case RecordType.OOI: return OOI.Pack(builder, _o.AsOOI()).Value;
+      case RecordType.OOL: return OOL.Pack(builder, _o.AsOOL()).Value;
+      case RecordType.OON: return OON.Pack(builder, _o.AsOON()).Value;
+      case RecordType.OPM: return OPM.Pack(builder, _o.AsOPM()).Value;
       case RecordType.OSM: return OSM.Pack(builder, _o.AsOSM()).Value;
+      case RecordType.PCF: return PCF.Pack(builder, _o.AsPCF()).Value;
+      case RecordType.PHY: return PHY.Pack(builder, _o.AsPHY()).Value;
       case RecordType.PLD: return PLD.Pack(builder, _o.AsPLD()).Value;
       case RecordType.PLG: return PLG.Pack(builder, _o.AsPLG()).Value;
       case RecordType.PLK: return PLK.Pack(builder, _o.AsPLK()).Value;
       case RecordType.PNM: return PNM.Pack(builder, _o.AsPNM()).Value;
       case RecordType.PRG: return PRG.Pack(builder, _o.AsPRG()).Value;
       case RecordType.PUR: return PUR.Pack(builder, _o.AsPUR()).Value;
+      case RecordType.RAF: return RAF.Pack(builder, _o.AsRAF()).Value;
+      case RecordType.RCF: return RCF.Pack(builder, _o.AsRCF()).Value;
+      case RecordType.RDM: return RDM.Pack(builder, _o.AsRDM()).Value;
+      case RecordType.RDO: return RDO.Pack(builder, _o.AsRDO()).Value;
       case RecordType.REV: return REV.Pack(builder, _o.AsREV()).Value;
+      case RecordType.RFB: return RFB.Pack(builder, _o.AsRFB()).Value;
+      case RecordType.RFE: return RFE.Pack(builder, _o.AsRFE()).Value;
       case RecordType.RFM: return RFM.Pack(builder, _o.AsRFM()).Value;
+      case RecordType.RFO: return RFO.Pack(builder, _o.AsRFO()).Value;
       case RecordType.ROC: return ROC.Pack(builder, _o.AsROC()).Value;
+      case RecordType.SAR: return SAR.Pack(builder, _o.AsSAR()).Value;
       case RecordType.SCM: return SCM.Pack(builder, _o.AsSCM()).Value;
+      case RecordType.SDL: return SDL.Pack(builder, _o.AsSDL()).Value;
+      case RecordType.SEO: return SEO.Pack(builder, _o.AsSEO()).Value;
+      case RecordType.SEV: return SEV.Pack(builder, _o.AsSEV()).Value;
       case RecordType.SIT: return SIT.Pack(builder, _o.AsSIT()).Value;
+      case RecordType.SKI: return SKI.Pack(builder, _o.AsSKI()).Value;
+      case RecordType.SNR: return SNR.Pack(builder, _o.AsSNR()).Value;
+      case RecordType.SOI: return SOI.Pack(builder, _o.AsSOI()).Value;
+      case RecordType.SON: return SON.Pack(builder, _o.AsSON()).Value;
+      case RecordType.SPP: return SPP.Pack(builder, _o.AsSPP()).Value;
+      case RecordType.SPW: return SPW.Pack(builder, _o.AsSPW()).Value;
       case RecordType.STF: return STF.Pack(builder, _o.AsSTF()).Value;
+      case RecordType.STR: return STR.Pack(builder, _o.AsSTR()).Value;
+      case RecordType.STV: return STV.Pack(builder, _o.AsSTV()).Value;
+      case RecordType.SWR: return SWR.Pack(builder, _o.AsSWR()).Value;
+      case RecordType.TCF: return TCF.Pack(builder, _o.AsTCF()).Value;
       case RecordType.TDM: return TDM.Pack(builder, _o.AsTDM()).Value;
       case RecordType.TIM: return TIM.Pack(builder, _o.AsTIM()).Value;
+      case RecordType.TKG: return TKG.Pack(builder, _o.AsTKG()).Value;
+      case RecordType.TME: return TME.Pack(builder, _o.AsTME()).Value;
+      case RecordType.TMF: return TMF.Pack(builder, _o.AsTMF()).Value;
+      case RecordType.TPN: return TPN.Pack(builder, _o.AsTPN()).Value;
+      case RecordType.TRK: return TRK.Pack(builder, _o.AsTRK()).Value;
+      case RecordType.TRN: return TRN.Pack(builder, _o.AsTRN()).Value;
       case RecordType.VCM: return VCM.Pack(builder, _o.AsVCM()).Value;
+      case RecordType.WPN: return WPN.Pack(builder, _o.AsWPN()).Value;
+      case RecordType.WTH: return WTH.Pack(builder, _o.AsWTH()).Value;
       case RecordType.XTC: return XTC.Pack(builder, _o.AsXTC()).Value;
     }
   }
@@ -189,8 +505,41 @@ static public class RecordTypeVerify
       case RecordType.ACL:
         result = ACLVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.ACM:
+        result = ACMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ACR:
+        result = ACRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AEM:
+        result = AEMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AOF:
+        result = AOFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.APM:
+        result = APMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ARM:
+        result = ARMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.AST:
+        result = ASTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ATD:
+        result = ATDVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.ATM:
         result = ATMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.BAL:
+        result = BALVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.BEM:
+        result = BEMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.BMC:
+        result = BMCVerify.Verify(verifier, tablePos);
         break;
       case RecordType.BOV:
         result = BOVVerify.Verify(verifier, tablePos);
@@ -201,6 +550,24 @@ static public class RecordTypeVerify
       case RecordType.CDM:
         result = CDMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.CFP:
+        result = CFPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CHN:
+        result = CHNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CLT:
+        result = CLTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CMS:
+        result = CMSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.COM:
+        result = COMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CRD:
+        result = CRDVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.CRM:
         result = CRMVerify.Verify(verifier, tablePos);
         break;
@@ -210,8 +577,20 @@ static public class RecordTypeVerify
       case RecordType.CTR:
         result = CTRVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.DFH:
+        result = DFHVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.DMG:
+        result = DMGVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.DOA:
+        result = DOAVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.EME:
         result = EMEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ENV:
+        result = ENVVerify.Verify(verifier, tablePos);
         break;
       case RecordType.EOO:
         result = EOOVerify.Verify(verifier, tablePos);
@@ -222,11 +601,38 @@ static public class RecordTypeVerify
       case RecordType.EPM:
         result = EPMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.EWR:
+        result = EWRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.FCS:
+        result = FCSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GDI:
+        result = GDIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GEO:
+        result = GEOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GNO:
+        result = GNOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GRV:
+        result = GRVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GVH:
+        result = GVHVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.HEL:
+        result = HELVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.HYP:
         result = HYPVerify.Verify(verifier, tablePos);
         break;
       case RecordType.IDM:
         result = IDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.IRO:
+        result = IROVerify.Verify(verifier, tablePos);
         break;
       case RecordType.LCC:
         result = LCCVerify.Verify(verifier, tablePos);
@@ -234,11 +640,47 @@ static public class RecordTypeVerify
       case RecordType.LDM:
         result = LDMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.LKS:
+        result = LKSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LND:
+        result = LNDVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.LNE:
+        result = LNEVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.MET:
         result = METVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.MFE:
+        result = MFEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MNF:
+        result = MNFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MNV:
+        result = MNVVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.MPE:
         result = MPEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MSL:
+        result = MSLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MST:
+        result = MSTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MTI:
+        result = MTIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.NAV:
+        result = NAVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OBD:
+        result = OBDVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OBT:
+        result = OBTVerify.Verify(verifier, tablePos);
         break;
       case RecordType.OCM:
         result = OCMVerify.Verify(verifier, tablePos);
@@ -249,8 +691,32 @@ static public class RecordTypeVerify
       case RecordType.OMM:
         result = OMMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.OOD:
+        result = OODVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OOE:
+        result = OOEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OOI:
+        result = OOIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OOL:
+        result = OOLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OON:
+        result = OONVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OPM:
+        result = OPMVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.OSM:
         result = OSMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PCF:
+        result = PCFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PHY:
+        result = PHYVerify.Verify(verifier, tablePos);
         break;
       case RecordType.PLD:
         result = PLDVerify.Verify(verifier, tablePos);
@@ -270,23 +736,86 @@ static public class RecordTypeVerify
       case RecordType.PUR:
         result = PURVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.RAF:
+        result = RAFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RCF:
+        result = RCFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RDM:
+        result = RDMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RDO:
+        result = RDOVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.REV:
         result = REVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RFB:
+        result = RFBVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RFE:
+        result = RFEVerify.Verify(verifier, tablePos);
         break;
       case RecordType.RFM:
         result = RFMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.RFO:
+        result = RFOVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.ROC:
         result = ROCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SAR:
+        result = SARVerify.Verify(verifier, tablePos);
         break;
       case RecordType.SCM:
         result = SCMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.SDL:
+        result = SDLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SEO:
+        result = SEOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SEV:
+        result = SEVVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.SIT:
         result = SITVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.SKI:
+        result = SKIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SNR:
+        result = SNRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SOI:
+        result = SOIVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SON:
+        result = SONVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SPP:
+        result = SPPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SPW:
+        result = SPWVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.STF:
         result = STFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.STR:
+        result = STRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.STV:
+        result = STVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SWR:
+        result = SWRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TCF:
+        result = TCFVerify.Verify(verifier, tablePos);
         break;
       case RecordType.TDM:
         result = TDMVerify.Verify(verifier, tablePos);
@@ -294,8 +823,32 @@ static public class RecordTypeVerify
       case RecordType.TIM:
         result = TIMVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.TKG:
+        result = TKGVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TME:
+        result = TMEVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TMF:
+        result = TMFVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TPN:
+        result = TPNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRK:
+        result = TRKVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRN:
+        result = TRNVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.VCM:
         result = VCMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.WPN:
+        result = WPNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.WTH:
+        result = WTHVerify.Verify(verifier, tablePos);
         break;
       case RecordType.XTC:
         result = XTCVerify.Verify(verifier, tablePos);

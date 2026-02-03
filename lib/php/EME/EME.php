@@ -104,31 +104,38 @@ class EME extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+    public function getSALT()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// Identifier for the public key used, aiding in recipient key management and message decryption.
     public function getPUBLIC_KEY_IDENTIFIER()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Specifies the set of cryptographic algorithms used in the encryption process.
     public function getCIPHER_SUITE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
     public function getKDF_PARAMETERS()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
     public function getENCRYPTION_ALGORITHM_PARAMETERS()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -138,22 +145,23 @@ class EME extends Table
      */
     public static function startEME(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EME
      */
-    public static function createEME(FlatBufferBuilder $builder, $ENCRYPTED_BLOB, $EPHEMERAL_PUBLIC_KEY, $MAC, $NONCE, $TAG, $IV, $PUBLIC_KEY_IDENTIFIER, $CIPHER_SUITE, $KDF_PARAMETERS, $ENCRYPTION_ALGORITHM_PARAMETERS)
+    public static function createEME(FlatBufferBuilder $builder, $ENCRYPTED_BLOB, $EPHEMERAL_PUBLIC_KEY, $MAC, $NONCE, $TAG, $IV, $SALT, $PUBLIC_KEY_IDENTIFIER, $CIPHER_SUITE, $KDF_PARAMETERS, $ENCRYPTION_ALGORITHM_PARAMETERS)
     {
-        $builder->startObject(10);
+        $builder->startObject(11);
         self::addENCRYPTED_BLOB($builder, $ENCRYPTED_BLOB);
         self::addEPHEMERAL_PUBLIC_KEY($builder, $EPHEMERAL_PUBLIC_KEY);
         self::addMAC($builder, $MAC);
         self::addNONCE($builder, $NONCE);
         self::addTAG($builder, $TAG);
         self::addIV($builder, $IV);
+        self::addSALT($builder, $SALT);
         self::addPUBLIC_KEY_IDENTIFIER($builder, $PUBLIC_KEY_IDENTIFIER);
         self::addCIPHER_SUITE($builder, $CIPHER_SUITE);
         self::addKDF_PARAMETERS($builder, $KDF_PARAMETERS);
@@ -251,9 +259,19 @@ class EME extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addSALT(FlatBufferBuilder $builder, $SALT)
+    {
+        $builder->addOffsetX(6, $SALT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addPUBLIC_KEY_IDENTIFIER(FlatBufferBuilder $builder, $PUBLIC_KEY_IDENTIFIER)
     {
-        $builder->addOffsetX(6, $PUBLIC_KEY_IDENTIFIER, 0);
+        $builder->addOffsetX(7, $PUBLIC_KEY_IDENTIFIER, 0);
     }
 
     /**
@@ -263,7 +281,7 @@ class EME extends Table
      */
     public static function addCIPHER_SUITE(FlatBufferBuilder $builder, $CIPHER_SUITE)
     {
-        $builder->addOffsetX(7, $CIPHER_SUITE, 0);
+        $builder->addOffsetX(8, $CIPHER_SUITE, 0);
     }
 
     /**
@@ -273,7 +291,7 @@ class EME extends Table
      */
     public static function addKDF_PARAMETERS(FlatBufferBuilder $builder, $KDF_PARAMETERS)
     {
-        $builder->addOffsetX(8, $KDF_PARAMETERS, 0);
+        $builder->addOffsetX(9, $KDF_PARAMETERS, 0);
     }
 
     /**
@@ -283,7 +301,7 @@ class EME extends Table
      */
     public static function addENCRYPTION_ALGORITHM_PARAMETERS(FlatBufferBuilder $builder, $ENCRYPTION_ALGORITHM_PARAMETERS)
     {
-        $builder->addOffsetX(9, $ENCRYPTION_ALGORITHM_PARAMETERS, 0);
+        $builder->addOffsetX(10, $ENCRYPTION_ALGORITHM_PARAMETERS, 0);
     }
 
     /**

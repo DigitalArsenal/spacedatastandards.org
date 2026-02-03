@@ -100,12 +100,22 @@ IV(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+ */
+SALT():string|null
+SALT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SALT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Identifier for the public key used, aiding in recipient key management and message decryption.
  */
 PUBLIC_KEY_IDENTIFIER():string|null
 PUBLIC_KEY_IDENTIFIER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PUBLIC_KEY_IDENTIFIER(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -115,7 +125,7 @@ PUBLIC_KEY_IDENTIFIER(optionalEncoding?:any):string|Uint8Array|null {
 CIPHER_SUITE():string|null
 CIPHER_SUITE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CIPHER_SUITE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -125,7 +135,7 @@ CIPHER_SUITE(optionalEncoding?:any):string|Uint8Array|null {
 KDF_PARAMETERS():string|null
 KDF_PARAMETERS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 KDF_PARAMETERS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -135,12 +145,12 @@ KDF_PARAMETERS(optionalEncoding?:any):string|Uint8Array|null {
 ENCRYPTION_ALGORITHM_PARAMETERS():string|null
 ENCRYPTION_ALGORITHM_PARAMETERS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ENCRYPTION_ALGORITHM_PARAMETERS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startEME(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(11);
 }
 
 static addEncryptedBlob(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset) {
@@ -179,20 +189,24 @@ static addIv(builder:flatbuffers.Builder, IVOffset:flatbuffers.Offset) {
   builder.addFieldOffset(5, IVOffset, 0);
 }
 
+static addSalt(builder:flatbuffers.Builder, SALTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SALTOffset, 0);
+}
+
 static addPublicKeyIdentifier(builder:flatbuffers.Builder, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, PUBLIC_KEY_IDENTIFIEROffset, 0);
+  builder.addFieldOffset(7, PUBLIC_KEY_IDENTIFIEROffset, 0);
 }
 
 static addCipherSuite(builder:flatbuffers.Builder, CIPHER_SUITEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, CIPHER_SUITEOffset, 0);
+  builder.addFieldOffset(8, CIPHER_SUITEOffset, 0);
 }
 
 static addKdfParameters(builder:flatbuffers.Builder, KDF_PARAMETERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, KDF_PARAMETERSOffset, 0);
+  builder.addFieldOffset(9, KDF_PARAMETERSOffset, 0);
 }
 
 static addEncryptionAlgorithmParameters(builder:flatbuffers.Builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ENCRYPTION_ALGORITHM_PARAMETERSOffset, 0);
+  builder.addFieldOffset(10, ENCRYPTION_ALGORITHM_PARAMETERSOffset, 0);
 }
 
 static endEME(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -208,7 +222,7 @@ static finishSizePrefixedEMEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EME', true);
 }
 
-static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset:flatbuffers.Offset, MACOffset:flatbuffers.Offset, NONCEOffset:flatbuffers.Offset, TAGOffset:flatbuffers.Offset, IVOffset:flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset, CIPHER_SUITEOffset:flatbuffers.Offset, KDF_PARAMETERSOffset:flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset:flatbuffers.Offset, MACOffset:flatbuffers.Offset, NONCEOffset:flatbuffers.Offset, TAGOffset:flatbuffers.Offset, IVOffset:flatbuffers.Offset, SALTOffset:flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset, CIPHER_SUITEOffset:flatbuffers.Offset, KDF_PARAMETERSOffset:flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   EME.startEME(builder);
   EME.addEncryptedBlob(builder, ENCRYPTED_BLOBOffset);
   EME.addEphemeralPublicKey(builder, EPHEMERAL_PUBLIC_KEYOffset);
@@ -216,6 +230,7 @@ static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.O
   EME.addNonce(builder, NONCEOffset);
   EME.addTag(builder, TAGOffset);
   EME.addIv(builder, IVOffset);
+  EME.addSalt(builder, SALTOffset);
   EME.addPublicKeyIdentifier(builder, PUBLIC_KEY_IDENTIFIEROffset);
   EME.addCipherSuite(builder, CIPHER_SUITEOffset);
   EME.addKdfParameters(builder, KDF_PARAMETERSOffset);
@@ -231,6 +246,7 @@ unpack(): EMET {
     this.NONCE(),
     this.TAG(),
     this.IV(),
+    this.SALT(),
     this.PUBLIC_KEY_IDENTIFIER(),
     this.CIPHER_SUITE(),
     this.KDF_PARAMETERS(),
@@ -246,6 +262,7 @@ unpackTo(_o: EMET): void {
   _o.NONCE = this.NONCE();
   _o.TAG = this.TAG();
   _o.IV = this.IV();
+  _o.SALT = this.SALT();
   _o.PUBLIC_KEY_IDENTIFIER = this.PUBLIC_KEY_IDENTIFIER();
   _o.CIPHER_SUITE = this.CIPHER_SUITE();
   _o.KDF_PARAMETERS = this.KDF_PARAMETERS();
@@ -261,6 +278,7 @@ constructor(
   public NONCE: string|Uint8Array|null = null,
   public TAG: string|Uint8Array|null = null,
   public IV: string|Uint8Array|null = null,
+  public SALT: string|Uint8Array|null = null,
   public PUBLIC_KEY_IDENTIFIER: string|Uint8Array|null = null,
   public CIPHER_SUITE: string|Uint8Array|null = null,
   public KDF_PARAMETERS: string|Uint8Array|null = null,
@@ -275,6 +293,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NONCE = (this.NONCE !== null ? builder.createString(this.NONCE!) : 0);
   const TAG = (this.TAG !== null ? builder.createString(this.TAG!) : 0);
   const IV = (this.IV !== null ? builder.createString(this.IV!) : 0);
+  const SALT = (this.SALT !== null ? builder.createString(this.SALT!) : 0);
   const PUBLIC_KEY_IDENTIFIER = (this.PUBLIC_KEY_IDENTIFIER !== null ? builder.createString(this.PUBLIC_KEY_IDENTIFIER!) : 0);
   const CIPHER_SUITE = (this.CIPHER_SUITE !== null ? builder.createString(this.CIPHER_SUITE!) : 0);
   const KDF_PARAMETERS = (this.KDF_PARAMETERS !== null ? builder.createString(this.KDF_PARAMETERS!) : 0);
@@ -287,6 +306,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     NONCE,
     TAG,
     IV,
+    SALT,
     PUBLIC_KEY_IDENTIFIER,
     CIPHER_SUITE,
     KDF_PARAMETERS,

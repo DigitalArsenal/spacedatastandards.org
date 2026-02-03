@@ -1,0 +1,19 @@
+export declare enum VesselType {
+    CARRIER = 0,
+    BATTLESHIP = 1,
+    CRUISER = 2,
+    DESTROYER = 3,
+    FRIGATE = 4,
+    CORVETTE = 5,
+    PATROL = 6,
+    SUBMARINE_SSN = 7,
+    SUBMARINE_SSBN = 8,
+    SUBMARINE_SSK = 9,
+    AMPHIBIOUS = 10,
+    CARGO = 11,
+    TANKER = 12,
+    AUXILIARY = 13,
+    FAST_ATTACK = 14,
+    TORPEDO_BOAT = 15
+}
+//# sourceMappingURL=VesselType.d.ts.map

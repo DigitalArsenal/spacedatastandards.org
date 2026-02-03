@@ -1,0 +1,15 @@
+export declare enum TerrainType {
+    OCEAN = 0,
+    WATER_FRESH = 1,
+    SAND = 2,
+    GRASS = 3,
+    FOREST = 4,
+    CONCRETE = 5,
+    ASPHALT = 6,
+    SNOW = 7,
+    ICE = 8,
+    ROCK = 9,
+    MARSH = 10,
+    URBAN = 11
+}
+//# sourceMappingURL=TerrainType.d.ts.map

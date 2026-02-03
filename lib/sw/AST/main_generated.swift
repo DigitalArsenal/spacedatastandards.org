@@ -4,7 +4,7 @@
 
 import FlatBuffers
 
-public enum PropagatorType: Int8, Enum, Verifiable {
+public enum PropagatorMethod: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,8 +20,8 @@ public enum PropagatorType: Int8, Enum, Verifiable {
   case kozai = 9
   case dsst = 10
 
-  public static var max: PropagatorType { return .dsst }
-  public static var min: PropagatorType { return .kepler }
+  public static var max: PropagatorMethod { return .dsst }
+  public static var min: PropagatorMethod { return .kepler }
 }
 
 
@@ -47,7 +47,7 @@ public enum ForceModel: Int8, Enum, Verifiable {
 }
 
 
-public enum OrbitType: Int8, Enum, Verifiable {
+public enum OrbitalRegime: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -63,12 +63,12 @@ public enum OrbitType: Int8, Enum, Verifiable {
   case hyperbolic = 9
   case parabolic = 10
 
-  public static var max: OrbitType { return .parabolic }
-  public static var min: OrbitType { return .leo }
+  public static var max: OrbitalRegime { return .parabolic }
+  public static var min: OrbitalRegime { return .leo }
 }
 
 
-public enum TimeSystem: Int8, Enum, Verifiable {
+public enum TimeReference: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -80,8 +80,8 @@ public enum TimeSystem: Int8, Enum, Verifiable {
   case julianDate = 5
   case modifiedJulianDate = 6
 
-  public static var max: TimeSystem { return .modifiedJulianDate }
-  public static var min: TimeSystem { return .utc }
+  public static var max: TimeReference { return .modifiedJulianDate }
+  public static var min: TimeReference { return .utc }
 }
 
 

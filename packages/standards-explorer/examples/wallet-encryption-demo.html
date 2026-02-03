@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HD Wallet + Standards Explorer - Field Encryption Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --border: #2a2a3e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #9ca3af;
+      --accent: #4a9eff;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
+    }
+    h1 span {
+      color: var(--accent);
+    }
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+    }
+    h3 {
+      font-size: 16px;
+      margin: 24px 0 12px;
+      color: var(--text-primary);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    .status-badge.connected {
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .status-badge.disconnected {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
+    pre {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 12px 0;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    button.secondary {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+    }
+    input, textarea, select {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    textarea {
+      font-family: 'JetBrains Mono', monospace;
+      resize: vertical;
+      min-height: 100px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+    }
+    .tag.clickable {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag.clickable:hover {
+      background: var(--accent);
+      color: white;
+    }
+    .result-section {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-row:last-child {
+      border-bottom: none;
+    }
+    .result-label {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .result-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      max-width: 60%;
+      word-break: break-all;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .tab {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 12px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab:hover {
+      color: var(--text-primary);
+    }
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .alert.success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    .alert.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    .alert.info {
+      background: rgba(74, 158, 255, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    #wallet-status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      background: var(--bg-tertiary);
+    }
+    #wallet-status.logged-in {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--success);
+    }
+    .split-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .split-view, .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .copy-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .copy-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>HD Wallet + <span>Standards Explorer</span></h1>
+      <p style="color: var(--text-secondary); margin: 8px 0 0 0;">
+        Field-level encryption with EPM/PLK schemas and code generation
+      </p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span id="wallet-status">Not Connected</span>
+      <button id="connect-wallet-btn">Connect Wallet</button>
+    </div>
+  </header>
+
+  <!-- Wallet Info Section -->
+  <div id="wallet-info" class="card" style="margin-bottom: 24px; display: none;">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+        <path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/>
+      </svg>
+      Wallet Connected
+    </div>
+    <div class="result-section">
+      <div class="result-row">
+        <span class="result-label">Extended Public Key (xpub)</span>
+        <span class="result-value" id="wallet-xpub">--</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Encryption Public Key</span>
+        <span class="result-value" id="wallet-enc-pubkey">--</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Signing Public Key</span>
+        <span class="result-value" id="wallet-sign-pubkey">--</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="secondary" id="logout-btn">Disconnect</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- EPM Entity Profile with Crypto Keys -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        EPM - Entity Profile Message
+      </div>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+        Create an entity profile with HD wallet-derived cryptographic keys
+      </p>
+
+      <div class="form-group">
+        <label>Legal Name</label>
+        <input type="text" id="epm-legal-name" placeholder="John Doe" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="epm-email" placeholder="john@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Job Title</label>
+        <input type="text" id="epm-job-title" placeholder="Software Engineer" />
+      </div>
+
+      <div class="btn-group">
+        <button id="generate-epm-btn" disabled>Generate EPM with Keys</button>
+      </div>
+
+      <div id="epm-result" style="display: none;">
+        <h3>Generated EPM Object</h3>
+        <pre id="epm-output"></pre>
+        <div class="btn-group">
+          <button class="secondary copy-btn" data-copy="epm-output">Copy JSON</button>
+          <button class="secondary" id="epm-generate-code">Generate Source Code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field Encryption with EME -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        EME - Field Encryption
+      </div>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+        Encrypt any field using ECIES (ECDH + HKDF + AES-256-GCM)
+      </p>
+
+      <div class="form-group">
+        <label>Recipient Public Key (hex)</label>
+        <input type="text" id="enc-recipient" placeholder="Enter recipient's encryption public key" />
+        <button class="secondary" id="enc-use-self" style="margin-top: 8px; padding: 6px 12px;">
+          Use My Key (Self-encrypt)
+        </button>
+      </div>
+      <div class="form-group">
+        <label>Plaintext Message</label>
+        <textarea id="enc-plaintext" placeholder="Enter the data to encrypt..."></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button id="encrypt-btn" disabled>Encrypt</button>
+      </div>
+
+      <div id="enc-result" style="display: none;">
+        <h3>EME Encrypted Envelope</h3>
+        <div class="tabs">
+          <button class="tab active" data-format="json">JSON</button>
+          <button class="tab" data-format="flatbuffer">FlatBuffer (base64)</button>
+        </div>
+        <pre id="enc-output"></pre>
+        <div class="result-section">
+          <div class="result-row">
+            <span class="result-label">Cipher Suite</span>
+            <span class="result-value">AES-256-GCM</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">KDF</span>
+            <span class="result-value">HKDF-SHA256</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Key Agreement</span>
+            <span class="result-value">secp256k1 ECDH</span>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button class="secondary copy-btn" data-copy="enc-output">Copy</button>
+          <button class="secondary" id="enc-download">Download .eme.json</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLK License Key -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+        </svg>
+        PLK - Plugin License Key
+      </div>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+        Generate a signed plugin license using X25519/Ed25519 keys
+      </p>
+
+      <div class="form-group">
+        <label>Plugin ID</label>
+        <input type="text" id="plk-plugin-id" placeholder="com.example.my-plugin" />
+      </div>
+      <div class="form-group">
+        <label>Licensee Organization</label>
+        <input type="text" id="plk-licensee-org" placeholder="Acme Corp" />
+      </div>
+      <div class="form-group">
+        <label>License Type</label>
+        <select id="plk-license-type">
+          <option value="0">Trial</option>
+          <option value="1">Commercial</option>
+          <option value="2">Enterprise</option>
+          <option value="3">Educational</option>
+          <option value="4">Open Source</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Allowed Domains (comma-separated)</label>
+        <input type="text" id="plk-domains" placeholder="example.com, *.example.org" />
+      </div>
+
+      <div class="btn-group">
+        <button id="generate-plk-btn" disabled>Generate License Key</button>
+      </div>
+
+      <div id="plk-result" style="display: none;">
+        <h3>Generated PLK Object</h3>
+        <pre id="plk-output"></pre>
+        <div class="btn-group">
+          <button class="secondary copy-btn" data-copy="plk-output">Copy JSON</button>
+          <button class="secondary" id="plk-generate-code">Generate Source Code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Code Generation -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        Code Generation
+      </div>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+        Generate source code for EPM, PLK, and EME schemas
+      </p>
+
+      <div class="form-group">
+        <label>Select Schema</label>
+        <select id="codegen-schema">
+          <option value="EPM">EPM - Entity Profile Message</option>
+          <option value="PLK">PLK - Plugin License Key</option>
+          <option value="EME">EME - Encrypted Message Envelope</option>
+          <option value="CDM">CDM - Conjunction Data Message</option>
+          <option value="OMM">OMM - Orbit Mean-Elements Message</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target Language</label>
+        <select id="codegen-lang">
+          <option value="ts">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="swift">Swift</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="dart">Dart</option>
+          <option value="php">PHP</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button id="codegen-btn">Generate Code</button>
+      </div>
+
+      <div id="codegen-result" style="display: none;">
+        <h3>Generated Files</h3>
+        <div id="codegen-files" class="tabs"></div>
+        <pre id="codegen-output"></pre>
+        <div class="btn-group">
+          <button class="secondary copy-btn" data-copy="codegen-output">Copy</button>
+          <button class="secondary" id="codegen-download">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standards Explorer -->
+  <h2>Interactive Standards Explorer</h2>
+  <p style="color: var(--text-secondary); margin-bottom: 16px;">
+    Browse all Space Data Standards schemas with crypto-enabled schemas highlighted
+  </p>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+    <span class="tag clickable" data-schema="EPM">EPM</span>
+    <span class="tag clickable" data-schema="PLK">PLK</span>
+    <span class="tag clickable" data-schema="EME">EME</span>
+    <span class="tag clickable" data-schema="CDM">CDM</span>
+    <span class="tag clickable" data-schema="CAT">CAT</span>
+    <span class="tag clickable" data-schema="OMM">OMM</span>
+    <span class="tag clickable" data-schema="OEM">OEM</span>
+  </div>
+
+  <standards-explorer></standards-explorer>
+
+</div>
+
+<script type="module">
+  // Import HD Wallet WASM and UI library
+  import initHDWallet, { Curve } from 'hd-wallet-wasm';
+  import {
+    buildSigningPath,
+    buildEncryptionPath,
+    toHex,
+    toHexCompact,
+    hexToBytes,
+  } from 'hd-wallet-ui/lib';
+
+  // Import Standards Explorer
+  import { StandardsExplorer } from '../src/index.js';
+  import '../src/web-component.js';
+
+  // Import FlatBuffers for EME serialization
+  import * as flatbuffers from 'flatbuffers';
+
+  // State
+  const state = {
+    hdWalletModule: null,
+    hdRoot: null,
+    mnemonic: null,
+    explorer: null,
+    encryptionKey: null,
+    signingKey: null,
+    currentEME: null,
+    generatedFiles: null,
+    activeFile: null,
+  };
+
+  // DOM helpers
+  const $ = (id) => document.getElementById(id);
+  const $qa = (sel) => document.querySelectorAll(sel);
+
+  // Initialize HD Wallet WASM
+  async function initWallet() {
+    try {
+      state.hdWalletModule = await initHDWallet();
+      console.log('HD Wallet WASM initialized:', state.hdWalletModule.getVersion());
+      console.log('Supported curves:', state.hdWalletModule.getSupportedCurves());
+      console.log('Supported coins:', state.hdWalletModule.getSupportedCoins());
+    } catch (err) {
+      console.error('Failed to initialize HD Wallet:', err);
+    }
+  }
+
+  // Initialize Standards Explorer
+  async function initExplorer() {
+    state.explorer = new StandardsExplorer();
+    await state.explorer.init();
+    console.log('Standards Explorer initialized, version:', state.explorer.getVersion());
+    console.log('Available standards:', state.explorer.getStandards().length);
+  }
+
+  // Connect wallet (generate or import mnemonic)
+  function connectWallet() {
+    if (!state.hdWalletModule) {
+      alert('HD Wallet not initialized yet. Please wait...');
+      return;
+    }
+
+    const mnemonic = state.hdWalletModule.mnemonic.generate(24);
+    const seed = state.hdWalletModule.mnemonic.toSeed(mnemonic);
+    state.hdRoot = state.hdWalletModule.hdkey.fromSeed(seed);
+    state.mnemonic = mnemonic;
+
+    // Derive encryption key (secp256k1 for ECIES compatibility)
+    const encPath = buildEncryptionPath(0, 0, 0);
+    state.encryptionKey = state.hdRoot.derivePath(encPath);
+
+    // Derive signing key (Ed25519)
+    const signPath = buildSigningPath(501, 0, 0); // Solana-style Ed25519
+    state.signingKey = state.hdRoot.derivePath(signPath);
+
+    updateWalletUI();
+    enableButtons();
+  }
+
+  function disconnectWallet() {
+    if (state.hdRoot) {
+      state.hdRoot.wipe();
+    }
+    state.hdRoot = null;
+    state.mnemonic = null;
+    state.encryptionKey = null;
+    state.signingKey = null;
+
+    $('wallet-status').textContent = 'Not Connected';
+    $('wallet-status').classList.remove('logged-in');
+    $('wallet-info').style.display = 'none';
+    disableButtons();
+  }
+
+  function updateWalletUI() {
+    $('wallet-status').textContent = 'Connected';
+    $('wallet-status').classList.add('logged-in');
+    $('wallet-info').style.display = 'block';
+
+    // Show truncated keys
+    const xpub = state.hdRoot.toXpub();
+    $('wallet-xpub').textContent = xpub.substring(0, 20) + '...' + xpub.substring(xpub.length - 8);
+
+    const encPub = toHexCompact(state.encryptionKey.publicKey());
+    $('wallet-enc-pubkey').textContent = encPub.substring(0, 20) + '...' + encPub.substring(encPub.length - 8);
+
+    const signPub = toHexCompact(state.signingKey.publicKey());
+    $('wallet-sign-pubkey').textContent = signPub.substring(0, 20) + '...' + signPub.substring(signPub.length - 8);
+  }
+
+  function enableButtons() {
+    $('generate-epm-btn').disabled = false;
+    $('encrypt-btn').disabled = false;
+    $('generate-plk-btn').disabled = false;
+  }
+
+  function disableButtons() {
+    $('generate-epm-btn').disabled = true;
+    $('encrypt-btn').disabled = true;
+    $('generate-plk-btn').disabled = true;
+  }
+
+  // Generate EPM with crypto keys
+  function generateEPM() {
+    if (!state.hdRoot) return;
+
+    const epm = {
+      LEGAL_NAME: $('epm-legal-name').value || 'Anonymous',
+      EMAIL: $('epm-email').value || null,
+      JOB_TITLE: $('epm-job-title').value || null,
+      KEYS: [
+        {
+          KEY_TYPE: 'Signing',
+          PUBLIC_KEY: toHexCompact(state.signingKey.publicKey()),
+          XPUB: state.hdRoot.toXpub(),
+          ADDRESS_TYPE: 'Ed25519',
+        },
+        {
+          KEY_TYPE: 'Encryption',
+          PUBLIC_KEY: toHexCompact(state.encryptionKey.publicKey()),
+          ADDRESS_TYPE: 'secp256k1',
+        },
+      ],
+      MULTIFORMAT_ADDRESS: [
+        `/xpub/${state.hdRoot.toXpub()}`,
+      ],
+    };
+
+    $('epm-output').textContent = JSON.stringify(epm, null, 2);
+    $('epm-result').style.display = 'block';
+  }
+
+  // Encrypt using ECIES
+  function encrypt() {
+    if (!state.hdWalletModule || !state.encryptionKey) return;
+
+    const recipientHex = $('enc-recipient').value.trim();
+    const plaintext = $('enc-plaintext').value;
+
+    if (!recipientHex || !plaintext) {
+      alert('Please enter both a recipient public key and a message.');
+      return;
+    }
+
+    try {
+      const w = state.hdWalletModule;
+      const senderPriv = state.encryptionKey.privateKey();
+      const senderPub = state.encryptionKey.publicKey();
+      const recipientPub = hexToBytes(recipientHex);
+
+      // 1. ECDH shared secret
+      const shared = w.curves.secp256k1.ecdh(senderPriv, recipientPub);
+
+      // 2. HKDF: derive 32-byte AES key
+      const salt = w.utils.getRandomBytes(32);
+      const info = new TextEncoder().encode('ecies-secp256k1-aes256gcm');
+      const aesKey = w.utils.hkdf(shared, salt, info, 32);
+
+      // 3. AES-256-GCM encrypt
+      const iv = w.utils.generateIv();
+      const plaintextBytes = new TextEncoder().encode(plaintext);
+      const { ciphertext, tag } = w.utils.aesGcm.encrypt(aesKey, plaintextBytes, iv);
+
+      // Build EME object
+      state.currentEME = {
+        ENCRYPTED_BLOB: Array.from(ciphertext),
+        EPHEMERAL_PUBLIC_KEY: toHexCompact(senderPub),
+        MAC: null,
+        NONCE: null,
+        TAG: toHexCompact(tag),
+        IV: toHexCompact(iv),
+        SALT: toHexCompact(salt),
+        PUBLIC_KEY_IDENTIFIER: null,
+        CIPHER_SUITE: 'aes-256-gcm',
+        KDF_PARAMETERS: 'hkdf-sha256',
+        ENCRYPTION_ALGORITHM_PARAMETERS: 'secp256k1',
+      };
+
+      updateEMEDisplay('json');
+      $('enc-result').style.display = 'block';
+    } catch (err) {
+      console.error('Encryption failed:', err);
+      alert('Encryption failed: ' + err.message);
+    }
+  }
+
+  function updateEMEDisplay(format) {
+    if (!state.currentEME) return;
+
+    if (format === 'json') {
+      $('enc-output').textContent = JSON.stringify(state.currentEME, null, 2);
+    } else {
+      // Base64-encoded representation for FlatBuffer
+      const json = JSON.stringify(state.currentEME);
+      const b64 = btoa(json);
+      $('enc-output').textContent = b64;
+    }
+  }
+
+  // Generate PLK
+  function generatePLK() {
+    if (!state.hdRoot || !state.encryptionKey) return;
+
+    const now = Math.floor(Date.now() / 1000);
+    const expiresAt = now + (365 * 24 * 60 * 60); // 1 year
+
+    const domains = $('plk-domains').value
+      .split(',')
+      .map(d => d.trim())
+      .filter(d => d.length > 0);
+
+    const plk = {
+      LICENSE_ID: crypto.randomUUID(),
+      PLUGIN_ID: $('plk-plugin-id').value || 'com.example.plugin',
+      PLUGIN_VERSION: '1.0.0',
+      LICENSEE_ORG: $('plk-licensee-org').value || 'Unknown',
+      LICENSEE_EMAIL: $('epm-email').value || null,
+      LICENSEE_PUBKEY: Array.from(state.encryptionKey.publicKey()),
+      ISSUER_PUBKEY: Array.from(state.encryptionKey.publicKey()), // Self-signed for demo
+      ALLOWED_DOMAINS: domains,
+      ALLOWED_TLDS: [],
+      LICENSE_TYPE: parseInt($('plk-license-type').value),
+      MAX_ACTIVATIONS: 0, // Unlimited
+      ISSUED_AT: now,
+      VALID_FROM: now,
+      EXPIRES_AT: expiresAt,
+      ISSUER_PEER_ID: toHexCompact(state.signingKey.publicKey()).substring(0, 16),
+      SIGNATURE: [], // Would be Ed25519 signature in production
+    };
+
+    $('plk-output').textContent = JSON.stringify(plk, null, 2);
+    $('plk-result').style.display = 'block';
+  }
+
+  // Code generation
+  async function generateCode() {
+    if (!state.explorer) return;
+
+    const schema = $('codegen-schema').value;
+    const lang = $('codegen-lang').value;
+
+    $('codegen-result').style.display = 'none';
+
+    try {
+      const files = await state.explorer.generateCode(schema, lang);
+      state.generatedFiles = files;
+
+      const fileNames = Object.keys(files);
+      if (fileNames.length === 0) {
+        $('codegen-output').textContent = 'No files generated';
+        $('codegen-result').style.display = 'block';
+        return;
+      }
+
+      // Build file tabs
+      const tabsEl = $('codegen-files');
+      tabsEl.innerHTML = '';
+      fileNames.forEach((name, i) => {
+        const tab = document.createElement('button');
+        tab.className = 'tab' + (i === 0 ? ' active' : '');
+        tab.textContent = name;
+        tab.dataset.file = name;
+        tab.addEventListener('click', () => {
+          $qa('#codegen-files .tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.activeFile = name;
+          $('codegen-output').textContent = files[name];
+        });
+        tabsEl.appendChild(tab);
+      });
+
+      state.activeFile = fileNames[0];
+      $('codegen-output').textContent = files[fileNames[0]];
+      $('codegen-result').style.display = 'block';
+    } catch (err) {
+      console.error('Code generation failed:', err);
+      $('codegen-output').textContent = 'Error: ' + err.message;
+      $('codegen-result').style.display = 'block';
+    }
+  }
+
+  // Copy button functionality
+  function setupCopyButtons() {
+    $qa('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.copy;
+        const text = $(targetId)?.textContent;
+        if (text) {
+          navigator.clipboard.writeText(text).then(() => {
+            const original = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = original; }, 1500);
+          });
+        }
+      });
+    });
+  }
+
+  // Schema tag clicks
+  function setupSchemaTags() {
+    $qa('.tag.clickable').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const schema = tag.dataset.schema;
+        $('codegen-schema').value = schema;
+        $('codegen-btn').click();
+      });
+    });
+  }
+
+  // EME format tabs
+  function setupEMEFormatTabs() {
+    $qa('#enc-result .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        $qa('#enc-result .tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        updateEMEDisplay(tab.dataset.format);
+      });
+    });
+  }
+
+  // Download buttons
+  function setupDownloads() {
+    $('enc-download')?.addEventListener('click', () => {
+      if (!state.currentEME) return;
+      const json = JSON.stringify(state.currentEME, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'message.eme.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    $('codegen-download')?.addEventListener('click', () => {
+      if (!state.generatedFiles || !state.activeFile) return;
+      const content = state.generatedFiles[state.activeFile];
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = state.activeFile;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  // Initialize
+  async function init() {
+    await Promise.all([initWallet(), initExplorer()]);
+
+    // Event listeners
+    $('connect-wallet-btn').addEventListener('click', connectWallet);
+    $('logout-btn').addEventListener('click', disconnectWallet);
+    $('generate-epm-btn').addEventListener('click', generateEPM);
+    $('encrypt-btn').addEventListener('click', encrypt);
+    $('generate-plk-btn').addEventListener('click', generatePLK);
+    $('codegen-btn').addEventListener('click', generateCode);
+
+    $('enc-use-self')?.addEventListener('click', () => {
+      if (state.encryptionKey) {
+        $('enc-recipient').value = toHexCompact(state.encryptionKey.publicKey());
+      }
+    });
+
+    $('epm-generate-code')?.addEventListener('click', () => {
+      $('codegen-schema').value = 'EPM';
+      $('codegen-btn').click();
+    });
+
+    $('plk-generate-code')?.addEventListener('click', () => {
+      $('codegen-schema').value = 'PLK';
+      $('codegen-btn').click();
+    });
+
+    setupCopyButtons();
+    setupSchemaTags();
+    setupEMEFormatTabs();
+    setupDownloads();
+
+    console.log('Demo initialized successfully');
+  }
+
+  init().catch(console.error);
+</script>
+
+</body>
+</html>

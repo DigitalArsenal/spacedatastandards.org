@@ -1,0 +1,14 @@
+export declare enum cltuPduType {
+    BIND_INVOCATION = 0,
+    BIND_RETURN = 1,
+    UNBIND_INVOCATION = 2,
+    UNBIND_RETURN = 3,
+    START_INVOCATION = 4,
+    START_RETURN = 5,
+    STOP_INVOCATION = 6,
+    STOP_RETURN = 7,
+    TRANSFER_DATA_INVOCATION = 8,
+    TRANSFER_DATA_RETURN = 9,
+    PEER_ABORT = 10
+}
+//# sourceMappingURL=cltuPduType.d.ts.map

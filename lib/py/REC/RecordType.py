@@ -5,43 +5,122 @@
 class RecordType(object):
     NONE = 0
     ACL = 1
-    ATM = 2
-    BOV = 3
-    CAT = 4
-    CDM = 5
-    CRM = 6
-    CSM = 7
-    CTR = 8
-    EME = 9
-    EOO = 10
-    EOP = 11
-    EPM = 12
-    HYP = 13
-    IDM = 14
-    LCC = 15
-    LDM = 16
-    MET = 17
-    MPE = 18
-    OCM = 19
-    OEM = 20
-    OMM = 21
-    OSM = 22
-    PLD = 23
-    PLG = 24
-    PLK = 25
-    PNM = 26
-    PRG = 27
-    PUR = 28
-    REV = 29
-    RFM = 30
-    ROC = 31
-    SCM = 32
-    SIT = 33
-    STF = 34
-    TDM = 35
-    TIM = 36
-    VCM = 37
-    XTC = 38
+    ACM = 2
+    ACR = 3
+    AEM = 4
+    AOF = 5
+    APM = 6
+    ARM = 7
+    AST = 8
+    ATD = 9
+    ATM = 10
+    BAL = 11
+    BEM = 12
+    BMC = 13
+    BOV = 14
+    CAT = 15
+    CDM = 16
+    CFP = 17
+    CHN = 18
+    CLT = 19
+    CMS = 20
+    COM = 21
+    CRD = 22
+    CRM = 23
+    CSM = 24
+    CTR = 25
+    DFH = 26
+    DMG = 27
+    DOA = 28
+    EME = 29
+    ENV = 30
+    EOO = 31
+    EOP = 32
+    EPM = 33
+    EWR = 34
+    FCS = 35
+    GDI = 36
+    GEO = 37
+    GNO = 38
+    GRV = 39
+    GVH = 40
+    HEL = 41
+    HYP = 42
+    IDM = 43
+    IRO = 44
+    LCC = 45
+    LDM = 46
+    LKS = 47
+    LND = 48
+    LNE = 49
+    MET = 50
+    MFE = 51
+    MNF = 52
+    MNV = 53
+    MPE = 54
+    MSL = 55
+    MST = 56
+    MTI = 57
+    NAV = 58
+    OBD = 59
+    OBT = 60
+    OCM = 61
+    OEM = 62
+    OMM = 63
+    OOD = 64
+    OOE = 65
+    OOI = 66
+    OOL = 67
+    OON = 68
+    OPM = 69
+    OSM = 70
+    PCF = 71
+    PHY = 72
+    PLD = 73
+    PLG = 74
+    PLK = 75
+    PNM = 76
+    PRG = 77
+    PUR = 78
+    RAF = 79
+    RCF = 80
+    RDM = 81
+    RDO = 82
+    REV = 83
+    RFB = 84
+    RFE = 85
+    RFM = 86
+    RFO = 87
+    ROC = 88
+    SAR = 89
+    SCM = 90
+    SDL = 91
+    SEO = 92
+    SEV = 93
+    SIT = 94
+    SKI = 95
+    SNR = 96
+    SOI = 97
+    SON = 98
+    SPP = 99
+    SPW = 100
+    STF = 101
+    STR = 102
+    STV = 103
+    SWR = 104
+    TCF = 105
+    TDM = 106
+    TIM = 107
+    TKG = 108
+    TME = 109
+    TMF = 110
+    TPN = 111
+    TRK = 112
+    TRN = 113
+    VCM = 114
+    WPN = 115
+    WTH = 116
+    XTC = 117
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -50,9 +129,42 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.ACL:
         import ACL
         return ACL.ACLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ACM:
+        import ACM
+        return ACM.ACMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ACR:
+        import ACR
+        return ACR.ACRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.AEM:
+        import AEM
+        return AEM.AEMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.AOF:
+        import AOF
+        return AOF.AOFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.APM:
+        import APM
+        return APM.APMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ARM:
+        import ARM
+        return ARM.ARMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.AST:
+        import AST
+        return AST.ASTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ATD:
+        import ATD
+        return ATD.ATDT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.ATM:
         import ATM
         return ATM.ATMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.BAL:
+        import BAL
+        return BAL.BALT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.BEM:
+        import BEM
+        return BEM.BEMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.BMC:
+        import BMC
+        return BMC.BMCT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.BOV:
         import BOV
         return BOV.BOVT.InitFromBuf(table.Bytes, table.Pos)
@@ -62,6 +174,24 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CDM:
         import CDM
         return CDM.CDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CFP:
+        import CFP
+        return CFP.CFPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CHN:
+        import CHN
+        return CHN.CHNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CLT:
+        import CLT
+        return CLT.CLTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CMS:
+        import CMS
+        return CMS.CMST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.COM:
+        import COM
+        return COM.COMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CRD:
+        import CRD
+        return CRD.CRDT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.CRM:
         import CRM
         return CRM.CRMT.InitFromBuf(table.Bytes, table.Pos)
@@ -71,9 +201,21 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CTR:
         import CTR
         return CTR.CTRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.DFH:
+        import DFH
+        return DFH.DFHT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.DMG:
+        import DMG
+        return DMG.DMGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.DOA:
+        import DOA
+        return DOA.DOAT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.EME:
         import EME
         return EME.EMET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ENV:
+        import ENV
+        return ENV.ENVT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.EOO:
         import EOO
         return EOO.EOOT.InitFromBuf(table.Bytes, table.Pos)
@@ -83,24 +225,87 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.EPM:
         import EPM
         return EPM.EPMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.EWR:
+        import EWR
+        return EWR.EWRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.FCS:
+        import FCS
+        return FCS.FCST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GDI:
+        import GDI
+        return GDI.GDIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GEO:
+        import GEO
+        return GEO.GEOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GNO:
+        import GNO
+        return GNO.GNOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GRV:
+        import GRV
+        return GRV.GRVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GVH:
+        import GVH
+        return GVH.GVHT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.HEL:
+        import HEL
+        return HEL.HELT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.HYP:
         import HYP
         return HYP.HYPT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.IDM:
         import IDM
         return IDM.IDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.IRO:
+        import IRO
+        return IRO.IROT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LDM:
         import LDM
         return LDM.LDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LKS:
+        import LKS
+        return LKS.LKST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LND:
+        import LND
+        return LND.LNDT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.LNE:
+        import LNE
+        return LNE.LNET.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.MET:
         import MET
         return MET.METT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MFE:
+        import MFE
+        return MFE.MFET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MNF:
+        import MNF
+        return MNF.MNFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MNV:
+        import MNV
+        return MNV.MNVT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.MPE:
         import MPE
         return MPE.MPET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MSL:
+        import MSL
+        return MSL.MSLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MST:
+        import MST
+        return MST.MSTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MTI:
+        import MTI
+        return MTI.MTIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.NAV:
+        import NAV
+        return NAV.NAVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OBD:
+        import OBD
+        return OBD.OBDT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OBT:
+        import OBT
+        return OBT.OBTT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.OCM:
         import OCM
         return OCM.OCMT.InitFromBuf(table.Bytes, table.Pos)
@@ -110,9 +315,33 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.OMM:
         import OMM
         return OMM.OMMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OOD:
+        import OOD
+        return OOD.OODT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OOE:
+        import OOE
+        return OOE.OOET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OOI:
+        import OOI
+        return OOI.OOIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OOL:
+        import OOL
+        return OOL.OOLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OON:
+        import OON
+        return OON.OONT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OPM:
+        import OPM
+        return OPM.OPMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.OSM:
         import OSM
         return OSM.OSMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PCF:
+        import PCF
+        return PCF.PCFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PHY:
+        import PHY
+        return PHY.PHYT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PLD:
         import PLD
         return PLD.PLDT.InitFromBuf(table.Bytes, table.Pos)
@@ -131,33 +360,120 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PUR:
         import PUR
         return PUR.PURT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RAF:
+        import RAF
+        return RAF.RAFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RCF:
+        import RCF
+        return RCF.RCFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RDM:
+        import RDM
+        return RDM.RDMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RDO:
+        import RDO
+        return RDO.RDOT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.REV:
         import REV
         return REV.REVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RFB:
+        import RFB
+        return RFB.RFBT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RFE:
+        import RFE
+        return RFE.RFET.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.RFM:
         import RFM
         return RFM.RFMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RFO:
+        import RFO
+        return RFO.RFOT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.ROC:
         import ROC
         return ROC.ROCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SAR:
+        import SAR
+        return SAR.SART.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SCM:
         import SCM
         return SCM.SCMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SDL:
+        import SDL
+        return SDL.SDLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SEO:
+        import SEO
+        return SEO.SEOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SEV:
+        import SEV
+        return SEV.SEVT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.SIT:
         import SIT
         return SIT.SITT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SKI:
+        import SKI
+        return SKI.SKIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SNR:
+        import SNR
+        return SNR.SNRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SOI:
+        import SOI
+        return SOI.SOIT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SON:
+        import SON
+        return SON.SONT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SPP:
+        import SPP
+        return SPP.SPPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SPW:
+        import SPW
+        return SPW.SPWT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.STF:
         import STF
         return STF.STFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.STR:
+        import STR
+        return STR.STRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.STV:
+        import STV
+        return STV.STVT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SWR:
+        import SWR
+        return SWR.SWRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TCF:
+        import TCF
+        return TCF.TCFT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TDM:
         import TDM
         return TDM.TDMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TIM:
         import TIM
         return TIM.TIMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TKG:
+        import TKG
+        return TKG.TKGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TME:
+        import TME
+        return TME.TMET.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TMF:
+        import TMF
+        return TMF.TMFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TPN:
+        import TPN
+        return TPN.TPNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TRK:
+        import TRK
+        return TRK.TRKT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TRN:
+        import TRN
+        return TRN.TRNT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.VCM:
         import VCM
         return VCM.VCMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.WPN:
+        import WPN
+        return WPN.WPNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.WTH:
+        import WTH
+        return WTH.WTHT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.XTC:
         import XTC
         return XTC.XTCT.InitFromBuf(table.Bytes, table.Pos)

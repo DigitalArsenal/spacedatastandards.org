@@ -1,5 +1,5 @@
-// Hash: 863f34b95eccb3f6f6508934073b1bf595a6116636b750804165aa8c3dff38e3
-// Version: 1.0.1
+// Hash: 396ce40ec0fd66fe7bd0497556cf18ab6e7e10fbc2866d9f2dc4c59765edb889
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 /// Encrypted Message Envelope
 table EME {
@@ -20,6 +20,9 @@ table EME {
 
   /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
   IV: string;
+
+  /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+  SALT: string;
 
   /// Identifier for the public key used, aiding in recipient key management and message decryption.
   PUBLIC_KEY_IDENTIFIER: string;

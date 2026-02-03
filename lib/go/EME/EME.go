@@ -140,9 +140,19 @@ func (rcv *EME) IV() []byte {
 }
 
 /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
+/// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+func (rcv *EME) SALT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
 /// Identifier for the public key used, aiding in recipient key management and message decryption.
 func (rcv *EME) PUBLIC_KEY_IDENTIFIER() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -152,7 +162,7 @@ func (rcv *EME) PUBLIC_KEY_IDENTIFIER() []byte {
 /// Identifier for the public key used, aiding in recipient key management and message decryption.
 /// Specifies the set of cryptographic algorithms used in the encryption process.
 func (rcv *EME) CIPHER_SUITE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -162,7 +172,7 @@ func (rcv *EME) CIPHER_SUITE() []byte {
 /// Specifies the set of cryptographic algorithms used in the encryption process.
 /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
 func (rcv *EME) KDF_PARAMETERS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -172,7 +182,7 @@ func (rcv *EME) KDF_PARAMETERS() []byte {
 /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
 /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
 func (rcv *EME) ENCRYPTION_ALGORITHM_PARAMETERS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -181,7 +191,7 @@ func (rcv *EME) ENCRYPTION_ALGORITHM_PARAMETERS() []byte {
 
 /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
 func EMEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(11)
 }
 func EMEAddENCRYPTED_BLOB(builder *flatbuffers.Builder, ENCRYPTED_BLOB flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENCRYPTED_BLOB), 0)
@@ -204,17 +214,20 @@ func EMEAddTAG(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
 func EMEAddIV(builder *flatbuffers.Builder, IV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(IV), 0)
 }
+func EMEAddSALT(builder *flatbuffers.Builder, SALT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SALT), 0)
+}
 func EMEAddPUBLIC_KEY_IDENTIFIER(builder *flatbuffers.Builder, PUBLIC_KEY_IDENTIFIER flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PUBLIC_KEY_IDENTIFIER), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PUBLIC_KEY_IDENTIFIER), 0)
 }
 func EMEAddCIPHER_SUITE(builder *flatbuffers.Builder, CIPHER_SUITE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CIPHER_SUITE), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CIPHER_SUITE), 0)
 }
 func EMEAddKDF_PARAMETERS(builder *flatbuffers.Builder, KDF_PARAMETERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(KDF_PARAMETERS), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(KDF_PARAMETERS), 0)
 }
 func EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder *flatbuffers.Builder, ENCRYPTION_ALGORITHM_PARAMETERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
 }
 func EMEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,7 +1,7 @@
-// Hash: 2125a61ebcca10e579dc248972b604f185de4a68cc50be3355d3aa180c976c8e
-// Version: 0.0.2
+// Hash: 505551bb2beca681fbb8896726941ee78afdb57a7574427345c58b8879bdcb57
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-enum PropagatorType : byte {
+enum PropagatorMethod : byte {
   KEPLER,                 // Two-body analytical
   SGP4,                   // Simplified General Perturbations
   SDP4,                   // Simplified Deep-space Perturbations
@@ -30,7 +30,7 @@ enum ForceModel : byte {
   MANEUVER
 }
 
-enum OrbitType : byte {
+enum OrbitalRegime : byte {
   LEO,                    // Low Earth Orbit
   MEO,                    // Medium Earth Orbit
   GEO,                    // Geostationary
@@ -44,7 +44,7 @@ enum OrbitType : byte {
   PARABOLIC
 }
 
-enum TimeSystem : byte {
+enum TimeReference : byte {
   UTC,
   TAI,
   TT,                     // Terrestrial Time

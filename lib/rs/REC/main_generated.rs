@@ -41,6 +41,85 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -50,48 +129,127 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 38;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 117;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 39] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 118] = [
   RecordType::NONE,
   RecordType::ACL,
+  RecordType::ACM,
+  RecordType::ACR,
+  RecordType::AEM,
+  RecordType::AOF,
+  RecordType::APM,
+  RecordType::ARM,
+  RecordType::AST,
+  RecordType::ATD,
   RecordType::ATM,
+  RecordType::BAL,
+  RecordType::BEM,
+  RecordType::BMC,
   RecordType::BOV,
   RecordType::CAT,
   RecordType::CDM,
+  RecordType::CFP,
+  RecordType::CHN,
+  RecordType::CLT,
+  RecordType::CMS,
+  RecordType::COM,
+  RecordType::CRD,
   RecordType::CRM,
   RecordType::CSM,
   RecordType::CTR,
+  RecordType::DFH,
+  RecordType::DMG,
+  RecordType::DOA,
   RecordType::EME,
+  RecordType::ENV,
   RecordType::EOO,
   RecordType::EOP,
   RecordType::EPM,
+  RecordType::EWR,
+  RecordType::FCS,
+  RecordType::GDI,
+  RecordType::GEO,
+  RecordType::GNO,
+  RecordType::GRV,
+  RecordType::GVH,
+  RecordType::HEL,
   RecordType::HYP,
   RecordType::IDM,
+  RecordType::IRO,
   RecordType::LCC,
   RecordType::LDM,
+  RecordType::LKS,
+  RecordType::LND,
+  RecordType::LNE,
   RecordType::MET,
+  RecordType::MFE,
+  RecordType::MNF,
+  RecordType::MNV,
   RecordType::MPE,
+  RecordType::MSL,
+  RecordType::MST,
+  RecordType::MTI,
+  RecordType::NAV,
+  RecordType::OBD,
+  RecordType::OBT,
   RecordType::OCM,
   RecordType::OEM,
   RecordType::OMM,
+  RecordType::OOD,
+  RecordType::OOE,
+  RecordType::OOI,
+  RecordType::OOL,
+  RecordType::OON,
+  RecordType::OPM,
   RecordType::OSM,
+  RecordType::PCF,
+  RecordType::PHY,
   RecordType::PLD,
   RecordType::PLG,
   RecordType::PLK,
   RecordType::PNM,
   RecordType::PRG,
   RecordType::PUR,
+  RecordType::RAF,
+  RecordType::RCF,
+  RecordType::RDM,
+  RecordType::RDO,
   RecordType::REV,
+  RecordType::RFB,
+  RecordType::RFE,
   RecordType::RFM,
+  RecordType::RFO,
   RecordType::ROC,
+  RecordType::SAR,
   RecordType::SCM,
+  RecordType::SDL,
+  RecordType::SEO,
+  RecordType::SEV,
   RecordType::SIT,
+  RecordType::SKI,
+  RecordType::SNR,
+  RecordType::SOI,
+  RecordType::SON,
+  RecordType::SPP,
+  RecordType::SPW,
   RecordType::STF,
+  RecordType::STR,
+  RecordType::STV,
+  RecordType::SWR,
+  RecordType::TCF,
   RecordType::TDM,
   RecordType::TIM,
+  RecordType::TKG,
+  RecordType::TME,
+  RecordType::TMF,
+  RecordType::TPN,
+  RecordType::TRK,
+  RecordType::TRN,
   RecordType::VCM,
+  RecordType::WPN,
+  RecordType::WTH,
   RecordType::XTC,
 ];
 
@@ -102,85 +260,243 @@ pub struct RecordType(pub u8);
 impl RecordType {
   pub const NONE: Self = Self(0);
   pub const ACL: Self = Self(1);
-  pub const ATM: Self = Self(2);
-  pub const BOV: Self = Self(3);
-  pub const CAT: Self = Self(4);
-  pub const CDM: Self = Self(5);
-  pub const CRM: Self = Self(6);
-  pub const CSM: Self = Self(7);
-  pub const CTR: Self = Self(8);
-  pub const EME: Self = Self(9);
-  pub const EOO: Self = Self(10);
-  pub const EOP: Self = Self(11);
-  pub const EPM: Self = Self(12);
-  pub const HYP: Self = Self(13);
-  pub const IDM: Self = Self(14);
-  pub const LCC: Self = Self(15);
-  pub const LDM: Self = Self(16);
-  pub const MET: Self = Self(17);
-  pub const MPE: Self = Self(18);
-  pub const OCM: Self = Self(19);
-  pub const OEM: Self = Self(20);
-  pub const OMM: Self = Self(21);
-  pub const OSM: Self = Self(22);
-  pub const PLD: Self = Self(23);
-  pub const PLG: Self = Self(24);
-  pub const PLK: Self = Self(25);
-  pub const PNM: Self = Self(26);
-  pub const PRG: Self = Self(27);
-  pub const PUR: Self = Self(28);
-  pub const REV: Self = Self(29);
-  pub const RFM: Self = Self(30);
-  pub const ROC: Self = Self(31);
-  pub const SCM: Self = Self(32);
-  pub const SIT: Self = Self(33);
-  pub const STF: Self = Self(34);
-  pub const TDM: Self = Self(35);
-  pub const TIM: Self = Self(36);
-  pub const VCM: Self = Self(37);
-  pub const XTC: Self = Self(38);
+  pub const ACM: Self = Self(2);
+  pub const ACR: Self = Self(3);
+  pub const AEM: Self = Self(4);
+  pub const AOF: Self = Self(5);
+  pub const APM: Self = Self(6);
+  pub const ARM: Self = Self(7);
+  pub const AST: Self = Self(8);
+  pub const ATD: Self = Self(9);
+  pub const ATM: Self = Self(10);
+  pub const BAL: Self = Self(11);
+  pub const BEM: Self = Self(12);
+  pub const BMC: Self = Self(13);
+  pub const BOV: Self = Self(14);
+  pub const CAT: Self = Self(15);
+  pub const CDM: Self = Self(16);
+  pub const CFP: Self = Self(17);
+  pub const CHN: Self = Self(18);
+  pub const CLT: Self = Self(19);
+  pub const CMS: Self = Self(20);
+  pub const COM: Self = Self(21);
+  pub const CRD: Self = Self(22);
+  pub const CRM: Self = Self(23);
+  pub const CSM: Self = Self(24);
+  pub const CTR: Self = Self(25);
+  pub const DFH: Self = Self(26);
+  pub const DMG: Self = Self(27);
+  pub const DOA: Self = Self(28);
+  pub const EME: Self = Self(29);
+  pub const ENV: Self = Self(30);
+  pub const EOO: Self = Self(31);
+  pub const EOP: Self = Self(32);
+  pub const EPM: Self = Self(33);
+  pub const EWR: Self = Self(34);
+  pub const FCS: Self = Self(35);
+  pub const GDI: Self = Self(36);
+  pub const GEO: Self = Self(37);
+  pub const GNO: Self = Self(38);
+  pub const GRV: Self = Self(39);
+  pub const GVH: Self = Self(40);
+  pub const HEL: Self = Self(41);
+  pub const HYP: Self = Self(42);
+  pub const IDM: Self = Self(43);
+  pub const IRO: Self = Self(44);
+  pub const LCC: Self = Self(45);
+  pub const LDM: Self = Self(46);
+  pub const LKS: Self = Self(47);
+  pub const LND: Self = Self(48);
+  pub const LNE: Self = Self(49);
+  pub const MET: Self = Self(50);
+  pub const MFE: Self = Self(51);
+  pub const MNF: Self = Self(52);
+  pub const MNV: Self = Self(53);
+  pub const MPE: Self = Self(54);
+  pub const MSL: Self = Self(55);
+  pub const MST: Self = Self(56);
+  pub const MTI: Self = Self(57);
+  pub const NAV: Self = Self(58);
+  pub const OBD: Self = Self(59);
+  pub const OBT: Self = Self(60);
+  pub const OCM: Self = Self(61);
+  pub const OEM: Self = Self(62);
+  pub const OMM: Self = Self(63);
+  pub const OOD: Self = Self(64);
+  pub const OOE: Self = Self(65);
+  pub const OOI: Self = Self(66);
+  pub const OOL: Self = Self(67);
+  pub const OON: Self = Self(68);
+  pub const OPM: Self = Self(69);
+  pub const OSM: Self = Self(70);
+  pub const PCF: Self = Self(71);
+  pub const PHY: Self = Self(72);
+  pub const PLD: Self = Self(73);
+  pub const PLG: Self = Self(74);
+  pub const PLK: Self = Self(75);
+  pub const PNM: Self = Self(76);
+  pub const PRG: Self = Self(77);
+  pub const PUR: Self = Self(78);
+  pub const RAF: Self = Self(79);
+  pub const RCF: Self = Self(80);
+  pub const RDM: Self = Self(81);
+  pub const RDO: Self = Self(82);
+  pub const REV: Self = Self(83);
+  pub const RFB: Self = Self(84);
+  pub const RFE: Self = Self(85);
+  pub const RFM: Self = Self(86);
+  pub const RFO: Self = Self(87);
+  pub const ROC: Self = Self(88);
+  pub const SAR: Self = Self(89);
+  pub const SCM: Self = Self(90);
+  pub const SDL: Self = Self(91);
+  pub const SEO: Self = Self(92);
+  pub const SEV: Self = Self(93);
+  pub const SIT: Self = Self(94);
+  pub const SKI: Self = Self(95);
+  pub const SNR: Self = Self(96);
+  pub const SOI: Self = Self(97);
+  pub const SON: Self = Self(98);
+  pub const SPP: Self = Self(99);
+  pub const SPW: Self = Self(100);
+  pub const STF: Self = Self(101);
+  pub const STR: Self = Self(102);
+  pub const STV: Self = Self(103);
+  pub const SWR: Self = Self(104);
+  pub const TCF: Self = Self(105);
+  pub const TDM: Self = Self(106);
+  pub const TIM: Self = Self(107);
+  pub const TKG: Self = Self(108);
+  pub const TME: Self = Self(109);
+  pub const TMF: Self = Self(110);
+  pub const TPN: Self = Self(111);
+  pub const TRK: Self = Self(112);
+  pub const TRN: Self = Self(113);
+  pub const VCM: Self = Self(114);
+  pub const WPN: Self = Self(115);
+  pub const WTH: Self = Self(116);
+  pub const XTC: Self = Self(117);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 38;
+  pub const ENUM_MAX: u8 = 117;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
+    Self::ACM,
+    Self::ACR,
+    Self::AEM,
+    Self::AOF,
+    Self::APM,
+    Self::ARM,
+    Self::AST,
+    Self::ATD,
     Self::ATM,
+    Self::BAL,
+    Self::BEM,
+    Self::BMC,
     Self::BOV,
     Self::CAT,
     Self::CDM,
+    Self::CFP,
+    Self::CHN,
+    Self::CLT,
+    Self::CMS,
+    Self::COM,
+    Self::CRD,
     Self::CRM,
     Self::CSM,
     Self::CTR,
+    Self::DFH,
+    Self::DMG,
+    Self::DOA,
     Self::EME,
+    Self::ENV,
     Self::EOO,
     Self::EOP,
     Self::EPM,
+    Self::EWR,
+    Self::FCS,
+    Self::GDI,
+    Self::GEO,
+    Self::GNO,
+    Self::GRV,
+    Self::GVH,
+    Self::HEL,
     Self::HYP,
     Self::IDM,
+    Self::IRO,
     Self::LCC,
     Self::LDM,
+    Self::LKS,
+    Self::LND,
+    Self::LNE,
     Self::MET,
+    Self::MFE,
+    Self::MNF,
+    Self::MNV,
     Self::MPE,
+    Self::MSL,
+    Self::MST,
+    Self::MTI,
+    Self::NAV,
+    Self::OBD,
+    Self::OBT,
     Self::OCM,
     Self::OEM,
     Self::OMM,
+    Self::OOD,
+    Self::OOE,
+    Self::OOI,
+    Self::OOL,
+    Self::OON,
+    Self::OPM,
     Self::OSM,
+    Self::PCF,
+    Self::PHY,
     Self::PLD,
     Self::PLG,
     Self::PLK,
     Self::PNM,
     Self::PRG,
     Self::PUR,
+    Self::RAF,
+    Self::RCF,
+    Self::RDM,
+    Self::RDO,
     Self::REV,
+    Self::RFB,
+    Self::RFE,
     Self::RFM,
+    Self::RFO,
     Self::ROC,
+    Self::SAR,
     Self::SCM,
+    Self::SDL,
+    Self::SEO,
+    Self::SEV,
     Self::SIT,
+    Self::SKI,
+    Self::SNR,
+    Self::SOI,
+    Self::SON,
+    Self::SPP,
+    Self::SPW,
     Self::STF,
+    Self::STR,
+    Self::STV,
+    Self::SWR,
+    Self::TCF,
     Self::TDM,
     Self::TIM,
+    Self::TKG,
+    Self::TME,
+    Self::TMF,
+    Self::TPN,
+    Self::TRK,
+    Self::TRN,
     Self::VCM,
+    Self::WPN,
+    Self::WTH,
     Self::XTC,
   ];
   /// Returns the variant's name or "" if unknown.
@@ -188,42 +504,121 @@ impl RecordType {
     match self {
       Self::NONE => Some("NONE"),
       Self::ACL => Some("ACL"),
+      Self::ACM => Some("ACM"),
+      Self::ACR => Some("ACR"),
+      Self::AEM => Some("AEM"),
+      Self::AOF => Some("AOF"),
+      Self::APM => Some("APM"),
+      Self::ARM => Some("ARM"),
+      Self::AST => Some("AST"),
+      Self::ATD => Some("ATD"),
       Self::ATM => Some("ATM"),
+      Self::BAL => Some("BAL"),
+      Self::BEM => Some("BEM"),
+      Self::BMC => Some("BMC"),
       Self::BOV => Some("BOV"),
       Self::CAT => Some("CAT"),
       Self::CDM => Some("CDM"),
+      Self::CFP => Some("CFP"),
+      Self::CHN => Some("CHN"),
+      Self::CLT => Some("CLT"),
+      Self::CMS => Some("CMS"),
+      Self::COM => Some("COM"),
+      Self::CRD => Some("CRD"),
       Self::CRM => Some("CRM"),
       Self::CSM => Some("CSM"),
       Self::CTR => Some("CTR"),
+      Self::DFH => Some("DFH"),
+      Self::DMG => Some("DMG"),
+      Self::DOA => Some("DOA"),
       Self::EME => Some("EME"),
+      Self::ENV => Some("ENV"),
       Self::EOO => Some("EOO"),
       Self::EOP => Some("EOP"),
       Self::EPM => Some("EPM"),
+      Self::EWR => Some("EWR"),
+      Self::FCS => Some("FCS"),
+      Self::GDI => Some("GDI"),
+      Self::GEO => Some("GEO"),
+      Self::GNO => Some("GNO"),
+      Self::GRV => Some("GRV"),
+      Self::GVH => Some("GVH"),
+      Self::HEL => Some("HEL"),
       Self::HYP => Some("HYP"),
       Self::IDM => Some("IDM"),
+      Self::IRO => Some("IRO"),
       Self::LCC => Some("LCC"),
       Self::LDM => Some("LDM"),
+      Self::LKS => Some("LKS"),
+      Self::LND => Some("LND"),
+      Self::LNE => Some("LNE"),
       Self::MET => Some("MET"),
+      Self::MFE => Some("MFE"),
+      Self::MNF => Some("MNF"),
+      Self::MNV => Some("MNV"),
       Self::MPE => Some("MPE"),
+      Self::MSL => Some("MSL"),
+      Self::MST => Some("MST"),
+      Self::MTI => Some("MTI"),
+      Self::NAV => Some("NAV"),
+      Self::OBD => Some("OBD"),
+      Self::OBT => Some("OBT"),
       Self::OCM => Some("OCM"),
       Self::OEM => Some("OEM"),
       Self::OMM => Some("OMM"),
+      Self::OOD => Some("OOD"),
+      Self::OOE => Some("OOE"),
+      Self::OOI => Some("OOI"),
+      Self::OOL => Some("OOL"),
+      Self::OON => Some("OON"),
+      Self::OPM => Some("OPM"),
       Self::OSM => Some("OSM"),
+      Self::PCF => Some("PCF"),
+      Self::PHY => Some("PHY"),
       Self::PLD => Some("PLD"),
       Self::PLG => Some("PLG"),
       Self::PLK => Some("PLK"),
       Self::PNM => Some("PNM"),
       Self::PRG => Some("PRG"),
       Self::PUR => Some("PUR"),
+      Self::RAF => Some("RAF"),
+      Self::RCF => Some("RCF"),
+      Self::RDM => Some("RDM"),
+      Self::RDO => Some("RDO"),
       Self::REV => Some("REV"),
+      Self::RFB => Some("RFB"),
+      Self::RFE => Some("RFE"),
       Self::RFM => Some("RFM"),
+      Self::RFO => Some("RFO"),
       Self::ROC => Some("ROC"),
+      Self::SAR => Some("SAR"),
       Self::SCM => Some("SCM"),
+      Self::SDL => Some("SDL"),
+      Self::SEO => Some("SEO"),
+      Self::SEV => Some("SEV"),
       Self::SIT => Some("SIT"),
+      Self::SKI => Some("SKI"),
+      Self::SNR => Some("SNR"),
+      Self::SOI => Some("SOI"),
+      Self::SON => Some("SON"),
+      Self::SPP => Some("SPP"),
+      Self::SPW => Some("SPW"),
       Self::STF => Some("STF"),
+      Self::STR => Some("STR"),
+      Self::STV => Some("STV"),
+      Self::SWR => Some("SWR"),
+      Self::TCF => Some("TCF"),
       Self::TDM => Some("TDM"),
       Self::TIM => Some("TIM"),
+      Self::TKG => Some("TKG"),
+      Self::TME => Some("TME"),
+      Self::TMF => Some("TMF"),
+      Self::TPN => Some("TPN"),
+      Self::TRK => Some("TRK"),
+      Self::TRN => Some("TRN"),
       Self::VCM => Some("VCM"),
+      Self::WPN => Some("WPN"),
+      Self::WTH => Some("WTH"),
       Self::XTC => Some("XTC"),
       _ => None,
     }
@@ -288,42 +683,121 @@ pub struct RecordTypeUnionTableOffset {}
 pub enum RecordTypeT {
   NONE,
   ACL(Box<ACLT>),
+  ACM(Box<ACMT>),
+  ACR(Box<ACRT>),
+  AEM(Box<AEMT>),
+  AOF(Box<AOFT>),
+  APM(Box<APMT>),
+  ARM(Box<ARMT>),
+  AST(Box<ASTT>),
+  ATD(Box<ATDT>),
   ATM(Box<ATMT>),
+  BAL(Box<BALT>),
+  BEM(Box<BEMT>),
+  BMC(Box<BMCT>),
   BOV(Box<BOVT>),
   CAT(Box<CATT>),
   CDM(Box<CDMT>),
+  CFP(Box<CFPT>),
+  CHN(Box<CHNT>),
+  CLT(Box<CLTT>),
+  CMS(Box<CMST>),
+  COM(Box<COMT>),
+  CRD(Box<CRDT>),
   CRM(Box<CRMT>),
   CSM(Box<CSMT>),
   CTR(Box<CTRT>),
+  DFH(Box<DFHT>),
+  DMG(Box<DMGT>),
+  DOA(Box<DOAT>),
   EME(Box<EMET>),
+  ENV(Box<ENVT>),
   EOO(Box<EOOT>),
   EOP(Box<EOPT>),
   EPM(Box<EPMT>),
+  EWR(Box<EWRT>),
+  FCS(Box<FCST>),
+  GDI(Box<GDIT>),
+  GEO(Box<GEOT>),
+  GNO(Box<GNOT>),
+  GRV(Box<GRVT>),
+  GVH(Box<GVHT>),
+  HEL(Box<HELT>),
   HYP(Box<HYPT>),
   IDM(Box<IDMT>),
+  IRO(Box<IROT>),
   LCC(Box<LCCT>),
   LDM(Box<LDMT>),
+  LKS(Box<LKST>),
+  LND(Box<LNDT>),
+  LNE(Box<LNET>),
   MET(Box<METT>),
+  MFE(Box<MFET>),
+  MNF(Box<MNFT>),
+  MNV(Box<MNVT>),
   MPE(Box<MPET>),
+  MSL(Box<MSLT>),
+  MST(Box<MSTT>),
+  MTI(Box<MTIT>),
+  NAV(Box<NAVT>),
+  OBD(Box<OBDT>),
+  OBT(Box<OBTT>),
   OCM(Box<OCMT>),
   OEM(Box<OEMT>),
   OMM(Box<OMMT>),
+  OOD(Box<OODT>),
+  OOE(Box<OOET>),
+  OOI(Box<OOIT>),
+  OOL(Box<OOLT>),
+  OON(Box<OONT>),
+  OPM(Box<OPMT>),
   OSM(Box<OSMT>),
+  PCF(Box<PCFT>),
+  PHY(Box<PHYT>),
   PLD(Box<PLDT>),
   PLG(Box<PLGT>),
   PLK(Box<PLKT>),
   PNM(Box<PNMT>),
   PRG(Box<PRGT>),
   PUR(Box<PURT>),
+  RAF(Box<RAFT>),
+  RCF(Box<RCFT>),
+  RDM(Box<RDMT>),
+  RDO(Box<RDOT>),
   REV(Box<REVT>),
+  RFB(Box<RFBT>),
+  RFE(Box<RFET>),
   RFM(Box<RFMT>),
+  RFO(Box<RFOT>),
   ROC(Box<ROCT>),
+  SAR(Box<SART>),
   SCM(Box<SCMT>),
+  SDL(Box<SDLT>),
+  SEO(Box<SEOT>),
+  SEV(Box<SEVT>),
   SIT(Box<SITT>),
+  SKI(Box<SKIT>),
+  SNR(Box<SNRT>),
+  SOI(Box<SOIT>),
+  SON(Box<SONT>),
+  SPP(Box<SPPT>),
+  SPW(Box<SPWT>),
   STF(Box<STFT>),
+  STR(Box<STRT>),
+  STV(Box<STVT>),
+  SWR(Box<SWRT>),
+  TCF(Box<TCFT>),
   TDM(Box<TDMT>),
   TIM(Box<TIMT>),
+  TKG(Box<TKGT>),
+  TME(Box<TMET>),
+  TMF(Box<TMFT>),
+  TPN(Box<TPNT>),
+  TRK(Box<TRKT>),
+  TRN(Box<TRNT>),
   VCM(Box<VCMT>),
+  WPN(Box<WPNT>),
+  WTH(Box<WTHT>),
   XTC(Box<XTCT>),
 }
 impl Default for RecordTypeT {
@@ -336,42 +810,121 @@ impl RecordTypeT {
     match self {
       Self::NONE => RecordType::NONE,
       Self::ACL(_) => RecordType::ACL,
+      Self::ACM(_) => RecordType::ACM,
+      Self::ACR(_) => RecordType::ACR,
+      Self::AEM(_) => RecordType::AEM,
+      Self::AOF(_) => RecordType::AOF,
+      Self::APM(_) => RecordType::APM,
+      Self::ARM(_) => RecordType::ARM,
+      Self::AST(_) => RecordType::AST,
+      Self::ATD(_) => RecordType::ATD,
       Self::ATM(_) => RecordType::ATM,
+      Self::BAL(_) => RecordType::BAL,
+      Self::BEM(_) => RecordType::BEM,
+      Self::BMC(_) => RecordType::BMC,
       Self::BOV(_) => RecordType::BOV,
       Self::CAT(_) => RecordType::CAT,
       Self::CDM(_) => RecordType::CDM,
+      Self::CFP(_) => RecordType::CFP,
+      Self::CHN(_) => RecordType::CHN,
+      Self::CLT(_) => RecordType::CLT,
+      Self::CMS(_) => RecordType::CMS,
+      Self::COM(_) => RecordType::COM,
+      Self::CRD(_) => RecordType::CRD,
       Self::CRM(_) => RecordType::CRM,
       Self::CSM(_) => RecordType::CSM,
       Self::CTR(_) => RecordType::CTR,
+      Self::DFH(_) => RecordType::DFH,
+      Self::DMG(_) => RecordType::DMG,
+      Self::DOA(_) => RecordType::DOA,
       Self::EME(_) => RecordType::EME,
+      Self::ENV(_) => RecordType::ENV,
       Self::EOO(_) => RecordType::EOO,
       Self::EOP(_) => RecordType::EOP,
       Self::EPM(_) => RecordType::EPM,
+      Self::EWR(_) => RecordType::EWR,
+      Self::FCS(_) => RecordType::FCS,
+      Self::GDI(_) => RecordType::GDI,
+      Self::GEO(_) => RecordType::GEO,
+      Self::GNO(_) => RecordType::GNO,
+      Self::GRV(_) => RecordType::GRV,
+      Self::GVH(_) => RecordType::GVH,
+      Self::HEL(_) => RecordType::HEL,
       Self::HYP(_) => RecordType::HYP,
       Self::IDM(_) => RecordType::IDM,
+      Self::IRO(_) => RecordType::IRO,
       Self::LCC(_) => RecordType::LCC,
       Self::LDM(_) => RecordType::LDM,
+      Self::LKS(_) => RecordType::LKS,
+      Self::LND(_) => RecordType::LND,
+      Self::LNE(_) => RecordType::LNE,
       Self::MET(_) => RecordType::MET,
+      Self::MFE(_) => RecordType::MFE,
+      Self::MNF(_) => RecordType::MNF,
+      Self::MNV(_) => RecordType::MNV,
       Self::MPE(_) => RecordType::MPE,
+      Self::MSL(_) => RecordType::MSL,
+      Self::MST(_) => RecordType::MST,
+      Self::MTI(_) => RecordType::MTI,
+      Self::NAV(_) => RecordType::NAV,
+      Self::OBD(_) => RecordType::OBD,
+      Self::OBT(_) => RecordType::OBT,
       Self::OCM(_) => RecordType::OCM,
       Self::OEM(_) => RecordType::OEM,
       Self::OMM(_) => RecordType::OMM,
+      Self::OOD(_) => RecordType::OOD,
+      Self::OOE(_) => RecordType::OOE,
+      Self::OOI(_) => RecordType::OOI,
+      Self::OOL(_) => RecordType::OOL,
+      Self::OON(_) => RecordType::OON,
+      Self::OPM(_) => RecordType::OPM,
       Self::OSM(_) => RecordType::OSM,
+      Self::PCF(_) => RecordType::PCF,
+      Self::PHY(_) => RecordType::PHY,
       Self::PLD(_) => RecordType::PLD,
       Self::PLG(_) => RecordType::PLG,
       Self::PLK(_) => RecordType::PLK,
       Self::PNM(_) => RecordType::PNM,
       Self::PRG(_) => RecordType::PRG,
       Self::PUR(_) => RecordType::PUR,
+      Self::RAF(_) => RecordType::RAF,
+      Self::RCF(_) => RecordType::RCF,
+      Self::RDM(_) => RecordType::RDM,
+      Self::RDO(_) => RecordType::RDO,
       Self::REV(_) => RecordType::REV,
+      Self::RFB(_) => RecordType::RFB,
+      Self::RFE(_) => RecordType::RFE,
       Self::RFM(_) => RecordType::RFM,
+      Self::RFO(_) => RecordType::RFO,
       Self::ROC(_) => RecordType::ROC,
+      Self::SAR(_) => RecordType::SAR,
       Self::SCM(_) => RecordType::SCM,
+      Self::SDL(_) => RecordType::SDL,
+      Self::SEO(_) => RecordType::SEO,
+      Self::SEV(_) => RecordType::SEV,
       Self::SIT(_) => RecordType::SIT,
+      Self::SKI(_) => RecordType::SKI,
+      Self::SNR(_) => RecordType::SNR,
+      Self::SOI(_) => RecordType::SOI,
+      Self::SON(_) => RecordType::SON,
+      Self::SPP(_) => RecordType::SPP,
+      Self::SPW(_) => RecordType::SPW,
       Self::STF(_) => RecordType::STF,
+      Self::STR(_) => RecordType::STR,
+      Self::STV(_) => RecordType::STV,
+      Self::SWR(_) => RecordType::SWR,
+      Self::TCF(_) => RecordType::TCF,
       Self::TDM(_) => RecordType::TDM,
       Self::TIM(_) => RecordType::TIM,
+      Self::TKG(_) => RecordType::TKG,
+      Self::TME(_) => RecordType::TME,
+      Self::TMF(_) => RecordType::TMF,
+      Self::TPN(_) => RecordType::TPN,
+      Self::TRK(_) => RecordType::TRK,
+      Self::TRN(_) => RecordType::TRN,
       Self::VCM(_) => RecordType::VCM,
+      Self::WPN(_) => RecordType::WPN,
+      Self::WTH(_) => RecordType::WTH,
       Self::XTC(_) => RecordType::XTC,
     }
   }
@@ -379,42 +932,121 @@ impl RecordTypeT {
     match self {
       Self::NONE => None,
       Self::ACL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ACM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ACR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AEM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AOF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::APM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ARM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::AST(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ATD(v) => Some(v.pack(fbb).as_union_value()),
       Self::ATM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::BAL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::BEM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::BMC(v) => Some(v.pack(fbb).as_union_value()),
       Self::BOV(v) => Some(v.pack(fbb).as_union_value()),
       Self::CAT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CFP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CHN(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CLT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CMS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::COM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CRD(v) => Some(v.pack(fbb).as_union_value()),
       Self::CRM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CTR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::DFH(v) => Some(v.pack(fbb).as_union_value()),
+      Self::DMG(v) => Some(v.pack(fbb).as_union_value()),
+      Self::DOA(v) => Some(v.pack(fbb).as_union_value()),
       Self::EME(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ENV(v) => Some(v.pack(fbb).as_union_value()),
       Self::EOO(v) => Some(v.pack(fbb).as_union_value()),
       Self::EOP(v) => Some(v.pack(fbb).as_union_value()),
       Self::EPM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::EWR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::FCS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GDI(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GEO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GNO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GRV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GVH(v) => Some(v.pack(fbb).as_union_value()),
+      Self::HEL(v) => Some(v.pack(fbb).as_union_value()),
       Self::HYP(v) => Some(v.pack(fbb).as_union_value()),
       Self::IDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::IRO(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
       Self::LDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LKS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LND(v) => Some(v.pack(fbb).as_union_value()),
+      Self::LNE(v) => Some(v.pack(fbb).as_union_value()),
       Self::MET(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MFE(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MNF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MNV(v) => Some(v.pack(fbb).as_union_value()),
       Self::MPE(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MSL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MST(v) => Some(v.pack(fbb).as_union_value()),
+      Self::MTI(v) => Some(v.pack(fbb).as_union_value()),
+      Self::NAV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OBD(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OBT(v) => Some(v.pack(fbb).as_union_value()),
       Self::OCM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OEM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OMM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOD(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOE(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOI(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OON(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OPM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OSM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PCF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PHY(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLD(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLG(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLK(v) => Some(v.pack(fbb).as_union_value()),
       Self::PNM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRG(v) => Some(v.pack(fbb).as_union_value()),
       Self::PUR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RAF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RCF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RDO(v) => Some(v.pack(fbb).as_union_value()),
       Self::REV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RFB(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RFE(v) => Some(v.pack(fbb).as_union_value()),
       Self::RFM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RFO(v) => Some(v.pack(fbb).as_union_value()),
       Self::ROC(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SAR(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SDL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SEO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SEV(v) => Some(v.pack(fbb).as_union_value()),
       Self::SIT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SKI(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SNR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SOI(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SON(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SPP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SPW(v) => Some(v.pack(fbb).as_union_value()),
       Self::STF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::STR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::STV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SWR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TCF(v) => Some(v.pack(fbb).as_union_value()),
       Self::TDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::TIM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TKG(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TME(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TMF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TPN(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TRK(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TRN(v) => Some(v.pack(fbb).as_union_value()),
       Self::VCM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::WPN(v) => Some(v.pack(fbb).as_union_value()),
+      Self::WTH(v) => Some(v.pack(fbb).as_union_value()),
       Self::XTC(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
@@ -439,6 +1071,174 @@ impl RecordTypeT {
   pub fn as_ACL_mut(&mut self) -> Option<&mut ACLT> {
     if let Self::ACL(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned ACMT, setting the union to NONE.
+  pub fn take_ACM(&mut self) -> Option<Box<ACMT>> {
+    if let Self::ACM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ACM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ACMT.
+  pub fn as_ACM(&self) -> Option<&ACMT> {
+    if let Self::ACM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ACMT.
+  pub fn as_ACM_mut(&mut self) -> Option<&mut ACMT> {
+    if let Self::ACM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ACRT, setting the union to NONE.
+  pub fn take_ACR(&mut self) -> Option<Box<ACRT>> {
+    if let Self::ACR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ACR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ACRT.
+  pub fn as_ACR(&self) -> Option<&ACRT> {
+    if let Self::ACR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ACRT.
+  pub fn as_ACR_mut(&mut self) -> Option<&mut ACRT> {
+    if let Self::ACR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned AEMT, setting the union to NONE.
+  pub fn take_AEM(&mut self) -> Option<Box<AEMT>> {
+    if let Self::AEM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::AEM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the AEMT.
+  pub fn as_AEM(&self) -> Option<&AEMT> {
+    if let Self::AEM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the AEMT.
+  pub fn as_AEM_mut(&mut self) -> Option<&mut AEMT> {
+    if let Self::AEM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned AOFT, setting the union to NONE.
+  pub fn take_AOF(&mut self) -> Option<Box<AOFT>> {
+    if let Self::AOF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::AOF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the AOFT.
+  pub fn as_AOF(&self) -> Option<&AOFT> {
+    if let Self::AOF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the AOFT.
+  pub fn as_AOF_mut(&mut self) -> Option<&mut AOFT> {
+    if let Self::AOF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned APMT, setting the union to NONE.
+  pub fn take_APM(&mut self) -> Option<Box<APMT>> {
+    if let Self::APM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::APM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the APMT.
+  pub fn as_APM(&self) -> Option<&APMT> {
+    if let Self::APM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the APMT.
+  pub fn as_APM_mut(&mut self) -> Option<&mut APMT> {
+    if let Self::APM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ARMT, setting the union to NONE.
+  pub fn take_ARM(&mut self) -> Option<Box<ARMT>> {
+    if let Self::ARM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ARM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ARMT.
+  pub fn as_ARM(&self) -> Option<&ARMT> {
+    if let Self::ARM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ARMT.
+  pub fn as_ARM_mut(&mut self) -> Option<&mut ARMT> {
+    if let Self::ARM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ASTT, setting the union to NONE.
+  pub fn take_AST(&mut self) -> Option<Box<ASTT>> {
+    if let Self::AST(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::AST(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ASTT.
+  pub fn as_AST(&self) -> Option<&ASTT> {
+    if let Self::AST(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ASTT.
+  pub fn as_AST_mut(&mut self) -> Option<&mut ASTT> {
+    if let Self::AST(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ATDT, setting the union to NONE.
+  pub fn take_ATD(&mut self) -> Option<Box<ATDT>> {
+    if let Self::ATD(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ATD(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ATDT.
+  pub fn as_ATD(&self) -> Option<&ATDT> {
+    if let Self::ATD(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ATDT.
+  pub fn as_ATD_mut(&mut self) -> Option<&mut ATDT> {
+    if let Self::ATD(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned ATMT, setting the union to NONE.
   pub fn take_ATM(&mut self) -> Option<Box<ATMT>> {
     if let Self::ATM(_) = self {
@@ -459,6 +1259,69 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the ATMT.
   pub fn as_ATM_mut(&mut self) -> Option<&mut ATMT> {
     if let Self::ATM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned BALT, setting the union to NONE.
+  pub fn take_BAL(&mut self) -> Option<Box<BALT>> {
+    if let Self::BAL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::BAL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the BALT.
+  pub fn as_BAL(&self) -> Option<&BALT> {
+    if let Self::BAL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the BALT.
+  pub fn as_BAL_mut(&mut self) -> Option<&mut BALT> {
+    if let Self::BAL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned BEMT, setting the union to NONE.
+  pub fn take_BEM(&mut self) -> Option<Box<BEMT>> {
+    if let Self::BEM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::BEM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the BEMT.
+  pub fn as_BEM(&self) -> Option<&BEMT> {
+    if let Self::BEM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the BEMT.
+  pub fn as_BEM_mut(&mut self) -> Option<&mut BEMT> {
+    if let Self::BEM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned BMCT, setting the union to NONE.
+  pub fn take_BMC(&mut self) -> Option<Box<BMCT>> {
+    if let Self::BMC(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::BMC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the BMCT.
+  pub fn as_BMC(&self) -> Option<&BMCT> {
+    if let Self::BMC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the BMCT.
+  pub fn as_BMC_mut(&mut self) -> Option<&mut BMCT> {
+    if let Self::BMC(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned BOVT, setting the union to NONE.
   pub fn take_BOV(&mut self) -> Option<Box<BOVT>> {
@@ -523,6 +1386,132 @@ impl RecordTypeT {
   pub fn as_CDM_mut(&mut self) -> Option<&mut CDMT> {
     if let Self::CDM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CFPT, setting the union to NONE.
+  pub fn take_CFP(&mut self) -> Option<Box<CFPT>> {
+    if let Self::CFP(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CFP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CFPT.
+  pub fn as_CFP(&self) -> Option<&CFPT> {
+    if let Self::CFP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CFPT.
+  pub fn as_CFP_mut(&mut self) -> Option<&mut CFPT> {
+    if let Self::CFP(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CHNT, setting the union to NONE.
+  pub fn take_CHN(&mut self) -> Option<Box<CHNT>> {
+    if let Self::CHN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CHN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CHNT.
+  pub fn as_CHN(&self) -> Option<&CHNT> {
+    if let Self::CHN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CHNT.
+  pub fn as_CHN_mut(&mut self) -> Option<&mut CHNT> {
+    if let Self::CHN(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CLTT, setting the union to NONE.
+  pub fn take_CLT(&mut self) -> Option<Box<CLTT>> {
+    if let Self::CLT(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CLT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CLTT.
+  pub fn as_CLT(&self) -> Option<&CLTT> {
+    if let Self::CLT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CLTT.
+  pub fn as_CLT_mut(&mut self) -> Option<&mut CLTT> {
+    if let Self::CLT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CMST, setting the union to NONE.
+  pub fn take_CMS(&mut self) -> Option<Box<CMST>> {
+    if let Self::CMS(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CMS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CMST.
+  pub fn as_CMS(&self) -> Option<&CMST> {
+    if let Self::CMS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CMST.
+  pub fn as_CMS_mut(&mut self) -> Option<&mut CMST> {
+    if let Self::CMS(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned COMT, setting the union to NONE.
+  pub fn take_COM(&mut self) -> Option<Box<COMT>> {
+    if let Self::COM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::COM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the COMT.
+  pub fn as_COM(&self) -> Option<&COMT> {
+    if let Self::COM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the COMT.
+  pub fn as_COM_mut(&mut self) -> Option<&mut COMT> {
+    if let Self::COM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CRDT, setting the union to NONE.
+  pub fn take_CRD(&mut self) -> Option<Box<CRDT>> {
+    if let Self::CRD(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CRD(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CRDT.
+  pub fn as_CRD(&self) -> Option<&CRDT> {
+    if let Self::CRD(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CRDT.
+  pub fn as_CRD_mut(&mut self) -> Option<&mut CRDT> {
+    if let Self::CRD(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned CRMT, setting the union to NONE.
   pub fn take_CRM(&mut self) -> Option<Box<CRMT>> {
     if let Self::CRM(_) = self {
@@ -586,6 +1575,69 @@ impl RecordTypeT {
   pub fn as_CTR_mut(&mut self) -> Option<&mut CTRT> {
     if let Self::CTR(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned DFHT, setting the union to NONE.
+  pub fn take_DFH(&mut self) -> Option<Box<DFHT>> {
+    if let Self::DFH(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::DFH(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the DFHT.
+  pub fn as_DFH(&self) -> Option<&DFHT> {
+    if let Self::DFH(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the DFHT.
+  pub fn as_DFH_mut(&mut self) -> Option<&mut DFHT> {
+    if let Self::DFH(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned DMGT, setting the union to NONE.
+  pub fn take_DMG(&mut self) -> Option<Box<DMGT>> {
+    if let Self::DMG(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::DMG(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the DMGT.
+  pub fn as_DMG(&self) -> Option<&DMGT> {
+    if let Self::DMG(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the DMGT.
+  pub fn as_DMG_mut(&mut self) -> Option<&mut DMGT> {
+    if let Self::DMG(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned DOAT, setting the union to NONE.
+  pub fn take_DOA(&mut self) -> Option<Box<DOAT>> {
+    if let Self::DOA(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::DOA(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the DOAT.
+  pub fn as_DOA(&self) -> Option<&DOAT> {
+    if let Self::DOA(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the DOAT.
+  pub fn as_DOA_mut(&mut self) -> Option<&mut DOAT> {
+    if let Self::DOA(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned EMET, setting the union to NONE.
   pub fn take_EME(&mut self) -> Option<Box<EMET>> {
     if let Self::EME(_) = self {
@@ -606,6 +1658,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the EMET.
   pub fn as_EME_mut(&mut self) -> Option<&mut EMET> {
     if let Self::EME(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ENVT, setting the union to NONE.
+  pub fn take_ENV(&mut self) -> Option<Box<ENVT>> {
+    if let Self::ENV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ENV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ENVT.
+  pub fn as_ENV(&self) -> Option<&ENVT> {
+    if let Self::ENV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ENVT.
+  pub fn as_ENV_mut(&mut self) -> Option<&mut ENVT> {
+    if let Self::ENV(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned EOOT, setting the union to NONE.
   pub fn take_EOO(&mut self) -> Option<Box<EOOT>> {
@@ -670,6 +1743,174 @@ impl RecordTypeT {
   pub fn as_EPM_mut(&mut self) -> Option<&mut EPMT> {
     if let Self::EPM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned EWRT, setting the union to NONE.
+  pub fn take_EWR(&mut self) -> Option<Box<EWRT>> {
+    if let Self::EWR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::EWR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the EWRT.
+  pub fn as_EWR(&self) -> Option<&EWRT> {
+    if let Self::EWR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the EWRT.
+  pub fn as_EWR_mut(&mut self) -> Option<&mut EWRT> {
+    if let Self::EWR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned FCST, setting the union to NONE.
+  pub fn take_FCS(&mut self) -> Option<Box<FCST>> {
+    if let Self::FCS(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::FCS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the FCST.
+  pub fn as_FCS(&self) -> Option<&FCST> {
+    if let Self::FCS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the FCST.
+  pub fn as_FCS_mut(&mut self) -> Option<&mut FCST> {
+    if let Self::FCS(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GDIT, setting the union to NONE.
+  pub fn take_GDI(&mut self) -> Option<Box<GDIT>> {
+    if let Self::GDI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GDI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GDIT.
+  pub fn as_GDI(&self) -> Option<&GDIT> {
+    if let Self::GDI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GDIT.
+  pub fn as_GDI_mut(&mut self) -> Option<&mut GDIT> {
+    if let Self::GDI(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GEOT, setting the union to NONE.
+  pub fn take_GEO(&mut self) -> Option<Box<GEOT>> {
+    if let Self::GEO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GEO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GEOT.
+  pub fn as_GEO(&self) -> Option<&GEOT> {
+    if let Self::GEO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GEOT.
+  pub fn as_GEO_mut(&mut self) -> Option<&mut GEOT> {
+    if let Self::GEO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GNOT, setting the union to NONE.
+  pub fn take_GNO(&mut self) -> Option<Box<GNOT>> {
+    if let Self::GNO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GNO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GNOT.
+  pub fn as_GNO(&self) -> Option<&GNOT> {
+    if let Self::GNO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GNOT.
+  pub fn as_GNO_mut(&mut self) -> Option<&mut GNOT> {
+    if let Self::GNO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GRVT, setting the union to NONE.
+  pub fn take_GRV(&mut self) -> Option<Box<GRVT>> {
+    if let Self::GRV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GRV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GRVT.
+  pub fn as_GRV(&self) -> Option<&GRVT> {
+    if let Self::GRV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GRVT.
+  pub fn as_GRV_mut(&mut self) -> Option<&mut GRVT> {
+    if let Self::GRV(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GVHT, setting the union to NONE.
+  pub fn take_GVH(&mut self) -> Option<Box<GVHT>> {
+    if let Self::GVH(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GVH(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GVHT.
+  pub fn as_GVH(&self) -> Option<&GVHT> {
+    if let Self::GVH(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GVHT.
+  pub fn as_GVH_mut(&mut self) -> Option<&mut GVHT> {
+    if let Self::GVH(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned HELT, setting the union to NONE.
+  pub fn take_HEL(&mut self) -> Option<Box<HELT>> {
+    if let Self::HEL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::HEL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the HELT.
+  pub fn as_HEL(&self) -> Option<&HELT> {
+    if let Self::HEL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the HELT.
+  pub fn as_HEL_mut(&mut self) -> Option<&mut HELT> {
+    if let Self::HEL(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned HYPT, setting the union to NONE.
   pub fn take_HYP(&mut self) -> Option<Box<HYPT>> {
     if let Self::HYP(_) = self {
@@ -711,6 +1952,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the IDMT.
   pub fn as_IDM_mut(&mut self) -> Option<&mut IDMT> {
     if let Self::IDM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned IROT, setting the union to NONE.
+  pub fn take_IRO(&mut self) -> Option<Box<IROT>> {
+    if let Self::IRO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::IRO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the IROT.
+  pub fn as_IRO(&self) -> Option<&IROT> {
+    if let Self::IRO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the IROT.
+  pub fn as_IRO_mut(&mut self) -> Option<&mut IROT> {
+    if let Self::IRO(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned LCCT, setting the union to NONE.
   pub fn take_LCC(&mut self) -> Option<Box<LCCT>> {
@@ -754,6 +2016,69 @@ impl RecordTypeT {
   pub fn as_LDM_mut(&mut self) -> Option<&mut LDMT> {
     if let Self::LDM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned LKST, setting the union to NONE.
+  pub fn take_LKS(&mut self) -> Option<Box<LKST>> {
+    if let Self::LKS(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::LKS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LKST.
+  pub fn as_LKS(&self) -> Option<&LKST> {
+    if let Self::LKS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LKST.
+  pub fn as_LKS_mut(&mut self) -> Option<&mut LKST> {
+    if let Self::LKS(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned LNDT, setting the union to NONE.
+  pub fn take_LND(&mut self) -> Option<Box<LNDT>> {
+    if let Self::LND(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::LND(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LNDT.
+  pub fn as_LND(&self) -> Option<&LNDT> {
+    if let Self::LND(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LNDT.
+  pub fn as_LND_mut(&mut self) -> Option<&mut LNDT> {
+    if let Self::LND(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned LNET, setting the union to NONE.
+  pub fn take_LNE(&mut self) -> Option<Box<LNET>> {
+    if let Self::LNE(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::LNE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the LNET.
+  pub fn as_LNE(&self) -> Option<&LNET> {
+    if let Self::LNE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the LNET.
+  pub fn as_LNE_mut(&mut self) -> Option<&mut LNET> {
+    if let Self::LNE(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned METT, setting the union to NONE.
   pub fn take_MET(&mut self) -> Option<Box<METT>> {
     if let Self::MET(_) = self {
@@ -775,6 +2100,69 @@ impl RecordTypeT {
   pub fn as_MET_mut(&mut self) -> Option<&mut METT> {
     if let Self::MET(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned MFET, setting the union to NONE.
+  pub fn take_MFE(&mut self) -> Option<Box<MFET>> {
+    if let Self::MFE(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MFE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MFET.
+  pub fn as_MFE(&self) -> Option<&MFET> {
+    if let Self::MFE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MFET.
+  pub fn as_MFE_mut(&mut self) -> Option<&mut MFET> {
+    if let Self::MFE(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned MNFT, setting the union to NONE.
+  pub fn take_MNF(&mut self) -> Option<Box<MNFT>> {
+    if let Self::MNF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MNF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MNFT.
+  pub fn as_MNF(&self) -> Option<&MNFT> {
+    if let Self::MNF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MNFT.
+  pub fn as_MNF_mut(&mut self) -> Option<&mut MNFT> {
+    if let Self::MNF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned MNVT, setting the union to NONE.
+  pub fn take_MNV(&mut self) -> Option<Box<MNVT>> {
+    if let Self::MNV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MNV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MNVT.
+  pub fn as_MNV(&self) -> Option<&MNVT> {
+    if let Self::MNV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MNVT.
+  pub fn as_MNV_mut(&mut self) -> Option<&mut MNVT> {
+    if let Self::MNV(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned MPET, setting the union to NONE.
   pub fn take_MPE(&mut self) -> Option<Box<MPET>> {
     if let Self::MPE(_) = self {
@@ -795,6 +2183,132 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the MPET.
   pub fn as_MPE_mut(&mut self) -> Option<&mut MPET> {
     if let Self::MPE(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned MSLT, setting the union to NONE.
+  pub fn take_MSL(&mut self) -> Option<Box<MSLT>> {
+    if let Self::MSL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MSL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MSLT.
+  pub fn as_MSL(&self) -> Option<&MSLT> {
+    if let Self::MSL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MSLT.
+  pub fn as_MSL_mut(&mut self) -> Option<&mut MSLT> {
+    if let Self::MSL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned MSTT, setting the union to NONE.
+  pub fn take_MST(&mut self) -> Option<Box<MSTT>> {
+    if let Self::MST(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MST(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MSTT.
+  pub fn as_MST(&self) -> Option<&MSTT> {
+    if let Self::MST(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MSTT.
+  pub fn as_MST_mut(&mut self) -> Option<&mut MSTT> {
+    if let Self::MST(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned MTIT, setting the union to NONE.
+  pub fn take_MTI(&mut self) -> Option<Box<MTIT>> {
+    if let Self::MTI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::MTI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the MTIT.
+  pub fn as_MTI(&self) -> Option<&MTIT> {
+    if let Self::MTI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the MTIT.
+  pub fn as_MTI_mut(&mut self) -> Option<&mut MTIT> {
+    if let Self::MTI(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned NAVT, setting the union to NONE.
+  pub fn take_NAV(&mut self) -> Option<Box<NAVT>> {
+    if let Self::NAV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::NAV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the NAVT.
+  pub fn as_NAV(&self) -> Option<&NAVT> {
+    if let Self::NAV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the NAVT.
+  pub fn as_NAV_mut(&mut self) -> Option<&mut NAVT> {
+    if let Self::NAV(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OBDT, setting the union to NONE.
+  pub fn take_OBD(&mut self) -> Option<Box<OBDT>> {
+    if let Self::OBD(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OBD(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OBDT.
+  pub fn as_OBD(&self) -> Option<&OBDT> {
+    if let Self::OBD(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OBDT.
+  pub fn as_OBD_mut(&mut self) -> Option<&mut OBDT> {
+    if let Self::OBD(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OBTT, setting the union to NONE.
+  pub fn take_OBT(&mut self) -> Option<Box<OBTT>> {
+    if let Self::OBT(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OBT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OBTT.
+  pub fn as_OBT(&self) -> Option<&OBTT> {
+    if let Self::OBT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OBTT.
+  pub fn as_OBT_mut(&mut self) -> Option<&mut OBTT> {
+    if let Self::OBT(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned OCMT, setting the union to NONE.
   pub fn take_OCM(&mut self) -> Option<Box<OCMT>> {
@@ -859,6 +2373,132 @@ impl RecordTypeT {
   pub fn as_OMM_mut(&mut self) -> Option<&mut OMMT> {
     if let Self::OMM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned OODT, setting the union to NONE.
+  pub fn take_OOD(&mut self) -> Option<Box<OODT>> {
+    if let Self::OOD(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOD(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OODT.
+  pub fn as_OOD(&self) -> Option<&OODT> {
+    if let Self::OOD(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OODT.
+  pub fn as_OOD_mut(&mut self) -> Option<&mut OODT> {
+    if let Self::OOD(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOET, setting the union to NONE.
+  pub fn take_OOE(&mut self) -> Option<Box<OOET>> {
+    if let Self::OOE(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOET.
+  pub fn as_OOE(&self) -> Option<&OOET> {
+    if let Self::OOE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOET.
+  pub fn as_OOE_mut(&mut self) -> Option<&mut OOET> {
+    if let Self::OOE(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOIT, setting the union to NONE.
+  pub fn take_OOI(&mut self) -> Option<Box<OOIT>> {
+    if let Self::OOI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOIT.
+  pub fn as_OOI(&self) -> Option<&OOIT> {
+    if let Self::OOI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOIT.
+  pub fn as_OOI_mut(&mut self) -> Option<&mut OOIT> {
+    if let Self::OOI(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOLT, setting the union to NONE.
+  pub fn take_OOL(&mut self) -> Option<Box<OOLT>> {
+    if let Self::OOL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOLT.
+  pub fn as_OOL(&self) -> Option<&OOLT> {
+    if let Self::OOL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOLT.
+  pub fn as_OOL_mut(&mut self) -> Option<&mut OOLT> {
+    if let Self::OOL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OONT, setting the union to NONE.
+  pub fn take_OON(&mut self) -> Option<Box<OONT>> {
+    if let Self::OON(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OON(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OONT.
+  pub fn as_OON(&self) -> Option<&OONT> {
+    if let Self::OON(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OONT.
+  pub fn as_OON_mut(&mut self) -> Option<&mut OONT> {
+    if let Self::OON(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OPMT, setting the union to NONE.
+  pub fn take_OPM(&mut self) -> Option<Box<OPMT>> {
+    if let Self::OPM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OPM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OPMT.
+  pub fn as_OPM(&self) -> Option<&OPMT> {
+    if let Self::OPM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OPMT.
+  pub fn as_OPM_mut(&mut self) -> Option<&mut OPMT> {
+    if let Self::OPM(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned OSMT, setting the union to NONE.
   pub fn take_OSM(&mut self) -> Option<Box<OSMT>> {
     if let Self::OSM(_) = self {
@@ -879,6 +2519,48 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the OSMT.
   pub fn as_OSM_mut(&mut self) -> Option<&mut OSMT> {
     if let Self::OSM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PCFT, setting the union to NONE.
+  pub fn take_PCF(&mut self) -> Option<Box<PCFT>> {
+    if let Self::PCF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::PCF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PCFT.
+  pub fn as_PCF(&self) -> Option<&PCFT> {
+    if let Self::PCF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PCFT.
+  pub fn as_PCF_mut(&mut self) -> Option<&mut PCFT> {
+    if let Self::PCF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PHYT, setting the union to NONE.
+  pub fn take_PHY(&mut self) -> Option<Box<PHYT>> {
+    if let Self::PHY(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::PHY(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PHYT.
+  pub fn as_PHY(&self) -> Option<&PHYT> {
+    if let Self::PHY(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PHYT.
+  pub fn as_PHY_mut(&mut self) -> Option<&mut PHYT> {
+    if let Self::PHY(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned PLDT, setting the union to NONE.
   pub fn take_PLD(&mut self) -> Option<Box<PLDT>> {
@@ -1006,6 +2688,90 @@ impl RecordTypeT {
   pub fn as_PUR_mut(&mut self) -> Option<&mut PURT> {
     if let Self::PUR(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned RAFT, setting the union to NONE.
+  pub fn take_RAF(&mut self) -> Option<Box<RAFT>> {
+    if let Self::RAF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RAF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RAFT.
+  pub fn as_RAF(&self) -> Option<&RAFT> {
+    if let Self::RAF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RAFT.
+  pub fn as_RAF_mut(&mut self) -> Option<&mut RAFT> {
+    if let Self::RAF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RCFT, setting the union to NONE.
+  pub fn take_RCF(&mut self) -> Option<Box<RCFT>> {
+    if let Self::RCF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RCF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RCFT.
+  pub fn as_RCF(&self) -> Option<&RCFT> {
+    if let Self::RCF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RCFT.
+  pub fn as_RCF_mut(&mut self) -> Option<&mut RCFT> {
+    if let Self::RCF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RDMT, setting the union to NONE.
+  pub fn take_RDM(&mut self) -> Option<Box<RDMT>> {
+    if let Self::RDM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RDM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RDMT.
+  pub fn as_RDM(&self) -> Option<&RDMT> {
+    if let Self::RDM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RDMT.
+  pub fn as_RDM_mut(&mut self) -> Option<&mut RDMT> {
+    if let Self::RDM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RDOT, setting the union to NONE.
+  pub fn take_RDO(&mut self) -> Option<Box<RDOT>> {
+    if let Self::RDO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RDO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RDOT.
+  pub fn as_RDO(&self) -> Option<&RDOT> {
+    if let Self::RDO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RDOT.
+  pub fn as_RDO_mut(&mut self) -> Option<&mut RDOT> {
+    if let Self::RDO(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned REVT, setting the union to NONE.
   pub fn take_REV(&mut self) -> Option<Box<REVT>> {
     if let Self::REV(_) = self {
@@ -1026,6 +2792,48 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the REVT.
   pub fn as_REV_mut(&mut self) -> Option<&mut REVT> {
     if let Self::REV(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RFBT, setting the union to NONE.
+  pub fn take_RFB(&mut self) -> Option<Box<RFBT>> {
+    if let Self::RFB(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RFB(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RFBT.
+  pub fn as_RFB(&self) -> Option<&RFBT> {
+    if let Self::RFB(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RFBT.
+  pub fn as_RFB_mut(&mut self) -> Option<&mut RFBT> {
+    if let Self::RFB(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RFET, setting the union to NONE.
+  pub fn take_RFE(&mut self) -> Option<Box<RFET>> {
+    if let Self::RFE(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RFE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RFET.
+  pub fn as_RFE(&self) -> Option<&RFET> {
+    if let Self::RFE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RFET.
+  pub fn as_RFE_mut(&mut self) -> Option<&mut RFET> {
+    if let Self::RFE(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned RFMT, setting the union to NONE.
   pub fn take_RFM(&mut self) -> Option<Box<RFMT>> {
@@ -1048,6 +2856,27 @@ impl RecordTypeT {
   pub fn as_RFM_mut(&mut self) -> Option<&mut RFMT> {
     if let Self::RFM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned RFOT, setting the union to NONE.
+  pub fn take_RFO(&mut self) -> Option<Box<RFOT>> {
+    if let Self::RFO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::RFO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RFOT.
+  pub fn as_RFO(&self) -> Option<&RFOT> {
+    if let Self::RFO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RFOT.
+  pub fn as_RFO_mut(&mut self) -> Option<&mut RFOT> {
+    if let Self::RFO(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned ROCT, setting the union to NONE.
   pub fn take_ROC(&mut self) -> Option<Box<ROCT>> {
     if let Self::ROC(_) = self {
@@ -1068,6 +2897,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the ROCT.
   pub fn as_ROC_mut(&mut self) -> Option<&mut ROCT> {
     if let Self::ROC(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SART, setting the union to NONE.
+  pub fn take_SAR(&mut self) -> Option<Box<SART>> {
+    if let Self::SAR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SAR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SART.
+  pub fn as_SAR(&self) -> Option<&SART> {
+    if let Self::SAR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SART.
+  pub fn as_SAR_mut(&mut self) -> Option<&mut SART> {
+    if let Self::SAR(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned SCMT, setting the union to NONE.
   pub fn take_SCM(&mut self) -> Option<Box<SCMT>> {
@@ -1090,6 +2940,69 @@ impl RecordTypeT {
   pub fn as_SCM_mut(&mut self) -> Option<&mut SCMT> {
     if let Self::SCM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned SDLT, setting the union to NONE.
+  pub fn take_SDL(&mut self) -> Option<Box<SDLT>> {
+    if let Self::SDL(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SDL(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SDLT.
+  pub fn as_SDL(&self) -> Option<&SDLT> {
+    if let Self::SDL(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SDLT.
+  pub fn as_SDL_mut(&mut self) -> Option<&mut SDLT> {
+    if let Self::SDL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SEOT, setting the union to NONE.
+  pub fn take_SEO(&mut self) -> Option<Box<SEOT>> {
+    if let Self::SEO(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SEO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SEOT.
+  pub fn as_SEO(&self) -> Option<&SEOT> {
+    if let Self::SEO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SEOT.
+  pub fn as_SEO_mut(&mut self) -> Option<&mut SEOT> {
+    if let Self::SEO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SEVT, setting the union to NONE.
+  pub fn take_SEV(&mut self) -> Option<Box<SEVT>> {
+    if let Self::SEV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SEV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SEVT.
+  pub fn as_SEV(&self) -> Option<&SEVT> {
+    if let Self::SEV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SEVT.
+  pub fn as_SEV_mut(&mut self) -> Option<&mut SEVT> {
+    if let Self::SEV(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned SITT, setting the union to NONE.
   pub fn take_SIT(&mut self) -> Option<Box<SITT>> {
     if let Self::SIT(_) = self {
@@ -1111,6 +3024,132 @@ impl RecordTypeT {
   pub fn as_SIT_mut(&mut self) -> Option<&mut SITT> {
     if let Self::SIT(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned SKIT, setting the union to NONE.
+  pub fn take_SKI(&mut self) -> Option<Box<SKIT>> {
+    if let Self::SKI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SKI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SKIT.
+  pub fn as_SKI(&self) -> Option<&SKIT> {
+    if let Self::SKI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SKIT.
+  pub fn as_SKI_mut(&mut self) -> Option<&mut SKIT> {
+    if let Self::SKI(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SNRT, setting the union to NONE.
+  pub fn take_SNR(&mut self) -> Option<Box<SNRT>> {
+    if let Self::SNR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SNR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SNRT.
+  pub fn as_SNR(&self) -> Option<&SNRT> {
+    if let Self::SNR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SNRT.
+  pub fn as_SNR_mut(&mut self) -> Option<&mut SNRT> {
+    if let Self::SNR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SOIT, setting the union to NONE.
+  pub fn take_SOI(&mut self) -> Option<Box<SOIT>> {
+    if let Self::SOI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SOI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SOIT.
+  pub fn as_SOI(&self) -> Option<&SOIT> {
+    if let Self::SOI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SOIT.
+  pub fn as_SOI_mut(&mut self) -> Option<&mut SOIT> {
+    if let Self::SOI(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SONT, setting the union to NONE.
+  pub fn take_SON(&mut self) -> Option<Box<SONT>> {
+    if let Self::SON(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SON(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SONT.
+  pub fn as_SON(&self) -> Option<&SONT> {
+    if let Self::SON(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SONT.
+  pub fn as_SON_mut(&mut self) -> Option<&mut SONT> {
+    if let Self::SON(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SPPT, setting the union to NONE.
+  pub fn take_SPP(&mut self) -> Option<Box<SPPT>> {
+    if let Self::SPP(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SPP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SPPT.
+  pub fn as_SPP(&self) -> Option<&SPPT> {
+    if let Self::SPP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SPPT.
+  pub fn as_SPP_mut(&mut self) -> Option<&mut SPPT> {
+    if let Self::SPP(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SPWT, setting the union to NONE.
+  pub fn take_SPW(&mut self) -> Option<Box<SPWT>> {
+    if let Self::SPW(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SPW(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SPWT.
+  pub fn as_SPW(&self) -> Option<&SPWT> {
+    if let Self::SPW(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SPWT.
+  pub fn as_SPW_mut(&mut self) -> Option<&mut SPWT> {
+    if let Self::SPW(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned STFT, setting the union to NONE.
   pub fn take_STF(&mut self) -> Option<Box<STFT>> {
     if let Self::STF(_) = self {
@@ -1131,6 +3170,90 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the STFT.
   pub fn as_STF_mut(&mut self) -> Option<&mut STFT> {
     if let Self::STF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned STRT, setting the union to NONE.
+  pub fn take_STR(&mut self) -> Option<Box<STRT>> {
+    if let Self::STR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::STR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the STRT.
+  pub fn as_STR(&self) -> Option<&STRT> {
+    if let Self::STR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the STRT.
+  pub fn as_STR_mut(&mut self) -> Option<&mut STRT> {
+    if let Self::STR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned STVT, setting the union to NONE.
+  pub fn take_STV(&mut self) -> Option<Box<STVT>> {
+    if let Self::STV(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::STV(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the STVT.
+  pub fn as_STV(&self) -> Option<&STVT> {
+    if let Self::STV(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the STVT.
+  pub fn as_STV_mut(&mut self) -> Option<&mut STVT> {
+    if let Self::STV(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SWRT, setting the union to NONE.
+  pub fn take_SWR(&mut self) -> Option<Box<SWRT>> {
+    if let Self::SWR(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SWR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SWRT.
+  pub fn as_SWR(&self) -> Option<&SWRT> {
+    if let Self::SWR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SWRT.
+  pub fn as_SWR_mut(&mut self) -> Option<&mut SWRT> {
+    if let Self::SWR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TCFT, setting the union to NONE.
+  pub fn take_TCF(&mut self) -> Option<Box<TCFT>> {
+    if let Self::TCF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TCF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TCFT.
+  pub fn as_TCF(&self) -> Option<&TCFT> {
+    if let Self::TCF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TCFT.
+  pub fn as_TCF_mut(&mut self) -> Option<&mut TCFT> {
+    if let Self::TCF(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned TDMT, setting the union to NONE.
   pub fn take_TDM(&mut self) -> Option<Box<TDMT>> {
@@ -1174,6 +3297,132 @@ impl RecordTypeT {
   pub fn as_TIM_mut(&mut self) -> Option<&mut TIMT> {
     if let Self::TIM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned TKGT, setting the union to NONE.
+  pub fn take_TKG(&mut self) -> Option<Box<TKGT>> {
+    if let Self::TKG(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TKG(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TKGT.
+  pub fn as_TKG(&self) -> Option<&TKGT> {
+    if let Self::TKG(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TKGT.
+  pub fn as_TKG_mut(&mut self) -> Option<&mut TKGT> {
+    if let Self::TKG(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TMET, setting the union to NONE.
+  pub fn take_TME(&mut self) -> Option<Box<TMET>> {
+    if let Self::TME(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TME(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TMET.
+  pub fn as_TME(&self) -> Option<&TMET> {
+    if let Self::TME(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TMET.
+  pub fn as_TME_mut(&mut self) -> Option<&mut TMET> {
+    if let Self::TME(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TMFT, setting the union to NONE.
+  pub fn take_TMF(&mut self) -> Option<Box<TMFT>> {
+    if let Self::TMF(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TMF(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TMFT.
+  pub fn as_TMF(&self) -> Option<&TMFT> {
+    if let Self::TMF(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TMFT.
+  pub fn as_TMF_mut(&mut self) -> Option<&mut TMFT> {
+    if let Self::TMF(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TPNT, setting the union to NONE.
+  pub fn take_TPN(&mut self) -> Option<Box<TPNT>> {
+    if let Self::TPN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TPN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TPNT.
+  pub fn as_TPN(&self) -> Option<&TPNT> {
+    if let Self::TPN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TPNT.
+  pub fn as_TPN_mut(&mut self) -> Option<&mut TPNT> {
+    if let Self::TPN(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TRKT, setting the union to NONE.
+  pub fn take_TRK(&mut self) -> Option<Box<TRKT>> {
+    if let Self::TRK(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TRK(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TRKT.
+  pub fn as_TRK(&self) -> Option<&TRKT> {
+    if let Self::TRK(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TRKT.
+  pub fn as_TRK_mut(&mut self) -> Option<&mut TRKT> {
+    if let Self::TRK(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TRNT, setting the union to NONE.
+  pub fn take_TRN(&mut self) -> Option<Box<TRNT>> {
+    if let Self::TRN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::TRN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TRNT.
+  pub fn as_TRN(&self) -> Option<&TRNT> {
+    if let Self::TRN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TRNT.
+  pub fn as_TRN_mut(&mut self) -> Option<&mut TRNT> {
+    if let Self::TRN(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned VCMT, setting the union to NONE.
   pub fn take_VCM(&mut self) -> Option<Box<VCMT>> {
     if let Self::VCM(_) = self {
@@ -1194,6 +3443,48 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the VCMT.
   pub fn as_VCM_mut(&mut self) -> Option<&mut VCMT> {
     if let Self::VCM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned WPNT, setting the union to NONE.
+  pub fn take_WPN(&mut self) -> Option<Box<WPNT>> {
+    if let Self::WPN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::WPN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the WPNT.
+  pub fn as_WPN(&self) -> Option<&WPNT> {
+    if let Self::WPN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the WPNT.
+  pub fn as_WPN_mut(&mut self) -> Option<&mut WPNT> {
+    if let Self::WPN(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned WTHT, setting the union to NONE.
+  pub fn take_WTH(&mut self) -> Option<Box<WTHT>> {
+    if let Self::WTH(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::WTH(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the WTHT.
+  pub fn as_WTH(&self) -> Option<&WTHT> {
+    if let Self::WTH(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the WTHT.
+  pub fn as_WTH_mut(&mut self) -> Option<&mut WTHT> {
+    if let Self::WTH(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned XTCT, setting the union to NONE.
   pub fn take_XTC(&mut self) -> Option<Box<XTCT>> {
@@ -1261,9 +3552,64 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::ACL`.")
             .unpack()
       )),
+      RecordType::ACM => RecordTypeT::ACM(Box::new(
+        self.value_as_ACM()
+            .expect("Invalid union table, expected `RecordType::ACM`.")
+            .unpack()
+      )),
+      RecordType::ACR => RecordTypeT::ACR(Box::new(
+        self.value_as_ACR()
+            .expect("Invalid union table, expected `RecordType::ACR`.")
+            .unpack()
+      )),
+      RecordType::AEM => RecordTypeT::AEM(Box::new(
+        self.value_as_AEM()
+            .expect("Invalid union table, expected `RecordType::AEM`.")
+            .unpack()
+      )),
+      RecordType::AOF => RecordTypeT::AOF(Box::new(
+        self.value_as_AOF()
+            .expect("Invalid union table, expected `RecordType::AOF`.")
+            .unpack()
+      )),
+      RecordType::APM => RecordTypeT::APM(Box::new(
+        self.value_as_APM()
+            .expect("Invalid union table, expected `RecordType::APM`.")
+            .unpack()
+      )),
+      RecordType::ARM => RecordTypeT::ARM(Box::new(
+        self.value_as_ARM()
+            .expect("Invalid union table, expected `RecordType::ARM`.")
+            .unpack()
+      )),
+      RecordType::AST => RecordTypeT::AST(Box::new(
+        self.value_as_AST()
+            .expect("Invalid union table, expected `RecordType::AST`.")
+            .unpack()
+      )),
+      RecordType::ATD => RecordTypeT::ATD(Box::new(
+        self.value_as_ATD()
+            .expect("Invalid union table, expected `RecordType::ATD`.")
+            .unpack()
+      )),
       RecordType::ATM => RecordTypeT::ATM(Box::new(
         self.value_as_ATM()
             .expect("Invalid union table, expected `RecordType::ATM`.")
+            .unpack()
+      )),
+      RecordType::BAL => RecordTypeT::BAL(Box::new(
+        self.value_as_BAL()
+            .expect("Invalid union table, expected `RecordType::BAL`.")
+            .unpack()
+      )),
+      RecordType::BEM => RecordTypeT::BEM(Box::new(
+        self.value_as_BEM()
+            .expect("Invalid union table, expected `RecordType::BEM`.")
+            .unpack()
+      )),
+      RecordType::BMC => RecordTypeT::BMC(Box::new(
+        self.value_as_BMC()
+            .expect("Invalid union table, expected `RecordType::BMC`.")
             .unpack()
       )),
       RecordType::BOV => RecordTypeT::BOV(Box::new(
@@ -1281,6 +3627,36 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::CDM`.")
             .unpack()
       )),
+      RecordType::CFP => RecordTypeT::CFP(Box::new(
+        self.value_as_CFP()
+            .expect("Invalid union table, expected `RecordType::CFP`.")
+            .unpack()
+      )),
+      RecordType::CHN => RecordTypeT::CHN(Box::new(
+        self.value_as_CHN()
+            .expect("Invalid union table, expected `RecordType::CHN`.")
+            .unpack()
+      )),
+      RecordType::CLT => RecordTypeT::CLT(Box::new(
+        self.value_as_CLT()
+            .expect("Invalid union table, expected `RecordType::CLT`.")
+            .unpack()
+      )),
+      RecordType::CMS => RecordTypeT::CMS(Box::new(
+        self.value_as_CMS()
+            .expect("Invalid union table, expected `RecordType::CMS`.")
+            .unpack()
+      )),
+      RecordType::COM => RecordTypeT::COM(Box::new(
+        self.value_as_COM()
+            .expect("Invalid union table, expected `RecordType::COM`.")
+            .unpack()
+      )),
+      RecordType::CRD => RecordTypeT::CRD(Box::new(
+        self.value_as_CRD()
+            .expect("Invalid union table, expected `RecordType::CRD`.")
+            .unpack()
+      )),
       RecordType::CRM => RecordTypeT::CRM(Box::new(
         self.value_as_CRM()
             .expect("Invalid union table, expected `RecordType::CRM`.")
@@ -1296,9 +3672,29 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::CTR`.")
             .unpack()
       )),
+      RecordType::DFH => RecordTypeT::DFH(Box::new(
+        self.value_as_DFH()
+            .expect("Invalid union table, expected `RecordType::DFH`.")
+            .unpack()
+      )),
+      RecordType::DMG => RecordTypeT::DMG(Box::new(
+        self.value_as_DMG()
+            .expect("Invalid union table, expected `RecordType::DMG`.")
+            .unpack()
+      )),
+      RecordType::DOA => RecordTypeT::DOA(Box::new(
+        self.value_as_DOA()
+            .expect("Invalid union table, expected `RecordType::DOA`.")
+            .unpack()
+      )),
       RecordType::EME => RecordTypeT::EME(Box::new(
         self.value_as_EME()
             .expect("Invalid union table, expected `RecordType::EME`.")
+            .unpack()
+      )),
+      RecordType::ENV => RecordTypeT::ENV(Box::new(
+        self.value_as_ENV()
+            .expect("Invalid union table, expected `RecordType::ENV`.")
             .unpack()
       )),
       RecordType::EOO => RecordTypeT::EOO(Box::new(
@@ -1316,6 +3712,46 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::EPM`.")
             .unpack()
       )),
+      RecordType::EWR => RecordTypeT::EWR(Box::new(
+        self.value_as_EWR()
+            .expect("Invalid union table, expected `RecordType::EWR`.")
+            .unpack()
+      )),
+      RecordType::FCS => RecordTypeT::FCS(Box::new(
+        self.value_as_FCS()
+            .expect("Invalid union table, expected `RecordType::FCS`.")
+            .unpack()
+      )),
+      RecordType::GDI => RecordTypeT::GDI(Box::new(
+        self.value_as_GDI()
+            .expect("Invalid union table, expected `RecordType::GDI`.")
+            .unpack()
+      )),
+      RecordType::GEO => RecordTypeT::GEO(Box::new(
+        self.value_as_GEO()
+            .expect("Invalid union table, expected `RecordType::GEO`.")
+            .unpack()
+      )),
+      RecordType::GNO => RecordTypeT::GNO(Box::new(
+        self.value_as_GNO()
+            .expect("Invalid union table, expected `RecordType::GNO`.")
+            .unpack()
+      )),
+      RecordType::GRV => RecordTypeT::GRV(Box::new(
+        self.value_as_GRV()
+            .expect("Invalid union table, expected `RecordType::GRV`.")
+            .unpack()
+      )),
+      RecordType::GVH => RecordTypeT::GVH(Box::new(
+        self.value_as_GVH()
+            .expect("Invalid union table, expected `RecordType::GVH`.")
+            .unpack()
+      )),
+      RecordType::HEL => RecordTypeT::HEL(Box::new(
+        self.value_as_HEL()
+            .expect("Invalid union table, expected `RecordType::HEL`.")
+            .unpack()
+      )),
       RecordType::HYP => RecordTypeT::HYP(Box::new(
         self.value_as_HYP()
             .expect("Invalid union table, expected `RecordType::HYP`.")
@@ -1324,6 +3760,11 @@ impl<'a> Record<'a> {
       RecordType::IDM => RecordTypeT::IDM(Box::new(
         self.value_as_IDM()
             .expect("Invalid union table, expected `RecordType::IDM`.")
+            .unpack()
+      )),
+      RecordType::IRO => RecordTypeT::IRO(Box::new(
+        self.value_as_IRO()
+            .expect("Invalid union table, expected `RecordType::IRO`.")
             .unpack()
       )),
       RecordType::LCC => RecordTypeT::LCC(Box::new(
@@ -1336,14 +3777,74 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::LDM`.")
             .unpack()
       )),
+      RecordType::LKS => RecordTypeT::LKS(Box::new(
+        self.value_as_LKS()
+            .expect("Invalid union table, expected `RecordType::LKS`.")
+            .unpack()
+      )),
+      RecordType::LND => RecordTypeT::LND(Box::new(
+        self.value_as_LND()
+            .expect("Invalid union table, expected `RecordType::LND`.")
+            .unpack()
+      )),
+      RecordType::LNE => RecordTypeT::LNE(Box::new(
+        self.value_as_LNE()
+            .expect("Invalid union table, expected `RecordType::LNE`.")
+            .unpack()
+      )),
       RecordType::MET => RecordTypeT::MET(Box::new(
         self.value_as_MET()
             .expect("Invalid union table, expected `RecordType::MET`.")
             .unpack()
       )),
+      RecordType::MFE => RecordTypeT::MFE(Box::new(
+        self.value_as_MFE()
+            .expect("Invalid union table, expected `RecordType::MFE`.")
+            .unpack()
+      )),
+      RecordType::MNF => RecordTypeT::MNF(Box::new(
+        self.value_as_MNF()
+            .expect("Invalid union table, expected `RecordType::MNF`.")
+            .unpack()
+      )),
+      RecordType::MNV => RecordTypeT::MNV(Box::new(
+        self.value_as_MNV()
+            .expect("Invalid union table, expected `RecordType::MNV`.")
+            .unpack()
+      )),
       RecordType::MPE => RecordTypeT::MPE(Box::new(
         self.value_as_MPE()
             .expect("Invalid union table, expected `RecordType::MPE`.")
+            .unpack()
+      )),
+      RecordType::MSL => RecordTypeT::MSL(Box::new(
+        self.value_as_MSL()
+            .expect("Invalid union table, expected `RecordType::MSL`.")
+            .unpack()
+      )),
+      RecordType::MST => RecordTypeT::MST(Box::new(
+        self.value_as_MST()
+            .expect("Invalid union table, expected `RecordType::MST`.")
+            .unpack()
+      )),
+      RecordType::MTI => RecordTypeT::MTI(Box::new(
+        self.value_as_MTI()
+            .expect("Invalid union table, expected `RecordType::MTI`.")
+            .unpack()
+      )),
+      RecordType::NAV => RecordTypeT::NAV(Box::new(
+        self.value_as_NAV()
+            .expect("Invalid union table, expected `RecordType::NAV`.")
+            .unpack()
+      )),
+      RecordType::OBD => RecordTypeT::OBD(Box::new(
+        self.value_as_OBD()
+            .expect("Invalid union table, expected `RecordType::OBD`.")
+            .unpack()
+      )),
+      RecordType::OBT => RecordTypeT::OBT(Box::new(
+        self.value_as_OBT()
+            .expect("Invalid union table, expected `RecordType::OBT`.")
             .unpack()
       )),
       RecordType::OCM => RecordTypeT::OCM(Box::new(
@@ -1361,9 +3862,49 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::OMM`.")
             .unpack()
       )),
+      RecordType::OOD => RecordTypeT::OOD(Box::new(
+        self.value_as_OOD()
+            .expect("Invalid union table, expected `RecordType::OOD`.")
+            .unpack()
+      )),
+      RecordType::OOE => RecordTypeT::OOE(Box::new(
+        self.value_as_OOE()
+            .expect("Invalid union table, expected `RecordType::OOE`.")
+            .unpack()
+      )),
+      RecordType::OOI => RecordTypeT::OOI(Box::new(
+        self.value_as_OOI()
+            .expect("Invalid union table, expected `RecordType::OOI`.")
+            .unpack()
+      )),
+      RecordType::OOL => RecordTypeT::OOL(Box::new(
+        self.value_as_OOL()
+            .expect("Invalid union table, expected `RecordType::OOL`.")
+            .unpack()
+      )),
+      RecordType::OON => RecordTypeT::OON(Box::new(
+        self.value_as_OON()
+            .expect("Invalid union table, expected `RecordType::OON`.")
+            .unpack()
+      )),
+      RecordType::OPM => RecordTypeT::OPM(Box::new(
+        self.value_as_OPM()
+            .expect("Invalid union table, expected `RecordType::OPM`.")
+            .unpack()
+      )),
       RecordType::OSM => RecordTypeT::OSM(Box::new(
         self.value_as_OSM()
             .expect("Invalid union table, expected `RecordType::OSM`.")
+            .unpack()
+      )),
+      RecordType::PCF => RecordTypeT::PCF(Box::new(
+        self.value_as_PCF()
+            .expect("Invalid union table, expected `RecordType::PCF`.")
+            .unpack()
+      )),
+      RecordType::PHY => RecordTypeT::PHY(Box::new(
+        self.value_as_PHY()
+            .expect("Invalid union table, expected `RecordType::PHY`.")
             .unpack()
       )),
       RecordType::PLD => RecordTypeT::PLD(Box::new(
@@ -1396,9 +3937,39 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::PUR`.")
             .unpack()
       )),
+      RecordType::RAF => RecordTypeT::RAF(Box::new(
+        self.value_as_RAF()
+            .expect("Invalid union table, expected `RecordType::RAF`.")
+            .unpack()
+      )),
+      RecordType::RCF => RecordTypeT::RCF(Box::new(
+        self.value_as_RCF()
+            .expect("Invalid union table, expected `RecordType::RCF`.")
+            .unpack()
+      )),
+      RecordType::RDM => RecordTypeT::RDM(Box::new(
+        self.value_as_RDM()
+            .expect("Invalid union table, expected `RecordType::RDM`.")
+            .unpack()
+      )),
+      RecordType::RDO => RecordTypeT::RDO(Box::new(
+        self.value_as_RDO()
+            .expect("Invalid union table, expected `RecordType::RDO`.")
+            .unpack()
+      )),
       RecordType::REV => RecordTypeT::REV(Box::new(
         self.value_as_REV()
             .expect("Invalid union table, expected `RecordType::REV`.")
+            .unpack()
+      )),
+      RecordType::RFB => RecordTypeT::RFB(Box::new(
+        self.value_as_RFB()
+            .expect("Invalid union table, expected `RecordType::RFB`.")
+            .unpack()
+      )),
+      RecordType::RFE => RecordTypeT::RFE(Box::new(
+        self.value_as_RFE()
+            .expect("Invalid union table, expected `RecordType::RFE`.")
             .unpack()
       )),
       RecordType::RFM => RecordTypeT::RFM(Box::new(
@@ -1406,9 +3977,19 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::RFM`.")
             .unpack()
       )),
+      RecordType::RFO => RecordTypeT::RFO(Box::new(
+        self.value_as_RFO()
+            .expect("Invalid union table, expected `RecordType::RFO`.")
+            .unpack()
+      )),
       RecordType::ROC => RecordTypeT::ROC(Box::new(
         self.value_as_ROC()
             .expect("Invalid union table, expected `RecordType::ROC`.")
+            .unpack()
+      )),
+      RecordType::SAR => RecordTypeT::SAR(Box::new(
+        self.value_as_SAR()
+            .expect("Invalid union table, expected `RecordType::SAR`.")
             .unpack()
       )),
       RecordType::SCM => RecordTypeT::SCM(Box::new(
@@ -1416,14 +3997,79 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::SCM`.")
             .unpack()
       )),
+      RecordType::SDL => RecordTypeT::SDL(Box::new(
+        self.value_as_SDL()
+            .expect("Invalid union table, expected `RecordType::SDL`.")
+            .unpack()
+      )),
+      RecordType::SEO => RecordTypeT::SEO(Box::new(
+        self.value_as_SEO()
+            .expect("Invalid union table, expected `RecordType::SEO`.")
+            .unpack()
+      )),
+      RecordType::SEV => RecordTypeT::SEV(Box::new(
+        self.value_as_SEV()
+            .expect("Invalid union table, expected `RecordType::SEV`.")
+            .unpack()
+      )),
       RecordType::SIT => RecordTypeT::SIT(Box::new(
         self.value_as_SIT()
             .expect("Invalid union table, expected `RecordType::SIT`.")
             .unpack()
       )),
+      RecordType::SKI => RecordTypeT::SKI(Box::new(
+        self.value_as_SKI()
+            .expect("Invalid union table, expected `RecordType::SKI`.")
+            .unpack()
+      )),
+      RecordType::SNR => RecordTypeT::SNR(Box::new(
+        self.value_as_SNR()
+            .expect("Invalid union table, expected `RecordType::SNR`.")
+            .unpack()
+      )),
+      RecordType::SOI => RecordTypeT::SOI(Box::new(
+        self.value_as_SOI()
+            .expect("Invalid union table, expected `RecordType::SOI`.")
+            .unpack()
+      )),
+      RecordType::SON => RecordTypeT::SON(Box::new(
+        self.value_as_SON()
+            .expect("Invalid union table, expected `RecordType::SON`.")
+            .unpack()
+      )),
+      RecordType::SPP => RecordTypeT::SPP(Box::new(
+        self.value_as_SPP()
+            .expect("Invalid union table, expected `RecordType::SPP`.")
+            .unpack()
+      )),
+      RecordType::SPW => RecordTypeT::SPW(Box::new(
+        self.value_as_SPW()
+            .expect("Invalid union table, expected `RecordType::SPW`.")
+            .unpack()
+      )),
       RecordType::STF => RecordTypeT::STF(Box::new(
         self.value_as_STF()
             .expect("Invalid union table, expected `RecordType::STF`.")
+            .unpack()
+      )),
+      RecordType::STR => RecordTypeT::STR(Box::new(
+        self.value_as_STR()
+            .expect("Invalid union table, expected `RecordType::STR`.")
+            .unpack()
+      )),
+      RecordType::STV => RecordTypeT::STV(Box::new(
+        self.value_as_STV()
+            .expect("Invalid union table, expected `RecordType::STV`.")
+            .unpack()
+      )),
+      RecordType::SWR => RecordTypeT::SWR(Box::new(
+        self.value_as_SWR()
+            .expect("Invalid union table, expected `RecordType::SWR`.")
+            .unpack()
+      )),
+      RecordType::TCF => RecordTypeT::TCF(Box::new(
+        self.value_as_TCF()
+            .expect("Invalid union table, expected `RecordType::TCF`.")
             .unpack()
       )),
       RecordType::TDM => RecordTypeT::TDM(Box::new(
@@ -1436,9 +4082,49 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::TIM`.")
             .unpack()
       )),
+      RecordType::TKG => RecordTypeT::TKG(Box::new(
+        self.value_as_TKG()
+            .expect("Invalid union table, expected `RecordType::TKG`.")
+            .unpack()
+      )),
+      RecordType::TME => RecordTypeT::TME(Box::new(
+        self.value_as_TME()
+            .expect("Invalid union table, expected `RecordType::TME`.")
+            .unpack()
+      )),
+      RecordType::TMF => RecordTypeT::TMF(Box::new(
+        self.value_as_TMF()
+            .expect("Invalid union table, expected `RecordType::TMF`.")
+            .unpack()
+      )),
+      RecordType::TPN => RecordTypeT::TPN(Box::new(
+        self.value_as_TPN()
+            .expect("Invalid union table, expected `RecordType::TPN`.")
+            .unpack()
+      )),
+      RecordType::TRK => RecordTypeT::TRK(Box::new(
+        self.value_as_TRK()
+            .expect("Invalid union table, expected `RecordType::TRK`.")
+            .unpack()
+      )),
+      RecordType::TRN => RecordTypeT::TRN(Box::new(
+        self.value_as_TRN()
+            .expect("Invalid union table, expected `RecordType::TRN`.")
+            .unpack()
+      )),
       RecordType::VCM => RecordTypeT::VCM(Box::new(
         self.value_as_VCM()
             .expect("Invalid union table, expected `RecordType::VCM`.")
+            .unpack()
+      )),
+      RecordType::WPN => RecordTypeT::WPN(Box::new(
+        self.value_as_WPN()
+            .expect("Invalid union table, expected `RecordType::WPN`.")
+            .unpack()
+      )),
+      RecordType::WTH => RecordTypeT::WTH(Box::new(
+        self.value_as_WTH()
+            .expect("Invalid union table, expected `RecordType::WTH`.")
             .unpack()
       )),
       RecordType::XTC => RecordTypeT::XTC(Box::new(
@@ -1495,6 +4181,126 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_ACM(&self) -> Option<ACM<'a>> {
+    if self.value_type() == RecordType::ACM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ACM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ACR(&self) -> Option<ACR<'a>> {
+    if self.value_type() == RecordType::ACR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ACR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_AEM(&self) -> Option<AEM<'a>> {
+    if self.value_type() == RecordType::AEM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AEM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_AOF(&self) -> Option<AOF<'a>> {
+    if self.value_type() == RecordType::AOF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AOF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_APM(&self) -> Option<APM<'a>> {
+    if self.value_type() == RecordType::APM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { APM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ARM(&self) -> Option<ARM<'a>> {
+    if self.value_type() == RecordType::ARM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ARM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_AST(&self) -> Option<AST<'a>> {
+    if self.value_type() == RecordType::AST {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { AST::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ATD(&self) -> Option<ATD<'a>> {
+    if self.value_type() == RecordType::ATD {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ATD::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_ATM(&self) -> Option<ATM<'a>> {
     if self.value_type() == RecordType::ATM {
       self.value().map(|t| {
@@ -1502,6 +4308,51 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { ATM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_BAL(&self) -> Option<BAL<'a>> {
+    if self.value_type() == RecordType::BAL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { BAL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_BEM(&self) -> Option<BEM<'a>> {
+    if self.value_type() == RecordType::BEM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { BEM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_BMC(&self) -> Option<BMC<'a>> {
+    if self.value_type() == RecordType::BMC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { BMC::init_from_table(t) }
      })
     } else {
       None
@@ -1555,6 +4406,96 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_CFP(&self) -> Option<CFP<'a>> {
+    if self.value_type() == RecordType::CFP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CFP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_CHN(&self) -> Option<CHN<'a>> {
+    if self.value_type() == RecordType::CHN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CHN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_CLT(&self) -> Option<CLT<'a>> {
+    if self.value_type() == RecordType::CLT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CLT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_CMS(&self) -> Option<CMS<'a>> {
+    if self.value_type() == RecordType::CMS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CMS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_COM(&self) -> Option<COM<'a>> {
+    if self.value_type() == RecordType::COM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { COM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_CRD(&self) -> Option<CRD<'a>> {
+    if self.value_type() == RecordType::CRD {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CRD::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_CRM(&self) -> Option<CRM<'a>> {
     if self.value_type() == RecordType::CRM {
       self.value().map(|t| {
@@ -1600,6 +4541,51 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_DFH(&self) -> Option<DFH<'a>> {
+    if self.value_type() == RecordType::DFH {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { DFH::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_DMG(&self) -> Option<DMG<'a>> {
+    if self.value_type() == RecordType::DMG {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { DMG::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_DOA(&self) -> Option<DOA<'a>> {
+    if self.value_type() == RecordType::DOA {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { DOA::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_EME(&self) -> Option<EME<'a>> {
     if self.value_type() == RecordType::EME {
       self.value().map(|t| {
@@ -1607,6 +4593,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { EME::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ENV(&self) -> Option<ENV<'a>> {
+    if self.value_type() == RecordType::ENV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ENV::init_from_table(t) }
      })
     } else {
       None
@@ -1660,6 +4661,126 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_EWR(&self) -> Option<EWR<'a>> {
+    if self.value_type() == RecordType::EWR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { EWR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_FCS(&self) -> Option<FCS<'a>> {
+    if self.value_type() == RecordType::FCS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { FCS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GDI(&self) -> Option<GDI<'a>> {
+    if self.value_type() == RecordType::GDI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GDI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GEO(&self) -> Option<GEO<'a>> {
+    if self.value_type() == RecordType::GEO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GEO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GNO(&self) -> Option<GNO<'a>> {
+    if self.value_type() == RecordType::GNO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GNO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GRV(&self) -> Option<GRV<'a>> {
+    if self.value_type() == RecordType::GRV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GRV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GVH(&self) -> Option<GVH<'a>> {
+    if self.value_type() == RecordType::GVH {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GVH::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_HEL(&self) -> Option<HEL<'a>> {
+    if self.value_type() == RecordType::HEL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { HEL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_HYP(&self) -> Option<HYP<'a>> {
     if self.value_type() == RecordType::HYP {
       self.value().map(|t| {
@@ -1682,6 +4803,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { IDM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_IRO(&self) -> Option<IRO<'a>> {
+    if self.value_type() == RecordType::IRO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { IRO::init_from_table(t) }
      })
     } else {
       None
@@ -1720,6 +4856,51 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_LKS(&self) -> Option<LKS<'a>> {
+    if self.value_type() == RecordType::LKS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LKS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_LND(&self) -> Option<LND<'a>> {
+    if self.value_type() == RecordType::LND {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LND::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_LNE(&self) -> Option<LNE<'a>> {
+    if self.value_type() == RecordType::LNE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { LNE::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_MET(&self) -> Option<MET<'a>> {
     if self.value_type() == RecordType::MET {
       self.value().map(|t| {
@@ -1735,6 +4916,51 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_MFE(&self) -> Option<MFE<'a>> {
+    if self.value_type() == RecordType::MFE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MFE::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_MNF(&self) -> Option<MNF<'a>> {
+    if self.value_type() == RecordType::MNF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MNF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_MNV(&self) -> Option<MNV<'a>> {
+    if self.value_type() == RecordType::MNV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MNV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_MPE(&self) -> Option<MPE<'a>> {
     if self.value_type() == RecordType::MPE {
       self.value().map(|t| {
@@ -1742,6 +4968,96 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { MPE::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_MSL(&self) -> Option<MSL<'a>> {
+    if self.value_type() == RecordType::MSL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MSL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_MST(&self) -> Option<MST<'a>> {
+    if self.value_type() == RecordType::MST {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MST::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_MTI(&self) -> Option<MTI<'a>> {
+    if self.value_type() == RecordType::MTI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { MTI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_NAV(&self) -> Option<NAV<'a>> {
+    if self.value_type() == RecordType::NAV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { NAV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OBD(&self) -> Option<OBD<'a>> {
+    if self.value_type() == RecordType::OBD {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OBD::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OBT(&self) -> Option<OBT<'a>> {
+    if self.value_type() == RecordType::OBT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OBT::init_from_table(t) }
      })
     } else {
       None
@@ -1795,6 +5111,96 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_OOD(&self) -> Option<OOD<'a>> {
+    if self.value_type() == RecordType::OOD {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOD::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOE(&self) -> Option<OOE<'a>> {
+    if self.value_type() == RecordType::OOE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOE::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOI(&self) -> Option<OOI<'a>> {
+    if self.value_type() == RecordType::OOI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOL(&self) -> Option<OOL<'a>> {
+    if self.value_type() == RecordType::OOL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OON(&self) -> Option<OON<'a>> {
+    if self.value_type() == RecordType::OON {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OON::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OPM(&self) -> Option<OPM<'a>> {
+    if self.value_type() == RecordType::OPM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OPM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_OSM(&self) -> Option<OSM<'a>> {
     if self.value_type() == RecordType::OSM {
       self.value().map(|t| {
@@ -1802,6 +5208,36 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { OSM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_PCF(&self) -> Option<PCF<'a>> {
+    if self.value_type() == RecordType::PCF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PCF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_PHY(&self) -> Option<PHY<'a>> {
+    if self.value_type() == RecordType::PHY {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PHY::init_from_table(t) }
      })
     } else {
       None
@@ -1900,6 +5336,66 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_RAF(&self) -> Option<RAF<'a>> {
+    if self.value_type() == RecordType::RAF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RAF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_RCF(&self) -> Option<RCF<'a>> {
+    if self.value_type() == RecordType::RCF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RCF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_RDM(&self) -> Option<RDM<'a>> {
+    if self.value_type() == RecordType::RDM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RDM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_RDO(&self) -> Option<RDO<'a>> {
+    if self.value_type() == RecordType::RDO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RDO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_REV(&self) -> Option<REV<'a>> {
     if self.value_type() == RecordType::REV {
       self.value().map(|t| {
@@ -1907,6 +5403,36 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { REV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_RFB(&self) -> Option<RFB<'a>> {
+    if self.value_type() == RecordType::RFB {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RFB::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_RFE(&self) -> Option<RFE<'a>> {
+    if self.value_type() == RecordType::RFE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RFE::init_from_table(t) }
      })
     } else {
       None
@@ -1930,6 +5456,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_RFO(&self) -> Option<RFO<'a>> {
+    if self.value_type() == RecordType::RFO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RFO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_ROC(&self) -> Option<ROC<'a>> {
     if self.value_type() == RecordType::ROC {
       self.value().map(|t| {
@@ -1937,6 +5478,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { ROC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SAR(&self) -> Option<SAR<'a>> {
+    if self.value_type() == RecordType::SAR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SAR::init_from_table(t) }
      })
     } else {
       None
@@ -1960,6 +5516,51 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_SDL(&self) -> Option<SDL<'a>> {
+    if self.value_type() == RecordType::SDL {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SDL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SEO(&self) -> Option<SEO<'a>> {
+    if self.value_type() == RecordType::SEO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SEO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SEV(&self) -> Option<SEV<'a>> {
+    if self.value_type() == RecordType::SEV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SEV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_SIT(&self) -> Option<SIT<'a>> {
     if self.value_type() == RecordType::SIT {
       self.value().map(|t| {
@@ -1975,6 +5576,96 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_SKI(&self) -> Option<SKI<'a>> {
+    if self.value_type() == RecordType::SKI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SKI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SNR(&self) -> Option<SNR<'a>> {
+    if self.value_type() == RecordType::SNR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SNR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SOI(&self) -> Option<SOI<'a>> {
+    if self.value_type() == RecordType::SOI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SOI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SON(&self) -> Option<SON<'a>> {
+    if self.value_type() == RecordType::SON {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SON::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SPP(&self) -> Option<SPP<'a>> {
+    if self.value_type() == RecordType::SPP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SPP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SPW(&self) -> Option<SPW<'a>> {
+    if self.value_type() == RecordType::SPW {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SPW::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_STF(&self) -> Option<STF<'a>> {
     if self.value_type() == RecordType::STF {
       self.value().map(|t| {
@@ -1982,6 +5673,66 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { STF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_STR(&self) -> Option<STR<'a>> {
+    if self.value_type() == RecordType::STR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { STR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_STV(&self) -> Option<STV<'a>> {
+    if self.value_type() == RecordType::STV {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { STV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SWR(&self) -> Option<SWR<'a>> {
+    if self.value_type() == RecordType::SWR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SWR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TCF(&self) -> Option<TCF<'a>> {
+    if self.value_type() == RecordType::TCF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TCF::init_from_table(t) }
      })
     } else {
       None
@@ -2020,6 +5771,96 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_TKG(&self) -> Option<TKG<'a>> {
+    if self.value_type() == RecordType::TKG {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TKG::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TME(&self) -> Option<TME<'a>> {
+    if self.value_type() == RecordType::TME {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TME::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TMF(&self) -> Option<TMF<'a>> {
+    if self.value_type() == RecordType::TMF {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TMF::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TPN(&self) -> Option<TPN<'a>> {
+    if self.value_type() == RecordType::TPN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TPN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TRK(&self) -> Option<TRK<'a>> {
+    if self.value_type() == RecordType::TRK {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TRK::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_TRN(&self) -> Option<TRN<'a>> {
+    if self.value_type() == RecordType::TRN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TRN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_VCM(&self) -> Option<VCM<'a>> {
     if self.value_type() == RecordType::VCM {
       self.value().map(|t| {
@@ -2027,6 +5868,36 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { VCM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_WPN(&self) -> Option<WPN<'a>> {
+    if self.value_type() == RecordType::WPN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { WPN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_WTH(&self) -> Option<WTH<'a>> {
+    if self.value_type() == RecordType::WTH {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { WTH::init_from_table(t) }
      })
     } else {
       None
@@ -2060,42 +5931,121 @@ impl flatbuffers::Verifiable for Record<'_> {
      .visit_union::<RecordType, _>("value_type", Self::VT_VALUE_TYPE, "value", Self::VT_VALUE, false, |key, v, pos| {
         match key {
           RecordType::ACL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACL>>("RecordType::ACL", pos),
+          RecordType::ACM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACM>>("RecordType::ACM", pos),
+          RecordType::ACR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACR>>("RecordType::ACR", pos),
+          RecordType::AEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<AEM>>("RecordType::AEM", pos),
+          RecordType::AOF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<AOF>>("RecordType::AOF", pos),
+          RecordType::APM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<APM>>("RecordType::APM", pos),
+          RecordType::ARM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ARM>>("RecordType::ARM", pos),
+          RecordType::AST => v.verify_union_variant::<flatbuffers::ForwardsUOffset<AST>>("RecordType::AST", pos),
+          RecordType::ATD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ATD>>("RecordType::ATD", pos),
           RecordType::ATM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ATM>>("RecordType::ATM", pos),
+          RecordType::BAL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BAL>>("RecordType::BAL", pos),
+          RecordType::BEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BEM>>("RecordType::BEM", pos),
+          RecordType::BMC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BMC>>("RecordType::BMC", pos),
           RecordType::BOV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BOV>>("RecordType::BOV", pos),
           RecordType::CAT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CAT>>("RecordType::CAT", pos),
           RecordType::CDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CDM>>("RecordType::CDM", pos),
+          RecordType::CFP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CFP>>("RecordType::CFP", pos),
+          RecordType::CHN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CHN>>("RecordType::CHN", pos),
+          RecordType::CLT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CLT>>("RecordType::CLT", pos),
+          RecordType::CMS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CMS>>("RecordType::CMS", pos),
+          RecordType::COM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<COM>>("RecordType::COM", pos),
+          RecordType::CRD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CRD>>("RecordType::CRD", pos),
           RecordType::CRM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CRM>>("RecordType::CRM", pos),
           RecordType::CSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CSM>>("RecordType::CSM", pos),
           RecordType::CTR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CTR>>("RecordType::CTR", pos),
+          RecordType::DFH => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DFH>>("RecordType::DFH", pos),
+          RecordType::DMG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DMG>>("RecordType::DMG", pos),
+          RecordType::DOA => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DOA>>("RecordType::DOA", pos),
           RecordType::EME => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EME>>("RecordType::EME", pos),
+          RecordType::ENV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ENV>>("RecordType::ENV", pos),
           RecordType::EOO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EOO>>("RecordType::EOO", pos),
           RecordType::EOP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EOP>>("RecordType::EOP", pos),
           RecordType::EPM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EPM>>("RecordType::EPM", pos),
+          RecordType::EWR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EWR>>("RecordType::EWR", pos),
+          RecordType::FCS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<FCS>>("RecordType::FCS", pos),
+          RecordType::GDI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GDI>>("RecordType::GDI", pos),
+          RecordType::GEO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GEO>>("RecordType::GEO", pos),
+          RecordType::GNO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GNO>>("RecordType::GNO", pos),
+          RecordType::GRV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GRV>>("RecordType::GRV", pos),
+          RecordType::GVH => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GVH>>("RecordType::GVH", pos),
+          RecordType::HEL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<HEL>>("RecordType::HEL", pos),
           RecordType::HYP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<HYP>>("RecordType::HYP", pos),
           RecordType::IDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IDM>>("RecordType::IDM", pos),
+          RecordType::IRO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IRO>>("RecordType::IRO", pos),
           RecordType::LCC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LCC>>("RecordType::LCC", pos),
           RecordType::LDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LDM>>("RecordType::LDM", pos),
+          RecordType::LKS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LKS>>("RecordType::LKS", pos),
+          RecordType::LND => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LND>>("RecordType::LND", pos),
+          RecordType::LNE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LNE>>("RecordType::LNE", pos),
           RecordType::MET => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MET>>("RecordType::MET", pos),
+          RecordType::MFE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MFE>>("RecordType::MFE", pos),
+          RecordType::MNF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MNF>>("RecordType::MNF", pos),
+          RecordType::MNV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MNV>>("RecordType::MNV", pos),
           RecordType::MPE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MPE>>("RecordType::MPE", pos),
+          RecordType::MSL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MSL>>("RecordType::MSL", pos),
+          RecordType::MST => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MST>>("RecordType::MST", pos),
+          RecordType::MTI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<MTI>>("RecordType::MTI", pos),
+          RecordType::NAV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<NAV>>("RecordType::NAV", pos),
+          RecordType::OBD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OBD>>("RecordType::OBD", pos),
+          RecordType::OBT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OBT>>("RecordType::OBT", pos),
           RecordType::OCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OCM>>("RecordType::OCM", pos),
           RecordType::OEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OEM>>("RecordType::OEM", pos),
           RecordType::OMM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OMM>>("RecordType::OMM", pos),
+          RecordType::OOD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOD>>("RecordType::OOD", pos),
+          RecordType::OOE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOE>>("RecordType::OOE", pos),
+          RecordType::OOI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOI>>("RecordType::OOI", pos),
+          RecordType::OOL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOL>>("RecordType::OOL", pos),
+          RecordType::OON => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OON>>("RecordType::OON", pos),
+          RecordType::OPM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OPM>>("RecordType::OPM", pos),
           RecordType::OSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OSM>>("RecordType::OSM", pos),
+          RecordType::PCF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PCF>>("RecordType::PCF", pos),
+          RecordType::PHY => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PHY>>("RecordType::PHY", pos),
           RecordType::PLD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLD>>("RecordType::PLD", pos),
           RecordType::PLG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLG>>("RecordType::PLG", pos),
           RecordType::PLK => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PLK>>("RecordType::PLK", pos),
           RecordType::PNM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PNM>>("RecordType::PNM", pos),
           RecordType::PRG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PRG>>("RecordType::PRG", pos),
           RecordType::PUR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PUR>>("RecordType::PUR", pos),
+          RecordType::RAF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RAF>>("RecordType::RAF", pos),
+          RecordType::RCF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RCF>>("RecordType::RCF", pos),
+          RecordType::RDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RDM>>("RecordType::RDM", pos),
+          RecordType::RDO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RDO>>("RecordType::RDO", pos),
           RecordType::REV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<REV>>("RecordType::REV", pos),
+          RecordType::RFB => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RFB>>("RecordType::RFB", pos),
+          RecordType::RFE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RFE>>("RecordType::RFE", pos),
           RecordType::RFM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RFM>>("RecordType::RFM", pos),
+          RecordType::RFO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<RFO>>("RecordType::RFO", pos),
           RecordType::ROC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ROC>>("RecordType::ROC", pos),
+          RecordType::SAR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SAR>>("RecordType::SAR", pos),
           RecordType::SCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SCM>>("RecordType::SCM", pos),
+          RecordType::SDL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SDL>>("RecordType::SDL", pos),
+          RecordType::SEO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SEO>>("RecordType::SEO", pos),
+          RecordType::SEV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SEV>>("RecordType::SEV", pos),
           RecordType::SIT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SIT>>("RecordType::SIT", pos),
+          RecordType::SKI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SKI>>("RecordType::SKI", pos),
+          RecordType::SNR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SNR>>("RecordType::SNR", pos),
+          RecordType::SOI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SOI>>("RecordType::SOI", pos),
+          RecordType::SON => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SON>>("RecordType::SON", pos),
+          RecordType::SPP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SPP>>("RecordType::SPP", pos),
+          RecordType::SPW => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SPW>>("RecordType::SPW", pos),
           RecordType::STF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<STF>>("RecordType::STF", pos),
+          RecordType::STR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<STR>>("RecordType::STR", pos),
+          RecordType::STV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<STV>>("RecordType::STV", pos),
+          RecordType::SWR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SWR>>("RecordType::SWR", pos),
+          RecordType::TCF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TCF>>("RecordType::TCF", pos),
           RecordType::TDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TDM>>("RecordType::TDM", pos),
           RecordType::TIM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TIM>>("RecordType::TIM", pos),
+          RecordType::TKG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TKG>>("RecordType::TKG", pos),
+          RecordType::TME => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TME>>("RecordType::TME", pos),
+          RecordType::TMF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TMF>>("RecordType::TMF", pos),
+          RecordType::TPN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TPN>>("RecordType::TPN", pos),
+          RecordType::TRK => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TRK>>("RecordType::TRK", pos),
+          RecordType::TRN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<TRN>>("RecordType::TRN", pos),
           RecordType::VCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<VCM>>("RecordType::VCM", pos),
+          RecordType::WPN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<WPN>>("RecordType::WPN", pos),
+          RecordType::WTH => v.verify_union_variant::<flatbuffers::ForwardsUOffset<WTH>>("RecordType::WTH", pos),
           RecordType::XTC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<XTC>>("RecordType::XTC", pos),
           _ => Ok(()),
         }
@@ -2165,8 +6115,85 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::ACM => {
+          if let Some(x) = self.value_as_ACM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ACR => {
+          if let Some(x) = self.value_as_ACR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AEM => {
+          if let Some(x) = self.value_as_AEM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AOF => {
+          if let Some(x) = self.value_as_AOF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::APM => {
+          if let Some(x) = self.value_as_APM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ARM => {
+          if let Some(x) = self.value_as_ARM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::AST => {
+          if let Some(x) = self.value_as_AST() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ATD => {
+          if let Some(x) = self.value_as_ATD() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::ATM => {
           if let Some(x) = self.value_as_ATM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::BAL => {
+          if let Some(x) = self.value_as_BAL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::BEM => {
+          if let Some(x) = self.value_as_BEM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::BMC => {
+          if let Some(x) = self.value_as_BMC() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2193,6 +6220,48 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::CFP => {
+          if let Some(x) = self.value_as_CFP() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CHN => {
+          if let Some(x) = self.value_as_CHN() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CLT => {
+          if let Some(x) = self.value_as_CLT() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CMS => {
+          if let Some(x) = self.value_as_CMS() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::COM => {
+          if let Some(x) = self.value_as_COM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CRD => {
+          if let Some(x) = self.value_as_CRD() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::CRM => {
           if let Some(x) = self.value_as_CRM() {
             ds.field("value", &x)
@@ -2214,8 +6283,36 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::DFH => {
+          if let Some(x) = self.value_as_DFH() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::DMG => {
+          if let Some(x) = self.value_as_DMG() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::DOA => {
+          if let Some(x) = self.value_as_DOA() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::EME => {
           if let Some(x) = self.value_as_EME() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ENV => {
+          if let Some(x) = self.value_as_ENV() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2242,6 +6339,62 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::EWR => {
+          if let Some(x) = self.value_as_EWR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::FCS => {
+          if let Some(x) = self.value_as_FCS() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GDI => {
+          if let Some(x) = self.value_as_GDI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GEO => {
+          if let Some(x) = self.value_as_GEO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GNO => {
+          if let Some(x) = self.value_as_GNO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GRV => {
+          if let Some(x) = self.value_as_GRV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GVH => {
+          if let Some(x) = self.value_as_GVH() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::HEL => {
+          if let Some(x) = self.value_as_HEL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::HYP => {
           if let Some(x) = self.value_as_HYP() {
             ds.field("value", &x)
@@ -2251,6 +6404,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::IDM => {
           if let Some(x) = self.value_as_IDM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::IRO => {
+          if let Some(x) = self.value_as_IRO() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2270,6 +6430,27 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::LKS => {
+          if let Some(x) = self.value_as_LKS() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::LND => {
+          if let Some(x) = self.value_as_LND() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::LNE => {
+          if let Some(x) = self.value_as_LNE() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::MET => {
           if let Some(x) = self.value_as_MET() {
             ds.field("value", &x)
@@ -2277,8 +6458,71 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::MFE => {
+          if let Some(x) = self.value_as_MFE() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::MNF => {
+          if let Some(x) = self.value_as_MNF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::MNV => {
+          if let Some(x) = self.value_as_MNV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::MPE => {
           if let Some(x) = self.value_as_MPE() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::MSL => {
+          if let Some(x) = self.value_as_MSL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::MST => {
+          if let Some(x) = self.value_as_MST() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::MTI => {
+          if let Some(x) = self.value_as_MTI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::NAV => {
+          if let Some(x) = self.value_as_NAV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OBD => {
+          if let Some(x) = self.value_as_OBD() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OBT => {
+          if let Some(x) = self.value_as_OBT() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2305,8 +6549,64 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::OOD => {
+          if let Some(x) = self.value_as_OOD() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOE => {
+          if let Some(x) = self.value_as_OOE() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOI => {
+          if let Some(x) = self.value_as_OOI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOL => {
+          if let Some(x) = self.value_as_OOL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OON => {
+          if let Some(x) = self.value_as_OON() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OPM => {
+          if let Some(x) = self.value_as_OPM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::OSM => {
           if let Some(x) = self.value_as_OSM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PCF => {
+          if let Some(x) = self.value_as_PCF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PHY => {
+          if let Some(x) = self.value_as_PHY() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2354,8 +6654,50 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::RAF => {
+          if let Some(x) = self.value_as_RAF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RCF => {
+          if let Some(x) = self.value_as_RCF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RDM => {
+          if let Some(x) = self.value_as_RDM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RDO => {
+          if let Some(x) = self.value_as_RDO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::REV => {
           if let Some(x) = self.value_as_REV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RFB => {
+          if let Some(x) = self.value_as_RFB() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RFE => {
+          if let Some(x) = self.value_as_RFE() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2368,8 +6710,22 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::RFO => {
+          if let Some(x) = self.value_as_RFO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::ROC => {
           if let Some(x) = self.value_as_ROC() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SAR => {
+          if let Some(x) = self.value_as_SAR() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2382,6 +6738,27 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::SDL => {
+          if let Some(x) = self.value_as_SDL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SEO => {
+          if let Some(x) = self.value_as_SEO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SEV => {
+          if let Some(x) = self.value_as_SEV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::SIT => {
           if let Some(x) = self.value_as_SIT() {
             ds.field("value", &x)
@@ -2389,8 +6766,78 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::SKI => {
+          if let Some(x) = self.value_as_SKI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SNR => {
+          if let Some(x) = self.value_as_SNR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SOI => {
+          if let Some(x) = self.value_as_SOI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SON => {
+          if let Some(x) = self.value_as_SON() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SPP => {
+          if let Some(x) = self.value_as_SPP() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SPW => {
+          if let Some(x) = self.value_as_SPW() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::STF => {
           if let Some(x) = self.value_as_STF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::STR => {
+          if let Some(x) = self.value_as_STR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::STV => {
+          if let Some(x) = self.value_as_STV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SWR => {
+          if let Some(x) = self.value_as_SWR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TCF => {
+          if let Some(x) = self.value_as_TCF() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -2410,8 +6857,64 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::TKG => {
+          if let Some(x) = self.value_as_TKG() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TME => {
+          if let Some(x) = self.value_as_TME() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TMF => {
+          if let Some(x) = self.value_as_TMF() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TPN => {
+          if let Some(x) = self.value_as_TPN() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TRK => {
+          if let Some(x) = self.value_as_TRK() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TRN => {
+          if let Some(x) = self.value_as_TRN() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::VCM => {
           if let Some(x) = self.value_as_VCM() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::WPN => {
+          if let Some(x) = self.value_as_WPN() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::WTH => {
+          if let Some(x) = self.value_as_WTH() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

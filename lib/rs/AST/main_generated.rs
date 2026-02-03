@@ -10,30 +10,30 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PROPAGATOR_TYPE: i8 = 0;
+pub const ENUM_MIN_PROPAGATOR_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PROPAGATOR_TYPE: i8 = 10;
+pub const ENUM_MAX_PROPAGATOR_METHOD: i8 = 10;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PROPAGATOR_TYPE: [PropagatorType; 11] = [
-  PropagatorType::KEPLER,
-  PropagatorType::SGP4,
-  PropagatorType::SDP4,
-  PropagatorType::HPOP,
-  PropagatorType::COWELL,
-  PropagatorType::ENCKE,
-  PropagatorType::GAUSS_JACKSON,
-  PropagatorType::RK78,
-  PropagatorType::BROUWER,
-  PropagatorType::KOZAI,
-  PropagatorType::DSST,
+pub const ENUM_VALUES_PROPAGATOR_METHOD: [PropagatorMethod; 11] = [
+  PropagatorMethod::KEPLER,
+  PropagatorMethod::SGP4,
+  PropagatorMethod::SDP4,
+  PropagatorMethod::HPOP,
+  PropagatorMethod::COWELL,
+  PropagatorMethod::ENCKE,
+  PropagatorMethod::GAUSS_JACKSON,
+  PropagatorMethod::RK78,
+  PropagatorMethod::BROUWER,
+  PropagatorMethod::KOZAI,
+  PropagatorMethod::DSST,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct PropagatorType(pub i8);
+pub struct PropagatorMethod(pub i8);
 #[allow(non_upper_case_globals)]
-impl PropagatorType {
+impl PropagatorMethod {
   pub const KEPLER: Self = Self(0);
   pub const SGP4: Self = Self(1);
   pub const SDP4: Self = Self(2);
@@ -79,7 +79,7 @@ impl PropagatorType {
     }
   }
 }
-impl core::fmt::Debug for PropagatorType {
+impl core::fmt::Debug for PropagatorMethod {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -88,7 +88,7 @@ impl core::fmt::Debug for PropagatorType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for PropagatorType {
+impl<'a> flatbuffers::Follow<'a> for PropagatorMethod {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -97,15 +97,15 @@ impl<'a> flatbuffers::Follow<'a> for PropagatorType {
   }
 }
 
-impl flatbuffers::Push for PropagatorType {
-    type Output = PropagatorType;
+impl flatbuffers::Push for PropagatorMethod {
+    type Output = PropagatorMethod;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for PropagatorType {
+impl flatbuffers::EndianScalar for PropagatorMethod {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -119,7 +119,7 @@ impl flatbuffers::EndianScalar for PropagatorType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for PropagatorType {
+impl<'a> flatbuffers::Verifiable for PropagatorMethod {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -129,7 +129,7 @@ impl<'a> flatbuffers::Verifiable for PropagatorType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for PropagatorType {}
+impl flatbuffers::SimpleToVerifyInSlice for PropagatorMethod {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_FORCE_MODEL: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -256,30 +256,30 @@ impl<'a> flatbuffers::Verifiable for ForceModel {
 
 impl flatbuffers::SimpleToVerifyInSlice for ForceModel {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_ORBIT_TYPE: i8 = 0;
+pub const ENUM_MIN_ORBITAL_REGIME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ORBIT_TYPE: i8 = 10;
+pub const ENUM_MAX_ORBITAL_REGIME: i8 = 10;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ORBIT_TYPE: [OrbitType; 11] = [
-  OrbitType::LEO,
-  OrbitType::MEO,
-  OrbitType::GEO,
-  OrbitType::HEO,
-  OrbitType::SSO,
-  OrbitType::MOLNIYA,
-  OrbitType::TUNDRA,
-  OrbitType::POLAR,
-  OrbitType::EQUATORIAL,
-  OrbitType::HYPERBOLIC,
-  OrbitType::PARABOLIC,
+pub const ENUM_VALUES_ORBITAL_REGIME: [OrbitalRegime; 11] = [
+  OrbitalRegime::LEO,
+  OrbitalRegime::MEO,
+  OrbitalRegime::GEO,
+  OrbitalRegime::HEO,
+  OrbitalRegime::SSO,
+  OrbitalRegime::MOLNIYA,
+  OrbitalRegime::TUNDRA,
+  OrbitalRegime::POLAR,
+  OrbitalRegime::EQUATORIAL,
+  OrbitalRegime::HYPERBOLIC,
+  OrbitalRegime::PARABOLIC,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct OrbitType(pub i8);
+pub struct OrbitalRegime(pub i8);
 #[allow(non_upper_case_globals)]
-impl OrbitType {
+impl OrbitalRegime {
   pub const LEO: Self = Self(0);
   pub const MEO: Self = Self(1);
   pub const GEO: Self = Self(2);
@@ -325,7 +325,7 @@ impl OrbitType {
     }
   }
 }
-impl core::fmt::Debug for OrbitType {
+impl core::fmt::Debug for OrbitalRegime {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -334,7 +334,7 @@ impl core::fmt::Debug for OrbitType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for OrbitType {
+impl<'a> flatbuffers::Follow<'a> for OrbitalRegime {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -343,15 +343,15 @@ impl<'a> flatbuffers::Follow<'a> for OrbitType {
   }
 }
 
-impl flatbuffers::Push for OrbitType {
-    type Output = OrbitType;
+impl flatbuffers::Push for OrbitalRegime {
+    type Output = OrbitalRegime;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for OrbitType {
+impl flatbuffers::EndianScalar for OrbitalRegime {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -365,7 +365,7 @@ impl flatbuffers::EndianScalar for OrbitType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for OrbitType {
+impl<'a> flatbuffers::Verifiable for OrbitalRegime {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -375,28 +375,28 @@ impl<'a> flatbuffers::Verifiable for OrbitType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for OrbitType {}
+impl flatbuffers::SimpleToVerifyInSlice for OrbitalRegime {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TIME_SYSTEM: i8 = 0;
+pub const ENUM_MIN_TIME_REFERENCE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TIME_SYSTEM: i8 = 6;
+pub const ENUM_MAX_TIME_REFERENCE: i8 = 6;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TIME_SYSTEM: [TimeSystem; 7] = [
-  TimeSystem::UTC,
-  TimeSystem::TAI,
-  TimeSystem::TT,
-  TimeSystem::TDB,
-  TimeSystem::GPS_TIME,
-  TimeSystem::JULIAN_DATE,
-  TimeSystem::MODIFIED_JULIAN_DATE,
+pub const ENUM_VALUES_TIME_REFERENCE: [TimeReference; 7] = [
+  TimeReference::UTC,
+  TimeReference::TAI,
+  TimeReference::TT,
+  TimeReference::TDB,
+  TimeReference::GPS_TIME,
+  TimeReference::JULIAN_DATE,
+  TimeReference::MODIFIED_JULIAN_DATE,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct TimeSystem(pub i8);
+pub struct TimeReference(pub i8);
 #[allow(non_upper_case_globals)]
-impl TimeSystem {
+impl TimeReference {
   pub const UTC: Self = Self(0);
   pub const TAI: Self = Self(1);
   pub const TT: Self = Self(2);
@@ -430,7 +430,7 @@ impl TimeSystem {
     }
   }
 }
-impl core::fmt::Debug for TimeSystem {
+impl core::fmt::Debug for TimeReference {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -439,7 +439,7 @@ impl core::fmt::Debug for TimeSystem {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for TimeSystem {
+impl<'a> flatbuffers::Follow<'a> for TimeReference {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -448,15 +448,15 @@ impl<'a> flatbuffers::Follow<'a> for TimeSystem {
   }
 }
 
-impl flatbuffers::Push for TimeSystem {
-    type Output = TimeSystem;
+impl flatbuffers::Push for TimeReference {
+    type Output = TimeReference;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for TimeSystem {
+impl flatbuffers::EndianScalar for TimeReference {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -470,7 +470,7 @@ impl flatbuffers::EndianScalar for TimeSystem {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for TimeSystem {
+impl<'a> flatbuffers::Verifiable for TimeReference {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -480,7 +480,7 @@ impl<'a> flatbuffers::Verifiable for TimeSystem {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for TimeSystem {}
+impl flatbuffers::SimpleToVerifyInSlice for TimeReference {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_REFERENCE_FRAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]

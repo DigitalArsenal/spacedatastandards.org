@@ -25,25 +25,28 @@ class EME : flatbuffers.handle
     /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
     def IV() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
+    /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+    def SALT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// Identifier for the public key used, aiding in recipient key management and message decryption.
     def PUBLIC_KEY_IDENTIFIER() -> string:
-        return flatbuffers.field_string(buf_, pos_, 16)
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Specifies the set of cryptographic algorithms used in the encryption process.
     def CIPHER_SUITE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 18)
+        return flatbuffers.field_string(buf_, pos_, 20)
     /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
     def KDF_PARAMETERS() -> string:
-        return flatbuffers.field_string(buf_, pos_, 20)
+        return flatbuffers.field_string(buf_, pos_, 22)
     /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
     def ENCRYPTION_ALGORITHM_PARAMETERS() -> string:
-        return flatbuffers.field_string(buf_, pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 24)
 
 def GetRootAsEME(buf:string): return EME { buf, flatbuffers.indirect(buf, 0) }
 
 struct EMEBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(11)
         return this
     def add_ENCRYPTED_BLOB(ENCRYPTED_BLOB:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENCRYPTED_BLOB)
@@ -63,17 +66,20 @@ struct EMEBuilder:
     def add_IV(IV:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, IV)
         return this
+    def add_SALT(SALT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, SALT)
+        return this
     def add_PUBLIC_KEY_IDENTIFIER(PUBLIC_KEY_IDENTIFIER:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, PUBLIC_KEY_IDENTIFIER)
+        b_.PrependUOffsetTRelativeSlot(7, PUBLIC_KEY_IDENTIFIER)
         return this
     def add_CIPHER_SUITE(CIPHER_SUITE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, CIPHER_SUITE)
+        b_.PrependUOffsetTRelativeSlot(8, CIPHER_SUITE)
         return this
     def add_KDF_PARAMETERS(KDF_PARAMETERS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, KDF_PARAMETERS)
+        b_.PrependUOffsetTRelativeSlot(9, KDF_PARAMETERS)
         return this
     def add_ENCRYPTION_ALGORITHM_PARAMETERS(ENCRYPTION_ALGORITHM_PARAMETERS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, ENCRYPTION_ALGORITHM_PARAMETERS)
+        b_.PrependUOffsetTRelativeSlot(10, ENCRYPTION_ALGORITHM_PARAMETERS)
         return this
     def end():
         return b_.EndObject()

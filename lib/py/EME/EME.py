@@ -97,10 +97,18 @@ class EME(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+    # EME
+    def SALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # Identifier for the public key used, aiding in recipient key management and message decryption.
     # EME
     def PUBLIC_KEY_IDENTIFIER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -108,7 +116,7 @@ class EME(object):
     # Specifies the set of cryptographic algorithms used in the encryption process.
     # EME
     def CIPHER_SUITE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -116,7 +124,7 @@ class EME(object):
     # Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
     # EME
     def KDF_PARAMETERS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -124,13 +132,13 @@ class EME(object):
     # Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
     # EME
     def ENCRYPTION_ALGORITHM_PARAMETERS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
 def EMEStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(11)
 
 def Start(builder):
     EMEStart(builder)
@@ -177,26 +185,32 @@ def EMEAddIV(builder, IV):
 def AddIV(builder, IV):
     EMEAddIV(builder, IV)
 
+def EMEAddSALT(builder, SALT):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SALT), 0)
+
+def AddSALT(builder, SALT):
+    EMEAddSALT(builder, SALT)
+
 def EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY_IDENTIFIER), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY_IDENTIFIER), 0)
 
 def AddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
     EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
 
 def EMEAddCIPHER_SUITE(builder, CIPHER_SUITE):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHER_SUITE), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHER_SUITE), 0)
 
 def AddCIPHER_SUITE(builder, CIPHER_SUITE):
     EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
 
 def EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(KDF_PARAMETERS), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(KDF_PARAMETERS), 0)
 
 def AddKDF_PARAMETERS(builder, KDF_PARAMETERS):
     EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
 
 def EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
 
 def AddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
     EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
@@ -222,6 +236,7 @@ class EMET(object):
         self.NONCE = None  # type: str
         self.TAG = None  # type: str
         self.IV = None  # type: str
+        self.SALT = None  # type: str
         self.PUBLIC_KEY_IDENTIFIER = None  # type: str
         self.CIPHER_SUITE = None  # type: str
         self.KDF_PARAMETERS = None  # type: str
@@ -260,6 +275,7 @@ class EMET(object):
         self.NONCE = EME.NONCE()
         self.TAG = EME.TAG()
         self.IV = EME.IV()
+        self.SALT = EME.SALT()
         self.PUBLIC_KEY_IDENTIFIER = EME.PUBLIC_KEY_IDENTIFIER()
         self.CIPHER_SUITE = EME.CIPHER_SUITE()
         self.KDF_PARAMETERS = EME.KDF_PARAMETERS()
@@ -285,6 +301,8 @@ class EMET(object):
             TAG = builder.CreateString(self.TAG)
         if self.IV is not None:
             IV = builder.CreateString(self.IV)
+        if self.SALT is not None:
+            SALT = builder.CreateString(self.SALT)
         if self.PUBLIC_KEY_IDENTIFIER is not None:
             PUBLIC_KEY_IDENTIFIER = builder.CreateString(self.PUBLIC_KEY_IDENTIFIER)
         if self.CIPHER_SUITE is not None:
@@ -306,6 +324,8 @@ class EMET(object):
             EMEAddTAG(builder, TAG)
         if self.IV is not None:
             EMEAddIV(builder, IV)
+        if self.SALT is not None:
+            EMEAddSALT(builder, SALT)
         if self.PUBLIC_KEY_IDENTIFIER is not None:
             EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
         if self.CIPHER_SUITE is not None:

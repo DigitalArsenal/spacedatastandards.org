@@ -1,0 +1,9 @@
+export declare enum ClockType {
+    CESIUM = 0,
+    RUBIDIUM = 1,
+    QUARTZ_TCXO = 2,
+    QUARTZ_OCXO = 3,
+    HYDROGEN_MASER = 4,
+    GPS_DISCIPLINED = 5
+}
+//# sourceMappingURL=ClockType.d.ts.map

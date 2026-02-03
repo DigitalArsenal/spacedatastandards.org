@@ -5,37 +5,37 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class PropagatorType {
+class PropagatorMethod {
   final int value;
-  const PropagatorType._(this.value);
+  const PropagatorMethod._(this.value);
 
-  factory PropagatorType.fromValue(int value) {
+  factory PropagatorMethod.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum PropagatorType');
+        throw StateError('Invalid value $value for bit flag enum PropagatorMethod');
     }
     return result;
   }
 
-  static PropagatorType? _createOrNull(int? value) => 
-      value == null ? null : PropagatorType.fromValue(value);
+  static PropagatorMethod? _createOrNull(int? value) => 
+      value == null ? null : PropagatorMethod.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 10;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const PropagatorType KEPLER = PropagatorType._(0);
-  static const PropagatorType SGP4 = PropagatorType._(1);
-  static const PropagatorType SDP4 = PropagatorType._(2);
-  static const PropagatorType HPOP = PropagatorType._(3);
-  static const PropagatorType COWELL = PropagatorType._(4);
-  static const PropagatorType ENCKE = PropagatorType._(5);
-  static const PropagatorType GAUSS_JACKSON = PropagatorType._(6);
-  static const PropagatorType RK78 = PropagatorType._(7);
-  static const PropagatorType BROUWER = PropagatorType._(8);
-  static const PropagatorType KOZAI = PropagatorType._(9);
-  static const PropagatorType DSST = PropagatorType._(10);
-  static const Map<int, PropagatorType> values = {
+  static const PropagatorMethod KEPLER = PropagatorMethod._(0);
+  static const PropagatorMethod SGP4 = PropagatorMethod._(1);
+  static const PropagatorMethod SDP4 = PropagatorMethod._(2);
+  static const PropagatorMethod HPOP = PropagatorMethod._(3);
+  static const PropagatorMethod COWELL = PropagatorMethod._(4);
+  static const PropagatorMethod ENCKE = PropagatorMethod._(5);
+  static const PropagatorMethod GAUSS_JACKSON = PropagatorMethod._(6);
+  static const PropagatorMethod RK78 = PropagatorMethod._(7);
+  static const PropagatorMethod BROUWER = PropagatorMethod._(8);
+  static const PropagatorMethod KOZAI = PropagatorMethod._(9);
+  static const PropagatorMethod DSST = PropagatorMethod._(10);
+  static const Map<int, PropagatorMethod> values = {
     0: KEPLER,
     1: SGP4,
     2: SDP4,
@@ -48,23 +48,23 @@ class PropagatorType {
     9: KOZAI,
     10: DSST};
 
-  static const fb.Reader<PropagatorType> reader = _PropagatorTypeReader();
+  static const fb.Reader<PropagatorMethod> reader = _PropagatorMethodReader();
 
   @override
   String toString() {
-    return 'PropagatorType{value: $value}';
+    return 'PropagatorMethod{value: $value}';
   }
 }
 
-class _PropagatorTypeReader extends fb.Reader<PropagatorType> {
-  const _PropagatorTypeReader();
+class _PropagatorMethodReader extends fb.Reader<PropagatorMethod> {
+  const _PropagatorMethodReader();
 
   @override
   int get size => 1;
 
   @override
-  PropagatorType read(fb.BufferContext bc, int offset) =>
-      PropagatorType.fromValue(const fb.Int8Reader().read(bc, offset));
+  PropagatorMethod read(fb.BufferContext bc, int offset) =>
+      PropagatorMethod.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class ForceModel {
@@ -131,37 +131,37 @@ class _ForceModelReader extends fb.Reader<ForceModel> {
       ForceModel.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class OrbitType {
+class OrbitalRegime {
   final int value;
-  const OrbitType._(this.value);
+  const OrbitalRegime._(this.value);
 
-  factory OrbitType.fromValue(int value) {
+  factory OrbitalRegime.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum OrbitType');
+        throw StateError('Invalid value $value for bit flag enum OrbitalRegime');
     }
     return result;
   }
 
-  static OrbitType? _createOrNull(int? value) => 
-      value == null ? null : OrbitType.fromValue(value);
+  static OrbitalRegime? _createOrNull(int? value) => 
+      value == null ? null : OrbitalRegime.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 10;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const OrbitType LEO = OrbitType._(0);
-  static const OrbitType MEO = OrbitType._(1);
-  static const OrbitType GEO = OrbitType._(2);
-  static const OrbitType HEO = OrbitType._(3);
-  static const OrbitType SSO = OrbitType._(4);
-  static const OrbitType MOLNIYA = OrbitType._(5);
-  static const OrbitType TUNDRA = OrbitType._(6);
-  static const OrbitType POLAR = OrbitType._(7);
-  static const OrbitType EQUATORIAL = OrbitType._(8);
-  static const OrbitType HYPERBOLIC = OrbitType._(9);
-  static const OrbitType PARABOLIC = OrbitType._(10);
-  static const Map<int, OrbitType> values = {
+  static const OrbitalRegime LEO = OrbitalRegime._(0);
+  static const OrbitalRegime MEO = OrbitalRegime._(1);
+  static const OrbitalRegime GEO = OrbitalRegime._(2);
+  static const OrbitalRegime HEO = OrbitalRegime._(3);
+  static const OrbitalRegime SSO = OrbitalRegime._(4);
+  static const OrbitalRegime MOLNIYA = OrbitalRegime._(5);
+  static const OrbitalRegime TUNDRA = OrbitalRegime._(6);
+  static const OrbitalRegime POLAR = OrbitalRegime._(7);
+  static const OrbitalRegime EQUATORIAL = OrbitalRegime._(8);
+  static const OrbitalRegime HYPERBOLIC = OrbitalRegime._(9);
+  static const OrbitalRegime PARABOLIC = OrbitalRegime._(10);
+  static const Map<int, OrbitalRegime> values = {
     0: LEO,
     1: MEO,
     2: GEO,
@@ -174,52 +174,52 @@ class OrbitType {
     9: HYPERBOLIC,
     10: PARABOLIC};
 
-  static const fb.Reader<OrbitType> reader = _OrbitTypeReader();
+  static const fb.Reader<OrbitalRegime> reader = _OrbitalRegimeReader();
 
   @override
   String toString() {
-    return 'OrbitType{value: $value}';
+    return 'OrbitalRegime{value: $value}';
   }
 }
 
-class _OrbitTypeReader extends fb.Reader<OrbitType> {
-  const _OrbitTypeReader();
+class _OrbitalRegimeReader extends fb.Reader<OrbitalRegime> {
+  const _OrbitalRegimeReader();
 
   @override
   int get size => 1;
 
   @override
-  OrbitType read(fb.BufferContext bc, int offset) =>
-      OrbitType.fromValue(const fb.Int8Reader().read(bc, offset));
+  OrbitalRegime read(fb.BufferContext bc, int offset) =>
+      OrbitalRegime.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class TimeSystem {
+class TimeReference {
   final int value;
-  const TimeSystem._(this.value);
+  const TimeReference._(this.value);
 
-  factory TimeSystem.fromValue(int value) {
+  factory TimeReference.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum TimeSystem');
+        throw StateError('Invalid value $value for bit flag enum TimeReference');
     }
     return result;
   }
 
-  static TimeSystem? _createOrNull(int? value) => 
-      value == null ? null : TimeSystem.fromValue(value);
+  static TimeReference? _createOrNull(int? value) => 
+      value == null ? null : TimeReference.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 6;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const TimeSystem UTC = TimeSystem._(0);
-  static const TimeSystem TAI = TimeSystem._(1);
-  static const TimeSystem TT = TimeSystem._(2);
-  static const TimeSystem TDB = TimeSystem._(3);
-  static const TimeSystem GPS_TIME = TimeSystem._(4);
-  static const TimeSystem JULIAN_DATE = TimeSystem._(5);
-  static const TimeSystem MODIFIED_JULIAN_DATE = TimeSystem._(6);
-  static const Map<int, TimeSystem> values = {
+  static const TimeReference UTC = TimeReference._(0);
+  static const TimeReference TAI = TimeReference._(1);
+  static const TimeReference TT = TimeReference._(2);
+  static const TimeReference TDB = TimeReference._(3);
+  static const TimeReference GPS_TIME = TimeReference._(4);
+  static const TimeReference JULIAN_DATE = TimeReference._(5);
+  static const TimeReference MODIFIED_JULIAN_DATE = TimeReference._(6);
+  static const Map<int, TimeReference> values = {
     0: UTC,
     1: TAI,
     2: TT,
@@ -228,23 +228,23 @@ class TimeSystem {
     5: JULIAN_DATE,
     6: MODIFIED_JULIAN_DATE};
 
-  static const fb.Reader<TimeSystem> reader = _TimeSystemReader();
+  static const fb.Reader<TimeReference> reader = _TimeReferenceReader();
 
   @override
   String toString() {
-    return 'TimeSystem{value: $value}';
+    return 'TimeReference{value: $value}';
   }
 }
 
-class _TimeSystemReader extends fb.Reader<TimeSystem> {
-  const _TimeSystemReader();
+class _TimeReferenceReader extends fb.Reader<TimeReference> {
+  const _TimeReferenceReader();
 
   @override
   int get size => 1;
 
   @override
-  TimeSystem read(fb.BufferContext bc, int offset) =>
-      TimeSystem.fromValue(const fb.Int8Reader().read(bc, offset));
+  TimeReference read(fb.BufferContext bc, int offset) =>
+      TimeReference.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class ReferenceFrame {
