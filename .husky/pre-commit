@@ -1,0 +1,6 @@
+# Update schema list and count in index.html from manifest
+node scripts/updateSchemaList.cjs
+node scripts/updateSchemaCount.cjs
+
+# If index.html was modified, add it to the commit
+git diff --quiet index.html || git add index.html
