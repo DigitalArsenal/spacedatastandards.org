@@ -487,7 +487,7 @@
         position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
         point: {
           pixelSize: idx === 0 ? 10 : 4,
-          color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.fromCssColorString("#17ead9"),
+          color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.YELLOW,
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: idx === 0 ? 2 : 1
         },
