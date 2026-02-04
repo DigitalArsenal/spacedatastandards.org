@@ -472,7 +472,7 @@ void main() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw subtle grid
-      ctx.strokeStyle = 'rgba(102, 126, 234, 0.08)';
+      ctx.strokeStyle = 'rgba(0, 119, 182, 0.08)';
       ctx.lineWidth = 1;
 
       // Vertical lines
@@ -492,7 +492,7 @@ void main() {
       }
 
       // Draw grid intersection dots
-      ctx.fillStyle = 'rgba(102, 126, 234, 0.15)';
+      ctx.fillStyle = 'rgba(0, 119, 182, 0.15)';
       for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
           ctx.beginPath();
@@ -504,7 +504,7 @@ void main() {
       // Draw floating data strings
       ctx.font = '10px "JetBrains Mono", monospace';
       dataStrings.forEach(data => {
-        ctx.fillStyle = `rgba(102, 126, 234, ${data.opacity})`;
+        ctx.fillStyle = `rgba(0, 119, 182, ${data.opacity})`;
         ctx.fillText(data.text, data.x, data.y);
 
         // Slowly drift upward
@@ -518,7 +518,7 @@ void main() {
 
       // Subtle gradient overlay at top
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
-      gradient.addColorStop(0, 'rgba(102, 126, 234, 0.05)');
+      gradient.addColorStop(0, 'rgba(0, 119, 182, 0.05)');
       gradient.addColorStop(1, 'transparent');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
@@ -536,8 +536,15 @@ void main() {
     };
   }
 
-  onMount(() => {
-    schemaCount = 40; // Updated schema count
+  onMount(async () => {
+    // Fetch actual schema count from manifest
+    try {
+      const response = await fetch('/dist/manifest.json');
+      const manifest = await response.json();
+      schemaCount = Object.keys(manifest.STANDARDS || {}).length;
+    } catch (e) {
+      schemaCount = 118; // Fallback count
+    }
     const cleanup = initTechBackground();
     return cleanup;
   });
@@ -557,15 +564,15 @@ void main() {
       <img src="https://github.com/DigitalArsenal/spacedatastandards.org/actions/workflows/pages/pages-build-deployment/badge.svg" alt="Pages Build" />
     </a>
     <a href="https://www.npmjs.com/package/spacedatastandards.org" target="_blank" rel="noopener">
-      <img src="https://img.shields.io/npm/v/spacedatastandards.org.svg?style=flat&colorB=667eea" alt="npm version" />
+      <img src="https://img.shields.io/npm/v/spacedatastandards.org.svg?style=flat&colorB=00d4ff" alt="npm version" />
     </a>
     <a href="https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/LICENSE" target="_blank" rel="noopener">
-      <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat&colorB=667eea" alt="License" />
+      <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat&colorB=00d4ff" alt="License" />
     </a>
   </div>
   <div class="schema-badge-row">
     <a href="/schemas" use:link>
-      <img src="https://img.shields.io/badge/schemas-{schemaCount}+-667eea?style=for-the-badge&labelColor=1a1a2e" alt="Schemas" />
+      <img src="https://img.shields.io/badge/schemas-{schemaCount}-00d4ff?style=flat&labelColor=1a1a2e" alt="Schemas" />
     </a>
   </div>
   <div class="hero-actions">
@@ -1163,8 +1170,8 @@ void main() {
   }
 
   .schema-badge-row img {
-    height: 32px;
-    border-radius: 6px;
+    height: 22px;
+    border-radius: 4px;
   }
 
   .hero {
@@ -1185,7 +1192,7 @@ void main() {
     letter-spacing: -0.03em;
     margin-bottom: 20px;
     max-width: 900px;
-    background: linear-gradient(135deg, #ffffff 0%, #b8c6ff 50%, #ffffff 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #b8f0ff 50%, #ffffff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1251,7 +1258,7 @@ void main() {
 
   /* About Section */
   .about-section {
-    background: linear-gradient(180deg, transparent 0%, rgba(102, 126, 234, 0.03) 50%, transparent 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 119, 182, 0.03) 50%, transparent 100%);
   }
 
   .about-grid {
@@ -1319,7 +1326,7 @@ void main() {
 
   .comparison-card.highlight {
     border-color: var(--accent);
-    box-shadow: 0 0 40px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 0 40px rgba(0, 119, 182, 0.15);
   }
 
   .comparison-card h3 {
@@ -1451,8 +1458,8 @@ void main() {
     z-index: 1;
   }
 
-  .icon-blue::before { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-  .icon-cyan::before { background: linear-gradient(135deg, #17ead9 0%, #6078ea 100%); }
+  .icon-blue::before { background: linear-gradient(135deg, #0077b6 0%, #005f8a 100%); }
+  .icon-cyan::before { background: linear-gradient(135deg, #17ead9 0%, #005f8a 100%); }
   .icon-green::before { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
   .icon-orange::before { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
   .icon-purple::before { background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); }
@@ -1482,8 +1489,8 @@ void main() {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     padding: 4px 10px;
-    background: rgba(102, 126, 234, 0.1);
-    border: 1px solid rgba(102, 126, 234, 0.2);
+    background: rgba(0, 119, 182, 0.1);
+    border: 1px solid rgba(0, 119, 182, 0.2);
     border-radius: 6px;
     color: var(--accent);
     text-decoration: none;
@@ -1491,13 +1498,13 @@ void main() {
   }
 
   .schema-tag:hover {
-    background: rgba(102, 126, 234, 0.2);
+    background: rgba(0, 119, 182, 0.2);
     border-color: var(--accent);
   }
 
   /* Code Section */
   .code-section {
-    background: linear-gradient(180deg, transparent 0%, rgba(102, 126, 234, 0.03) 50%, transparent 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 119, 182, 0.03) 50%, transparent 100%);
   }
 
   .quickstart-container {
@@ -1630,7 +1637,7 @@ void main() {
 
   .formats-note code {
     font-family: 'JetBrains Mono', monospace;
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(0, 119, 182, 0.1);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 13px;
@@ -1715,14 +1722,23 @@ void main() {
   }
 
   .btn-accent {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    background: var(--accent);
     color: white;
     border: none;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-accent:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 100%);
+    transition: background 0.2s ease;
+  }
+
+  .btn-accent:hover::before {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
   }
 
   /* CTA Section */

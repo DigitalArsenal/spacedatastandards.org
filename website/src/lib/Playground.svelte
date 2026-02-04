@@ -21,6 +21,9 @@
     { value: "OEM", label: "OEM - Orbit Ephemeris" },
     { value: "CDM", label: "CDM - Conjunction Data" },
     { value: "EPM", label: "EPM - Entity Profile" },
+    { value: "SIT", label: "SIT - Site Information" },
+    { value: "LDM", label: "LDM - Launch Data" },
+    { value: "TDM", label: "TDM - Tracking Data" },
   ];
 
   // Sample data
@@ -235,6 +238,150 @@
       CAPABILITIES: ["LAUNCH", "SPACECRAFT_OPERATIONS", "CONSTELLATION_MANAGEMENT"],
       ACTIVE_ASSETS: 5000,
       REGISTRATION_DATE: "2002-05-06T00:00:00.000Z"
+    },
+    // SIT - Site Information Message
+    // Sample showing multiple ground sites around the world
+    SIT: {
+      SITES: [
+        {
+          ID: "GS-001",
+          NAME: "Kennedy Space Center",
+          ABBREVIATION: "KSC",
+          SITE_TYPE: "LAUNCH_SITE",
+          NETWORK: "NASA",
+          LATITUDE: 28.5721,
+          LONGITUDE: -80.6480,
+          ALTITUDE: 0.003,
+          CTR_ID: "USA",
+          DESCRIPTION: "Primary NASA launch facility",
+          OPERATIONAL_STATUS: "active"
+        },
+        {
+          ID: "GS-002",
+          NAME: "Goldstone DSN",
+          ABBREVIATION: "GDSCC",
+          SITE_TYPE: "SATELLITE_GROUND_STATION",
+          NETWORK: "DSN",
+          LATITUDE: 35.4267,
+          LONGITUDE: -116.8900,
+          ALTITUDE: 0.951,
+          CTR_ID: "USA",
+          DESCRIPTION: "Deep Space Network complex",
+          OPERATIONAL_STATUS: "active"
+        },
+        {
+          ID: "GS-003",
+          NAME: "Canberra DSN",
+          ABBREVIATION: "CDSCC",
+          SITE_TYPE: "SATELLITE_GROUND_STATION",
+          NETWORK: "DSN",
+          LATITUDE: -35.4014,
+          LONGITUDE: 148.9817,
+          ALTITUDE: 0.680,
+          CTR_ID: "AUS",
+          DESCRIPTION: "Deep Space Network complex",
+          OPERATIONAL_STATUS: "active"
+        },
+        {
+          ID: "GS-004",
+          NAME: "Madrid DSN",
+          ABBREVIATION: "MDSCC",
+          SITE_TYPE: "SATELLITE_GROUND_STATION",
+          NETWORK: "DSN",
+          LATITUDE: 40.4314,
+          LONGITUDE: -4.2481,
+          ALTITUDE: 0.830,
+          CTR_ID: "ESP",
+          DESCRIPTION: "Deep Space Network complex",
+          OPERATIONAL_STATUS: "active"
+        },
+        {
+          ID: "GS-005",
+          NAME: "Baikonur Cosmodrome",
+          ABBREVIATION: "BKNR",
+          SITE_TYPE: "SPACEPORT",
+          NETWORK: "ROSCOSMOS",
+          LATITUDE: 45.9650,
+          LONGITUDE: 63.3050,
+          ALTITUDE: 0.090,
+          CTR_ID: "KAZ",
+          DESCRIPTION: "Russian space launch facility",
+          OPERATIONAL_STATUS: "active"
+        },
+        {
+          ID: "GS-006",
+          NAME: "Vandenberg SFB",
+          ABBREVIATION: "VSFB",
+          SITE_TYPE: "LAUNCH_SITE",
+          NETWORK: "USSF",
+          LATITUDE: 34.7420,
+          LONGITUDE: -120.5724,
+          ALTITUDE: 0.112,
+          CTR_ID: "USA",
+          DESCRIPTION: "US Space Force west coast launch site",
+          OPERATIONAL_STATUS: "active"
+        }
+      ]
+    },
+    // LDM - Launch Data Message
+    // Sample SpaceX Falcon 9 launch from KSC
+    LDM: {
+      SITE: {
+        ID: "LC-39A",
+        NAME: "Launch Complex 39A",
+        ABBREVIATION: "LC-39A",
+        SITE_TYPE: "LAUNCH_SITE",
+        NETWORK: "SpaceX",
+        LATITUDE: 28.6084,
+        LONGITUDE: -80.6043,
+        ALTITUDE: 0.005,
+        CTR_ID: "USA",
+        DESCRIPTION: "Historic Apollo/Shuttle pad, now SpaceX",
+        OPERATIONAL_STATUS: "active"
+      },
+      AZIMUTH: 35.0,
+      AGENCY_NAME: "SpaceX",
+      NET: "2024-06-22T14:30:00.000Z",
+      MISSION_NAME: "Starlink Group 6-58",
+      MISSION_DESCRIPTION: "Deployment of 23 Starlink satellites",
+      MISSION_TYPE: "SATELLITE_DEPLOYMENT",
+      ORBIT_TYPE: "LEO",
+      LAUNCH_STATUS: "SCHEDULED",
+      ROCKET_CONFIGURATION: {
+        NAME: "Falcon 9",
+        FAMILY: "Falcon",
+        VARIANT: "Block 5"
+      }
+    },
+    // TDM - Tracking Data Message
+    // Sample tracking observation from Goldstone to ISS
+    TDM: {
+      OBSERVER_ID: "GDSCC-DSS14",
+      OBSERVER_X: -2353.621,
+      OBSERVER_Y: -4641.342,
+      OBSERVER_Z: 3677.052,
+      OBSERVER_VX: 0.0,
+      OBSERVER_VY: 0.0,
+      OBSERVER_VZ: 0.0,
+      OBSERVER_POSITION_REFERENCE_FRAME: "ECEF",
+      CCSDS_TDM_VERS: "2.0",
+      CREATION_DATE: "2024-06-22T12:00:00.000Z",
+      ORIGINATOR: "NASA/JPL",
+      TIME_SYSTEM: "UTC",
+      START_TIME: "2024-06-22T12:00:00.000Z",
+      STOP_TIME: "2024-06-22T12:10:00.000Z",
+      PARTICIPANT_1: "GDSCC-DSS14",
+      PARTICIPANT_2: "ISS (ZARYA)",
+      ANGLE_TYPE: "AZEL",
+      OBSERVATION_STEP_SIZE: 10.0,
+      OBSERVATION_START_TIME: "2024-06-22T12:00:00.000Z",
+      ANGLE_1: [45.0, 46.2, 47.5, 48.9, 50.4, 52.0],
+      ANGLE_2: [25.0, 27.5, 30.2, 33.1, 36.2, 39.5],
+      TARGET_POSITION: {
+        X: 4650.866,
+        Y: 2849.401,
+        Z: 4047.689
+      }
     }
   };
 
@@ -349,6 +496,15 @@
           break;
         case "EPM":
           await visualizeEPM(data);
+          break;
+        case "SIT":
+          await visualizeSIT(data);
+          break;
+        case "LDM":
+          await visualizeLDM(data);
+          break;
+        case "TDM":
+          await visualizeTDM(data);
           break;
       }
 
@@ -524,7 +680,7 @@
         position: pos1,
         point: {
           pixelSize: 14,
-          color: Cesium.Color.fromCssColorString("#667eea"),
+          color: Cesium.Color.fromCssColorString("#0077b6"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
@@ -672,6 +828,371 @@
     }
   }
 
+  // Visualize SIT (Site Information) - shows ground sites with different markers
+  async function visualizeSIT(data: any) {
+    const Cesium = getCesium();
+
+    // Handle both single site and array of sites
+    const sites = data.SITES || [data];
+
+    // Color map for site types
+    const siteTypeColors: Record<string, string> = {
+      LAUNCH_SITE: "#ff6b6b",
+      OBSERVATION_STATION: "#4ecdc4",
+      HOBBYIST_OBSERVER: "#95e1d3",
+      SATELLITE_GROUND_STATION: "#f9ca24",
+      SPACEPORT: "#eb4d4b",
+      MILITARY_BASE: "#686de0",
+      ASTRONOMICAL_OBSERVATORY: "#be2edd",
+      COMMUNICATION_HUB: "#22a6b3",
+      OTHER: "#95afc0"
+    };
+
+    sites.forEach((site: any) => {
+      const lat = site.LATITUDE;
+      const lon = site.LONGITUDE;
+      const alt = (site.ALTITUDE || 0) * 1000; // km to m
+
+      if (lat === undefined || lon === undefined) return;
+
+      const position = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+      const color = siteTypeColors[site.SITE_TYPE] || siteTypeColors.OTHER;
+
+      // Add site marker
+      viewer.entities.add({
+        name: site.NAME || "Site",
+        position: position,
+        point: {
+          pixelSize: 14,
+          color: Cesium.Color.fromCssColorString(color),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 2
+        },
+        label: {
+          text: site.ABBREVIATION || site.NAME || "Site",
+          font: "12px JetBrains Mono, monospace",
+          fillColor: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -18)
+        }
+      });
+
+      // Add info panel on hover/click
+      const infoText = [
+        site.NAME,
+        `Type: ${(site.SITE_TYPE || "").replace(/_/g, " ")}`,
+        `Network: ${site.NETWORK || "Unknown"}`,
+        site.DESCRIPTION || ""
+      ].filter(Boolean).join("\n");
+
+      viewer.entities.add({
+        position: position,
+        label: {
+          text: infoText,
+          font: "11px JetBrains Mono, monospace",
+          fillColor: Cesium.Color.WHITE,
+          showBackground: true,
+          backgroundColor: Cesium.Color.fromCssColorString("rgba(0, 0, 0, 0.8)"),
+          backgroundPadding: new Cesium.Cartesian2(10, 8),
+          horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+          verticalOrigin: Cesium.VerticalOrigin.TOP,
+          pixelOffset: new Cesium.Cartesian2(18, 0),
+          distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000000)
+        }
+      });
+    });
+
+    viewer.zoomTo(viewer.entities);
+  }
+
+  // Visualize LDM (Launch Data Message) - shows launch site with azimuth direction
+  async function visualizeLDM(data: any) {
+    const Cesium = getCesium();
+
+    // Launch site from embedded SIT
+    const site = data.SITE;
+    if (!site) return;
+
+    const lat = site.LATITUDE;
+    const lon = site.LONGITUDE;
+    const alt = (site.ALTITUDE || 0) * 1000;
+
+    const launchPosition = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+
+    // Add launch site marker (larger, red)
+    viewer.entities.add({
+      name: site.NAME || "Launch Site",
+      position: launchPosition,
+      point: {
+        pixelSize: 18,
+        color: Cesium.Color.fromCssColorString("#ff6b6b"),
+        outlineColor: Cesium.Color.WHITE,
+        outlineWidth: 3
+      },
+      label: {
+        text: data.MISSION_NAME || site.NAME || "Launch",
+        font: "14px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK,
+        outlineWidth: 2,
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -22)
+      }
+    });
+
+    // Draw azimuth direction line
+    if (data.AZIMUTH !== undefined) {
+      const azimuthRad = Cesium.Math.toRadians(data.AZIMUTH);
+      const distance = 500000; // 500km line
+
+      // Calculate end point along azimuth
+      const endLat = lat + (distance / 111320) * Math.cos(azimuthRad);
+      const endLon = lon + (distance / (111320 * Math.cos(Cesium.Math.toRadians(lat)))) * Math.sin(azimuthRad);
+      const endAlt = alt + 200000; // Rise to 200km altitude
+
+      const azimuthEnd = Cesium.Cartesian3.fromDegrees(endLon, endLat, endAlt);
+
+      viewer.entities.add({
+        name: `Azimuth: ${data.AZIMUTH}°`,
+        polyline: {
+          positions: [launchPosition, azimuthEnd],
+          width: 4,
+          material: new Cesium.PolylineArrowMaterialProperty(
+            Cesium.Color.fromCssColorString("#f9ca24")
+          )
+        }
+      });
+    }
+
+    // Draw burn-out vectors as trajectory if available
+    if (data.BURN_OUT_VECTORS && data.BURN_OUT_VECTORS.length > 0) {
+      const bovPositions = [launchPosition];
+
+      data.BURN_OUT_VECTORS.forEach((bov: any) => {
+        // BOV uses EFG coordinates (Earth-fixed geocentric) - convert to Cartesian
+        // EFG is similar to ECEF, values in km
+        const pos = new Cesium.Cartesian3(
+          bov.E_COORDINATE * 1000,
+          bov.F_COORDINATE * 1000,
+          bov.G_COORDINATE * 1000
+        );
+        bovPositions.push(pos);
+
+        // Add point at each BOV
+        viewer.entities.add({
+          position: pos,
+          point: {
+            pixelSize: 8,
+            color: Cesium.Color.fromCssColorString("#f9ca24"),
+            outlineColor: Cesium.Color.WHITE,
+            outlineWidth: 1
+          }
+        });
+      });
+
+      // Draw trajectory line through burn-out vectors
+      viewer.entities.add({
+        name: "Launch Trajectory",
+        polyline: {
+          positions: bovPositions,
+          width: 3,
+          material: Cesium.Color.fromCssColorString("#f9ca24").withAlpha(0.8)
+        }
+      });
+    }
+
+    // Add mission info panel
+    const infoText = [
+      data.MISSION_NAME || "Launch",
+      `Vehicle: ${data.ROCKET_CONFIGURATION?.NAME || "Unknown"}`,
+      `Agency: ${data.AGENCY_NAME || "Unknown"}`,
+      `Orbit: ${data.ORBIT_TYPE || "Unknown"}`,
+      `NET: ${data.NET || "TBD"}`,
+      `Status: ${data.LAUNCH_STATUS || "Unknown"}`
+    ].filter(Boolean).join("\n");
+
+    viewer.entities.add({
+      position: launchPosition,
+      label: {
+        text: infoText,
+        font: "11px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.WHITE,
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromCssColorString("rgba(0, 0, 0, 0.85)"),
+        backgroundPadding: new Cesium.Cartesian2(12, 10),
+        horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(22, 0)
+      }
+    });
+
+    viewer.zoomTo(viewer.entities);
+  }
+
+  // Visualize TDM (Tracking Data Message) - shows observer and tracking geometry
+  async function visualizeTDM(data: any) {
+    const Cesium = getCesium();
+
+    // Observer position (ground station)
+    // TDM stores observer position in ECEF km
+    let observerPosition;
+
+    if (data.OBSERVER_X !== undefined) {
+      observerPosition = new Cesium.Cartesian3(
+        data.OBSERVER_X * 1000,
+        data.OBSERVER_Y * 1000,
+        data.OBSERVER_Z * 1000
+      );
+    } else {
+      return;
+    }
+
+    // Add observer (ground station) marker
+    viewer.entities.add({
+      name: data.OBSERVER_ID || data.PARTICIPANT_1 || "Observer",
+      position: observerPosition,
+      point: {
+        pixelSize: 14,
+        color: Cesium.Color.fromCssColorString("#4ecdc4"),
+        outlineColor: Cesium.Color.WHITE,
+        outlineWidth: 2
+      },
+      label: {
+        text: data.OBSERVER_ID || data.PARTICIPANT_1 || "Observer",
+        font: "12px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK,
+        outlineWidth: 2,
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -18)
+      }
+    });
+
+    // If we have target position data, draw tracking line
+    if (data.TARGET_POSITION) {
+      const targetPosition = new Cesium.Cartesian3(
+        data.TARGET_POSITION.X * 1000,
+        data.TARGET_POSITION.Y * 1000,
+        data.TARGET_POSITION.Z * 1000
+      );
+
+      // Add target marker
+      viewer.entities.add({
+        name: data.PARTICIPANT_2 || "Target",
+        position: targetPosition,
+        point: {
+          pixelSize: 12,
+          color: Cesium.Color.fromCssColorString("#38ef7d"),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 2
+        },
+        label: {
+          text: data.PARTICIPANT_2 || "Target",
+          font: "12px JetBrains Mono, monospace",
+          fillColor: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -16)
+        }
+      });
+
+      // Draw tracking line from observer to target
+      viewer.entities.add({
+        name: "Tracking Link",
+        polyline: {
+          positions: [observerPosition, targetPosition],
+          width: 2,
+          material: new Cesium.PolylineDashMaterialProperty({
+            color: Cesium.Color.fromCssColorString("#f9ca24"),
+            dashLength: 16.0
+          })
+        }
+      });
+    }
+
+    // Visualize angle observations as a cone/fan if available
+    if (data.ANGLE_1 && data.ANGLE_2 && data.ANGLE_1.length > 0) {
+      // Draw lines showing the tracking sweep based on angle data
+      // ANGLE_TYPE: AZEL means Azimuth/Elevation
+      const positions: any[] = [];
+
+      for (let i = 0; i < Math.min(data.ANGLE_1.length, data.ANGLE_2.length); i++) {
+        const azimuth = Cesium.Math.toRadians(data.ANGLE_1[i]);
+        const elevation = Cesium.Math.toRadians(data.ANGLE_2[i]);
+        const range = 1000000; // 1000km visualization range
+
+        // Convert Az/El to ENU then to ECEF
+        const e = range * Math.cos(elevation) * Math.sin(azimuth);
+        const n = range * Math.cos(elevation) * Math.cos(azimuth);
+        const u = range * Math.sin(elevation);
+
+        // Transform from observer ENU to ECEF (simplified)
+        const obsCartographic = Cesium.Cartographic.fromCartesian(observerPosition);
+        const obsLon = obsCartographic.longitude;
+        const obsLat = obsCartographic.latitude;
+
+        // ENU to ECEF rotation
+        const sinLon = Math.sin(obsLon);
+        const cosLon = Math.cos(obsLon);
+        const sinLat = Math.sin(obsLat);
+        const cosLat = Math.cos(obsLat);
+
+        const dx = -sinLon * e - sinLat * cosLon * n + cosLat * cosLon * u;
+        const dy = cosLon * e - sinLat * sinLon * n + cosLat * sinLon * u;
+        const dz = cosLat * n + sinLat * u;
+
+        const targetPos = new Cesium.Cartesian3(
+          data.OBSERVER_X * 1000 + dx,
+          data.OBSERVER_Y * 1000 + dy,
+          data.OBSERVER_Z * 1000 + dz
+        );
+        positions.push(targetPos);
+
+        // Draw observation ray
+        viewer.entities.add({
+          polyline: {
+            positions: [observerPosition, targetPos],
+            width: 1,
+            material: Cesium.Color.fromCssColorString("#f9ca24").withAlpha(0.4)
+          }
+        });
+      }
+    }
+
+    // Add info panel
+    const infoText = [
+      `Observer: ${data.OBSERVER_ID || data.PARTICIPANT_1 || "Unknown"}`,
+      `Target: ${data.PARTICIPANT_2 || "Unknown"}`,
+      `Mode: ${data.MODE || "Unknown"}`,
+      `Angles: ${data.ANGLE_TYPE || "Unknown"}`,
+      `Time: ${data.START_TIME || ""} - ${data.STOP_TIME || ""}`
+    ].filter(Boolean).join("\n");
+
+    viewer.entities.add({
+      position: observerPosition,
+      label: {
+        text: infoText,
+        font: "11px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.WHITE,
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromCssColorString("rgba(0, 0, 0, 0.85)"),
+        backgroundPadding: new Cesium.Cartesian2(10, 8),
+        horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(18, 0)
+      }
+    });
+
+    viewer.zoomTo(viewer.entities);
+  }
+
   // Clear visualization
   function clearVisualization() {
     if (viewer) {
@@ -774,11 +1295,21 @@
   }
 
   onMount(async () => {
+    // Prevent body scroll and hide footer while playground is active
+    document.body.style.overflow = 'hidden';
+    const footer = document.querySelector('footer');
+    if (footer) (footer as HTMLElement).style.display = 'none';
+
     await initCesium();
     loadSample("OMM");
   });
 
   onDestroy(() => {
+    // Restore body scroll and footer
+    document.body.style.overflow = '';
+    const footer = document.querySelector('footer');
+    if (footer) (footer as HTMLElement).style.display = '';
+
     if (viewer) {
       viewer.destroy();
     }
@@ -812,18 +1343,13 @@
       <div class="control-group">
         <label class="control-label">Load Sample Data</label>
         <div class="sample-buttons">
-          <button class="sample-btn" on:click={() => loadSample("OMM")}>
-            ISS Orbit (OMM)
-          </button>
-          <button class="sample-btn" on:click={() => loadSample("OEM")}>
-            Ephemeris (OEM)
-          </button>
-          <button class="sample-btn" on:click={() => loadSample("CDM")}>
-            Conjunction (CDM)
-          </button>
-          <button class="sample-btn" on:click={() => loadSample("EPM")}>
-            Entity (EPM)
-          </button>
+          <button class="sample-btn" on:click={() => loadSample("OMM")}>OMM</button>
+          <button class="sample-btn" on:click={() => loadSample("OEM")}>OEM</button>
+          <button class="sample-btn" on:click={() => loadSample("CDM")}>CDM</button>
+          <button class="sample-btn" on:click={() => loadSample("EPM")}>EPM</button>
+          <button class="sample-btn" on:click={() => loadSample("SIT")}>SIT</button>
+          <button class="sample-btn" on:click={() => loadSample("LDM")}>LDM</button>
+          <button class="sample-btn" on:click={() => loadSample("TDM")}>TDM</button>
         </div>
       </div>
 
@@ -884,19 +1410,31 @@
         <div class="help-content">
           <div class="help-item">
             <span class="help-badge omm">OMM</span>
-            <span>Shows satellite orbit path computed from mean elements</span>
+            <span>Satellite orbit from mean elements</span>
           </div>
           <div class="help-item">
             <span class="help-badge oem">OEM</span>
-            <span>Plots state vectors as orbit trajectory</span>
+            <span>State vectors as orbit trajectory</span>
           </div>
           <div class="help-item">
             <span class="help-badge cdm">CDM</span>
-            <span>Displays two objects at TCA with miss distance</span>
+            <span>Two objects at conjunction</span>
           </div>
           <div class="help-item">
             <span class="help-badge epm">EPM</span>
-            <span>Shows entity location on globe with info popup</span>
+            <span>Entity location with info popup</span>
+          </div>
+          <div class="help-item">
+            <span class="help-badge sit">SIT</span>
+            <span>Ground sites and stations</span>
+          </div>
+          <div class="help-item">
+            <span class="help-badge ldm">LDM</span>
+            <span>Launch site with trajectory</span>
+          </div>
+          <div class="help-item">
+            <span class="help-badge tdm">TDM</span>
+            <span>Tracking data and geometry</span>
           </div>
         </div>
       </div>
@@ -931,14 +1469,19 @@
 
 <style>
   .playground-page {
-    padding-top: 52px;
-    min-height: 100vh;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
     background: #030308;
   }
 
   .playground-layout {
     display: flex;
-    height: calc(100vh - 52px);
+    height: 100%;
+    overflow: hidden;
   }
 
   /* Control Panel */
@@ -963,7 +1506,7 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #ffffff 0%, #b8c6ff 50%, #ffffff 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #b8f0ff 50%, #ffffff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1011,21 +1554,22 @@
 
   .sample-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
   }
 
   .sample-btn {
-    padding: 10px 12px;
+    padding: 8px 4px;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 500;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s;
     font-family: var(--font-mono);
+    text-align: center;
   }
 
   .sample-btn:hover {
@@ -1117,13 +1661,22 @@
 
   .btn-accent {
     flex: 1;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    background: var(--accent);
     color: white;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-accent:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 100%);
+    transition: background 0.2s ease;
+  }
+
+  .btn-accent:hover:not(:disabled)::before {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
   }
 
   .btn-accent:disabled {
@@ -1172,18 +1725,18 @@
   }
 
   .help-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .help-item {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12px;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
     color: var(--text-muted);
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
   .help-badge {
@@ -1196,8 +1749,8 @@
   }
 
   .help-badge.omm {
-    background: rgba(102, 126, 234, 0.2);
-    color: #667eea;
+    background: rgba(0, 119, 182, 0.2);
+    color: #0077b6;
   }
 
   .help-badge.oem {
@@ -1213,6 +1766,21 @@
   .help-badge.epm {
     background: rgba(56, 239, 125, 0.2);
     color: #38ef7d;
+  }
+
+  .help-badge.sit {
+    background: rgba(249, 202, 36, 0.2);
+    color: #f9ca24;
+  }
+
+  .help-badge.ldm {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+  }
+
+  .help-badge.tdm {
+    background: rgba(78, 205, 196, 0.2);
+    color: #4ecdc4;
   }
 
   /* Globe Container */

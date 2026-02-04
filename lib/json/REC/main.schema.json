@@ -213,6 +213,18 @@
       "type" : "string",
       "enum": ["NONE", "AMMO_DETONATION", "FUEL_FIRE", "CREW_LOST", "STRUCTURAL_FAILURE", "FLOODING"]
     },
+    "KeyExchange" : {
+      "type" : "string",
+      "enum": ["X25519", "Secp256k1", "P256"]
+    },
+    "SymmetricAlgo" : {
+      "type" : "string",
+      "enum": ["AES_256_CTR"]
+    },
+    "KDF" : {
+      "type" : "string",
+      "enum": ["HKDF_SHA256"]
+    },
     "AtmosphereModel" : {
       "type" : "string",
       "enum": ["ISA", "US_STD_1976", "NRLMSISE_00", "SIMPLE", "CUSTOM"]
@@ -615,7 +627,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "AEM", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "CRD", "CRM", "CSM", "CTR", "DFH", "DMG", "DOA", "EME", "ENV", "EOO", "EOP", "EPM", "EWR", "FCS", "GDI", "GEO", "GNO", "GRV", "GVH", "HEL", "HYP", "IDM", "IRO", "LCC", "LDM", "LKS", "LND", "LNE", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "OBD", "OBT", "OCM", "OEM", "OMM", "OOD", "OOE", "OOI", "OOL", "OON", "OPM", "OSM", "PCF", "PHY", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "RAF", "RCF", "RDM", "RDO", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDL", "SEO", "SEV", "SIT", "SKI", "SNR", "SOI", "SON", "SPP", "SPW", "STF", "STR", "STV", "SWR", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "AEM", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "CRD", "CRM", "CSM", "CTR", "DFH", "DMG", "DOA", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "EWR", "FCS", "GDI", "GEO", "GNO", "GRV", "GVH", "HEL", "HYP", "IDM", "IRO", "LCC", "LDM", "LKS", "LND", "LNE", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "OBD", "OBT", "OCM", "OEM", "OMM", "OOD", "OOE", "OOI", "OOL", "OON", "OPM", "OSM", "PCF", "PHY", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "RAF", "RCF", "RDM", "RDO", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDL", "SEO", "SEV", "SIT", "SKI", "SNR", "SOI", "SON", "SPP", "SPW", "STF", "STR", "STV", "SWR", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC"]
     },
     "SpatialCoverage" : {
       "type" : "object",
@@ -3080,9 +3092,9 @@
                 "type" : "string",
                 "description" : "Message Authentication Code to verify the integrity and authenticity of the encrypted message."
               },
-        "NONCE" : {
-                "type" : "string",
-                "description" : "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption."
+        "NONCE_START" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
               },
         "TAG" : {
                 "type" : "string",
@@ -3113,6 +3125,58 @@
                 "description" : "Parameters defining specific settings for the encryption algorithm, such as block size or operation mode."
               }
       },
+      "additionalProperties" : false
+    },
+    "ENC" : {
+      "type" : "object",
+      "description" : "Encryption Header containing all parameters needed for decryption",
+      "properties" : {
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Schema version for forward compatibility"
+              },
+        "KEY_EXCHANGE" : {
+                "$ref" : "#/definitions/KeyExchange",
+                "description" : "Key exchange algorithm used"
+              },
+        "SYMMETRIC" : {
+                "$ref" : "#/definitions/SymmetricAlgo",
+                "description" : "Symmetric encryption algorithm used"
+              },
+        "KEY_DERIVATION" : {
+                "$ref" : "#/definitions/KDF",
+                "description" : "Key derivation function used"
+              },
+        "EPHEMERAL_PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)"
+              },
+        "NONCE_START" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
+              },
+        "RECIPIENT_KEY_ID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional identifier for the recipient's public key (up to 32 bytes)"
+              },
+        "CONTEXT" : {
+                "type" : "string",
+                "description" : "Optional domain separation context string"
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)"
+              },
+        "ROOT_TYPE" : {
+                "type" : "string",
+                "description" : "Optional root type name from the schema"
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Optional Unix timestamp (milliseconds) when encryption was performed"
+              }
+      },
+      "required" : ["EPHEMERAL_PUBLIC_KEY", "NONCE_START"],
       "additionalProperties" : false
     },
     "ENV" : {
@@ -13023,7 +13087,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

@@ -1,0 +1,52 @@
+// Hash: dd9d788a8398de1ae251bb2d8436b5c24d9bb63e0b2748e8eac49422360d283d
+// Version: 1.0.2
+// -----------------------------------END_HEADER
+/// Encryption Header for FlatBuffers field-level encryption
+
+/// Key exchange algorithm used to derive the shared secret
+enum KeyExchange : byte { X25519, Secp256k1, P256 }
+
+/// Symmetric encryption algorithm
+enum SymmetricAlgo : byte { AES_256_CTR }
+
+/// Key derivation function
+enum KDF : byte { HKDF_SHA256 }
+
+/// Encryption Header containing all parameters needed for decryption
+table ENC {
+  /// Schema version for forward compatibility
+  VERSION: ubyte = 1;
+
+  /// Key exchange algorithm used
+  KEY_EXCHANGE: KeyExchange = X25519;
+
+  /// Symmetric encryption algorithm used
+  SYMMETRIC: SymmetricAlgo = AES_256_CTR;
+
+  /// Key derivation function used
+  KEY_DERIVATION: KDF = HKDF_SHA256;
+
+  /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
+  EPHEMERAL_PUBLIC_KEY: [ubyte] (required);
+
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  NONCE_START: [ubyte] (required);
+
+  /// Optional identifier for the recipient's public key (up to 32 bytes)
+  RECIPIENT_KEY_ID: [ubyte];
+
+  /// Optional domain separation context string
+  CONTEXT: string;
+
+  /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
+  SCHEMA_HASH: [ubyte];
+
+  /// Optional root type name from the schema
+  ROOT_TYPE: string;
+
+  /// Optional Unix timestamp (milliseconds) when encryption was performed
+  TIMESTAMP: uint64;
+}
+
+root_type ENC;
+file_identifier "$ENC";

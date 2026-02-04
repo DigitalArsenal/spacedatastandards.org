@@ -20,7 +20,7 @@ public struct EME: FlatBufferObject, Verifiable {
     case ENCRYPTED_BLOB = 4
     case EPHEMERAL_PUBLIC_KEY = 6
     case MAC = 8
-    case NONCE = 10
+    case NONCE_START = 10
     case TAG = 12
     case IV = 14
     case SALT = 16
@@ -43,9 +43,11 @@ public struct EME: FlatBufferObject, Verifiable {
   ///  Message Authentication Code to verify the integrity and authenticity of the encrypted message.
   public var MAC: String? { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MACSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MAC.v) }
-  ///  Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-  public var NONCE: String? { let o = _accessor.offset(VTOFFSET.NONCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NONCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NONCE.v) }
+  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  public var hasNonceStart: Bool { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? false : true }
+  public var NONCE_STARTCount: Int32 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func NONCE_START(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
+  public var NONCE_START: [UInt8] { return _accessor.getVector(at: VTOFFSET.NONCE_START.v) ?? [] }
   ///  Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   public var TAG: String? { let o = _accessor.offset(VTOFFSET.TAG.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAG.v) }
@@ -71,7 +73,7 @@ public struct EME: FlatBufferObject, Verifiable {
   public static func addVectorOf(ENCRYPTED_BLOB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_BLOB, at: VTOFFSET.ENCRYPTED_BLOB.p) }
   public static func add(EPHEMERAL_PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERAL_PUBLIC_KEY, at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p) }
   public static func add(MAC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAC, at: VTOFFSET.MAC.p) }
-  public static func add(NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE, at: VTOFFSET.NONCE.p) }
+  public static func addVectorOf(NONCE_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE_START, at: VTOFFSET.NONCE_START.p) }
   public static func add(TAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAG, at: VTOFFSET.TAG.p) }
   public static func add(IV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IV, at: VTOFFSET.IV.p) }
   public static func add(SALT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SALT, at: VTOFFSET.SALT.p) }
@@ -85,7 +87,7 @@ public struct EME: FlatBufferObject, Verifiable {
     ENCRYPTED_BLOBVectorOffset ENCRYPTED_BLOB: Offset = Offset(),
     EPHEMERAL_PUBLIC_KEYOffset EPHEMERAL_PUBLIC_KEY: Offset = Offset(),
     MACOffset MAC: Offset = Offset(),
-    NONCEOffset NONCE: Offset = Offset(),
+    NONCE_STARTVectorOffset NONCE_START: Offset = Offset(),
     TAGOffset TAG: Offset = Offset(),
     IVOffset IV: Offset = Offset(),
     SALTOffset SALT: Offset = Offset(),
@@ -98,7 +100,7 @@ public struct EME: FlatBufferObject, Verifiable {
     EME.addVectorOf(ENCRYPTED_BLOB: ENCRYPTED_BLOB, &fbb)
     EME.add(EPHEMERAL_PUBLIC_KEY: EPHEMERAL_PUBLIC_KEY, &fbb)
     EME.add(MAC: MAC, &fbb)
-    EME.add(NONCE: NONCE, &fbb)
+    EME.addVectorOf(NONCE_START: NONCE_START, &fbb)
     EME.add(TAG: TAG, &fbb)
     EME.add(IV: IV, &fbb)
     EME.add(SALT: SALT, &fbb)
@@ -114,7 +116,7 @@ public struct EME: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ENCRYPTED_BLOB.p, fieldName: "ENCRYPTED_BLOB", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VTOFFSET.EPHEMERAL_PUBLIC_KEY.p, fieldName: "EPHEMERAL_PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.MAC.p, fieldName: "MAC", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NONCE.p, fieldName: "NONCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NONCE_START.p, fieldName: "NONCE_START", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VTOFFSET.TAG.p, fieldName: "TAG", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.IV.p, fieldName: "IV", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SALT.p, fieldName: "SALT", required: false, type: ForwardOffset<String>.self)

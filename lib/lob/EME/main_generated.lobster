@@ -16,9 +16,11 @@ class EME : flatbuffers.handle
     /// Message Authentication Code to verify the integrity and authenticity of the encrypted message.
     def MAC() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-    def NONCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+    def NONCE_START(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+    def NONCE_START_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
     /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
     def TAG() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
@@ -57,8 +59,8 @@ struct EMEBuilder:
     def add_MAC(MAC:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, MAC)
         return this
-    def add_NONCE(NONCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, NONCE)
+    def add_NONCE_START(NONCE_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, NONCE_START)
         return this
     def add_TAG(TAG:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, TAG)
@@ -87,6 +89,13 @@ struct EMEBuilder:
 def EMEStartENCRYPTED_BLOBVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
 def EMECreateENCRYPTED_BLOBVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def EMEStartNONCE_STARTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def EMECreateNONCE_STARTVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

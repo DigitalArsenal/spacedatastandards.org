@@ -130,6 +130,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -168,99 +169,100 @@ enum RecordType : uint8_t {
   RecordType_DMG = 27,
   RecordType_DOA = 28,
   RecordType_EME = 29,
-  RecordType_ENV = 30,
-  RecordType_EOO = 31,
-  RecordType_EOP = 32,
-  RecordType_EPM = 33,
-  RecordType_EWR = 34,
-  RecordType_FCS = 35,
-  RecordType_GDI = 36,
-  RecordType_GEO = 37,
-  RecordType_GNO = 38,
-  RecordType_GRV = 39,
-  RecordType_GVH = 40,
-  RecordType_HEL = 41,
-  RecordType_HYP = 42,
-  RecordType_IDM = 43,
-  RecordType_IRO = 44,
-  RecordType_LCC = 45,
-  RecordType_LDM = 46,
-  RecordType_LKS = 47,
-  RecordType_LND = 48,
-  RecordType_LNE = 49,
-  RecordType_MET = 50,
-  RecordType_MFE = 51,
-  RecordType_MNF = 52,
-  RecordType_MNV = 53,
-  RecordType_MPE = 54,
-  RecordType_MSL = 55,
-  RecordType_MST = 56,
-  RecordType_MTI = 57,
-  RecordType_NAV = 58,
-  RecordType_OBD = 59,
-  RecordType_OBT = 60,
-  RecordType_OCM = 61,
-  RecordType_OEM = 62,
-  RecordType_OMM = 63,
-  RecordType_OOD = 64,
-  RecordType_OOE = 65,
-  RecordType_OOI = 66,
-  RecordType_OOL = 67,
-  RecordType_OON = 68,
-  RecordType_OPM = 69,
-  RecordType_OSM = 70,
-  RecordType_PCF = 71,
-  RecordType_PHY = 72,
-  RecordType_PLD = 73,
-  RecordType_PLG = 74,
-  RecordType_PLK = 75,
-  RecordType_PNM = 76,
-  RecordType_PRG = 77,
-  RecordType_PUR = 78,
-  RecordType_RAF = 79,
-  RecordType_RCF = 80,
-  RecordType_RDM = 81,
-  RecordType_RDO = 82,
-  RecordType_REV = 83,
-  RecordType_RFB = 84,
-  RecordType_RFE = 85,
-  RecordType_RFM = 86,
-  RecordType_RFO = 87,
-  RecordType_ROC = 88,
-  RecordType_SAR = 89,
-  RecordType_SCM = 90,
-  RecordType_SDL = 91,
-  RecordType_SEO = 92,
-  RecordType_SEV = 93,
-  RecordType_SIT = 94,
-  RecordType_SKI = 95,
-  RecordType_SNR = 96,
-  RecordType_SOI = 97,
-  RecordType_SON = 98,
-  RecordType_SPP = 99,
-  RecordType_SPW = 100,
-  RecordType_STF = 101,
-  RecordType_STR = 102,
-  RecordType_STV = 103,
-  RecordType_SWR = 104,
-  RecordType_TCF = 105,
-  RecordType_TDM = 106,
-  RecordType_TIM = 107,
-  RecordType_TKG = 108,
-  RecordType_TME = 109,
-  RecordType_TMF = 110,
-  RecordType_TPN = 111,
-  RecordType_TRK = 112,
-  RecordType_TRN = 113,
-  RecordType_VCM = 114,
-  RecordType_WPN = 115,
-  RecordType_WTH = 116,
-  RecordType_XTC = 117,
+  RecordType_ENC = 30,
+  RecordType_ENV = 31,
+  RecordType_EOO = 32,
+  RecordType_EOP = 33,
+  RecordType_EPM = 34,
+  RecordType_EWR = 35,
+  RecordType_FCS = 36,
+  RecordType_GDI = 37,
+  RecordType_GEO = 38,
+  RecordType_GNO = 39,
+  RecordType_GRV = 40,
+  RecordType_GVH = 41,
+  RecordType_HEL = 42,
+  RecordType_HYP = 43,
+  RecordType_IDM = 44,
+  RecordType_IRO = 45,
+  RecordType_LCC = 46,
+  RecordType_LDM = 47,
+  RecordType_LKS = 48,
+  RecordType_LND = 49,
+  RecordType_LNE = 50,
+  RecordType_MET = 51,
+  RecordType_MFE = 52,
+  RecordType_MNF = 53,
+  RecordType_MNV = 54,
+  RecordType_MPE = 55,
+  RecordType_MSL = 56,
+  RecordType_MST = 57,
+  RecordType_MTI = 58,
+  RecordType_NAV = 59,
+  RecordType_OBD = 60,
+  RecordType_OBT = 61,
+  RecordType_OCM = 62,
+  RecordType_OEM = 63,
+  RecordType_OMM = 64,
+  RecordType_OOD = 65,
+  RecordType_OOE = 66,
+  RecordType_OOI = 67,
+  RecordType_OOL = 68,
+  RecordType_OON = 69,
+  RecordType_OPM = 70,
+  RecordType_OSM = 71,
+  RecordType_PCF = 72,
+  RecordType_PHY = 73,
+  RecordType_PLD = 74,
+  RecordType_PLG = 75,
+  RecordType_PLK = 76,
+  RecordType_PNM = 77,
+  RecordType_PRG = 78,
+  RecordType_PUR = 79,
+  RecordType_RAF = 80,
+  RecordType_RCF = 81,
+  RecordType_RDM = 82,
+  RecordType_RDO = 83,
+  RecordType_REV = 84,
+  RecordType_RFB = 85,
+  RecordType_RFE = 86,
+  RecordType_RFM = 87,
+  RecordType_RFO = 88,
+  RecordType_ROC = 89,
+  RecordType_SAR = 90,
+  RecordType_SCM = 91,
+  RecordType_SDL = 92,
+  RecordType_SEO = 93,
+  RecordType_SEV = 94,
+  RecordType_SIT = 95,
+  RecordType_SKI = 96,
+  RecordType_SNR = 97,
+  RecordType_SOI = 98,
+  RecordType_SON = 99,
+  RecordType_SPP = 100,
+  RecordType_SPW = 101,
+  RecordType_STF = 102,
+  RecordType_STR = 103,
+  RecordType_STV = 104,
+  RecordType_SWR = 105,
+  RecordType_TCF = 106,
+  RecordType_TDM = 107,
+  RecordType_TIM = 108,
+  RecordType_TKG = 109,
+  RecordType_TME = 110,
+  RecordType_TMF = 111,
+  RecordType_TPN = 112,
+  RecordType_TRK = 113,
+  RecordType_TRN = 114,
+  RecordType_VCM = 115,
+  RecordType_WPN = 116,
+  RecordType_WTH = 117,
+  RecordType_XTC = 118,
   RecordType_MIN = RecordType_NONE,
   RecordType_MAX = RecordType_XTC
 };
 
-inline const RecordType (&EnumValuesRecordType())[118] {
+inline const RecordType (&EnumValuesRecordType())[119] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -292,6 +294,7 @@ inline const RecordType (&EnumValuesRecordType())[118] {
     RecordType_DMG,
     RecordType_DOA,
     RecordType_EME,
+    RecordType_ENC,
     RecordType_ENV,
     RecordType_EOO,
     RecordType_EOP,
@@ -385,7 +388,7 @@ inline const RecordType (&EnumValuesRecordType())[118] {
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[119] = {
+  static const char * const names[120] = {
     "NONE",
     "ACL",
     "ACM",
@@ -416,6 +419,7 @@ inline const char * const *EnumNamesRecordType() {
     "DMG",
     "DOA",
     "EME",
+    "ENC",
     "ENV",
     "EOO",
     "EOP",
@@ -633,6 +637,10 @@ template<> struct RecordTypeTraits<DOA> {
 
 template<> struct RecordTypeTraits<EME> {
   static const RecordType enum_value = RecordType_EME;
+};
+
+template<> struct RecordTypeTraits<ENC> {
+  static const RecordType enum_value = RecordType_ENC;
 };
 
 template<> struct RecordTypeTraits<ENV> {
@@ -1093,6 +1101,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const EME *value_as_EME() const {
     return value_type() == RecordType_EME ? static_cast<const EME *>(value()) : nullptr;
   }
+  const ENC *value_as_ENC() const {
+    return value_type() == RecordType_ENC ? static_cast<const ENC *>(value()) : nullptr;
+  }
   const ENV *value_as_ENV() const {
     return value_type() == RecordType_ENV ? static_cast<const ENV *>(value()) : nullptr;
   }
@@ -1486,6 +1497,10 @@ template<> inline const DOA *Record::value_as<DOA>() const {
 
 template<> inline const EME *Record::value_as<EME>() const {
   return value_as_EME();
+}
+
+template<> inline const ENC *Record::value_as<ENC>() const {
+  return value_as_ENC();
 }
 
 template<> inline const ENV *Record::value_as<ENV>() const {
@@ -2077,6 +2092,10 @@ inline bool VerifyRecordType(::flatbuffers::Verifier &verifier, const void *obj,
     }
     case RecordType_EME: {
       auto ptr = reinterpret_cast<const EME *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ENC: {
+      auto ptr = reinterpret_cast<const ENC *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_ENV: {

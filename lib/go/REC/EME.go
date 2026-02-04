@@ -110,8 +110,25 @@ func (rcv *EME) MAC() []byte {
 }
 
 /// Message Authentication Code to verify the integrity and authenticity of the encrypted message.
-/// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-func (rcv *EME) NONCE() []byte {
+/// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+func (rcv *EME) NONCE_START(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *EME) NONCE_STARTLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *EME) NONCE_STARTBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -119,7 +136,16 @@ func (rcv *EME) NONCE() []byte {
 	return nil
 }
 
-/// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+/// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+func (rcv *EME) MutateNONCE_START(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
 /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
 func (rcv *EME) TAG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -205,8 +231,11 @@ func EMEAddEPHEMERAL_PUBLIC_KEY(builder *flatbuffers.Builder, EPHEMERAL_PUBLIC_K
 func EMEAddMAC(builder *flatbuffers.Builder, MAC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MAC), 0)
 }
-func EMEAddNONCE(builder *flatbuffers.Builder, NONCE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NONCE), 0)
+func EMEAddNONCE_START(builder *flatbuffers.Builder, NONCE_START flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NONCE_START), 0)
+}
+func EMEStartNONCE_STARTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
 }
 func EMEAddTAG(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TAG), 0)

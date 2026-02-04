@@ -73,13 +73,33 @@ class EME(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+    # Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
     # EME
-    def NONCE(self):
+    def NONCE_START(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # EME
+    def NONCE_STARTAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # EME
+    def NONCE_STARTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EME
+    def NONCE_STARTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
 
     # Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
     # EME
@@ -167,11 +187,17 @@ def EMEAddMAC(builder, MAC):
 def AddMAC(builder, MAC):
     EMEAddMAC(builder, MAC)
 
-def EMEAddNONCE(builder, NONCE):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE), 0)
+def EMEAddNONCE_START(builder, NONCE_START):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE_START), 0)
 
-def AddNONCE(builder, NONCE):
-    EMEAddNONCE(builder, NONCE)
+def AddNONCE_START(builder, NONCE_START):
+    EMEAddNONCE_START(builder, NONCE_START)
+
+def EMEStartNONCE_STARTVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartNONCE_STARTVector(builder, numElems):
+    return EMEStartNONCE_STARTVector(builder, numElems)
 
 def EMEAddTAG(builder, TAG):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
@@ -233,7 +259,7 @@ class EMET(object):
         self.ENCRYPTED_BLOB = None  # type: List[int]
         self.EPHEMERAL_PUBLIC_KEY = None  # type: str
         self.MAC = None  # type: str
-        self.NONCE = None  # type: str
+        self.NONCE_START = None  # type: List[int]
         self.TAG = None  # type: str
         self.IV = None  # type: str
         self.SALT = None  # type: str
@@ -272,7 +298,13 @@ class EMET(object):
                 self.ENCRYPTED_BLOB = EME.ENCRYPTED_BLOBAsNumpy()
         self.EPHEMERAL_PUBLIC_KEY = EME.EPHEMERAL_PUBLIC_KEY()
         self.MAC = EME.MAC()
-        self.NONCE = EME.NONCE()
+        if not EME.NONCE_STARTIsNone():
+            if np is None:
+                self.NONCE_START = []
+                for i in range(EME.NONCE_STARTLength()):
+                    self.NONCE_START.append(EME.NONCE_START(i))
+            else:
+                self.NONCE_START = EME.NONCE_STARTAsNumpy()
         self.TAG = EME.TAG()
         self.IV = EME.IV()
         self.SALT = EME.SALT()
@@ -295,8 +327,14 @@ class EMET(object):
             EPHEMERAL_PUBLIC_KEY = builder.CreateString(self.EPHEMERAL_PUBLIC_KEY)
         if self.MAC is not None:
             MAC = builder.CreateString(self.MAC)
-        if self.NONCE is not None:
-            NONCE = builder.CreateString(self.NONCE)
+        if self.NONCE_START is not None:
+            if np is not None and type(self.NONCE_START) is np.ndarray:
+                NONCE_START = builder.CreateNumpyVector(self.NONCE_START)
+            else:
+                EMEStartNONCE_STARTVector(builder, len(self.NONCE_START))
+                for i in reversed(range(len(self.NONCE_START))):
+                    builder.PrependUint8(self.NONCE_START[i])
+                NONCE_START = builder.EndVector()
         if self.TAG is not None:
             TAG = builder.CreateString(self.TAG)
         if self.IV is not None:
@@ -318,8 +356,8 @@ class EMET(object):
             EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
         if self.MAC is not None:
             EMEAddMAC(builder, MAC)
-        if self.NONCE is not None:
-            EMEAddNONCE(builder, NONCE)
+        if self.NONCE_START is not None:
+            EMEAddNONCE_START(builder, NONCE_START)
         if self.TAG is not None:
             EMEAddTAG(builder, TAG)
         if self.IV is not None:

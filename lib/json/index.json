@@ -10703,6 +10703,26 @@
                         "FLOODING"
                     ]
                 },
+                "KeyExchange": {
+                    "type": "string",
+                    "enum": [
+                        "X25519",
+                        "Secp256k1",
+                        "P256"
+                    ]
+                },
+                "SymmetricAlgo": {
+                    "type": "string",
+                    "enum": [
+                        "AES_256_CTR"
+                    ]
+                },
+                "KDF": {
+                    "type": "string",
+                    "enum": [
+                        "HKDF_SHA256"
+                    ]
+                },
                 "AtmosphereModel": {
                     "type": "string",
                     "enum": [
@@ -12003,6 +12023,7 @@
                         "DMG",
                         "DOA",
                         "EME",
+                        "ENC",
                         "ENV",
                         "EOO",
                         "EOP",
@@ -14876,9 +14897,14 @@
                             "type": "string",
                             "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message."
                         },
-                        "NONCE": {
-                            "type": "string",
-                            "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption."
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
                         },
                         "TAG": {
                             "type": "string",
@@ -14909,6 +14935,85 @@
                             "description": "Parameters defining specific settings for the encryption algorithm, such as block size or operation mode."
                         }
                     },
+                    "additionalProperties": false
+                },
+                "ENC": {
+                    "type": "object",
+                    "description": "Encryption Header containing all parameters needed for decryption",
+                    "properties": {
+                        "VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Schema version for forward compatibility"
+                        },
+                        "KEY_EXCHANGE": {
+                            "$ref": "#/definitions/KeyExchange",
+                            "description": "Key exchange algorithm used"
+                        },
+                        "SYMMETRIC": {
+                            "$ref": "#/definitions/SymmetricAlgo",
+                            "description": "Symmetric encryption algorithm used"
+                        },
+                        "KEY_DERIVATION": {
+                            "$ref": "#/definitions/KDF",
+                            "description": "Key derivation function used"
+                        },
+                        "EPHEMERAL_PUBLIC_KEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)"
+                        },
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional identifier for the recipient's public key (up to 32 bytes)"
+                        },
+                        "CONTEXT": {
+                            "type": "string",
+                            "description": "Optional domain separation context string"
+                        },
+                        "SCHEMA_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)"
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name from the schema"
+                        },
+                        "TIMESTAMP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional Unix timestamp (milliseconds) when encryption was performed"
+                        }
+                    },
+                    "required": [
+                        "EPHEMERAL_PUBLIC_KEY",
+                        "NONCE_START"
+                    ],
                     "additionalProperties": false
                 },
                 "ENV": {
@@ -26297,6 +26402,9 @@
                                     "$ref": "#/definitions/EME"
                                 },
                                 {
+                                    "$ref": "#/definitions/ENC"
+                                },
+                                {
                                     "$ref": "#/definitions/ENV"
                                 },
                                 {
@@ -26723,6 +26831,111 @@
             },
             "$ref": "#/definitions/OBT"
         },
+        "ENC": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "KeyExchange": {
+                    "type": "string",
+                    "enum": [
+                        "X25519",
+                        "Secp256k1",
+                        "P256"
+                    ]
+                },
+                "SymmetricAlgo": {
+                    "type": "string",
+                    "enum": [
+                        "AES_256_CTR"
+                    ]
+                },
+                "KDF": {
+                    "type": "string",
+                    "enum": [
+                        "HKDF_SHA256"
+                    ]
+                },
+                "ENC": {
+                    "type": "object",
+                    "description": "Encryption Header containing all parameters needed for decryption",
+                    "properties": {
+                        "VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Schema version for forward compatibility"
+                        },
+                        "KEY_EXCHANGE": {
+                            "$ref": "#/definitions/KeyExchange",
+                            "description": "Key exchange algorithm used"
+                        },
+                        "SYMMETRIC": {
+                            "$ref": "#/definitions/SymmetricAlgo",
+                            "description": "Symmetric encryption algorithm used"
+                        },
+                        "KEY_DERIVATION": {
+                            "$ref": "#/definitions/KDF",
+                            "description": "Key derivation function used"
+                        },
+                        "EPHEMERAL_PUBLIC_KEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)"
+                        },
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional identifier for the recipient's public key (up to 32 bytes)"
+                        },
+                        "CONTEXT": {
+                            "type": "string",
+                            "description": "Optional domain separation context string"
+                        },
+                        "SCHEMA_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)"
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name from the schema"
+                        },
+                        "TIMESTAMP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional Unix timestamp (milliseconds) when encryption was performed"
+                        }
+                    },
+                    "required": [
+                        "EPHEMERAL_PUBLIC_KEY",
+                        "NONCE_START"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ENC"
+        },
         "REV": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -27043,9 +27256,14 @@
                             "type": "string",
                             "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message."
                         },
-                        "NONCE": {
-                            "type": "string",
-                            "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption."
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
                         },
                         "TAG": {
                             "type": "string",

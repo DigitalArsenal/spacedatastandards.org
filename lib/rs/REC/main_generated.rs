@@ -120,6 +120,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -129,10 +130,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 117;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 118;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 118] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -163,6 +164,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 118] = [
   RecordType::DMG,
   RecordType::DOA,
   RecordType::EME,
+  RecordType::ENC,
   RecordType::ENV,
   RecordType::EOO,
   RecordType::EOP,
@@ -288,97 +290,98 @@ impl RecordType {
   pub const DMG: Self = Self(27);
   pub const DOA: Self = Self(28);
   pub const EME: Self = Self(29);
-  pub const ENV: Self = Self(30);
-  pub const EOO: Self = Self(31);
-  pub const EOP: Self = Self(32);
-  pub const EPM: Self = Self(33);
-  pub const EWR: Self = Self(34);
-  pub const FCS: Self = Self(35);
-  pub const GDI: Self = Self(36);
-  pub const GEO: Self = Self(37);
-  pub const GNO: Self = Self(38);
-  pub const GRV: Self = Self(39);
-  pub const GVH: Self = Self(40);
-  pub const HEL: Self = Self(41);
-  pub const HYP: Self = Self(42);
-  pub const IDM: Self = Self(43);
-  pub const IRO: Self = Self(44);
-  pub const LCC: Self = Self(45);
-  pub const LDM: Self = Self(46);
-  pub const LKS: Self = Self(47);
-  pub const LND: Self = Self(48);
-  pub const LNE: Self = Self(49);
-  pub const MET: Self = Self(50);
-  pub const MFE: Self = Self(51);
-  pub const MNF: Self = Self(52);
-  pub const MNV: Self = Self(53);
-  pub const MPE: Self = Self(54);
-  pub const MSL: Self = Self(55);
-  pub const MST: Self = Self(56);
-  pub const MTI: Self = Self(57);
-  pub const NAV: Self = Self(58);
-  pub const OBD: Self = Self(59);
-  pub const OBT: Self = Self(60);
-  pub const OCM: Self = Self(61);
-  pub const OEM: Self = Self(62);
-  pub const OMM: Self = Self(63);
-  pub const OOD: Self = Self(64);
-  pub const OOE: Self = Self(65);
-  pub const OOI: Self = Self(66);
-  pub const OOL: Self = Self(67);
-  pub const OON: Self = Self(68);
-  pub const OPM: Self = Self(69);
-  pub const OSM: Self = Self(70);
-  pub const PCF: Self = Self(71);
-  pub const PHY: Self = Self(72);
-  pub const PLD: Self = Self(73);
-  pub const PLG: Self = Self(74);
-  pub const PLK: Self = Self(75);
-  pub const PNM: Self = Self(76);
-  pub const PRG: Self = Self(77);
-  pub const PUR: Self = Self(78);
-  pub const RAF: Self = Self(79);
-  pub const RCF: Self = Self(80);
-  pub const RDM: Self = Self(81);
-  pub const RDO: Self = Self(82);
-  pub const REV: Self = Self(83);
-  pub const RFB: Self = Self(84);
-  pub const RFE: Self = Self(85);
-  pub const RFM: Self = Self(86);
-  pub const RFO: Self = Self(87);
-  pub const ROC: Self = Self(88);
-  pub const SAR: Self = Self(89);
-  pub const SCM: Self = Self(90);
-  pub const SDL: Self = Self(91);
-  pub const SEO: Self = Self(92);
-  pub const SEV: Self = Self(93);
-  pub const SIT: Self = Self(94);
-  pub const SKI: Self = Self(95);
-  pub const SNR: Self = Self(96);
-  pub const SOI: Self = Self(97);
-  pub const SON: Self = Self(98);
-  pub const SPP: Self = Self(99);
-  pub const SPW: Self = Self(100);
-  pub const STF: Self = Self(101);
-  pub const STR: Self = Self(102);
-  pub const STV: Self = Self(103);
-  pub const SWR: Self = Self(104);
-  pub const TCF: Self = Self(105);
-  pub const TDM: Self = Self(106);
-  pub const TIM: Self = Self(107);
-  pub const TKG: Self = Self(108);
-  pub const TME: Self = Self(109);
-  pub const TMF: Self = Self(110);
-  pub const TPN: Self = Self(111);
-  pub const TRK: Self = Self(112);
-  pub const TRN: Self = Self(113);
-  pub const VCM: Self = Self(114);
-  pub const WPN: Self = Self(115);
-  pub const WTH: Self = Self(116);
-  pub const XTC: Self = Self(117);
+  pub const ENC: Self = Self(30);
+  pub const ENV: Self = Self(31);
+  pub const EOO: Self = Self(32);
+  pub const EOP: Self = Self(33);
+  pub const EPM: Self = Self(34);
+  pub const EWR: Self = Self(35);
+  pub const FCS: Self = Self(36);
+  pub const GDI: Self = Self(37);
+  pub const GEO: Self = Self(38);
+  pub const GNO: Self = Self(39);
+  pub const GRV: Self = Self(40);
+  pub const GVH: Self = Self(41);
+  pub const HEL: Self = Self(42);
+  pub const HYP: Self = Self(43);
+  pub const IDM: Self = Self(44);
+  pub const IRO: Self = Self(45);
+  pub const LCC: Self = Self(46);
+  pub const LDM: Self = Self(47);
+  pub const LKS: Self = Self(48);
+  pub const LND: Self = Self(49);
+  pub const LNE: Self = Self(50);
+  pub const MET: Self = Self(51);
+  pub const MFE: Self = Self(52);
+  pub const MNF: Self = Self(53);
+  pub const MNV: Self = Self(54);
+  pub const MPE: Self = Self(55);
+  pub const MSL: Self = Self(56);
+  pub const MST: Self = Self(57);
+  pub const MTI: Self = Self(58);
+  pub const NAV: Self = Self(59);
+  pub const OBD: Self = Self(60);
+  pub const OBT: Self = Self(61);
+  pub const OCM: Self = Self(62);
+  pub const OEM: Self = Self(63);
+  pub const OMM: Self = Self(64);
+  pub const OOD: Self = Self(65);
+  pub const OOE: Self = Self(66);
+  pub const OOI: Self = Self(67);
+  pub const OOL: Self = Self(68);
+  pub const OON: Self = Self(69);
+  pub const OPM: Self = Self(70);
+  pub const OSM: Self = Self(71);
+  pub const PCF: Self = Self(72);
+  pub const PHY: Self = Self(73);
+  pub const PLD: Self = Self(74);
+  pub const PLG: Self = Self(75);
+  pub const PLK: Self = Self(76);
+  pub const PNM: Self = Self(77);
+  pub const PRG: Self = Self(78);
+  pub const PUR: Self = Self(79);
+  pub const RAF: Self = Self(80);
+  pub const RCF: Self = Self(81);
+  pub const RDM: Self = Self(82);
+  pub const RDO: Self = Self(83);
+  pub const REV: Self = Self(84);
+  pub const RFB: Self = Self(85);
+  pub const RFE: Self = Self(86);
+  pub const RFM: Self = Self(87);
+  pub const RFO: Self = Self(88);
+  pub const ROC: Self = Self(89);
+  pub const SAR: Self = Self(90);
+  pub const SCM: Self = Self(91);
+  pub const SDL: Self = Self(92);
+  pub const SEO: Self = Self(93);
+  pub const SEV: Self = Self(94);
+  pub const SIT: Self = Self(95);
+  pub const SKI: Self = Self(96);
+  pub const SNR: Self = Self(97);
+  pub const SOI: Self = Self(98);
+  pub const SON: Self = Self(99);
+  pub const SPP: Self = Self(100);
+  pub const SPW: Self = Self(101);
+  pub const STF: Self = Self(102);
+  pub const STR: Self = Self(103);
+  pub const STV: Self = Self(104);
+  pub const SWR: Self = Self(105);
+  pub const TCF: Self = Self(106);
+  pub const TDM: Self = Self(107);
+  pub const TIM: Self = Self(108);
+  pub const TKG: Self = Self(109);
+  pub const TME: Self = Self(110);
+  pub const TMF: Self = Self(111);
+  pub const TPN: Self = Self(112);
+  pub const TRK: Self = Self(113);
+  pub const TRN: Self = Self(114);
+  pub const VCM: Self = Self(115);
+  pub const WPN: Self = Self(116);
+  pub const WTH: Self = Self(117);
+  pub const XTC: Self = Self(118);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 117;
+  pub const ENUM_MAX: u8 = 118;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -410,6 +413,7 @@ impl RecordType {
     Self::DMG,
     Self::DOA,
     Self::EME,
+    Self::ENC,
     Self::ENV,
     Self::EOO,
     Self::EOP,
@@ -532,6 +536,7 @@ impl RecordType {
       Self::DMG => Some("DMG"),
       Self::DOA => Some("DOA"),
       Self::EME => Some("EME"),
+      Self::ENC => Some("ENC"),
       Self::ENV => Some("ENV"),
       Self::EOO => Some("EOO"),
       Self::EOP => Some("EOP"),
@@ -711,6 +716,7 @@ pub enum RecordTypeT {
   DMG(Box<DMGT>),
   DOA(Box<DOAT>),
   EME(Box<EMET>),
+  ENC(Box<ENCT>),
   ENV(Box<ENVT>),
   EOO(Box<EOOT>),
   EOP(Box<EOPT>),
@@ -838,6 +844,7 @@ impl RecordTypeT {
       Self::DMG(_) => RecordType::DMG,
       Self::DOA(_) => RecordType::DOA,
       Self::EME(_) => RecordType::EME,
+      Self::ENC(_) => RecordType::ENC,
       Self::ENV(_) => RecordType::ENV,
       Self::EOO(_) => RecordType::EOO,
       Self::EOP(_) => RecordType::EOP,
@@ -960,6 +967,7 @@ impl RecordTypeT {
       Self::DMG(v) => Some(v.pack(fbb).as_union_value()),
       Self::DOA(v) => Some(v.pack(fbb).as_union_value()),
       Self::EME(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ENC(v) => Some(v.pack(fbb).as_union_value()),
       Self::ENV(v) => Some(v.pack(fbb).as_union_value()),
       Self::EOO(v) => Some(v.pack(fbb).as_union_value()),
       Self::EOP(v) => Some(v.pack(fbb).as_union_value()),
@@ -1658,6 +1666,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the EMET.
   pub fn as_EME_mut(&mut self) -> Option<&mut EMET> {
     if let Self::EME(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ENCT, setting the union to NONE.
+  pub fn take_ENC(&mut self) -> Option<Box<ENCT>> {
+    if let Self::ENC(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ENC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ENCT.
+  pub fn as_ENC(&self) -> Option<&ENCT> {
+    if let Self::ENC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ENCT.
+  pub fn as_ENC_mut(&mut self) -> Option<&mut ENCT> {
+    if let Self::ENC(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned ENVT, setting the union to NONE.
   pub fn take_ENV(&mut self) -> Option<Box<ENVT>> {
@@ -3693,6 +3722,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::EME`.")
             .unpack()
       )),
+      RecordType::ENC => RecordTypeT::ENC(Box::new(
+        self.value_as_ENC()
+            .expect("Invalid union table, expected `RecordType::ENC`.")
+            .unpack()
+      )),
       RecordType::ENV => RecordTypeT::ENV(Box::new(
         self.value_as_ENV()
             .expect("Invalid union table, expected `RecordType::ENV`.")
@@ -4596,6 +4630,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { EME::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ENC(&self) -> Option<ENC<'a>> {
+    if self.value_type() == RecordType::ENC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ENC::init_from_table(t) }
      })
     } else {
       None
@@ -5962,6 +6011,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::DMG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DMG>>("RecordType::DMG", pos),
           RecordType::DOA => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DOA>>("RecordType::DOA", pos),
           RecordType::EME => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EME>>("RecordType::EME", pos),
+          RecordType::ENC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ENC>>("RecordType::ENC", pos),
           RecordType::ENV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ENV>>("RecordType::ENV", pos),
           RecordType::EOO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EOO>>("RecordType::EOO", pos),
           RecordType::EOP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<EOP>>("RecordType::EOP", pos),
@@ -6309,6 +6359,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::EME => {
           if let Some(x) = self.value_as_EME() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::ENC => {
+          if let Some(x) = self.value_as_ENC() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

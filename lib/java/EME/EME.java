@@ -51,11 +51,14 @@ public final class EME extends Table {
   public ByteBuffer MACAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer MACInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+   * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
    */
-  public String NONCE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NONCEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer NONCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public int NONCE_START(int j) { int o = __offset(10); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int NONCE_STARTLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector nonceStartVector() { return nonceStartVector(new ByteVector()); }
+  public ByteVector nonceStartVector(ByteVector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer NONCE_STARTAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer NONCE_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
    * Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
    */
@@ -103,7 +106,7 @@ public final class EME extends Table {
       int ENCRYPTED_BLOBOffset,
       int EPHEMERAL_PUBLIC_KEYOffset,
       int MACOffset,
-      int NONCEOffset,
+      int NONCE_STARTOffset,
       int TAGOffset,
       int IVOffset,
       int SALTOffset,
@@ -119,7 +122,7 @@ public final class EME extends Table {
     EME.addSalt(builder, SALTOffset);
     EME.addIv(builder, IVOffset);
     EME.addTag(builder, TAGOffset);
-    EME.addNonce(builder, NONCEOffset);
+    EME.addNonceStart(builder, NONCE_STARTOffset);
     EME.addMac(builder, MACOffset);
     EME.addEphemeralPublicKey(builder, EPHEMERAL_PUBLIC_KEYOffset);
     EME.addEncryptedBlob(builder, ENCRYPTED_BLOBOffset);
@@ -133,7 +136,10 @@ public final class EME extends Table {
   public static void startEncryptedBlobVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addEphemeralPublicKey(FlatBufferBuilder builder, int EPHEMERAL_PUBLIC_KEYOffset) { builder.addOffset(1, EPHEMERAL_PUBLIC_KEYOffset, 0); }
   public static void addMac(FlatBufferBuilder builder, int MACOffset) { builder.addOffset(2, MACOffset, 0); }
-  public static void addNonce(FlatBufferBuilder builder, int NONCEOffset) { builder.addOffset(3, NONCEOffset, 0); }
+  public static void addNonceStart(FlatBufferBuilder builder, int NONCE_STARTOffset) { builder.addOffset(3, NONCE_STARTOffset, 0); }
+  public static int createNonceStartVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createNonceStartVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startNonceStartVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addTag(FlatBufferBuilder builder, int TAGOffset) { builder.addOffset(4, TAGOffset, 0); }
   public static void addIv(FlatBufferBuilder builder, int IVOffset) { builder.addOffset(5, IVOffset, 0); }
   public static void addSalt(FlatBufferBuilder builder, int SALTOffset) { builder.addOffset(6, SALTOffset, 0); }

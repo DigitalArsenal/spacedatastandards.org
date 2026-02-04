@@ -83,11 +83,32 @@ class EME extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-    public function getNONCE()
+    /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getNONCE_START($j)
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNONCE_STARTLength()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNONCE_STARTBytes()
+    {
+        return $this->__vector_as_bytes(10);
     }
 
     /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
@@ -152,13 +173,13 @@ class EME extends Table
      * @param FlatBufferBuilder $builder
      * @return EME
      */
-    public static function createEME(FlatBufferBuilder $builder, $ENCRYPTED_BLOB, $EPHEMERAL_PUBLIC_KEY, $MAC, $NONCE, $TAG, $IV, $SALT, $PUBLIC_KEY_IDENTIFIER, $CIPHER_SUITE, $KDF_PARAMETERS, $ENCRYPTION_ALGORITHM_PARAMETERS)
+    public static function createEME(FlatBufferBuilder $builder, $ENCRYPTED_BLOB, $EPHEMERAL_PUBLIC_KEY, $MAC, $NONCE_START, $TAG, $IV, $SALT, $PUBLIC_KEY_IDENTIFIER, $CIPHER_SUITE, $KDF_PARAMETERS, $ENCRYPTION_ALGORITHM_PARAMETERS)
     {
         $builder->startObject(11);
         self::addENCRYPTED_BLOB($builder, $ENCRYPTED_BLOB);
         self::addEPHEMERAL_PUBLIC_KEY($builder, $EPHEMERAL_PUBLIC_KEY);
         self::addMAC($builder, $MAC);
-        self::addNONCE($builder, $NONCE);
+        self::addNONCE_START($builder, $NONCE_START);
         self::addTAG($builder, $TAG);
         self::addIV($builder, $IV);
         self::addSALT($builder, $SALT);
@@ -226,12 +247,36 @@ class EME extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param VectorOffset
      * @return void
      */
-    public static function addNONCE(FlatBufferBuilder $builder, $NONCE)
+    public static function addNONCE_START(FlatBufferBuilder $builder, $NONCE_START)
     {
-        $builder->addOffsetX(3, $NONCE, 0);
+        $builder->addOffsetX(3, $NONCE_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createNONCE_STARTVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startNONCE_STARTVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

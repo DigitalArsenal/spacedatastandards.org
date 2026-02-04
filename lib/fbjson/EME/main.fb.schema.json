@@ -25,10 +25,15 @@
           "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message.",
           "x-flatbuffer-type": "string"
         },
-        "NONCE": {
-          "type": "string",
-          "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.",
-          "x-flatbuffer-type": "string"
+        "NONCE_START": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+          "x-flatbuffer-type": "[ubyte]"
         },
         "TAG": {
           "type": "string",

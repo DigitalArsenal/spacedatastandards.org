@@ -75,19 +75,22 @@ class EME : Table() {
     val MACAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun MACInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+     * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
      */
-    val NONCE : String?
-        get() {
-            val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+    fun NONCE_START(j: Int) : UByte {
+        val o = __offset(10)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
         }
-    val NONCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun NONCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    }
+    val NONCE_STARTLength : Int
+        get() {
+            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+        }
+    val NONCE_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun NONCE_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
      */
@@ -194,7 +197,7 @@ class EME : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EME")
-        fun createEME(builder: FlatBufferBuilder, ENCRYPTED_BLOBOffset: Int, EPHEMERAL_PUBLIC_KEYOffset: Int, MACOffset: Int, NONCEOffset: Int, TAGOffset: Int, IVOffset: Int, SALTOffset: Int, PUBLIC_KEY_IDENTIFIEROffset: Int, CIPHER_SUITEOffset: Int, KDF_PARAMETERSOffset: Int, ENCRYPTION_ALGORITHM_PARAMETERSOffset: Int) : Int {
+        fun createEME(builder: FlatBufferBuilder, ENCRYPTED_BLOBOffset: Int, EPHEMERAL_PUBLIC_KEYOffset: Int, MACOffset: Int, NONCE_STARTOffset: Int, TAGOffset: Int, IVOffset: Int, SALTOffset: Int, PUBLIC_KEY_IDENTIFIEROffset: Int, CIPHER_SUITEOffset: Int, KDF_PARAMETERSOffset: Int, ENCRYPTION_ALGORITHM_PARAMETERSOffset: Int) : Int {
             builder.startTable(11)
             addENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERSOffset)
             addKDF_PARAMETERS(builder, KDF_PARAMETERSOffset)
@@ -203,7 +206,7 @@ class EME : Table() {
             addSALT(builder, SALTOffset)
             addIV(builder, IVOffset)
             addTAG(builder, TAGOffset)
-            addNONCE(builder, NONCEOffset)
+            addNONCE_START(builder, NONCE_STARTOffset)
             addMAC(builder, MACOffset)
             addEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEYOffset)
             addENCRYPTED_BLOB(builder, ENCRYPTED_BLOBOffset)
@@ -222,7 +225,16 @@ class EME : Table() {
         fun startEncryptedBlobVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addEPHEMERAL_PUBLIC_KEY(builder: FlatBufferBuilder, EPHEMERAL_PUBLIC_KEY: Int) = builder.addOffset(1, EPHEMERAL_PUBLIC_KEY, 0)
         fun addMAC(builder: FlatBufferBuilder, MAC: Int) = builder.addOffset(2, MAC, 0)
-        fun addNONCE(builder: FlatBufferBuilder, NONCE: Int) = builder.addOffset(3, NONCE, 0)
+        fun addNONCE_START(builder: FlatBufferBuilder, NONCE_START: Int) = builder.addOffset(3, NONCE_START, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createNonceStartVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startNonceStartVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addTAG(builder: FlatBufferBuilder, TAG: Int) = builder.addOffset(4, TAG, 0)
         fun addIV(builder: FlatBufferBuilder, IV: Int) = builder.addOffset(5, IV, 0)
         fun addSALT(builder: FlatBufferBuilder, SALT: Int) = builder.addOffset(6, SALT, 0)

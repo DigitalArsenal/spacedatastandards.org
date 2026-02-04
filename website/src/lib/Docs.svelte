@@ -1089,7 +1089,7 @@ for (const container of containers) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(0, 119, 182, 0.1);
     border-radius: 8px;
     font-size: 18px;
     font-weight: 600;
@@ -1303,6 +1303,8 @@ for (const container of containers) {
     border: 1px solid var(--ui-border);
     border-radius: 16px;
     padding: 24px;
+    display: flex;
+    flex-direction: column;
   }
 
   .benefit-icon {
@@ -1321,10 +1323,10 @@ for (const container of containers) {
     color: white;
   }
 
-  .size-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  .size-icon { background: linear-gradient(135deg, #0077b6 0%, #005f8a 100%); }
   .latency-icon { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
   .cpu-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-  .memory-icon { background: linear-gradient(135deg, #17ead9 0%, #6078ea 100%); }
+  .memory-icon { background: linear-gradient(135deg, #17ead9 0%, #005f8a 100%); }
 
   .benefit-card h3 {
     font-size: 18px;
@@ -1357,6 +1359,7 @@ for (const container of containers) {
     list-style: none;
     padding: 0;
     margin: 0 0 16px;
+    flex-grow: 1;
   }
 
   .benefit-list li {
@@ -1383,7 +1386,7 @@ for (const container of containers) {
     border: 1px solid #30363d;
     border-radius: 8px;
     padding: 16px;
-    margin-top: 16px;
+    margin-top: auto;
   }
 
   .example-title {
@@ -1428,13 +1431,15 @@ for (const container of containers) {
   .code-compare {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   .code-compare code {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     display: block;
+    word-break: break-all;
+    overflow-wrap: break-word;
   }
 
   .code-compare .note {
@@ -1457,7 +1462,7 @@ for (const container of containers) {
 
   /* XTCE Section */
   .xtce-intro {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(23, 234, 217, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.1) 0%, rgba(23, 234, 217, 0.1) 100%);
     border: 1px solid var(--ui-border);
     border-radius: 16px;
     padding: 24px;
@@ -1746,7 +1751,7 @@ for (const container of containers) {
     font-size: 16px;
     font-weight: 600;
     color: var(--accent);
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(0, 119, 182, 0.1);
     padding: 4px 10px;
     border-radius: 6px;
   }
@@ -1839,14 +1844,23 @@ for (const container of containers) {
   }
 
   .btn-accent {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    background: var(--accent);
     color: white;
     border: none;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-accent:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 100%);
+    transition: background 0.2s ease;
+  }
+
+  .btn-accent:hover::before {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
   }
 
   .btn-primary {

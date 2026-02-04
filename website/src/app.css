@@ -22,8 +22,8 @@
   --ui-border-hover: rgba(134, 134, 139, 0.5);
   --nav-bg: rgba(22, 22, 23, 0.95);
   --code-bg: rgba(30, 30, 32, 0.9);
-  --accent: #667eea;
-  --accent-hover: #764ba2;
+  --accent: #0077b6;
+  --accent-hover: #005f8a;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
   --radius: 28px;
@@ -46,7 +46,16 @@ body {
 }
 
 #app {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Space for fixed footer */
 }
 
 a {

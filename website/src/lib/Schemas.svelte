@@ -8,48 +8,28 @@
     name: string;
     description: string;
     category: string;
-    fields: number;
   }
 
-  // Schema metadata with categories
-  const schemaData: Record<string, { description: string; category: string }> = {
-    "OMM": { description: "Orbit Mean-Elements Message", category: "Orbital" },
-    "OEM": { description: "Orbit Ephemeris Message", category: "Orbital" },
-    "OCM": { description: "Orbit Comprehensive Message", category: "Orbital" },
-    "OSM": { description: "Orbit State Message", category: "Orbital" },
-    "CDM": { description: "Conjunction Data Message", category: "Conjunction" },
-    "CSM": { description: "Conjunction Screening Message", category: "Conjunction" },
-    "CAT": { description: "Catalog Message", category: "Conjunction" },
-    "TDM": { description: "Tracking Data Message", category: "Tracking" },
-    "RFM": { description: "Reference Frame Message", category: "Tracking" },
-    "EPM": { description: "Entity Profile Message", category: "Entity" },
-    "PNM": { description: "Publish Notification Message", category: "Entity" },
-    "MET": { description: "Mean Element Theory", category: "Maneuver" },
-    "MPE": { description: "Maneuver Planning/Execution", category: "Maneuver" },
-    "HYP": { description: "Hyperbolic Orbit Parameters", category: "Propagation" },
-    "EME": { description: "Earth Mean Equator", category: "Propagation" },
-    "EOO": { description: "Earth Orientation Parameters", category: "Propagation" },
-    "EOP": { description: "Earth Orientation Parameters", category: "Propagation" },
-    "LCC": { description: "Launch Coordination Center", category: "Reference" },
-    "LDM": { description: "Launch Data Message", category: "Reference" },
-    "CRM": { description: "Collection Request Message", category: "Reference" },
-    "CTR": { description: "Contact Request", category: "Reference" },
-    "ATM": { description: "Attitude Message", category: "Other" },
-    "BOV": { description: "Burn-out Vector", category: "Other" },
-    "IDM": { description: "Identification Message", category: "Other" },
-    "PLD": { description: "Payload Message", category: "Other" },
-    "PRG": { description: "Progress Message", category: "Other" },
-    "REC": { description: "Record Message", category: "Other" },
-    "ROC": { description: "Reentry Operations Coordination", category: "Other" },
-    "SCM": { description: "Schema Catalog Message", category: "Other" },
-    "SIT": { description: "Site Message", category: "Other" },
-    "TIM": { description: "Time System Message", category: "Other" },
-    "VCM": { description: "Vector Covariance Message", category: "Other" },
-    "STF": { description: "Storefront Listing", category: "Marketplace" },
-    "PUR": { description: "Purchase Request", category: "Marketplace" },
-    "REV": { description: "Review", category: "Marketplace" },
-    "ACL": { description: "Access Control Grant", category: "Marketplace" },
-    "XTC": { description: "XML Telemetry and Command Exchange", category: "Telemetry" },
+  // Category mapping for known schemas
+  const categoryMap: Record<string, string> = {
+    // Orbital
+    "OMM": "Orbital", "OEM": "Orbital", "OCM": "Orbital", "OSM": "Orbital", "AEM": "Orbital",
+    // Conjunction
+    "CDM": "Conjunction", "CSM": "Conjunction", "CAT": "Conjunction",
+    // Entity
+    "EPM": "Entity", "PNM": "Entity",
+    // Tracking
+    "TDM": "Tracking", "RFM": "Tracking",
+    // Telemetry
+    "XTC": "Telemetry",
+    // Maneuver
+    "MET": "Maneuver", "MPE": "Maneuver", "MNV": "Maneuver",
+    // Propagation
+    "HYP": "Propagation", "EME": "Propagation", "EOO": "Propagation", "EOP": "Propagation", "PCF": "Propagation",
+    // Reference
+    "LCC": "Reference", "LDM": "Reference", "CRM": "Reference", "CTR": "Reference", "TIM": "Reference", "RFM": "Reference",
+    // Marketplace
+    "STF": "Marketplace", "PUR": "Marketplace", "REV": "Marketplace", "ACL": "Marketplace",
   };
 
   const categories = ["All", "Orbital", "Conjunction", "Entity", "Tracking", "Telemetry", "Maneuver", "Propagation", "Reference", "Marketplace", "Other"];
@@ -57,6 +37,7 @@
   let schemas = writable<SchemaInfo[]>([]);
   let searchQuery = writable("");
   let activeCategory = writable("All");
+  let isLoading = true;
 
   const filteredSchemas = derived(
     [schemas, searchQuery, activeCategory],
@@ -72,16 +53,45 @@
     }
   );
 
+  // Extract description from IDL comment
+  function extractDescription(idl: string, key: string): string {
+    // Look for /// comment before the table definition
+    const tableMatch = idl.match(/\/\/\/\s*(.+?)\n(?:\/\/.*\n)*\s*table\s+\w+/);
+    if (tableMatch) {
+      return tableMatch[1].trim();
+    }
+    // Look for // Description comment
+    const descMatch = idl.match(/\/\/\s*Description\s*\n\/\/\s*(.+)/i);
+    if (descMatch) {
+      return descMatch[1].trim();
+    }
+    // Fallback: use the key
+    return key + " Message";
+  }
+
   onMount(async () => {
-    // Build schema list from metadata
-    const schemaList: SchemaInfo[] = Object.entries(schemaData).map(([key, data]) => ({
-      key,
-      name: key,
-      description: data.description,
-      category: data.category,
-      fields: Math.floor(Math.random() * 50) + 10 // Placeholder - would come from actual schema
-    }));
-    schemas.set(schemaList);
+    try {
+      const response = await fetch('/dist/manifest.json');
+      const manifest = await response.json();
+
+      const schemaList: SchemaInfo[] = Object.entries(manifest.STANDARDS || {}).map(([key, data]: [string, any]) => {
+        const description = extractDescription(data.IDL || '', key);
+        const category = categoryMap[key] || "Other";
+
+        return {
+          key,
+          name: key,
+          description,
+          category
+        };
+      }).sort((a, b) => a.key.localeCompare(b.key));
+
+      schemas.set(schemaList);
+    } catch (e) {
+      console.error('Failed to load schemas:', e);
+    } finally {
+      isLoading = false;
+    }
   });
 
   function getCategoryColor(category: string): string {
@@ -102,7 +112,7 @@
 
   function getCategoryTextColor(category: string): string {
     const colors: Record<string, string> = {
-      "Orbital": "#667eea",
+      "Orbital": "#0077b6",
       "Conjunction": "#f5576c",
       "Entity": "#38ef7d",
       "Tracking": "#17ead9",
@@ -147,7 +157,11 @@
     </div>
 
     <div class="results-info">
-      Showing {$filteredSchemas.length} of {$schemas.length} schemas
+      {#if isLoading}
+        Loading schemas...
+      {:else}
+        Showing {$filteredSchemas.length} of {$schemas.length} schemas
+      {/if}
     </div>
 
     <div class="schema-grid">

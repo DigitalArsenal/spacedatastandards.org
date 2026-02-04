@@ -17,9 +17,9 @@
                 "type" : "string",
                 "description" : "Message Authentication Code to verify the integrity and authenticity of the encrypted message."
               },
-        "NONCE" : {
-                "type" : "string",
-                "description" : "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption."
+        "NONCE_START" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces."
               },
         "TAG" : {
                 "type" : "string",

@@ -23,7 +23,7 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ENCRYPTED_BLOB = 4,
     VT_EPHEMERAL_PUBLIC_KEY = 6,
     VT_MAC = 8,
-    VT_NONCE = 10,
+    VT_NONCE_START = 10,
     VT_TAG = 12,
     VT_IV = 14,
     VT_SALT = 16,
@@ -44,9 +44,9 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *MAC() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MAC);
   }
-  /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-  const ::flatbuffers::String *NONCE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NONCE);
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  const ::flatbuffers::Vector<uint8_t> *NONCE_START() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_NONCE_START);
   }
   /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   const ::flatbuffers::String *TAG() const {
@@ -84,8 +84,8 @@ struct EME FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(EPHEMERAL_PUBLIC_KEY()) &&
            VerifyOffset(verifier, VT_MAC) &&
            verifier.VerifyString(MAC()) &&
-           VerifyOffset(verifier, VT_NONCE) &&
-           verifier.VerifyString(NONCE()) &&
+           VerifyOffset(verifier, VT_NONCE_START) &&
+           verifier.VerifyVector(NONCE_START()) &&
            VerifyOffset(verifier, VT_TAG) &&
            verifier.VerifyString(TAG()) &&
            VerifyOffset(verifier, VT_IV) &&
@@ -117,8 +117,8 @@ struct EMEBuilder {
   void add_MAC(::flatbuffers::Offset<::flatbuffers::String> MAC) {
     fbb_.AddOffset(EME::VT_MAC, MAC);
   }
-  void add_NONCE(::flatbuffers::Offset<::flatbuffers::String> NONCE) {
-    fbb_.AddOffset(EME::VT_NONCE, NONCE);
+  void add_NONCE_START(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START) {
+    fbb_.AddOffset(EME::VT_NONCE_START, NONCE_START);
   }
   void add_TAG(::flatbuffers::Offset<::flatbuffers::String> TAG) {
     fbb_.AddOffset(EME::VT_TAG, TAG);
@@ -157,7 +157,7 @@ inline ::flatbuffers::Offset<EME> CreateEME(
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENCRYPTED_BLOB = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERAL_PUBLIC_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MAC = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NONCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> NONCE_START = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TAG = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IV = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SALT = 0,
@@ -173,7 +173,7 @@ inline ::flatbuffers::Offset<EME> CreateEME(
   builder_.add_SALT(SALT);
   builder_.add_IV(IV);
   builder_.add_TAG(TAG);
-  builder_.add_NONCE(NONCE);
+  builder_.add_NONCE_START(NONCE_START);
   builder_.add_MAC(MAC);
   builder_.add_EPHEMERAL_PUBLIC_KEY(EPHEMERAL_PUBLIC_KEY);
   builder_.add_ENCRYPTED_BLOB(ENCRYPTED_BLOB);
@@ -185,7 +185,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
     const std::vector<uint8_t> *ENCRYPTED_BLOB = nullptr,
     const char *EPHEMERAL_PUBLIC_KEY = nullptr,
     const char *MAC = nullptr,
-    const char *NONCE = nullptr,
+    const std::vector<uint8_t> *NONCE_START = nullptr,
     const char *TAG = nullptr,
     const char *IV = nullptr,
     const char *SALT = nullptr,
@@ -196,7 +196,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
   auto ENCRYPTED_BLOB__ = ENCRYPTED_BLOB ? _fbb.CreateVector<uint8_t>(*ENCRYPTED_BLOB) : 0;
   auto EPHEMERAL_PUBLIC_KEY__ = EPHEMERAL_PUBLIC_KEY ? _fbb.CreateString(EPHEMERAL_PUBLIC_KEY) : 0;
   auto MAC__ = MAC ? _fbb.CreateString(MAC) : 0;
-  auto NONCE__ = NONCE ? _fbb.CreateString(NONCE) : 0;
+  auto NONCE_START__ = NONCE_START ? _fbb.CreateVector<uint8_t>(*NONCE_START) : 0;
   auto TAG__ = TAG ? _fbb.CreateString(TAG) : 0;
   auto IV__ = IV ? _fbb.CreateString(IV) : 0;
   auto SALT__ = SALT ? _fbb.CreateString(SALT) : 0;
@@ -209,7 +209,7 @@ inline ::flatbuffers::Offset<EME> CreateEMEDirect(
       ENCRYPTED_BLOB__,
       EPHEMERAL_PUBLIC_KEY__,
       MAC__,
-      NONCE__,
+      NONCE_START__,
       TAG__,
       IV__,
       SALT__,

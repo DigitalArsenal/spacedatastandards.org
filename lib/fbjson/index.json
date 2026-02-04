@@ -27512,6 +27512,47 @@
                         }
                     }
                 },
+                "KeyExchange": {
+                    "type": "string",
+                    "enum": [
+                        "X25519",
+                        "Secp256k1",
+                        "P256"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "X25519": {
+                            "value": 0
+                        }
+                    }
+                },
+                "SymmetricAlgo": {
+                    "type": "string",
+                    "enum": [
+                        "AES_256_CTR"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "AES_256_CTR": {
+                            "value": 0
+                        }
+                    }
+                },
+                "KDF": {
+                    "type": "string",
+                    "enum": [
+                        "HKDF_SHA256"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "HKDF_SHA256": {
+                            "value": 0
+                        }
+                    }
+                },
                 "AtmosphereModel": {
                     "type": "string",
                     "enum": [
@@ -31619,6 +31660,7 @@
                         "DMG",
                         "DOA",
                         "EME",
+                        "ENC",
                         "ENV",
                         "EOO",
                         "EOP",
@@ -36984,10 +37026,15 @@
                             "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message.",
                             "x-flatbuffer-type": "string"
                         },
-                        "NONCE": {
-                            "type": "string",
-                            "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.",
-                            "x-flatbuffer-type": "string"
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+                            "x-flatbuffer-type": "[ubyte]"
                         },
                         "TAG": {
                             "type": "string",
@@ -37025,6 +37072,116 @@
                             "x-flatbuffer-type": "string"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "ENC": {
+                    "type": "object",
+                    "description": "Encryption Header containing all parameters needed for decryption",
+                    "properties": {
+                        "VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Schema version for forward compatibility",
+                            "x-flatbuffer-type": "ubyte"
+                        },
+                        "KEY_EXCHANGE": {
+                            "$ref": "#/definitions/KeyExchange",
+                            "description": "Key exchange algorithm used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "X25519": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "SYMMETRIC": {
+                            "$ref": "#/definitions/SymmetricAlgo",
+                            "description": "Symmetric encryption algorithm used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "AES_256_CTR": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "KEY_DERIVATION": {
+                            "$ref": "#/definitions/KDF",
+                            "description": "Key derivation function used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "HKDF_SHA256": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "EPHEMERAL_PUBLIC_KEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)",
+                            "x-flatbuffer-type": "[ubyte]",
+                            "x-flatbuffer-required": true
+                        },
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+                            "x-flatbuffer-type": "[ubyte]",
+                            "x-flatbuffer-required": true
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional identifier for the recipient's public key (up to 32 bytes)",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CONTEXT": {
+                            "type": "string",
+                            "description": "Optional domain separation context string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SCHEMA_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name from the schema",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TIMESTAMP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional Unix timestamp (milliseconds) when encryption was performed",
+                            "x-flatbuffer-type": "uint64"
+                        }
+                    },
+                    "required": [
+                        "EPHEMERAL_PUBLIC_KEY",
+                        "NONCE_START"
+                    ],
                     "additionalProperties": false
                 },
                 "ENV": {
@@ -52332,6 +52489,9 @@
                                     "$ref": "#/definitions/EME"
                                 },
                                 {
+                                    "$ref": "#/definitions/ENC"
+                                },
+                                {
                                     "$ref": "#/definitions/ENV"
                                 },
                                 {
@@ -52802,6 +52962,165 @@
             "$ref": "#/definitions/OBT",
             "x-flatbuffer-root-type": "OBT",
             "x-flatbuffer-file-identifier": "$OBT"
+        },
+        "ENC": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "KeyExchange": {
+                    "type": "string",
+                    "enum": [
+                        "X25519",
+                        "Secp256k1",
+                        "P256"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "X25519": {
+                            "value": 0
+                        }
+                    }
+                },
+                "SymmetricAlgo": {
+                    "type": "string",
+                    "enum": [
+                        "AES_256_CTR"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "AES_256_CTR": {
+                            "value": 0
+                        }
+                    }
+                },
+                "KDF": {
+                    "type": "string",
+                    "enum": [
+                        "HKDF_SHA256"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "HKDF_SHA256": {
+                            "value": 0
+                        }
+                    }
+                },
+                "ENC": {
+                    "type": "object",
+                    "description": "Encryption Header containing all parameters needed for decryption",
+                    "properties": {
+                        "VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Schema version for forward compatibility",
+                            "x-flatbuffer-type": "ubyte"
+                        },
+                        "KEY_EXCHANGE": {
+                            "$ref": "#/definitions/KeyExchange",
+                            "description": "Key exchange algorithm used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "X25519": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "SYMMETRIC": {
+                            "$ref": "#/definitions/SymmetricAlgo",
+                            "description": "Symmetric encryption algorithm used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "AES_256_CTR": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "KEY_DERIVATION": {
+                            "$ref": "#/definitions/KDF",
+                            "description": "Key derivation function used",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "HKDF_SHA256": {
+                                    "value": 0
+                                }
+                            }
+                        },
+                        "EPHEMERAL_PUBLIC_KEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)",
+                            "x-flatbuffer-type": "[ubyte]",
+                            "x-flatbuffer-required": true
+                        },
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+                            "x-flatbuffer-type": "[ubyte]",
+                            "x-flatbuffer-required": true
+                        },
+                        "RECIPIENT_KEY_ID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional identifier for the recipient's public key (up to 32 bytes)",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "CONTEXT": {
+                            "type": "string",
+                            "description": "Optional domain separation context string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SCHEMA_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional SHA-256 hash of the FlatBuffers schema (32 bytes)",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "ROOT_TYPE": {
+                            "type": "string",
+                            "description": "Optional root type name from the schema",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TIMESTAMP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Optional Unix timestamp (milliseconds) when encryption was performed",
+                            "x-flatbuffer-type": "uint64"
+                        }
+                    },
+                    "required": [
+                        "EPHEMERAL_PUBLIC_KEY",
+                        "NONCE_START"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/ENC",
+            "x-flatbuffer-root-type": "ENC",
+            "x-flatbuffer-file-identifier": "$ENC"
         },
         "REV": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -53391,10 +53710,15 @@
                             "description": "Message Authentication Code to verify the integrity and authenticity of the encrypted message.",
                             "x-flatbuffer-type": "string"
                         },
-                        "NONCE": {
-                            "type": "string",
-                            "description": "Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.",
-                            "x-flatbuffer-type": "string"
+                        "NONCE_START": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.",
+                            "x-flatbuffer-type": "[ubyte]"
                         },
                         "TAG": {
                             "type": "string",

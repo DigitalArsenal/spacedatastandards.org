@@ -26,10 +26,16 @@
 
 <style>
   footer {
-    padding: 60px 24px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 24px;
     border-top: 1px solid var(--ui-border);
     background: var(--nav-bg);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9999;
   }
 
   .footer-content {

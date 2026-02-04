@@ -26,10 +26,11 @@ export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     MAC(): string | null;
     MAC(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+     * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
      */
-    NONCE(): string | null;
-    NONCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    NONCE_START(index: number): number | null;
+    nonceStartLength(): number;
+    nonceStartArray(): Uint8Array | null;
     /**
      * Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
      */
@@ -71,7 +72,9 @@ export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     static startEncryptedBlobVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEphemeralPublicKey(builder: flatbuffers.Builder, EPHEMERAL_PUBLIC_KEYOffset: flatbuffers.Offset): void;
     static addMac(builder: flatbuffers.Builder, MACOffset: flatbuffers.Offset): void;
-    static addNonce(builder: flatbuffers.Builder, NONCEOffset: flatbuffers.Offset): void;
+    static addNonceStart(builder: flatbuffers.Builder, NONCE_STARTOffset: flatbuffers.Offset): void;
+    static createNonceStartVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startNonceStartVector(builder: flatbuffers.Builder, numElems: number): void;
     static addTag(builder: flatbuffers.Builder, TAGOffset: flatbuffers.Offset): void;
     static addIv(builder: flatbuffers.Builder, IVOffset: flatbuffers.Offset): void;
     static addSalt(builder: flatbuffers.Builder, SALTOffset: flatbuffers.Offset): void;
@@ -82,7 +85,7 @@ export declare class EME implements flatbuffers.IUnpackableObject<EMET> {
     static endEME(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEMEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEMEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEME(builder: flatbuffers.Builder, ENCRYPTED_BLOBOffset: flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset: flatbuffers.Offset, MACOffset: flatbuffers.Offset, NONCEOffset: flatbuffers.Offset, TAGOffset: flatbuffers.Offset, IVOffset: flatbuffers.Offset, SALTOffset: flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset: flatbuffers.Offset, CIPHER_SUITEOffset: flatbuffers.Offset, KDF_PARAMETERSOffset: flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createEME(builder: flatbuffers.Builder, ENCRYPTED_BLOBOffset: flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset: flatbuffers.Offset, MACOffset: flatbuffers.Offset, NONCE_STARTOffset: flatbuffers.Offset, TAGOffset: flatbuffers.Offset, IVOffset: flatbuffers.Offset, SALTOffset: flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset: flatbuffers.Offset, CIPHER_SUITEOffset: flatbuffers.Offset, KDF_PARAMETERSOffset: flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): EMET;
     unpackTo(_o: EMET): void;
 }
@@ -90,7 +93,7 @@ export declare class EMET implements flatbuffers.IGeneratedObject {
     ENCRYPTED_BLOB: (number)[];
     EPHEMERAL_PUBLIC_KEY: string | Uint8Array | null;
     MAC: string | Uint8Array | null;
-    NONCE: string | Uint8Array | null;
+    NONCE_START: (number)[];
     TAG: string | Uint8Array | null;
     IV: string | Uint8Array | null;
     SALT: string | Uint8Array | null;
@@ -98,7 +101,7 @@ export declare class EMET implements flatbuffers.IGeneratedObject {
     CIPHER_SUITE: string | Uint8Array | null;
     KDF_PARAMETERS: string | Uint8Array | null;
     ENCRYPTION_ALGORITHM_PARAMETERS: string | Uint8Array | null;
-    constructor(ENCRYPTED_BLOB?: (number)[], EPHEMERAL_PUBLIC_KEY?: string | Uint8Array | null, MAC?: string | Uint8Array | null, NONCE?: string | Uint8Array | null, TAG?: string | Uint8Array | null, IV?: string | Uint8Array | null, SALT?: string | Uint8Array | null, PUBLIC_KEY_IDENTIFIER?: string | Uint8Array | null, CIPHER_SUITE?: string | Uint8Array | null, KDF_PARAMETERS?: string | Uint8Array | null, ENCRYPTION_ALGORITHM_PARAMETERS?: string | Uint8Array | null);
+    constructor(ENCRYPTED_BLOB?: (number)[], EPHEMERAL_PUBLIC_KEY?: string | Uint8Array | null, MAC?: string | Uint8Array | null, NONCE_START?: (number)[], TAG?: string | Uint8Array | null, IV?: string | Uint8Array | null, SALT?: string | Uint8Array | null, PUBLIC_KEY_IDENTIFIER?: string | Uint8Array | null, CIPHER_SUITE?: string | Uint8Array | null, KDF_PARAMETERS?: string | Uint8Array | null, ENCRYPTION_ALGORITHM_PARAMETERS?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EME.d.ts.map

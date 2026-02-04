@@ -70,13 +70,21 @@ MAC(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+ * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
  */
-NONCE():string|null
-NONCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NONCE(optionalEncoding?:any):string|Uint8Array|null {
+NONCE_START(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+nonceStartLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+nonceStartArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
 /**
@@ -177,8 +185,20 @@ static addMac(builder:flatbuffers.Builder, MACOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, MACOffset, 0);
 }
 
-static addNonce(builder:flatbuffers.Builder, NONCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, NONCEOffset, 0);
+static addNonceStart(builder:flatbuffers.Builder, NONCE_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, NONCE_STARTOffset, 0);
+}
+
+static createNonceStartVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startNonceStartVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
 }
 
 static addTag(builder:flatbuffers.Builder, TAGOffset:flatbuffers.Offset) {
@@ -222,12 +242,12 @@ static finishSizePrefixedEMEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$EME', true);
 }
 
-static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset:flatbuffers.Offset, MACOffset:flatbuffers.Offset, NONCEOffset:flatbuffers.Offset, TAGOffset:flatbuffers.Offset, IVOffset:flatbuffers.Offset, SALTOffset:flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset, CIPHER_SUITEOffset:flatbuffers.Offset, KDF_PARAMETERSOffset:flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createEME(builder:flatbuffers.Builder, ENCRYPTED_BLOBOffset:flatbuffers.Offset, EPHEMERAL_PUBLIC_KEYOffset:flatbuffers.Offset, MACOffset:flatbuffers.Offset, NONCE_STARTOffset:flatbuffers.Offset, TAGOffset:flatbuffers.Offset, IVOffset:flatbuffers.Offset, SALTOffset:flatbuffers.Offset, PUBLIC_KEY_IDENTIFIEROffset:flatbuffers.Offset, CIPHER_SUITEOffset:flatbuffers.Offset, KDF_PARAMETERSOffset:flatbuffers.Offset, ENCRYPTION_ALGORITHM_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   EME.startEME(builder);
   EME.addEncryptedBlob(builder, ENCRYPTED_BLOBOffset);
   EME.addEphemeralPublicKey(builder, EPHEMERAL_PUBLIC_KEYOffset);
   EME.addMac(builder, MACOffset);
-  EME.addNonce(builder, NONCEOffset);
+  EME.addNonceStart(builder, NONCE_STARTOffset);
   EME.addTag(builder, TAGOffset);
   EME.addIv(builder, IVOffset);
   EME.addSalt(builder, SALTOffset);
@@ -243,7 +263,7 @@ unpack(): EMET {
     this.bb!.createScalarList<number>(this.ENCRYPTED_BLOB.bind(this), this.encryptedBlobLength()),
     this.EPHEMERAL_PUBLIC_KEY(),
     this.MAC(),
-    this.NONCE(),
+    this.bb!.createScalarList<number>(this.NONCE_START.bind(this), this.nonceStartLength()),
     this.TAG(),
     this.IV(),
     this.SALT(),
@@ -259,7 +279,7 @@ unpackTo(_o: EMET): void {
   _o.ENCRYPTED_BLOB = this.bb!.createScalarList<number>(this.ENCRYPTED_BLOB.bind(this), this.encryptedBlobLength());
   _o.EPHEMERAL_PUBLIC_KEY = this.EPHEMERAL_PUBLIC_KEY();
   _o.MAC = this.MAC();
-  _o.NONCE = this.NONCE();
+  _o.NONCE_START = this.bb!.createScalarList<number>(this.NONCE_START.bind(this), this.nonceStartLength());
   _o.TAG = this.TAG();
   _o.IV = this.IV();
   _o.SALT = this.SALT();
@@ -275,7 +295,7 @@ constructor(
   public ENCRYPTED_BLOB: (number)[] = [],
   public EPHEMERAL_PUBLIC_KEY: string|Uint8Array|null = null,
   public MAC: string|Uint8Array|null = null,
-  public NONCE: string|Uint8Array|null = null,
+  public NONCE_START: (number)[] = [],
   public TAG: string|Uint8Array|null = null,
   public IV: string|Uint8Array|null = null,
   public SALT: string|Uint8Array|null = null,
@@ -290,7 +310,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ENCRYPTED_BLOB = EME.createEncryptedBlobVector(builder, this.ENCRYPTED_BLOB);
   const EPHEMERAL_PUBLIC_KEY = (this.EPHEMERAL_PUBLIC_KEY !== null ? builder.createString(this.EPHEMERAL_PUBLIC_KEY!) : 0);
   const MAC = (this.MAC !== null ? builder.createString(this.MAC!) : 0);
-  const NONCE = (this.NONCE !== null ? builder.createString(this.NONCE!) : 0);
+  const NONCE_START = EME.createNonceStartVector(builder, this.NONCE_START);
   const TAG = (this.TAG !== null ? builder.createString(this.TAG!) : 0);
   const IV = (this.IV !== null ? builder.createString(this.IV!) : 0);
   const SALT = (this.SALT !== null ? builder.createString(this.SALT!) : 0);
@@ -303,7 +323,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ENCRYPTED_BLOB,
     EPHEMERAL_PUBLIC_KEY,
     MAC,
-    NONCE,
+    NONCE_START,
     TAG,
     IV,
     SALT,

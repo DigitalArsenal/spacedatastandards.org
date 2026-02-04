@@ -29,7 +29,7 @@ impl<'a> EME<'a> {
   pub const VT_ENCRYPTED_BLOB: flatbuffers::VOffsetT = 4;
   pub const VT_EPHEMERAL_PUBLIC_KEY: flatbuffers::VOffsetT = 6;
   pub const VT_MAC: flatbuffers::VOffsetT = 8;
-  pub const VT_NONCE: flatbuffers::VOffsetT = 10;
+  pub const VT_NONCE_START: flatbuffers::VOffsetT = 10;
   pub const VT_TAG: flatbuffers::VOffsetT = 12;
   pub const VT_IV: flatbuffers::VOffsetT = 14;
   pub const VT_SALT: flatbuffers::VOffsetT = 16;
@@ -55,7 +55,7 @@ impl<'a> EME<'a> {
     if let Some(x) = args.SALT { builder.add_SALT(x); }
     if let Some(x) = args.IV { builder.add_IV(x); }
     if let Some(x) = args.TAG { builder.add_TAG(x); }
-    if let Some(x) = args.NONCE { builder.add_NONCE(x); }
+    if let Some(x) = args.NONCE_START { builder.add_NONCE_START(x); }
     if let Some(x) = args.MAC { builder.add_MAC(x); }
     if let Some(x) = args.EPHEMERAL_PUBLIC_KEY { builder.add_EPHEMERAL_PUBLIC_KEY(x); }
     if let Some(x) = args.ENCRYPTED_BLOB { builder.add_ENCRYPTED_BLOB(x); }
@@ -72,8 +72,8 @@ impl<'a> EME<'a> {
     let MAC = self.MAC().map(|x| {
       x.to_string()
     });
-    let NONCE = self.NONCE().map(|x| {
-      x.to_string()
+    let NONCE_START = self.NONCE_START().map(|x| {
+      x.into_iter().collect()
     });
     let TAG = self.TAG().map(|x| {
       x.to_string()
@@ -100,7 +100,7 @@ impl<'a> EME<'a> {
       ENCRYPTED_BLOB,
       EPHEMERAL_PUBLIC_KEY,
       MAC,
-      NONCE,
+      NONCE_START,
       TAG,
       IV,
       SALT,
@@ -135,13 +135,13 @@ impl<'a> EME<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EME::VT_MAC, None)}
   }
-  /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
   #[inline]
-  pub fn NONCE(&self) -> Option<&'a str> {
+  pub fn NONCE_START(&self) -> Option<flatbuffers::Vector<'a, u8>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EME::VT_NONCE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, u8>>>(EME::VT_NONCE_START, None)}
   }
   /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   #[inline]
@@ -211,7 +211,7 @@ impl flatbuffers::Verifiable for EME<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, u8>>>("ENCRYPTED_BLOB", Self::VT_ENCRYPTED_BLOB, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPHEMERAL_PUBLIC_KEY", Self::VT_EPHEMERAL_PUBLIC_KEY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MAC", Self::VT_MAC, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NONCE", Self::VT_NONCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, u8>>>("NONCE_START", Self::VT_NONCE_START, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TAG", Self::VT_TAG, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IV", Self::VT_IV, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SALT", Self::VT_SALT, false)?
@@ -227,7 +227,7 @@ pub struct EMEArgs<'a> {
     pub ENCRYPTED_BLOB: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, u8>>>,
     pub EPHEMERAL_PUBLIC_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MAC: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub NONCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NONCE_START: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, u8>>>,
     pub TAG: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IV: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SALT: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -243,7 +243,7 @@ impl<'a> Default for EMEArgs<'a> {
       ENCRYPTED_BLOB: None,
       EPHEMERAL_PUBLIC_KEY: None,
       MAC: None,
-      NONCE: None,
+      NONCE_START: None,
       TAG: None,
       IV: None,
       SALT: None,
@@ -273,8 +273,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EMEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_MAC, MAC);
   }
   #[inline]
-  pub fn add_NONCE(&mut self, NONCE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_NONCE, NONCE);
+  pub fn add_NONCE_START(&mut self, NONCE_START: flatbuffers::WIPOffset<flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EME::VT_NONCE_START, NONCE_START);
   }
   #[inline]
   pub fn add_TAG(&mut self, TAG: flatbuffers::WIPOffset<&'b  str>) {
@@ -325,7 +325,7 @@ impl core::fmt::Debug for EME<'_> {
       ds.field("ENCRYPTED_BLOB", &self.ENCRYPTED_BLOB());
       ds.field("EPHEMERAL_PUBLIC_KEY", &self.EPHEMERAL_PUBLIC_KEY());
       ds.field("MAC", &self.MAC());
-      ds.field("NONCE", &self.NONCE());
+      ds.field("NONCE_START", &self.NONCE_START());
       ds.field("TAG", &self.TAG());
       ds.field("IV", &self.IV());
       ds.field("SALT", &self.SALT());
@@ -342,7 +342,7 @@ pub struct EMET {
   pub ENCRYPTED_BLOB: Option<Vec<u8>>,
   pub EPHEMERAL_PUBLIC_KEY: Option<String>,
   pub MAC: Option<String>,
-  pub NONCE: Option<String>,
+  pub NONCE_START: Option<Vec<u8>>,
   pub TAG: Option<String>,
   pub IV: Option<String>,
   pub SALT: Option<String>,
@@ -357,7 +357,7 @@ impl Default for EMET {
       ENCRYPTED_BLOB: None,
       EPHEMERAL_PUBLIC_KEY: None,
       MAC: None,
-      NONCE: None,
+      NONCE_START: None,
       TAG: None,
       IV: None,
       SALT: None,
@@ -382,8 +382,8 @@ impl EMET {
     let MAC = self.MAC.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let NONCE = self.NONCE.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let NONCE_START = self.NONCE_START.as_ref().map(|x|{
+      _fbb.create_vector(x)
     });
     let TAG = self.TAG.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -410,7 +410,7 @@ impl EMET {
       ENCRYPTED_BLOB,
       EPHEMERAL_PUBLIC_KEY,
       MAC,
-      NONCE,
+      NONCE_START,
       TAG,
       IV,
       SALT,

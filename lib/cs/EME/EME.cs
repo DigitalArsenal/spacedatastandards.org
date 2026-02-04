@@ -44,14 +44,15 @@ public struct EME : IFlatbufferObject
   public ArraySegment<byte>? GetMACBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetMACArray() { return __p.__vector_as_array<byte>(8); }
-  /// Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-  public string NONCE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  public byte NONCE_START(int j) { int o = __p.__offset(10); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int NONCE_STARTLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNONCEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetNONCE_STARTBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetNONCEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetNONCE_STARTBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetNONCEArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetNONCE_STARTArray() { return __p.__vector_as_array<byte>(10); }
   /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   public string TAG { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -113,7 +114,7 @@ public struct EME : IFlatbufferObject
       VectorOffset ENCRYPTED_BLOBOffset = default(VectorOffset),
       StringOffset EPHEMERAL_PUBLIC_KEYOffset = default(StringOffset),
       StringOffset MACOffset = default(StringOffset),
-      StringOffset NONCEOffset = default(StringOffset),
+      VectorOffset NONCE_STARTOffset = default(VectorOffset),
       StringOffset TAGOffset = default(StringOffset),
       StringOffset IVOffset = default(StringOffset),
       StringOffset SALTOffset = default(StringOffset),
@@ -129,7 +130,7 @@ public struct EME : IFlatbufferObject
     EME.AddSALT(builder, SALTOffset);
     EME.AddIV(builder, IVOffset);
     EME.AddTAG(builder, TAGOffset);
-    EME.AddNONCE(builder, NONCEOffset);
+    EME.AddNONCE_START(builder, NONCE_STARTOffset);
     EME.AddMAC(builder, MACOffset);
     EME.AddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEYOffset);
     EME.AddENCRYPTED_BLOB(builder, ENCRYPTED_BLOBOffset);
@@ -145,7 +146,12 @@ public struct EME : IFlatbufferObject
   public static void StartENCRYPTED_BLOBVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddEPHEMERAL_PUBLIC_KEY(FlatBufferBuilder builder, StringOffset EPHEMERAL_PUBLIC_KEYOffset) { builder.AddOffset(1, EPHEMERAL_PUBLIC_KEYOffset.Value, 0); }
   public static void AddMAC(FlatBufferBuilder builder, StringOffset MACOffset) { builder.AddOffset(2, MACOffset.Value, 0); }
-  public static void AddNONCE(FlatBufferBuilder builder, StringOffset NONCEOffset) { builder.AddOffset(3, NONCEOffset.Value, 0); }
+  public static void AddNONCE_START(FlatBufferBuilder builder, VectorOffset NONCE_STARTOffset) { builder.AddOffset(3, NONCE_STARTOffset.Value, 0); }
+  public static VectorOffset CreateNONCE_STARTVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateNONCE_STARTVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNONCE_STARTVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNONCE_STARTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartNONCE_STARTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddTAG(FlatBufferBuilder builder, StringOffset TAGOffset) { builder.AddOffset(4, TAGOffset.Value, 0); }
   public static void AddIV(FlatBufferBuilder builder, StringOffset IVOffset) { builder.AddOffset(5, IVOffset.Value, 0); }
   public static void AddSALT(FlatBufferBuilder builder, StringOffset SALTOffset) { builder.AddOffset(6, SALTOffset.Value, 0); }
@@ -169,7 +175,8 @@ public struct EME : IFlatbufferObject
     for (var _j = 0; _j < this.ENCRYPTED_BLOBLength; ++_j) {_o.ENCRYPTED_BLOB.Add(this.ENCRYPTED_BLOB(_j));}
     _o.EPHEMERAL_PUBLIC_KEY = this.EPHEMERAL_PUBLIC_KEY;
     _o.MAC = this.MAC;
-    _o.NONCE = this.NONCE;
+    _o.NONCE_START = new List<byte>();
+    for (var _j = 0; _j < this.NONCE_STARTLength; ++_j) {_o.NONCE_START.Add(this.NONCE_START(_j));}
     _o.TAG = this.TAG;
     _o.IV = this.IV;
     _o.SALT = this.SALT;
@@ -187,7 +194,11 @@ public struct EME : IFlatbufferObject
     }
     var _EPHEMERAL_PUBLIC_KEY = _o.EPHEMERAL_PUBLIC_KEY == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERAL_PUBLIC_KEY);
     var _MAC = _o.MAC == null ? default(StringOffset) : builder.CreateString(_o.MAC);
-    var _NONCE = _o.NONCE == null ? default(StringOffset) : builder.CreateString(_o.NONCE);
+    var _NONCE_START = default(VectorOffset);
+    if (_o.NONCE_START != null) {
+      var __NONCE_START = _o.NONCE_START.ToArray();
+      _NONCE_START = CreateNONCE_STARTVector(builder, __NONCE_START);
+    }
     var _TAG = _o.TAG == null ? default(StringOffset) : builder.CreateString(_o.TAG);
     var _IV = _o.IV == null ? default(StringOffset) : builder.CreateString(_o.IV);
     var _SALT = _o.SALT == null ? default(StringOffset) : builder.CreateString(_o.SALT);
@@ -200,7 +211,7 @@ public struct EME : IFlatbufferObject
       _ENCRYPTED_BLOB,
       _EPHEMERAL_PUBLIC_KEY,
       _MAC,
-      _NONCE,
+      _NONCE_START,
       _TAG,
       _IV,
       _SALT,
@@ -216,7 +227,7 @@ public class EMET
   public List<byte> ENCRYPTED_BLOB { get; set; }
   public string EPHEMERAL_PUBLIC_KEY { get; set; }
   public string MAC { get; set; }
-  public string NONCE { get; set; }
+  public List<byte> NONCE_START { get; set; }
   public string TAG { get; set; }
   public string IV { get; set; }
   public string SALT { get; set; }
@@ -229,7 +240,7 @@ public class EMET
     this.ENCRYPTED_BLOB = null;
     this.EPHEMERAL_PUBLIC_KEY = null;
     this.MAC = null;
-    this.NONCE = null;
+    this.NONCE_START = null;
     this.TAG = null;
     this.IV = null;
     this.SALT = null;
@@ -257,7 +268,7 @@ static public class EMEVerify
       && verifier.VerifyVectorOfData(tablePos, 4 /*ENCRYPTED_BLOB*/, 1 /*byte*/, false)
       && verifier.VerifyString(tablePos, 6 /*EPHEMERAL_PUBLIC_KEY*/, false)
       && verifier.VerifyString(tablePos, 8 /*MAC*/, false)
-      && verifier.VerifyString(tablePos, 10 /*NONCE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 10 /*NONCE_START*/, 1 /*byte*/, false)
       && verifier.VerifyString(tablePos, 12 /*TAG*/, false)
       && verifier.VerifyString(tablePos, 14 /*IV*/, false)
       && verifier.VerifyString(tablePos, 16 /*SALT*/, false)

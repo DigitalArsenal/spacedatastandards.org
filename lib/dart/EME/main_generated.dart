@@ -24,8 +24,8 @@ class EME {
   String? get EPHEMERAL_PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Message Authentication Code to verify the integrity and authenticity of the encrypted message.
   String? get MAC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Unique value used to ensure that the same plaintext produces a different ciphertext for each encryption.
-  String? get NONCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+  List<int>? get NONCE_START => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   String? get TAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Initialization vector used to introduce randomness in the encryption process, enhancing security.
@@ -43,7 +43,7 @@ class EME {
 
   @override
   String toString() {
-    return 'EME{ENCRYPTED_BLOB: ${ENCRYPTED_BLOB}, EPHEMERAL_PUBLIC_KEY: ${EPHEMERAL_PUBLIC_KEY}, MAC: ${MAC}, NONCE: ${NONCE}, TAG: ${TAG}, IV: ${IV}, SALT: ${SALT}, PUBLIC_KEY_IDENTIFIER: ${PUBLIC_KEY_IDENTIFIER}, CIPHER_SUITE: ${CIPHER_SUITE}, KDF_PARAMETERS: ${KDF_PARAMETERS}, ENCRYPTION_ALGORITHM_PARAMETERS: ${ENCRYPTION_ALGORITHM_PARAMETERS}}';
+    return 'EME{ENCRYPTED_BLOB: ${ENCRYPTED_BLOB}, EPHEMERAL_PUBLIC_KEY: ${EPHEMERAL_PUBLIC_KEY}, MAC: ${MAC}, NONCE_START: ${NONCE_START}, TAG: ${TAG}, IV: ${IV}, SALT: ${SALT}, PUBLIC_KEY_IDENTIFIER: ${PUBLIC_KEY_IDENTIFIER}, CIPHER_SUITE: ${CIPHER_SUITE}, KDF_PARAMETERS: ${KDF_PARAMETERS}, ENCRYPTION_ALGORITHM_PARAMETERS: ${ENCRYPTION_ALGORITHM_PARAMETERS}}';
   }
 }
 
@@ -76,7 +76,7 @@ class EMEBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addNonceOffset(int? offset) {
+  int addNonceStartOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
@@ -118,7 +118,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _ENCRYPTED_BLOB;
   final String? _EPHEMERAL_PUBLIC_KEY;
   final String? _MAC;
-  final String? _NONCE;
+  final List<int>? _NONCE_START;
   final String? _TAG;
   final String? _IV;
   final String? _SALT;
@@ -131,7 +131,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
     List<int>? ENCRYPTED_BLOB,
     String? EPHEMERAL_PUBLIC_KEY,
     String? MAC,
-    String? NONCE,
+    List<int>? NONCE_START,
     String? TAG,
     String? IV,
     String? SALT,
@@ -143,7 +143,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
       : _ENCRYPTED_BLOB = ENCRYPTED_BLOB,
         _EPHEMERAL_PUBLIC_KEY = EPHEMERAL_PUBLIC_KEY,
         _MAC = MAC,
-        _NONCE = NONCE,
+        _NONCE_START = NONCE_START,
         _TAG = TAG,
         _IV = IV,
         _SALT = SALT,
@@ -161,8 +161,8 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPHEMERAL_PUBLIC_KEY!);
     final int? MACOffset = _MAC == null ? null
         : fbBuilder.writeString(_MAC!);
-    final int? NONCEOffset = _NONCE == null ? null
-        : fbBuilder.writeString(_NONCE!);
+    final int? NONCE_STARTOffset = _NONCE_START == null ? null
+        : fbBuilder.writeListUint8(_NONCE_START!);
     final int? TAGOffset = _TAG == null ? null
         : fbBuilder.writeString(_TAG!);
     final int? IVOffset = _IV == null ? null
@@ -181,7 +181,7 @@ class EMEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(0, ENCRYPTED_BLOBOffset);
     fbBuilder.addOffset(1, EPHEMERAL_PUBLIC_KEYOffset);
     fbBuilder.addOffset(2, MACOffset);
-    fbBuilder.addOffset(3, NONCEOffset);
+    fbBuilder.addOffset(3, NONCE_STARTOffset);
     fbBuilder.addOffset(4, TAGOffset);
     fbBuilder.addOffset(5, IVOffset);
     fbBuilder.addOffset(6, SALTOffset);
