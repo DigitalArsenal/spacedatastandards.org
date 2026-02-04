@@ -199,7 +199,7 @@ jobs:
           build-backend = "setuptools.build_meta"
 
           [project]
-          name = "spacedatastandards"
+          name = "spacedatastandards.org"
           version = "${{ needs.build.outputs.version }}"
           description = "Space data standards framework based on CCSDS standards and Google FlatBuffers"
           readme = "README.md"
