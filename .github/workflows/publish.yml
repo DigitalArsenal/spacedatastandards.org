@@ -167,6 +167,9 @@ jobs:
   publish-pypi:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     if: |
       github.event_name == 'release' ||
       contains(inputs.packages, 'pypi') ||
@@ -269,12 +272,9 @@ jobs:
           python -m build
 
       - name: Publish to PyPI
-        run: |
-          cd lib/py
-          twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: lib/py/dist/
 
   # ============================================
   # crates.io (Rust)
