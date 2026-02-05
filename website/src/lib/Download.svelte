@@ -113,6 +113,61 @@
         <span class="file-name">{selected.file}</span>
       </div>
     </div>
+
+    <div class="package-managers">
+      <h2 class="pm-title">Install via Package Manager</h2>
+      <p class="pm-subtitle">Available on all major package registries</p>
+
+      <div class="pm-grid">
+        <a href="https://www.npmjs.com/package/spacedatastandards.org" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon npm">npm</div>
+          <div class="pm-info">
+            <div class="pm-name">npm / Node.js</div>
+            <code class="pm-command">npm i spacedatastandards.org</code>
+          </div>
+        </a>
+
+        <a href="https://pypi.org/project/spacedatastandards.org/" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon pypi">PyPI</div>
+          <div class="pm-info">
+            <div class="pm-name">Python / PyPI</div>
+            <code class="pm-command">pip install spacedatastandards.org</code>
+          </div>
+        </a>
+
+        <a href="https://pkg.go.dev/github.com/DigitalArsenal/spacedatastandards.org/lib/go" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon go">Go</div>
+          <div class="pm-info">
+            <div class="pm-name">Go Modules</div>
+            <code class="pm-command">go get github.com/DigitalArsenal/spacedatastandards.org/lib/go</code>
+          </div>
+        </a>
+
+        <a href="https://github.com/DigitalArsenal/spacedatastandards.org/pkgs/npm/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon github">GH</div>
+          <div class="pm-info">
+            <div class="pm-name">GitHub Packages</div>
+            <code class="pm-command">npm i @digitalarsenal/spacedatastandards</code>
+          </div>
+        </a>
+
+        <a href="https://packagist.org/packages/digitalarsenal/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon php">PHP</div>
+          <div class="pm-info">
+            <div class="pm-name">Packagist / PHP</div>
+            <code class="pm-command">composer require digitalarsenal/spacedatastandards</code>
+          </div>
+        </a>
+
+        <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon source">src</div>
+          <div class="pm-info">
+            <div class="pm-name">Source Code</div>
+            <code class="pm-command">git clone github.com/DigitalArsenal/spacedatastandards.org</code>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -412,6 +467,91 @@
     color: var(--text-muted);
   }
 
+  .package-managers {
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  .pm-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .pm-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .pm-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .pm-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .pm-card:hover {
+    border-color: var(--accent);
+    background: var(--ui-hover);
+    transform: translateY(-2px);
+  }
+
+  .pm-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .pm-icon.npm { background: linear-gradient(135deg, #cb3837, #a02c2c); }
+  .pm-icon.pypi { background: linear-gradient(135deg, #3775a9, #ffd43b); color: #3775a9; }
+  .pm-icon.go { background: linear-gradient(135deg, #00add8, #007d9c); }
+  .pm-icon.github { background: linear-gradient(135deg, #333, #24292e); }
+  .pm-icon.php { background: linear-gradient(135deg, #777bb4, #4f5b93); }
+  .pm-icon.source { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
+
+  .pm-info {
+    flex: 1;
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .pm-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .pm-command {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   @media (max-width: 480px) {
     .download-card {
       padding: 24px;
@@ -427,6 +567,20 @@
 
     .stat-value {
       font-size: 18px;
+    }
+
+    .pm-card {
+      padding: 12px 16px;
+    }
+
+    .pm-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 10px;
+    }
+
+    .pm-command {
+      font-size: 11px;
     }
   }
 </style>
