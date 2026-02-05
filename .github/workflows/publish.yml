@@ -395,12 +395,19 @@ jobs:
       - name: Add namespaces to C# files
         run: |
           cd lib/cs
+          # Build list of all namespace using directives
+          USINGS=""
+          for dir in */; do
+            ns="${dir%/}"
+            USINGS="${USINGS}using SpaceDataStandards.${ns};\n"
+          done
+          # Wrap each file in its namespace and add cross-namespace usings
           for dir in */; do
             ns="${dir%/}"
             for f in "$dir"*.cs; do
               [ -f "$f" ] || continue
               content=$(cat "$f")
-              printf 'namespace SpaceDataStandards.%s {\n%s\n}\n' "$ns" "$content" > "$f"
+              printf '%b\nnamespace SpaceDataStandards.%s {\n%s\n}\n' "$USINGS" "$ns" "$content" > "$f"
             done
           done
 
