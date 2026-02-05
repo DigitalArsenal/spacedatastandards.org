@@ -392,6 +392,18 @@ jobs:
           - [GitHub](https://github.com/DigitalArsenal/spacedatastandards.org)
           EOF
 
+      - name: Add namespaces to C# files
+        run: |
+          cd lib/cs
+          for dir in */; do
+            ns="${dir%/}"
+            for f in "$dir"*.cs; do
+              [ -f "$f" ] || continue
+              content=$(cat "$f")
+              printf 'namespace SpaceDataStandards.%s {\n%s\n}\n' "$ns" "$content" > "$f"
+            done
+          done
+
       - name: Build NuGet package
         run: |
           cd lib/cs
