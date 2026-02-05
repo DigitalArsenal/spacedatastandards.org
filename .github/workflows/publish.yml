@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       packages:
-        description: 'Packages to publish (comma-separated: npm,pypi,cargo,nuget,dart,maven,go)'
+        description: 'Packages to publish (comma-separated: npm,pypi,cargo,dart,maven,go)'
         required: false
         default: 'all'
         type: string
@@ -18,7 +18,6 @@ on:
 env:
   NODE_VERSION: '20'
   PYTHON_VERSION: '3.11'
-  DOTNET_VERSION: '8.0.x'
   GO_VERSION: '1.21'
   JAVA_VERSION: '17'
 
@@ -324,109 +323,12 @@ jobs:
           cargo publish --token ${{ secrets.CARGO_TOKEN }}
 
   # ============================================
-  # NuGet (C#/.NET)
-  # ============================================
-  publish-nuget:
-    needs: build
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'release' ||
-      contains(inputs.packages, 'nuget') ||
-      inputs.packages == 'all'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: lib-artifacts
-          path: lib/
-
-      - name: Create .csproj file
-        run: |
-          cat > lib/cs/SpaceDataStandards.csproj << 'EOF'
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
-              <PackageId>SpaceDataStandards</PackageId>
-              <Version>${{ needs.build.outputs.version }}</Version>
-              <Authors>Digital Arsenal</Authors>
-              <Company>Digital Arsenal</Company>
-              <Description>Space data standards framework based on CCSDS and FlatBuffers</Description>
-              <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-              <PackageProjectUrl>https://spacedatastandards.org</PackageProjectUrl>
-              <RepositoryUrl>https://github.com/DigitalArsenal/spacedatastandards.org</RepositoryUrl>
-              <PackageTags>space;flatbuffers;ccsds;satellite;orbit;ssa</PackageTags>
-              <PackageReadmeFile>README.md</PackageReadmeFile>
-            </PropertyGroup>
-            <ItemGroup>
-              <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
-            </ItemGroup>
-            <ItemGroup>
-              <None Include="README.md" Pack="true" PackagePath="\" />
-            </ItemGroup>
-          </Project>
-          EOF
-
-      - name: Create README for NuGet
-        run: |
-          cat > lib/cs/README.md << 'EOF'
-          # Space Data Standards (.NET)
-
-          High-performance FlatBuffers schemas for space data exchange.
-
-          ## Installation
-
-          ```bash
-          dotnet add package SpaceDataStandards
-          ```
-
-          ## Documentation
-
-          - [Website](https://spacedatastandards.org)
-          - [GitHub](https://github.com/DigitalArsenal/spacedatastandards.org)
-          EOF
-
-      - name: Add namespaces to C# files
-        run: |
-          cd lib/cs
-          # Build list of all namespace using directives
-          USINGS=""
-          for dir in */; do
-            ns="${dir%/}"
-            USINGS="${USINGS}using SpaceDataStandards.${ns};\n"
-          done
-          # Wrap each file in its namespace and add cross-namespace usings
-          for dir in */; do
-            ns="${dir%/}"
-            for f in "$dir"*.cs; do
-              [ -f "$f" ] || continue
-              content=$(cat "$f")
-              printf '%b\nnamespace SpaceDataStandards.%s {\n%s\n}\n' "$USINGS" "$ns" "$content" > "$f"
-            done
-          done
-
-      - name: Build NuGet package
-        run: |
-          cd lib/cs
-          dotnet pack -c Release
-
-      - name: Publish to NuGet
-        run: |
-          cd lib/cs
-          dotnet nuget push bin/Release/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
-
-  # ============================================
   # pub.dev (Dart)
   # ============================================
   publish-dart:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: |
       github.event_name == 'release' ||
       contains(inputs.packages, 'dart') ||
@@ -896,7 +798,6 @@ jobs:
       - publish-github-npm
       - publish-pypi
       - publish-cargo
-      - publish-nuget
       - publish-dart
       - publish-maven-java
       - publish-go
@@ -914,7 +815,6 @@ jobs:
           echo "| npm (GitHub Packages) | ${{ needs.publish-github-npm.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| PyPI | ${{ needs.publish-pypi.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| crates.io | ${{ needs.publish-cargo.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| NuGet | ${{ needs.publish-nuget.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| pub.dev | ${{ needs.publish-dart.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Maven Central | ${{ needs.publish-maven-java.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Go Modules | ${{ needs.publish-go.result }} |" >> $GITHUB_STEP_SUMMARY
