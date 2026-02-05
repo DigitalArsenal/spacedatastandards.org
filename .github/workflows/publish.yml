@@ -523,9 +523,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
 
@@ -575,17 +572,6 @@ jobs:
                   <developerConnection>scm:git:ssh://github.com:DigitalArsenal/spacedatastandards.org.git</developerConnection>
                   <url>https://github.com/DigitalArsenal/spacedatastandards.org</url>
               </scm>
-
-              <distributionManagement>
-                  <snapshotRepository>
-                      <id>ossrh</id>
-                      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-                  </snapshotRepository>
-                  <repository>
-                      <id>ossrh</id>
-                      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                  </repository>
-              </distributionManagement>
 
               <dependencies>
                   <dependency>
@@ -646,16 +632,11 @@ jobs:
                                   </goals>
                               </execution>
                           </executions>
-                      </plugin>
-                      <plugin>
-                          <groupId>org.sonatype.plugins</groupId>
-                          <artifactId>nexus-staging-maven-plugin</artifactId>
-                          <version>1.6.13</version>
-                          <extensions>true</extensions>
                           <configuration>
-                              <serverId>ossrh</serverId>
-                              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                              <gpgArguments>
+                                  <arg>--pinentry-mode</arg>
+                                  <arg>loopback</arg>
+                              </gpgArguments>
                           </configuration>
                       </plugin>
                   </plugins>
@@ -680,14 +661,57 @@ jobs:
             rm -rf "$dir"
           done
 
-      - name: Publish to Maven Central
+      - name: Build and sign artifacts
         run: |
           cd lib/java
-          mvn clean deploy -P release
+          mvn clean verify -DskipTests
         env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Create bundle for Central Portal
+        run: |
+          cd lib/java/target
+          VERSION="${{ needs.build.outputs.version }}"
+          # Create the bundle directory structure
+          BUNDLE_DIR="io/spacedatastandards/spacedatastandards/${VERSION}"
+          mkdir -p "${BUNDLE_DIR}"
+          # Copy artifacts
+          cp "spacedatastandards-${VERSION}.jar" "${BUNDLE_DIR}/"
+          cp "spacedatastandards-${VERSION}.pom" "${BUNDLE_DIR}/" 2>/dev/null || cp ../pom.xml "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom"
+          cp "spacedatastandards-${VERSION}-sources.jar" "${BUNDLE_DIR}/" 2>/dev/null || true
+          cp "spacedatastandards-${VERSION}-javadoc.jar" "${BUNDLE_DIR}/" 2>/dev/null || true
+          # Copy signatures
+          for f in "${BUNDLE_DIR}"/*.jar "${BUNDLE_DIR}"/*.pom; do
+            [ -f "$f" ] || continue
+            if [ -f "$f.asc" ]; then cp "$f.asc" "${BUNDLE_DIR}/"; fi
+            # Generate checksums
+            md5sum "$f" | cut -d' ' -f1 > "$f.md5"
+            sha1sum "$f" | cut -d' ' -f1 > "$f.sha1"
+          done
+          # Sign the pom if not already signed
+          if [ ! -f "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom.asc" ]; then
+            gpg --armor --detach-sign "${BUNDLE_DIR}/spacedatastandards-${VERSION}.pom"
+          fi
+          # Create the bundle zip
+          cd "$(dirname "${BUNDLE_DIR}")"
+          zip -r "${GITHUB_WORKSPACE}/bundle.zip" "${VERSION}/"
+
+      - name: Upload bundle to Central Portal
+        run: |
+          # Upload via Central Portal API
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -u "${{ secrets.MAVEN_USERNAME }}:${{ secrets.MAVEN_PASSWORD }}" \
+            -F "bundle=@bundle.zip" \
+            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC&name=spacedatastandards-${{ needs.build.outputs.version }}")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "Upload failed with status $HTTP_CODE"
+            exit 1
+          fi
+          echo "Deployment ID: $BODY"
 
   # ============================================
   # Go Modules (tag-based)
