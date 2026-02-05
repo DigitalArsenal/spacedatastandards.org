@@ -58,7 +58,9 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            VERSION=$(node -p "require('./package.json').version.split('+')[0]")
+            # Get version from release tag (strip leading 'v')
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="${VERSION#v}"
             echo "version=$VERSION" >> $GITHUB_OUTPUT
           fi
 
@@ -109,6 +111,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Update package.json version
+        run: |
+          npm version ${{ needs.build.outputs.version }} --no-git-tag-version --allow-same-version
+
       - name: Publish to npm
         run: |
           unset NODE_AUTH_TOKEN
@@ -148,10 +154,11 @@ jobs:
 
       - name: Configure package for GitHub Packages
         run: |
-          # Update package.json for GitHub Packages (scoped package)
+          # Update package.json for GitHub Packages (scoped package and version)
           node -e "
             const pkg = require('./package.json');
             pkg.name = '@digitalarsenal/spacedatastandards';
+            pkg.version = '${{ needs.build.outputs.version }}';
             pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
             require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
           "
@@ -345,7 +352,7 @@ jobs:
           cat > lib/cs/SpaceDataStandards.csproj << 'EOF'
           <Project Sdk="Microsoft.NET.Sdk">
             <PropertyGroup>
-              <TargetFramework>netstandard2.0</TargetFramework>
+              <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
               <PackageId>SpaceDataStandards</PackageId>
               <Version>${{ needs.build.outputs.version }}</Version>
               <Authors>Digital Arsenal</Authors>
@@ -434,7 +441,110 @@ jobs:
           EOF
 
       - name: Create LICENSE
-        run: cp LICENSE lib/dart/LICENSE
+        run: |
+          cat > lib/dart/LICENSE << 'LICEOF'
+          Apache License
+          Version 2.0, January 2004
+          http://www.apache.org/licenses/
+
+          TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+          1. Definitions.
+
+          "License" shall mean the terms and conditions for use, reproduction,
+          and distribution as defined by Sections 1 through 9 of this document.
+
+          "Licensor" shall mean the copyright owner or entity authorized by
+          the copyright owner that is granting the License.
+
+          "Legal Entity" shall mean the union of the acting entity and all
+          other entities that control, are controlled by, or are under common
+          control with that entity.
+
+          "You" (or "Your") shall mean an individual or Legal Entity
+          exercising permissions granted by this License.
+
+          "Source" form shall mean the preferred form for making modifications.
+
+          "Object" form shall mean any form resulting from mechanical
+          transformation or translation of a Source form.
+
+          "Work" shall mean the work of authorship made available under the License.
+
+          "Derivative Works" shall mean any work that is based on the Work.
+
+          "Contribution" shall mean any work of authorship submitted for
+          inclusion in the Work by the copyright owner.
+
+          "Contributor" shall mean Licensor and any Legal Entity on behalf of
+          whom a Contribution has been received by Licensor.
+
+          2. Grant of Copyright License. Subject to the terms and conditions of
+          this License, each Contributor hereby grants to You a perpetual,
+          worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+          copyright license to reproduce, prepare Derivative Works of,
+          publicly display, publicly perform, sublicense, and distribute the
+          Work and such Derivative Works in Source or Object form.
+
+          3. Grant of Patent License. Subject to the terms and conditions of
+          this License, each Contributor hereby grants to You a perpetual,
+          worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+          patent license to make, have made, use, offer to sell, sell, import,
+          and otherwise transfer the Work.
+
+          4. Redistribution. You may reproduce and distribute copies of the
+          Work or Derivative Works thereof in any medium, with or without
+          modifications, and in Source or Object form, provided that You
+          meet the following conditions:
+
+          (a) You must give any other recipients of the Work or
+              Derivative Works a copy of this License; and
+
+          (b) You must cause any modified files to carry prominent notices
+              stating that You changed the files; and
+
+          (c) You must retain, in the Source form of any Derivative Works
+              that You distribute, all copyright, patent, trademark, and
+              attribution notices from the Source form of the Work; and
+
+          (d) If the Work includes a "NOTICE" text file, You must include
+              a readable copy of the attribution notices contained within.
+
+          5. Submission of Contributions. Unless You explicitly state otherwise,
+          any Contribution intentionally submitted for inclusion in the Work
+          by You to the Licensor shall be under the terms and conditions of
+          this License, without any additional terms or conditions.
+
+          6. Trademarks. This License does not grant permission to use the trade
+          names, trademarks, service marks, or product names of the Licensor.
+
+          7. Disclaimer of Warranty. Unless required by applicable law or
+          agreed to in writing, Licensor provides the Work on an "AS IS" BASIS,
+          WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND.
+
+          8. Limitation of Liability. In no event and under no legal theory,
+          shall any Contributor be liable to You for damages.
+
+          9. Accepting Warranty or Additional Liability. While redistributing
+          the Work, You may choose to offer, and charge a fee for, warranty,
+          support, indemnity or other liability obligations.
+
+          END OF TERMS AND CONDITIONS
+
+          Copyright 2024 Digital Arsenal
+
+          Licensed under the Apache License, Version 2.0 (the "License");
+          you may not use this file except in compliance with the License.
+          You may obtain a copy of the License at
+
+              http://www.apache.org/licenses/LICENSE-2.0
+
+          Unless required by applicable law or agreed to in writing, software
+          distributed under the License is distributed on an "AS IS" BASIS,
+          WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+          See the License for the specific language governing permissions and
+          limitations under the License.
+          LICEOF
 
       - name: Create README for pub.dev
         run: |
