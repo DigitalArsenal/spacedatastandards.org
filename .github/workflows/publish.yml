@@ -663,6 +663,23 @@ jobs:
           </project>
           EOF
 
+      - name: Add Java package declarations and restructure
+        run: |
+          cd lib/java
+          for dir in */; do
+            pkg="${dir%/}"
+            # Create package directory structure
+            mkdir -p "io/spacedatastandards/${pkg}"
+            for f in "${dir}"*.java; do
+              [ -f "$f" ] || continue
+              fname=$(basename "$f")
+              # Add package declaration at the top of each file
+              { echo "package io.spacedatastandards.${pkg};"; echo ""; cat "$f"; } > "io/spacedatastandards/${pkg}/${fname}"
+            done
+            # Remove original directory
+            rm -rf "$dir"
+          done
+
       - name: Publish to Maven Central
         run: |
           cd lib/java
