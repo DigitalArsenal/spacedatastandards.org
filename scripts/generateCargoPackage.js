@@ -40,7 +40,7 @@ function resetDirectoryStructure() {
 function generateCargoToml() {
   const cargoTomlContent = `
 [package]
-name = "digitalarsenal-standards"
+name = "spacedatastandards-org"
 version = "0.1.0"
 edition = "2021"
 description = "Space data standards framework based on CCSDS standards and Google FlatBuffers."
