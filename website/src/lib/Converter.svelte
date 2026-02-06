@@ -12,7 +12,7 @@
   let output = "";
   let detectedType = "";
   let detectedFormat = "";
-  let targetFormat = "xml";
+  let targetFormat = "json";
   let converting = false;
   let convertError = "";
   let copySuccess = false;
@@ -23,6 +23,170 @@
 
   // Language showcase
   let selectedLang = "nodejs";
+
+  // --- Parsers & Serializers ---
+  function parseKVN(src: string): any {
+    const result: any = {};
+    const ephLines: string[] = [];
+    let inData = false;
+    for (const line of src.split('\n')) {
+      const t = line.trim();
+      if (!t || t.startsWith('COMMENT')) continue;
+      if (t === 'META_STOP') { inData = true; continue; }
+      if (t === 'META_START') { inData = false; continue; }
+      const eq = t.indexOf('=');
+      if (eq >= 0) {
+        const key = t.substring(0, eq).trim();
+        let val: any = t.substring(eq + 1).trim();
+        if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(val)) val = Number(val);
+        result[key] = val;
+      } else if (inData && /^\d{4}-/.test(t)) {
+        ephLines.push(t);
+      }
+    }
+    if (ephLines.length) {
+      result.EPHEMERIS = ephLines.map(l => {
+        const p = l.split(/\s+/);
+        const e: any = { EPOCH: p[0] };
+        if (p.length >= 4) { e.X = +p[1]; e.Y = +p[2]; e.Z = +p[3]; }
+        if (p.length >= 7) { e.X_DOT = +p[4]; e.Y_DOT = +p[5]; e.Z_DOT = +p[6]; }
+        return e;
+      });
+    }
+    return result;
+  }
+
+  function parseXML(src: string): any {
+    const doc = new DOMParser().parseFromString(src, 'text/xml');
+    function walk(node: Element): any {
+      const kids = Array.from(node.children);
+      if (kids.length === 0) {
+        let v: any = (node.textContent || '').trim();
+        if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(v)) v = Number(v);
+        return v;
+      }
+      const obj: any = {};
+      for (const c of kids) {
+        const k = c.tagName.replace(/^.*:/, '');
+        const val = walk(c);
+        if (obj[k] !== undefined) {
+          if (!Array.isArray(obj[k])) obj[k] = [obj[k]];
+          obj[k].push(val);
+        } else obj[k] = val;
+      }
+      return obj;
+    }
+    return walk(doc.documentElement);
+  }
+
+  function jsonToKVN(data: any): string {
+    const lines: string[] = [];
+    function emit(obj: any) {
+      for (const [key, value] of Object.entries(obj)) {
+        if (value !== null && typeof value === 'object') {
+          if (Array.isArray(value)) {
+            for (const item of value) {
+              if (typeof item === 'object' && item !== null) emit(item);
+              else lines.push(`${key} = ${item}`);
+            }
+          } else {
+            emit(value);
+          }
+          continue;
+        }
+        lines.push(`${key} = ${value}`);
+      }
+    }
+    emit(data);
+    return lines.join('\n');
+  }
+
+  function jsonToXML(data: any, rootTag: string): string {
+    const tag = (rootTag || 'message').toLowerCase();
+    function ser(obj: any, lvl: number): string {
+      const pad = '  '.repeat(lvl);
+      let xml = '';
+      for (const [key, value] of Object.entries(obj)) {
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            if (typeof item === 'object' && item !== null) {
+              xml += `${pad}<${key}>\n${ser(item, lvl + 1)}${pad}</${key}>\n`;
+            } else xml += `${pad}<${key}>${item}</${key}>\n`;
+          }
+        } else if (typeof value === 'object' && value !== null) {
+          xml += `${pad}<${key}>\n${ser(value, lvl + 1)}${pad}</${key}>\n`;
+        } else {
+          xml += `${pad}<${key}>${value}</${key}>\n`;
+        }
+      }
+      return xml;
+    }
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<${tag}>\n${ser(data, 1)}</${tag}>`;
+  }
+
+  function toHexDump(data: any, type: string): string {
+    const enc = new TextEncoder();
+    const fileId = ('$' + (type || 'SDS').substring(0, 3)).padEnd(4, '\0');
+    const strFields: [string, string][] = [];
+    const numFields: [string, number][] = [];
+    for (const [k, v] of Object.entries(data)) {
+      if (typeof v === 'string') strFields.push([k, v]);
+      else if (typeof v === 'number') numFields.push([k, v]);
+    }
+    const nFields = strFields.length + numFields.length;
+    const vtableBytes = 4 + nFields * 2;
+    const vtablePad = (vtableBytes + 3) & ~3;
+    const tablePad = (4 + numFields.length * 8 + strFields.length * 4 + 3) & ~3;
+    const buf = new ArrayBuffer(4096);
+    const u8 = new Uint8Array(buf);
+    const dv = new DataView(buf);
+    let p = 0;
+    // Root offset + file id
+    dv.setUint32(p, 8 + vtablePad, true); p += 4;
+    for (let i = 0; i < 4; i++) u8[p++] = fileId.charCodeAt(i);
+    // VTable
+    dv.setUint16(p, vtableBytes, true); p += 2;
+    dv.setUint16(p, tablePad, true); p += 2;
+    let fOff = 4;
+    for (const _ of numFields) { dv.setUint16(p, fOff, true); p += 2; fOff += 8; }
+    for (const _ of strFields) { dv.setUint16(p, fOff, true); p += 2; fOff += 4; }
+    p = 8 + vtablePad;
+    // Table
+    const tStart = p;
+    dv.setInt32(p, tStart - 8, true); p += 4;
+    for (const [, v] of numFields) { dv.setFloat64(p, v, true); p += 8; }
+    const sOffBase = p;
+    p += strFields.length * 4;
+    p = tStart + tablePad;
+    // Strings
+    for (let i = 0; i < strFields.length; i++) {
+      const bytes = enc.encode(strFields[i][1]);
+      dv.setUint32(sOffBase + i * 4, p - (sOffBase + i * 4), true);
+      dv.setUint32(p, bytes.length, true); p += 4;
+      u8.set(bytes, p); p += bytes.length;
+      u8[p++] = 0;
+      p = (p + 3) & ~3;
+    }
+    return formatHex(u8.subarray(0, p));
+  }
+
+  function formatHex(bytes: Uint8Array): string {
+    const lines: string[] = [];
+    for (let i = 0; i < bytes.length; i += 16) {
+      const addr = i.toString(16).padStart(8, '0');
+      const hex: string[] = [];
+      const asc: string[] = [];
+      for (let j = 0; j < 16; j++) {
+        if (i + j < bytes.length) {
+          hex.push(bytes[i + j].toString(16).padStart(2, '0'));
+          const c = bytes[i + j];
+          asc.push(c >= 0x20 && c < 0x7f ? String.fromCharCode(c) : '.');
+        } else { hex.push('  '); asc.push(' '); }
+      }
+      lines.push(`${addr}  ${hex.slice(0, 8).join(' ')}  ${hex.slice(8).join(' ')}  |${asc.join('')}|`);
+    }
+    return lines.join('\n');
+  }
 
   const supportedTypes = [
     { name: "OMM", desc: "Orbit Mean-Elements Message" },
@@ -239,18 +403,51 @@ builder.finish(omm);`
   };
 
   function detectInput() {
-    if (!input.trim() || !wasmModule) return;
+    if (!input.trim()) return;
     convertError = "";
     try {
-      detectedFormat = wasmModule.detectFormat(input);
-      if (detectedFormat === "kvn") {
-        detectedType = wasmModule.detectKvnType(input);
-        targetFormat = "xml";
-      } else if (detectedFormat === "xml") {
-        detectedType = wasmModule.detectXmlType(input);
-        targetFormat = "kvn";
+      // Try JSON first
+      const trimmed = input.trim();
+      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        try {
+          JSON.parse(trimmed);
+          detectedFormat = "json";
+          // Try to detect type from JSON keys
+          const obj = JSON.parse(trimmed);
+          const keys = Object.keys(obj);
+          if (keys.some(k => /MEAN_MOTION|NORAD_CAT_ID|EPHEMERIS_TYPE/.test(k))) detectedType = "OMM";
+          else if (keys.some(k => /MISS_DISTANCE|TCA/.test(k))) detectedType = "CDM";
+          else if (keys.some(k => /X_DOT|Y_DOT|Z_DOT|EPHEMERIS/.test(k)) && !keys.some(k => /EULER|QUATERNION/.test(k))) detectedType = "OEM";
+          else if (keys.some(k => /QUATERNION|EULER/.test(k))) detectedType = "AEM";
+          else if (keys.some(k => /SEMI_MAJOR_AXIS|STATE_VECTOR/.test(k))) detectedType = "OPM";
+          else detectedType = "";
+          if (!targetFormat || targetFormat === "json") targetFormat = "kvn";
+          return;
+        } catch { /* not JSON */ }
+      }
+      // Use WASM detection for KVN/XML
+      if (wasmModule) {
+        detectedFormat = wasmModule.detectFormat(input);
+        if (detectedFormat === "kvn") {
+          detectedType = wasmModule.detectKvnType(input);
+          if (!targetFormat || targetFormat === "kvn") targetFormat = "json";
+        } else if (detectedFormat === "xml") {
+          detectedType = wasmModule.detectXmlType(input);
+          if (!targetFormat || targetFormat === "xml") targetFormat = "json";
+        } else {
+          detectedType = "";
+        }
       } else {
-        detectedType = "";
+        // Fallback detection without WASM
+        if (trimmed.startsWith('<?xml') || trimmed.startsWith('<')) {
+          detectedFormat = "xml";
+          detectedType = "";
+          if (!targetFormat || targetFormat === "xml") targetFormat = "json";
+        } else if (/^CCSDS_\w+_VERS/.test(trimmed)) {
+          detectedFormat = "kvn";
+          detectedType = "";
+          if (!targetFormat || targetFormat === "kvn") targetFormat = "json";
+        }
       }
     } catch {
       detectedType = "";
@@ -269,13 +466,59 @@ builder.finish(omm);`
   }
 
   async function convert() {
-    if (!wasmModule || !input.trim()) return;
+    if (!input.trim()) return;
     converting = true;
     convertError = "";
     output = "";
     try {
-      const result = wasmModule.convert(input, targetFormat);
-      output = result;
+      const src = detectedFormat;
+      const tgt = targetFormat;
+
+      if (src === tgt) {
+        output = input;
+        converting = false;
+        return;
+      }
+
+      // KVN <-> XML via WASM (high fidelity)
+      if (wasmModule && ((src === "kvn" && tgt === "xml") || (src === "xml" && tgt === "kvn"))) {
+        output = wasmModule.convert(input, tgt);
+        converting = false;
+        return;
+      }
+
+      // Parse input to intermediate JSON object
+      let intermediate: any;
+      if (src === "json") {
+        intermediate = JSON.parse(input.trim());
+      } else if (src === "kvn") {
+        // Try WASM KVN->XML->JSON path for better fidelity, fallback to JS parser
+        if (wasmModule && tgt !== "xml") {
+          try {
+            const xmlStr = wasmModule.convert(input, "xml");
+            intermediate = parseXML(xmlStr);
+          } catch {
+            intermediate = parseKVN(input);
+          }
+        } else {
+          intermediate = parseKVN(input);
+        }
+      } else if (src === "xml") {
+        intermediate = parseXML(input);
+      } else {
+        throw new Error(`Cannot parse input format: ${src || 'unknown'}`);
+      }
+
+      // Serialize to target format
+      if (tgt === "json") {
+        output = JSON.stringify(intermediate, null, 2);
+      } else if (tgt === "kvn") {
+        output = jsonToKVN(intermediate);
+      } else if (tgt === "xml") {
+        output = jsonToXML(intermediate, detectedType || "message");
+      } else if (tgt === "hex") {
+        output = toHexDump(intermediate, detectedType || "SDS");
+      }
     } catch (e: any) {
       convertError = e.message || "Conversion failed";
     }
@@ -348,9 +591,9 @@ builder.finish(omm);`
 
   <div class="container">
     <div class="hero">
-      <div class="format-badge">CCSDS NDM</div>
+      <div class="hero-badge">CCSDS NDM</div>
       <h1 class="title">Format Converter</h1>
-      <p class="subtitle">Convert between KVN and XML formats using C++/WASM parsers running in your browser</p>
+      <p class="subtitle">Convert between KVN, XML, JSON, and FlatBuffer hex — everything to everything — using C++/WASM parsers in your browser</p>
     </div>
 
     <!-- Main Converter Card -->
@@ -411,7 +654,7 @@ builder.finish(omm);`
             <span class="badge type-badge">{detectedType}</span>
           {/if}
           {#if detectedFormat}
-            <span class="badge format-badge">{detectedFormat.toUpperCase()}</span>
+            <span class="badge det-format-badge">{detectedFormat.toUpperCase()}</span>
           {/if}
           {#if !detectedType && !detectedFormat && input.trim()}
             <span class="badge unknown-badge">Unknown format</span>
@@ -430,6 +673,16 @@ builder.finish(omm);`
               class:active={targetFormat === 'xml'}
               on:click={() => { targetFormat = 'xml'; }}
             >XML</button>
+            <button
+              class="target-btn"
+              class:active={targetFormat === 'json'}
+              on:click={() => { targetFormat = 'json'; }}
+            >JSON</button>
+            <button
+              class="target-btn"
+              class:active={targetFormat === 'hex'}
+              on:click={() => { targetFormat = 'hex'; }}
+            >FlatBuffer</button>
           </div>
         {/if}
       </div>
@@ -444,7 +697,7 @@ builder.finish(omm);`
             class="editor-textarea"
             bind:value={input}
             on:input={detectInput}
-            placeholder="Paste CCSDS KVN or XML here, or select a sample above..."
+            placeholder="Paste KVN, XML, or JSON here, or select a sample above..."
             spellcheck="false"
           ></textarea>
         </div>
@@ -483,7 +736,7 @@ builder.finish(omm);`
         <button
           class="convert-btn"
           on:click={convert}
-          disabled={!wasmModule || !input.trim() || converting}
+          disabled={!input.trim() || !detectedFormat || converting}
         >
           {#if converting}
             <div class="spinner small"></div>
@@ -496,7 +749,7 @@ builder.finish(omm);`
               <line x1="15" y1="15" x2="21" y2="21"></line>
               <line x1="4" y1="4" x2="9" y2="9"></line>
             </svg>
-            Convert to {targetFormat.toUpperCase()}
+            Convert to {targetFormat === 'hex' ? 'FlatBuffer Hex' : targetFormat.toUpperCase()}
           {/if}
         </button>
       </div>
@@ -584,7 +837,7 @@ builder.finish(omm);`
     margin-bottom: 48px;
   }
 
-  .format-badge {
+  .hero-badge {
     display: inline-block;
     padding: 6px 14px;
     background: rgba(0, 119, 182, 0.1);
@@ -862,7 +1115,7 @@ builder.finish(omm);`
     color: var(--accent);
   }
 
-  .format-badge {
+  .det-format-badge {
     background: rgba(23, 234, 217, 0.15);
     color: #17ead9;
   }
