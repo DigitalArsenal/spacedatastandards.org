@@ -166,7 +166,7 @@
   let intermediate: any = null;
   let convertError = "";
   let copySuccess = false;
-  let hexViewMode: 'hex' | 'utf16' = "hex";
+  let hexViewMode: 'hex' | 'utf8' = "hex";
   let fbBytesOutput: Uint8Array | null = null;
 
   // Dropdown state
@@ -396,23 +396,18 @@
     return lines.join('\n');
   }
 
-  function formatUtf16(bytes: Uint8Array): string {
-    // Pad to even length if needed
-    const padded = bytes.length % 2 === 0 ? bytes : new Uint8Array([...bytes, 0]);
-    const u16 = new Uint16Array(padded.buffer, padded.byteOffset, padded.length >> 1);
-    return String.fromCharCode(...u16);
+  function formatUtf8(bytes: Uint8Array): string {
+    return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
   }
 
   function serialize(data: any, fmt: string, type: string): string {
     if (fmt === 'json') return JSON.stringify(data, null, 2);
-    if (fmt === 'kvn') {
-      // Try WASM via JSON→XML→KVN if available, otherwise JS
-      return jsonToKVN(data);
-    }
+    if (fmt === 'kvn') return jsonToKVN(data);
     if (fmt === 'xml') return jsonToXML(data, type || 'message');
     if (fmt === 'hex') {
-      fbBytesOutput = buildFlatBuffer(data, type);
-      return hexViewMode === 'hex' ? formatHex(fbBytesOutput) : formatUtf16(fbBytesOutput);
+      const bytes = buildFlatBuffer(data, type);
+      fbBytesOutput = bytes;
+      return hexViewMode === 'hex' ? formatHex(bytes) : formatUtf8(bytes);
     }
     throw new Error(`Unknown format: ${fmt}`);
   }
@@ -466,6 +461,11 @@
       // Use native sample if available for KVN/XML
       if (nativeSample && (fmt === 'kvn' || fmt === 'xml')) {
         inputText = nativeSample;
+      } else if (fmt === 'hex') {
+        // Build FlatBuffer directly and set both bytes + display text
+        const bytes = buildFlatBuffer(intermediate, selectedStandard);
+        fbBytesOutput = bytes;
+        inputText = hexViewMode === 'hex' ? formatHex(bytes) : formatUtf8(bytes);
       } else {
         inputText = serialize(intermediate, fmt, selectedStandard);
       }
@@ -523,7 +523,14 @@
           return;
         } catch { /* fall through to JS */ }
       }
-      outputText = serialize(intermediate, outputFormat, selectedStandard);
+      // Handle hex output directly to ensure fbBytesOutput and outputText are both set
+      if (outputFormat === 'hex') {
+        const bytes = buildFlatBuffer(intermediate, selectedStandard);
+        fbBytesOutput = bytes;
+        outputText = hexViewMode === 'hex' ? formatHex(bytes) : formatUtf8(bytes);
+      } else {
+        outputText = serialize(intermediate, outputFormat, selectedStandard);
+      }
     } catch (e: any) {
       convertError = `Output error: ${e.message}`;
       outputText = "";
@@ -535,9 +542,9 @@
   }
 
   function toggleHexView() {
-    hexViewMode = hexViewMode === 'hex' ? 'utf16' : 'hex';
+    hexViewMode = hexViewMode === 'hex' ? 'utf8' : 'hex';
     if (fbBytesOutput) {
-      const text = hexViewMode === 'hex' ? formatHex(fbBytesOutput) : formatUtf16(fbBytesOutput);
+      const text = hexViewMode === 'hex' ? formatHex(fbBytesOutput) : formatUtf8(fbBytesOutput);
       if (outputFormat === 'hex') outputText = text;
       if (inputFormat === 'hex') inputText = text;
     }
@@ -897,7 +904,7 @@ builder.finish(omm);`
             {/each}
             {#if inputFormat === 'hex'}
               <button class="hex-toggle" on:click={toggleHexView}>
-                {hexViewMode === 'hex' ? 'UTF-16' : 'Hex'}
+                {hexViewMode === 'hex' ? 'UTF-8' : 'Hex'}
               </button>
             {/if}
           </div>
@@ -943,7 +950,7 @@ builder.finish(omm);`
             {/each}
             {#if outputFormat === 'hex'}
               <button class="hex-toggle" on:click={toggleHexView}>
-                {hexViewMode === 'hex' ? 'UTF-16' : 'Hex'}
+                {hexViewMode === 'hex' ? 'UTF-8' : 'Hex'}
               </button>
             {/if}
           </div>
