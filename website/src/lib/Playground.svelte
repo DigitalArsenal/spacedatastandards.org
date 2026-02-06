@@ -1491,6 +1491,14 @@
     // === 6. ANIMATED DATA PACKETS ===
     // All packet flow gated on LOS. Packets route through whichever GS has contact.
 
+    // Surface-arc interpolation: lerp in Cartesian then project back to surface
+    function surfaceLerp(a: any, b: any, t: number): any {
+      const mid = Cesium.Cartesian3.lerp(a, b, t, new Cesium.Cartesian3());
+      const carto = Cesium.Cartographic.fromCartesian(mid);
+      carto.height = 50000; // 50 km above surface so dot stays visible
+      return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, carto.height);
+    }
+
     // Command uplink packets (orange): ops → visible GS → satellite
     for (let i = 0; i < 3; i++) {
       const phase = i / 3;
@@ -1503,7 +1511,7 @@
           const satPos = getSatPosition(Date.now(), vis.satIdx);
           if (t < 0.35) {
             const ft = t / 0.35;
-            return Cesium.Cartesian3.lerp(opsPos, vis.gs.pos, ft, new Cesium.Cartesian3());
+            return surfaceLerp(opsPos, vis.gs.pos, ft);
           } else {
             const rt = (t - 0.35) / 0.65;
             return Cesium.Cartesian3.lerp(vis.gs.pos, satPos, rt, new Cesium.Cartesian3());
@@ -1534,7 +1542,7 @@
             return Cesium.Cartesian3.lerp(satPos, vis.gs.pos, rt, new Cesium.Cartesian3());
           } else {
             const ft = (t - 0.65) / 0.35;
-            return Cesium.Cartesian3.lerp(vis.gs.pos, opsPos, ft, new Cesium.Cartesian3());
+            return surfaceLerp(vis.gs.pos, opsPos, ft);
           }
         }, false),
         point: {
